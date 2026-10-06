@@ -1,6 +1,6 @@
 # Container images and packages
 
-The canonical container namespace is `ghcr.io/unipat-ai`. The twelve release versions below use ten canonical package names. All are private.
+The canonical container namespace is `ghcr.io/unipat-ai`. Ten canonical packages contain twelve release versions and one archived experimental oracle runtime, for thirteen versions in total. All are private and linked to [UniPat-AI/ScienceVision](https://github.com/UniPat-AI/ScienceVision).
 
 [`resources/images.json`](../resources/images.json) records the full tag, immutable GHCR manifest digest, package URL, source mapping, platform, visibility, and verification evidence for every listed version. Verification date: 2026-10-06.
 
@@ -25,7 +25,19 @@ For each agent engine (`codex` or `claude-code`), the name without a suffix is t
 
 All inspected images declare `linux/amd64`. The original Docker Hub/GHCR comparison read the manifests and configurations. Corresponding release images have matching configuration digests, including their declared uncompressed layer identities and runtime configuration; their compressed layer and manifest digests differ across registries. That comparison did not download every layer payload or run containers.
 
-The two `-mcp-client` copies transferred the existing GHCR layers and preserve the manifests, configurations, and rootfs layer identities of the `sciencevision-codex-agent` and `sciencevision-claude-code-agent` packages. Those old addresses remain private compatibility aliases, recorded in `legacy_aliases` in the inventory. Use `-mcp-client` for new release references; retain the originally observed address and digest in historical run receipts.
+The two `-mcp-client` copies transferred the existing GHCR layers and preserve the manifests, configurations, and rootfs layer identities of the `sciencevision-codex-agent` and `sciencevision-claude-code-agent` packages. Those old addresses remain private compatibility aliases, recorded in `legacy_aliases` in the inventory, and are no longer linked to this repository's package list. Use `-mcp-client` for new release references; retain the originally observed address and digest in historical run receipts.
+
+## Archived oracle runtime
+
+| Role | Canonical tag | Package page |
+|---|---|---|
+| experimental oracle MCP Claude Code | `ghcr.io/unipat-ai/sciencevision-claude-code-mcp:mcpfix-20261006-h20` | [Package](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) |
+
+This runtime contains MCP tool-surface patches used by the oracle workflow. It was archived from a locally built Docker image; it was not retrieved from a Docker Hub release. It differs from `server-20261002-h20` and is not a default image reference in the pinned baseline source.
+
+Its GHCR manifest is `sha256:ce4394ed1555b822176f188e8d682b90bf6e04acbe426722a2d3289dc45a1436`. The configuration digest equals the original image ID, `sha256:5bc7e58b3213cb068a38774784a8f3128d7d92d36f8d262814431b8d82fe62de`; all 22 declared rootfs layer identities and the `linux/amd64` platform match. The saved image was transferred and the target manifest/configuration read back. No new benchmark or full post-upload layer download was performed.
+
+The inventory records an associated staged-source archive checksum, not a public Git revision or proof of a byte-identical rebuild. This experimental tag preserves that runtime for reproducibility; it does not establish end-to-end compatibility with every `review-v11` task or a model performance result.
 
 ## Pull a pinned image
 
