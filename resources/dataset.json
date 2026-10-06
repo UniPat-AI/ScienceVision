@@ -1,0 +1,62 @@
+{
+  "schema_version": "sciencevision.dataset_reference.v1",
+  "verified_at": "2026-10-06",
+  "release_name": "review-v11",
+  "status": "existing_dataset_selected",
+  "source": {
+    "repository": "elorian-ai/ScienceVision",
+    "url": "https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/review-v11",
+    "revision_type": "branch",
+    "revision_name": "review-v11",
+    "commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
+    "private": true,
+    "gated": "auto"
+  },
+  "task_count": 250,
+  "domain_counts": {
+    "architecture": 50,
+    "biology": 50,
+    "chemistry": 50,
+    "mechanical-cad": 50,
+    "medical": 50
+  },
+  "file_count": 21653,
+  "logical_file_bytes": 8224311200,
+  "index_sha256": "d90b72139fa74c9cbe331559d2bb617d21c92dcd57e11445f41b028703864f37",
+  "layout": {
+    "index": "index.jsonl",
+    "task": "<domain>/<task_id>/",
+    "question_answer": "<domain>/<task_id>/normalized.json",
+    "assets": [
+      {
+        "path": "<domain>/<task_id>/assets/",
+        "task_count": 240
+      },
+      {
+        "path": "<domain>/<task_id>/",
+        "task_count": 10,
+        "note": "Architecture scene JSON and associated PNG files at task root."
+      }
+    ],
+    "archived_runs": "<domain>/<task_id>/runs/<arm>/"
+  },
+  "license": {
+    "status": "unspecified_in_source",
+    "dataset_card_license": null,
+    "license_file": null,
+    "repository_code_license_applies": false
+  },
+  "verification": {
+    "index_rows_and_hash": true,
+    "normalized_questions_and_answer_objects": 250,
+    "full_asset_payload_checksums": false,
+    "full_harness_reproduction": false
+  },
+  "known_limitations": [
+    "Archived scores combine different source runs; source_run is row-specific.",
+    "Some tasks depend on viewer camera state not represented by the baseline runtime.",
+    "The source card records scoring-contract limitations and retained runtime-path metadata in archived runs.",
+    "main differs from the selected review-v11 branch."
+  ],
+  "canonical_repository": "elorian-ai/ScienceVision"
+}

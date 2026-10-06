@@ -1,0 +1,13 @@
+ScienceVision
+Copyright 2026 UniPat AI
+
+The documentation, schemas, and utility scripts in this repository are distributed
+under the Apache License, Version 2.0.
+
+The evaluation implementation is maintained separately in UniPat-AI/BabyVision-v2,
+pinned here at c7280352fa626bd74712b95f804e59cf4bded816. That repository also declares
+Apache-2.0. This repository does not duplicate its implementation or Git history.
+
+The repository license does not license the linked dataset, third-party assets,
+model services, or all software inside container images. Their own terms apply.
+The review-v11 dataset snapshot does not declare a dataset license.

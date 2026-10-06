@@ -1,0 +1,395 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UniPat-AI/ScienceVision/schemas/run-metadata.schema.json",
+  "title": "ScienceVision result provenance sidecar",
+  "description": "Repository-side metadata for a native collector artifact. This sidecar is not emitted by the upstream harness.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "record_kind",
+    "run_id",
+    "created_at",
+    "description",
+    "dataset",
+    "harness",
+    "model",
+    "sampling",
+    "environment",
+    "images",
+    "command",
+    "scope",
+    "coverage",
+    "aggregation",
+    "artifacts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "sciencevision.run_metadata.v1"
+    },
+    "record_kind": {
+      "enum": [
+        "example",
+        "diagnostic",
+        "benchmark"
+      ]
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "description": {
+      "type": "string"
+    },
+    "dataset": {
+      "type": "object",
+      "required": [
+        "repository",
+        "revision_name",
+        "commit",
+        "index_sha256"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/]+/[^/]+$"
+        },
+        "revision_name": {
+          "type": "string"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "index_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "harness": {
+      "type": "object",
+      "required": [
+        "repository",
+        "commit"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "pattern": "^[^/]+/[^/]+$"
+        },
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "sampling": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "environment": {
+      "type": "object",
+      "required": [
+        "platform",
+        "dependencies"
+      ],
+      "properties": {
+        "platform": {
+          "type": "string"
+        },
+        "python": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "images": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "reference"
+        ],
+        "properties": {
+          "role": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string",
+            "pattern": "^ghcr\\.io/unipat-ai/[a-z0-9._-]+@sha256:[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "command": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "scope": {
+      "type": "object",
+      "required": [
+        "task_set",
+        "routes",
+        "repeats"
+      ],
+      "properties": {
+        "task_set": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "routes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "repeats": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "expected",
+        "attempted",
+        "completed",
+        "eligible_completed",
+        "ineligible_completed",
+        "citable",
+        "blocked",
+        "ungated",
+        "missing",
+        "error",
+        "incomplete"
+      ],
+      "properties": {
+        "expected": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "attempted": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ineligible_completed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "citable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "blocked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ungated": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "incomplete": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "aggregation": {
+      "type": "object",
+      "required": [
+        "producer",
+        "mode",
+        "primary_metric",
+        "missing_trial_policy"
+      ],
+      "properties": {
+        "producer": {
+          "const": "collect_qagen_results"
+        },
+        "mode": {
+          "const": "eligible_citable_mean"
+        },
+        "primary_metric": {
+          "const": "answer_score"
+        },
+        "missing_trial_policy": {
+          "const": "reported_separately_not_imputed"
+        }
+      },
+      "additionalProperties": false
+    },
+    "artifacts": {
+      "type": "object",
+      "required": [
+        "leaderboard",
+        "evidence"
+      ],
+      "properties": {
+        "leaderboard": {
+          "type": "object",
+          "required": [
+            "path",
+            "sha256"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "path",
+              "sha256"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$)).+$"
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "record_kind": {
+            "const": "benchmark"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "coverage": {
+            "properties": {
+              "blocked": {
+                "const": 0
+              },
+              "ungated": {
+                "const": 0
+              },
+              "missing": {
+                "const": 0
+              },
+              "error": {
+                "const": 0
+              },
+              "incomplete": {
+                "const": 0
+              },
+              "expected": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "citable": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "artifacts": {
+            "properties": {
+              "evidence": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "example-legacy-001",
+  "domain": "architecture",
+  "sub_domain": "example-bucket",
+  "direction": "example-direction",
+  "proposed_sub_domain": null,
+  "set": "example",
+  "source_run": "synthetic-example",
+  "class": null,
+  "reward_cc": 0.0,
+  "reward_ccmcp": 0.5,
+  "native_calls_cc": 1,
+  "native_calls_ccmcp": 2,
+  "mcp_steps_ccmcp": 1,
+  "traj_len": 2,
+  "views": true,
+  "views_aligned": true,
+  "runs_cc": true,
+  "runs_ccmcp": true,
+  "exc_cc": null,
+  "exc_ccmcp": null
+}

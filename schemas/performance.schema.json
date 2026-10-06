@@ -1,0 +1,312 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UniPat-AI/ScienceVision/schemas/performance.schema.json",
+  "title": "Native ScienceVision collector leaderboard",
+  "description": "Output of collect_qagen_results.build_leaderboard at the pinned harness revision. Empty mean maps mean no qualifying observations.",
+  "type": "object",
+  "required": [
+    "n_runs",
+    "n_completed",
+    "n_eligible_completed",
+    "citability",
+    "by_harness_model_census",
+    "rows",
+    "by_harness_model_mean_reward",
+    "by_harness_model_mean_reward_all_eligible",
+    "by_harness_model_mean_answer",
+    "by_harness_model_mean_process",
+    "by_harness_model_mean_capability_coverage",
+    "by_harness_model_mean_mcp_success",
+    "by_harness_model_citable_rate",
+    "by_harness_domain_mean_reward",
+    "by_harness_domain_mean_reward_all_eligible"
+  ],
+  "properties": {
+    "n_runs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "n_completed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "n_eligible_completed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "citability": {
+      "type": "object",
+      "required": [
+        "n_eligible",
+        "n_citable",
+        "n_blocked",
+        "n_ungated"
+      ],
+      "properties": {
+        "n_eligible": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_citable": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_blocked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_ungated": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "by_harness_model_census": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "n_eligible",
+          "n_citable",
+          "n_blocked",
+          "n_ungated"
+        ],
+        "properties": {
+          "n_eligible": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "n_citable": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "n_blocked": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "n_ungated": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "task_id",
+          "set",
+          "domain",
+          "v_class",
+          "harness",
+          "model",
+          "status",
+          "evaluation_eligible",
+          "reward",
+          "answer_score",
+          "process_compliance",
+          "shadow_llm_judge",
+          "shadow_process_judge",
+          "capability_policy",
+          "capability_coverage",
+          "mcp_attempted",
+          "mcp_success_rate",
+          "citable",
+          "blockers"
+        ],
+        "properties": {
+          "task_id": {
+            "type": "string"
+          },
+          "set": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "v_class": {
+            "type": "string"
+          },
+          "harness": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "ok",
+              "error",
+              "incomplete"
+            ]
+          },
+          "evaluation_eligible": {
+            "type": "boolean"
+          },
+          "reward": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "answer_score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "process_compliance": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "shadow_llm_judge": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "shadow_process_judge": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "capability_policy": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "capability_coverage": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "mcp_attempted": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "mcp_success_rate": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "citable": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "by_harness_model_mean_reward": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_mean_reward_all_eligible": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_mean_answer": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_mean_process": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_mean_capability_coverage": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_mean_mcp_success": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_model_citable_rate": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_domain_mean_reward": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    },
+    "by_harness_domain_mean_reward_all_eligible": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 1
+      }
+    }
+  },
+  "additionalProperties": true
+}

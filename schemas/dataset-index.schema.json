@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/UniPat-AI/ScienceVision/schemas/dataset-index.schema.json",
+  "title": "ScienceVision review-v11 historical index row",
+  "description": "One index.jsonl row. Archived rewards are not formal eligibility or a newly measured benchmark.",
+  "type": "object",
+  "required": [
+    "task_id",
+    "domain",
+    "sub_domain",
+    "direction",
+    "proposed_sub_domain",
+    "set",
+    "source_run",
+    "class",
+    "reward_cc",
+    "reward_ccmcp",
+    "native_calls_cc",
+    "native_calls_ccmcp",
+    "mcp_steps_ccmcp",
+    "traj_len",
+    "views",
+    "views_aligned",
+    "runs_cc",
+    "runs_ccmcp",
+    "exc_cc",
+    "exc_ccmcp"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "enum": [
+        "architecture",
+        "biology",
+        "chemistry",
+        "mechanical-cad",
+        "medical"
+      ]
+    },
+    "sub_domain": {
+      "type": "string"
+    },
+    "direction": {
+      "type": "string"
+    },
+    "proposed_sub_domain": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "set": {
+      "type": "string"
+    },
+    "source_run": {
+      "type": "string"
+    },
+    "class": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "reward_cc": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reward_ccmcp": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "native_calls_cc": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "native_calls_ccmcp": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "mcp_steps_ccmcp": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "traj_len": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "views": {
+      "type": "boolean"
+    },
+    "views_aligned": {
+      "type": "boolean"
+    },
+    "runs_cc": {
+      "type": "boolean"
+    },
+    "runs_ccmcp": {
+      "type": "boolean"
+    },
+    "exc_cc": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "exc_ccmcp": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

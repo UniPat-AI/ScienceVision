@@ -1,0 +1,16 @@
+# Local environments and downloaded artifacts
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.DS_Store
+.env
+.env.*
+!.env.example
+data/
+work/
+eval-baseline/
+*.log
+*.tar
+*.tar.gz
+*.zip
