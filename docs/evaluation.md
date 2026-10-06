@@ -2,12 +2,12 @@
 
 ## Implementation and access
 
-The implementation remains in [`UniPat-AI/BabyVision-v2`](https://github.com/UniPat-AI/BabyVision-v2/tree/c7280352fa626bd74712b95f804e59cf4bded816), pinned to `c7280352fa626bd74712b95f804e59cf4bded816` from `eval-baseline`. It is private; access to this documentation repository alone does not grant access to that dependency.
+The implementation remains in [`UniPat-AI/BabyVision-v2`](https://github.com/UniPat-AI/BabyVision-v2/tree/b47f13ac5abb54b9e287ff3131ae7e29771ec53e), pinned to `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` from `eval-baseline`. It is private; access to this documentation repository alone does not grant access to that dependency.
 
 ```bash
 gh repo clone UniPat-AI/BabyVision-v2 eval-baseline
 cd eval-baseline
-git checkout --detach c7280352fa626bd74712b95f804e59cf4bded816
+git checkout --detach b47f13ac5abb54b9e287ff3131ae7e29771ec53e
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e ".[harbor]"
@@ -17,9 +17,11 @@ python -m scripts.harbor.qa_gen_to_tasks --help
 
 The Python project declares Python 3.10 or later. Use Python 3.12 or later for the Harbor extra: [Harbor 0.13.0 package metadata](https://pypi.org/project/harbor/0.13.0/) specifies that minimum. The upstream dependency is `harbor>=0.13`, so record the installed version and dependency lock for every real run. Run the harness on a Docker-capable host with the rendering dependencies required by the selected assets. The pinned container inventory is `linux/amd64`. This repository has not executed the complete six-route benchmark.
 
+The default scorer is the GHCR copy of `server-20260930-h20`, pinned at `ghcr.io/unipat-ai/sciencevision-scorer@sha256:d07c59a7c89cc1c8981d20bb8d5a169d577eb2d141153804b86ff866de023062`. [Upstream PR #128](https://github.com/UniPat-AI/BabyVision-v2/pull/128) changed the registry reference while preserving that scorer release. Set `SCI3D_SCORER_IMAGE` explicitly when a prepared task package requires a different scorer, and record the selected digest.
+
 ## Routes in the current driver
 
-The [driver source](https://github.com/UniPat-AI/BabyVision-v2/blob/c7280352fa626bd74712b95f804e59cf4bded816/scripts/harbor/run_end2end.py) defines these default Codex routes:
+The [driver source](https://github.com/UniPat-AI/BabyVision-v2/blob/b47f13ac5abb54b9e287ff3131ae7e29771ec53e/scripts/harbor/run_end2end.py) defines these default Codex routes:
 
 | Label | Access | Agent environment |
 |---|---|---|
@@ -59,7 +61,7 @@ python -m scripts.harbor.run_end2end \
   --limit 1 --dry-run
 ```
 
-Use a fresh jobs directory for each run. Preserve each route's task IDs and its explicit rendering-exclusion receipt. Before launching, replace generated unqualified image references with the compatible digest-pinned agent, worker, and scorer references in the [container guide](containers.md). A bundled MCP image and an agent-only wrapper plus worker are distinct runtimes.
+Use a fresh jobs directory for each run. Preserve each route's task IDs and its explicit rendering-exclusion receipt. Resolve the local agent and worker aliases against the selected release in the [container guide](containers.md), verify their image identities, and retain that mapping in the run receipt. Some pinned shell runners check the exact local `FROM` alias; replacing it with a registry address alone can fail preflight. A bundled MCP image and a client-only wrapper plus worker are distinct runtimes.
 
 ## Scoring and outputs
 

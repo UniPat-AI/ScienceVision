@@ -1,8 +1,8 @@
 {
   "schema_version": "sciencevision.image_inventory.v1",
   "verified_at": "2026-10-06",
-  "status": "existing_private_packages_verified_and_linked",
-  "verification": "Source and canonical manifests fetched with skopeo. Equal config digests prove equal declared uncompressed rootfs diff IDs and runtime configuration. Compressed layers and manifest digests differ; this was not a byte-preserving manifest copy. No layer payload download or runtime smoke test was performed.",
+  "status": "private_canonical_packages_verified",
+  "verification": "The original Docker Hub/GHCR release comparison inspected manifests and configurations with skopeo. Equal config digests establish equal declared uncompressed rootfs diff IDs and runtime configuration; compressed layers and manifest digests differ. That comparison did not download every layer payload or run containers. Later alias-copy verification is recorded on the corresponding entries.",
   "images": [
     {
       "role": "raw-file Codex",
@@ -56,12 +56,12 @@
       "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp"
     },
     {
-      "role": "agent-only Codex wrapper",
+      "role": "MCP client Codex",
       "source": "docker.io/suermars/sci3d-codex-mcp:release-20260930-h20",
       "source_manifest_digest": "sha256:43f3687e9fdf9396e0f0be98bc4debc16610fceb744dcfcebe04b6428fd9a7e3",
-      "canonical": "ghcr.io/unipat-ai/sciencevision-codex-agent:release-20260930-h20",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-codex-mcp-client:release-20260930-h20",
       "canonical_manifest_digest": "sha256:b4c03b16847e7f5d02a4c78e61c89e9f5fe896845663e532ee1f6ae2f8ae04fe",
-      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-codex-agent@sha256:b4c03b16847e7f5d02a4c78e61c89e9f5fe896845663e532ee1f6ae2f8ae04fe",
+      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-codex-mcp-client@sha256:b4c03b16847e7f5d02a4c78e61c89e9f5fe896845663e532ee1f6ae2f8ae04fe",
       "config_digest": "sha256:9134175006e6a8357b18aa99897792b395fab19536bd292920942cb3d7b61e7a",
       "source_config_digest": "sha256:9134175006e6a8357b18aa99897792b395fab19536bd292920942cb3d7b61e7a",
       "config_digest_matches": true,
@@ -70,7 +70,9 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-agent"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp-client",
+      "usage": "External HTTP MCP profile; requires a separate compatible worker.",
+      "alias_copy_verification": "Manifest, configuration, and rootfs diff IDs match the retained GHCR alias."
     },
     {
       "role": "raw-file Claude Code",
@@ -124,12 +126,12 @@
       "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp"
     },
     {
-      "role": "agent-only Claude Code wrapper",
+      "role": "MCP client Claude Code",
       "source": "docker.io/suermars/sci3d-claude-code-mcp:release-20261002-h20",
       "source_manifest_digest": "sha256:c9b019ae4f38857cfe4400cef75a4e8720a3e5fea8f23767dbf1065c75faf548",
-      "canonical": "ghcr.io/unipat-ai/sciencevision-claude-code-agent:release-20261002-h20",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-claude-code-mcp-client:release-20261002-h20",
       "canonical_manifest_digest": "sha256:597cc446d579d0ccca961f0eed5b133d7925337fd50008594632117a8fec1b2a",
-      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-claude-code-agent@sha256:597cc446d579d0ccca961f0eed5b133d7925337fd50008594632117a8fec1b2a",
+      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-claude-code-mcp-client@sha256:597cc446d579d0ccca961f0eed5b133d7925337fd50008594632117a8fec1b2a",
       "config_digest": "sha256:d5b4a69157462b845352280b2257f18eecb06e514ab77010fdfec722c0fd6600",
       "source_config_digest": "sha256:d5b4a69157462b845352280b2257f18eecb06e514ab77010fdfec722c0fd6600",
       "config_digest_matches": true,
@@ -138,7 +140,9 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-agent"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp-client",
+      "usage": "External HTTP MCP profile; requires a separate compatible worker.",
+      "alias_copy_verification": "Manifest, configuration, and rootfs diff IDs match the retained GHCR alias."
     },
     {
       "role": "external MCP worker",
@@ -155,7 +159,8 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker",
+      "usage": "Worker for the external HTTP MCP profile; not replaced by a bundled agent image."
     },
     {
       "role": "historical scorer",
@@ -172,10 +177,11 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
+      "usage": "Historical release and task-contract reproduction; retain for existing receipts."
     },
     {
-      "role": "historical scorer",
+      "role": "pinned harness scorer",
       "source": "docker.io/suermars/sci3d-scorer:server-20260930-h20",
       "source_manifest_digest": "sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3",
       "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20260930-h20",
@@ -189,10 +195,11 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
+      "usage": "Default of the pinned eval-baseline harness; also used by oracle validation."
     },
     {
-      "role": "current scorer",
+      "role": "platform package scorer",
       "source": "docker.io/suermars/sci3d-scorer:server-20261005-h20",
       "source_manifest_digest": "sha256:b97ca59f66fb66838a9a5a5fcf7b51230df0ce0e21664523c52f1e3f02d4f1ee",
       "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20261005-h20",
@@ -206,8 +213,25 @@
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
-      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer"
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
+      "usage": "Later platform-package scorer; not a drop-in replacement for historical scoring."
     }
   ],
-  "repository_linked_at": "2026-10-06"
+  "repository_linked_at": "2026-10-06",
+  "legacy_aliases": [
+    {
+      "alias": "ghcr.io/unipat-ai/sciencevision-codex-agent:release-20260930-h20",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-codex-mcp-client:release-20260930-h20",
+      "manifest_digest": "sha256:b4c03b16847e7f5d02a4c78e61c89e9f5fe896845663e532ee1f6ae2f8ae04fe",
+      "visibility": "private",
+      "status": "retained_for_compatibility"
+    },
+    {
+      "alias": "ghcr.io/unipat-ai/sciencevision-claude-code-agent:release-20261002-h20",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-claude-code-mcp-client:release-20261002-h20",
+      "manifest_digest": "sha256:597cc446d579d0ccca961f0eed5b133d7925337fd50008594632117a8fec1b2a",
+      "visibility": "private",
+      "status": "retained_for_compatibility"
+    }
+  ]
 }

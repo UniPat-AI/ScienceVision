@@ -18,9 +18,9 @@ Equal task counts do not imply equal difficulty or identical scoring contracts. 
 
 ## Repository responsibilities
 
-This repository holds the release references and documentation. [BabyVision-v2](https://github.com/UniPat-AI/BabyVision-v2/tree/c7280352fa626bd74712b95f804e59cf4bded816) holds the evaluation implementation. Hugging Face holds data and archived trajectories; GHCR holds container packages. Large data and evaluation histories are not duplicated in Git.
+This repository holds the release references and documentation. [BabyVision-v2](https://github.com/UniPat-AI/BabyVision-v2/tree/b47f13ac5abb54b9e287ff3131ae7e29771ec53e) holds the evaluation implementation. Hugging Face holds data and archived trajectories; GHCR holds container packages. Large data and evaluation histories are not duplicated in Git.
 
-The implementation is pinned to `c7280352fa626bd74712b95f804e59cf4bded816` on the `eval-baseline` line. Future updates should change the reference and record compatibility evidence together.
+The implementation is pinned to `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` on the `eval-baseline` line. Future updates should change the reference and record compatibility evidence together.
 
 ## Release status
 

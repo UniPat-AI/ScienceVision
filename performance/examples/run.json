@@ -12,7 +12,7 @@
   },
   "harness": {
     "repository": "UniPat-AI/BabyVision-v2",
-    "commit": "c7280352fa626bd74712b95f804e59cf4bded816"
+    "commit": "b47f13ac5abb54b9e287ff3131ae7e29771ec53e"
   },
   "model": {
     "name": "example-model",

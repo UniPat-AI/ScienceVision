@@ -5,7 +5,7 @@ The documentation, schemas, and utility scripts in this repository are distribut
 under the Apache License, Version 2.0.
 
 The evaluation implementation is maintained separately in UniPat-AI/BabyVision-v2,
-pinned here at c7280352fa626bd74712b95f804e59cf4bded816. That repository also declares
+pinned here at b47f13ac5abb54b9e287ff3131ae7e29771ec53e. That repository also declares
 Apache-2.0. This repository does not duplicate its implementation or Git history.
 
 The repository license does not license the linked dataset, third-party assets,
