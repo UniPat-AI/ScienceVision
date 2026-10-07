@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/sciencevision-logo.png" alt="ScienceVision project logo" width="320" />
+</p>
+
 # ScienceVision
 
 ScienceVision studies how agents reason about scientific 3D data across architecture, biology, chemistry, mechanical CAD, and medical imaging. This repository provides the project description, dataset and container references, evaluation instructions, and performance data formats.
