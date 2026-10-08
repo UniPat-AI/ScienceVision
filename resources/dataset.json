@@ -1,13 +1,12 @@
 {
   "schema_version": "sciencevision.dataset_reference.v1",
   "verified_at": "2026-10-06",
-  "release_name": "review-v11",
   "status": "existing_dataset_selected",
   "source": {
     "repository": "elorian-ai/ScienceVision",
-    "url": "https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/review-v11",
-    "revision_type": "branch",
-    "revision_name": "review-v11",
+    "url": "https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/0f9e91ed597a49c205960a0f96ff3d4457db682e",
+    "revision_type": "commit",
+    "revision_name": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
     "commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
     "private": true,
     "gated": "auto"
@@ -56,7 +55,7 @@
     "Archived scores combine different source runs; source_run is row-specific.",
     "Some tasks depend on viewer camera state not represented by the baseline runtime.",
     "The source card records scoring-contract limitations and retained runtime-path metadata in archived runs.",
-    "main differs from the selected review-v11 branch."
+    "main differs from the selected pinned snapshot."
   ],
   "canonical_repository": "elorian-ai/ScienceVision"
 }

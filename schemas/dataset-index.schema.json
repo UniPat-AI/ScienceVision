@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/UniPat-AI/ScienceVision/schemas/dataset-index.schema.json",
-  "title": "ScienceVision review-v11 historical index row",
+  "title": "ScienceVision historical index row",
   "description": "One index.jsonl row. Archived rewards are not formal eligibility or a newly measured benchmark.",
   "type": "object",
   "required": [

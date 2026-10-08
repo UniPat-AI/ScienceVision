@@ -23,6 +23,8 @@ Schemas follow JSON Schema 2020-12. Unknown native-output fields are retained fo
 
 Each entry in `rows` identifies a `task_id`, `set`, `domain`, `v_class`, `harness`, and `model`. `status` is `ok`, `error`, or `incomplete`. `reward` and `answer_score` are numbers or `null`; process fields include `citable`, `blockers`, capability coverage, and MCP attempt/success signals. Preserve the upstream fields rather than renaming them.
 
+Native `harness` values and archived dataset fields retain their internal route identifiers. Use the [paper setting names](evaluation.md#paper-settings-and-harness-mapping) in displayed tables and prose; keep the original IDs in stored results for compatibility. A route ID alone does not prove that a run enforced the paper's intended access conditions.
+
 A numeric `0.0` is a scored zero. `null` means that no value is available. An absent row means that the task has no collected result, not that it was excluded from the declared evaluation scope. A process-gate `citable: null` means the gate has no verdict; it is different from `false`.
 
 The collector's `n_completed` counts rows with non-null reward. `n_eligible_completed` further requires `evaluation_eligible: true`. `citability` splits that eligible completed set into `n_citable`, `n_blocked`, and `n_ungated`. Error and incomplete rows remain in `rows`; they are not part of those means. This makes a separate expected-task count essential.
@@ -47,13 +49,13 @@ A `record_kind` of `benchmark` requires a nonempty scope, a numeric reward for e
 
 ## Reproduction metadata
 
-Record the exact dataset repository, branch and 40-character commit; the index hash; harness commit; model identifier/version; sampling configuration; platform and dependency versions; and each image's GHCR digest. An equivalent Docker Hub image has its own manifest digest. Include the command as an argument array without credentials, and record hashes of the task set, native leaderboard, and supporting evidence.
+Record the exact dataset repository and 40-character commit, using that immutable commit as `revision_name`; the index hash; harness commit; model identifier/version; sampling configuration; platform and dependency versions; and each image's GHCR digest. An equivalent Docker Hub image has its own manifest digest. Include the command as an argument array without credentials, and record hashes of the task set, native leaderboard, and supporting evidence.
 
 No tokens, authentication files, private service addresses, raw local paths, or unreviewed trajectories belong in submitted artifacts. `record_kind: example` is reserved for synthetic documentation examples and never enters a leaderboard.
 
 ## Validate
 
-The [example directory](../performance/examples/README.md) demonstrates one citable result, one blocked result, an error, and a missing trial. It is deliberately incomplete.
+The [example directory](../performance/examples/README.md) demonstrates one citable result, one blocked result, an error, and a missing trial. It is deliberately incomplete. Run these checks from the ScienceVision repository root.
 
 ```bash
 python scripts/validate_repository.py

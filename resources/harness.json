@@ -27,7 +27,7 @@
     "t0-probe"
   ],
   "dataset_compatibility": {
-    "release": "review-v11",
+    "dataset_commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
     "status": "contract_export_required_not_end_to_end_validated",
     "index_is_runnable_input": false
   },

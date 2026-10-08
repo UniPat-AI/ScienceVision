@@ -6,7 +6,7 @@
   "description": "Synthetic format example. Invented task IDs and model results; no model run was performed. Resource revisions are illustrative real references.",
   "dataset": {
     "repository": "elorian-ai/ScienceVision",
-    "revision_name": "review-v11",
+    "revision_name": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
     "commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
     "index_sha256": "d90b72139fa74c9cbe331559d2bb617d21c92dcd57e11445f41b028703864f37"
   },

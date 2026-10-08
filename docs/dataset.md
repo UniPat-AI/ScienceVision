@@ -2,8 +2,7 @@
 
 ## Exact source
 
-- Repository: [`elorian-ai/ScienceVision`](https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/review-v11).
-- Selected branch: `review-v11`.
+- Repository: [`elorian-ai/ScienceVision`](https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/0f9e91ed597a49c205960a0f96ff3d4457db682e).
 - Commit: `0f9e91ed597a49c205960a0f96ff3d4457db682e`.
 - Tasks: 250, with 50 in each of five domains.
 - Files: 21,653; logical contents: 8,224,311,200 bytes.
@@ -11,15 +10,15 @@
 
 Verified on 2026-10-06. File totals come from repository metadata; the full asset payload was not downloaded or checksum-verified for this repository.
 
-The source is private and records automatic gating. Authenticate with an account authorized to read it. The current dataset stays in `elorian-ai/ScienceVision`. Use the pinned `review-v11` snapshot below.
+The source is private and records automatic gating. Authenticate with an account authorized to read it. The current dataset stays in `elorian-ai/ScienceVision`. Run the following commands from the ScienceVision repository root to download and check the pinned snapshot.
 
 ```bash
 hf auth login
 hf download elorian-ai/ScienceVision \
   --type dataset \
   --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
-  --local-dir data/review-v11
-python scripts/check_dataset.py data/review-v11
+  --local-dir data/sciencevision
+python scripts/check_dataset.py data/sciencevision
 ```
 
 For a small metadata-only inspection:
@@ -28,11 +27,11 @@ For a small metadata-only inspection:
 hf download elorian-ai/ScienceVision README.md index.jsonl \
   --type dataset \
   --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
-  --local-dir data/review-v11
-python scripts/check_dataset.py data/review-v11 --index-only
+  --local-dir data/sciencevision
+python scripts/check_dataset.py data/sciencevision --index-only
 ```
 
-Do not substitute `main`: its task IDs and file contents have changed after the selected branch snapshot.
+Do not substitute `main`: its task IDs and file contents differ from the selected snapshot.
 
 ## Layout and records
 
@@ -53,7 +52,7 @@ Every task has `normalized.json` with `task_id`, `domain`, `sub_domain`, `direct
 
 Task-specific source files vary: 118 tasks have `question.md` and `answer.json`; 156 have `题目与轨迹.json`; 84 have `trajectory.jsonl`. Read the common question and answer from `normalized.json`. Asset layout varies: 240 tasks have an `assets/` subtree; 10 architecture tasks store scene JSON and associated PNG files at the task root. Resolve each asset from the actual task files and retain its original path and hash in the evaluation contract.
 
-`index.jsonl` records selection metadata and archived `cc`/`ccmcp` outcomes. It does not contain the complete question, asset manifest, or scoring contract required by the harness. Its schema is [`dataset-index.schema.json`](../schemas/dataset-index.schema.json).
+`index.jsonl` records selection metadata and archived outcomes. Its historical identifiers `cc` and `ccmcp` label **3D + Scaffold** and **3D + Scaffold + Vision MCP**, respectively; retain those identifiers in file paths and field names. They do not verify the access restrictions enforced by each run. The index does not contain the complete question, asset manifest, or scoring contract required by the harness. Its schema is [`dataset-index.schema.json`](../schemas/dataset-index.schema.json).
 
 ## Interpretation and data terms
 
@@ -63,4 +62,4 @@ Archived trajectories include runtime metadata. Keep the bundle private while it
 
 ## Version record
 
-[`resources/dataset.json`](../resources/dataset.json) records the selected existing repository, branch, commit, inventory, and verification scope. Any future dataset update must receive a new recorded revision and compatibility review; it must not silently change this release's task set.
+[`resources/dataset.json`](../resources/dataset.json) records the selected existing repository, immutable commit, inventory, and verification scope. Any future dataset update must receive a new recorded revision and compatibility review; it must not silently change this release's task set.

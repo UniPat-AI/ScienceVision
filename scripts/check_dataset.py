@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the pinned local review-v11 index and common task records, read-only."""
+"""Check the pinned local ScienceVision index and common task records, read-only."""
 from __future__ import annotations
 
 import argparse
@@ -17,7 +17,7 @@ def check(snapshot: Path, *, index_only: bool = False) -> dict:
     raw = (snapshot / "index.jsonl").read_bytes()
     actual = hashlib.sha256(raw).hexdigest()
     if actual != reference["index_sha256"]:
-        raise ValueError("index.jsonl hash differs from the pinned review-v11 snapshot")
+        raise ValueError("index.jsonl hash differs from the pinned ScienceVision snapshot")
     rows = [json.loads(line) for line in raw.splitlines() if line.strip()]
     if len(rows) != reference["task_count"]:
         raise ValueError("task count differs from the release reference")

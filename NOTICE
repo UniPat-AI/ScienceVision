@@ -10,4 +10,4 @@ Apache-2.0. This repository does not duplicate its implementation or Git history
 
 The repository license does not license the linked dataset, third-party assets,
 model services, or all software inside container images. Their own terms apply.
-The review-v11 dataset snapshot does not declare a dataset license.
+The selected ScienceVision dataset snapshot does not declare a dataset license.

@@ -1,10 +1,10 @@
 # Project overview
 
-ScienceVision evaluates questions grounded in scientific 3D assets. A task combines a question, one or more source assets, and an answer or scoring contract. The baseline comparison changes how the agent can access the asset: raw files, files with MCP tools, or rendered images.
+ScienceVision evaluates questions grounded in scientific 3D assets. A task combines a question, one or more source assets, and an answer or scoring contract. The paper defines **3D + Scaffold**, **3D + Scaffold + Vision MCP**, **3D + Vision MCP** (tools only, with source artifacts withheld), and **2D + Scaffold ×1/×3/×6/×12**. See the [seven evaluation settings](../README.md#evaluation-settings) for their intended access conditions and which settings have reported results.
 
 ## Selected release
 
-The `review-v11` snapshot contains 250 tasks:
+The selected ScienceVision dataset snapshot contains 250 tasks:
 
 | Domain identifier | Tasks | Example subject matter |
 |---|---:|---|
@@ -24,6 +24,6 @@ The implementation is pinned to `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` on th
 
 ## Release status
 
-The GitHub repository and GHCR packages are private. The dataset remains in `elorian-ai/ScienceVision` at the selected `review-v11` snapshot. Before public release, linked private dependencies must be made accessible through the intended release mechanism, data terms must be established, and the dataset's documented content and evaluation limitations must be resolved or stated in the release.
+The GitHub repository and GHCR packages are private. The dataset remains in `elorian-ai/ScienceVision` at the selected pinned commit. Before public release, linked private dependencies must be made accessible through the intended release mechanism, data terms must be established, and the dataset's documented content and evaluation limitations must be resolved or stated in the release.
 
 No paper citation, author list, benchmark claim, or new performance result is asserted by this repository.

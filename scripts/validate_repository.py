@@ -137,7 +137,11 @@ def validate_references() -> None:
     require(re.fullmatch(r"[0-9a-f]{40}", harness["commit"]) is not None,
             "harness commit must be pinned")
     require(sum(dataset["domain_counts"].values()) == dataset["task_count"], "domain count mismatch")
-    require(dataset["source"]["revision_name"] == "review-v11", "wrong dataset branch")
+    require(dataset["source"]["revision_type"] == "commit", "dataset revision must be a commit")
+    require(dataset["source"]["revision_name"] == dataset["source"]["commit"],
+            "dataset revision selector differs from the pinned commit")
+    require(harness["dataset_compatibility"]["dataset_commit"] == dataset["source"]["commit"],
+            "harness dataset compatibility reference differs from the pinned commit")
     references = set()
     for item in images["images"]:
         expected = item["canonical"].rsplit(":", 1)[0] + "@" + item["canonical_manifest_digest"]

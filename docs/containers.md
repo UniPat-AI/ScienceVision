@@ -37,7 +37,7 @@ This runtime contains MCP tool-surface patches used by the oracle workflow. It w
 
 Its GHCR manifest is `sha256:ce4394ed1555b822176f188e8d682b90bf6e04acbe426722a2d3289dc45a1436`. The configuration digest equals the original image ID, `sha256:5bc7e58b3213cb068a38774784a8f3128d7d92d36f8d262814431b8d82fe62de`; all 22 declared rootfs layer identities and the `linux/amd64` platform match. The saved image was transferred and the target manifest/configuration read back. No new benchmark or full post-upload layer download was performed.
 
-The inventory records an associated staged-source archive checksum, not a public Git revision or proof of a byte-identical rebuild. This experimental tag preserves that runtime for reproducibility; it does not establish end-to-end compatibility with every `review-v11` task or a model performance result.
+The inventory records an associated staged-source archive checksum, not a public Git revision or proof of a byte-identical rebuild. This experimental tag preserves that runtime for reproducibility; it does not establish end-to-end compatibility with every task in the selected dataset snapshot or a model performance result.
 
 ## Pull a pinned image
 
@@ -58,6 +58,8 @@ The inventory contains two MCP layouts:
 - The external HTTP route uses a `sciencevision-*-mcp-client` wrapper and a separate `sciencevision-mcp-worker` service.
 
 These layouts are not interchangeable. Their MCP interfaces, registration, and task contracts must match the selected harness. The worker's `server-20260924-h20` date does not make it redundant: the external HTTP profile still needs a worker, while the bundled profile carries its MCP implementation inside the agent image.
+
+Package roles describe deployment layouts, not the paper's access settings. **3D + Scaffold + Vision MCP** retains direct source access; **3D + Vision MCP** is tools only with source artifacts withheld. An `-mcp` package name does not establish either access policy. Use the [paper-setting mapping and access checks](evaluation.md#paper-settings-and-harness-mapping) when selecting a runtime.
 
 The pinned source still builds and consumes local development aliases such as `sci3d-codex-mcp:latest`, `sci3d-claude-code-mcp:latest`, and `sci3d-mcp-worker:dev`. The two agent aliases can denote a bundled image in one source tree and a client-only wrapper in another. Canonical package naming does not rename those local builds. Some shell preflights check their exact `FROM` strings. Resolve each alias to the intended image identity, verify the agent/worker layout, and retain the mapping in the run receipt. Replacing a `FROM` line alone is not a complete runtime migration.
 
