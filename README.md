@@ -4,24 +4,47 @@
 
 # ScienceVision
 
-ScienceVision studies how agents reason about scientific 3D data across architecture, biology, chemistry, mechanical CAD, and medical imaging. This repository provides the project description, dataset and container references, evaluation instructions, and performance data formats.
+ScienceVision evaluates how agents reason about scientific 3D data across architecture, biology, chemistry, mechanical CAD, and medical imaging. This repository brings together the dataset, evaluation baselines, container packages, and performance formats.
 
-**Status:** private preparation repository. The selected dataset is the `review-v11` branch, with 250 tasks, 50 per domain. Evaluation source and container packages are also private. No new model benchmark results are published here.
+[1. Quickstart](#1-quickstart) · [2. Evaluation](#2-evaluation) · [3. Benchmark](#3-benchmark)
 
-| Resource | Location | Current state |
-|---|---|---|
-| Project | [Project overview](docs/project.md) | Scope and task composition |
-| Dataset | [Dataset guide](docs/dataset.md) | Current dataset: `elorian-ai/ScienceVision`, fixed `review-v11` revision |
-| Evaluation | [Baseline guide](docs/evaluation.md) | Source maintained in `UniPat-AI/BabyVision-v2`, fixed commit |
-| Containers | [Container guide](docs/containers.md) | Existing private `ghcr.io/unipat-ai/sciencevision-*` packages |
-| Performance | [Format and reporting rules](docs/performance.md) | Native harness output schemas and synthetic examples |
+## 1. Quickstart
 
-## Dataset version
+The selected `review-v11` release contains **250 tasks across five domains**, with 50 tasks per domain. The bundle includes questions, answers, scientific assets, rendered views, and archived trajectories. Start by inspecting its task index, then download the assets needed for your work. See [Benchmark](#3-benchmark) for task coverage.
 
-Use the selected existing dataset at the exact revision:
+**Access:** this repository, the evaluation source, and GHCR packages are private. The dataset is hosted at [`elorian-ai/ScienceVision`](https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/review-v11); it is private and gated. Use accounts authorized for each resource. Signing in alone does not grant dataset or package access.
+
+### Set up and inspect the task index
+
+Use Python 3.12 and an authenticated GitHub CLI (`gh`). The setup also installs the [Hugging Face CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli).
+
+```bash
+gh repo clone UniPat-AI/ScienceVision
+cd ScienceVision
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-validation.txt huggingface_hub
+python scripts/validate_repository.py
+```
+
+Download the small metadata files first:
 
 ```bash
 hf auth login
+hf download elorian-ai/ScienceVision README.md index.jsonl \
+  --type dataset \
+  --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
+  --local-dir data/review-v11
+python scripts/check_dataset.py data/review-v11 --index-only
+```
+
+The checks validate repository links, schemas, examples, the pinned index hash, and task counts. They do not call models or run the benchmark.
+
+### Download the task bundle
+
+For the complete questions, answers, assets, and archived runs, download the same fixed revision. Its logical file contents total about **8.22 GB**.
+
+```bash
 hf download elorian-ai/ScienceVision \
   --type dataset \
   --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
@@ -29,26 +52,90 @@ hf download elorian-ai/ScienceVision \
 python scripts/check_dataset.py data/review-v11
 ```
 
-`review-v11` is a branch. The current `main` branch differs. The download contains about 8.22 GB of logical file contents, including assets, views, and archived trajectories. [Access, file layout, and limitations](docs/dataset.md).
+Read each task's common question and answer from `<domain>/<task_id>/normalized.json`. Asset paths vary by task; the [dataset guide](docs/dataset.md) describes both layouts. The check verifies common task records, not every asset checksum or harness compatibility. `review-v11` is a branch; use the commit above because `main` has different task IDs and contents.
 
-The dataset is a delivery and review bundle with questions, answers, and assets. Its `index.jsonl` is a task and archived-performance index. A unified `review-v11` input export for the pinned harness is not currently supplied; the [baseline guide](docs/evaluation.md) documents the existing interfaces and outputs, not a complete reproduction recipe.
+## 2. Evaluation
 
-## Versioned references
+**Current scope:** a unified `review-v11` task export for the pinned harness is not yet supplied. The dataset contains questions, answers, and assets, but neither `index.jsonl` nor an unmodified `normalized.json` is runnable harness input. The steps below provide the existing images and evaluation interfaces; complete end-to-end reproduction of this snapshot still requires validated task and scoring contracts.
 
-Machine-readable records are in [`resources/dataset.json`](resources/dataset.json), [`resources/harness.json`](resources/harness.json), and [`resources/images.json`](resources/images.json). They record the current resource locations and scope of verification. Pull containers with their GHCR digest references.
+### Container packages
 
-## Repository checks
+Images are hosted under **`ghcr.io/unipat-ai`**. Choose the runtime that matches the prepared task contract:
 
-Use Python 3.10 or later.
+| Runtime | Codex package | Claude Code package |
+|---|---|---|
+| Raw task files | [sciencevision-codex](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex) | [sciencevision-claude-code](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code) |
+| Rendered views | [sciencevision-codex-2d](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-2d) | [sciencevision-claude-code-2d](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-2d) |
+| Bundled MCP tools | [sciencevision-codex-mcp](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp) | [sciencevision-claude-code-mcp](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) |
+| Client for an external HTTP MCP worker | [sciencevision-codex-mcp-client](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp-client) | [sciencevision-claude-code-mcp-client](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp-client) |
+
+The external HTTP route also needs a compatible [sciencevision-mcp-worker](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker). Scoring uses [sciencevision-scorer](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer), with the version selected by the task contract. The [container guide](docs/containers.md) lists release tags, scorer versions, and the archived experimental runtime.
+
+All listed packages are private `linux/amd64` images. Authenticate with package read access and pull immutable GHCR digests. For example, the raw-file Codex runtime and the pinned harness's default scorer:
 
 ```bash
-python -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements-validation.txt
-python scripts/validate_repository.py
+docker login ghcr.io
+docker pull ghcr.io/unipat-ai/sciencevision-codex@sha256:43b4bf787e205762368aee65588b7a24bac748f267488769152209632efba04c
+docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:d07c59a7c89cc1c8981d20bb8d5a169d577eb2d141153804b86ff866de023062
 ```
 
-These checks validate documentation links, schemas, references, and example consistency. They do not run model evaluation or prove container runtime compatibility.
+The pinned source also uses local development aliases. Follow the [runtime-selection instructions](docs/containers.md#runtime-selection) before launching a route: bundled MCP images and client-plus-worker layouts are distinct, and some runner preflights check exact local aliases. Pulling an image alone does not configure the harness.
+
+### Evaluation harness
+
+The implementation is maintained in [`UniPat-AI/BabyVision-v2`](https://github.com/UniPat-AI/BabyVision-v2/tree/b47f13ac5abb54b9e287ff3131ae7e29771ec53e), pinned to commit `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` from `eval-baseline`. With access to that repository, install the Harbor extra and inspect its entry points:
+
+```bash
+gh repo clone UniPat-AI/BabyVision-v2 eval-baseline
+cd eval-baseline
+git checkout --detach b47f13ac5abb54b9e287ff3131ae7e29771ec53e
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install -e ".[harbor]"
+python -m scripts.harbor.run_end2end --help
+python -m scripts.harbor.qa_gen_to_tasks --help
+```
+
+Real runs require a Docker-capable host, asset-specific rendering dependencies, approved task records, a model configuration, and valid model credentials. The [evaluation guide](docs/evaluation.md) documents the required task fields, task-builder command, one-task dry run, and result collection. A dry run still builds task directories and renders views; it does not call models or launch Harbor jobs.
+
+## 3. Benchmark
+
+### Task coverage
+
+| Domain | Tasks | Example subject matter |
+|---|---:|---|
+| Architecture | 50 | Geometry, alignment, clearance, and dimensional checks |
+| Biology | 50 | Molecular arrangement, contacts, and spatial selection |
+| Chemistry | 50 | Molecular geometry, torsion, occlusion, and crystal structure |
+| Mechanical CAD | 50 | Parts, assembly composition, properties, and motion |
+| Medical imaging | 50 | Volumetric geometry, slice comparisons, and spatial localization |
+| **Total** | **250** | |
+
+Each task connects a question to scientific source assets and an answer or scoring contract. Equal domain counts do not imply equal difficulty. See the [project overview](docs/project.md) and [dataset limitations](docs/dataset.md#interpretation-and-data-terms).
+
+### Baselines and scoring
+
+The pinned driver's default Codex matrix compares six routes:
+
+| Route | Agent access |
+|---|---|
+| `cc` | Raw files with shell/Python tools |
+| `ccmcp` | The configured shell and MCP route |
+| `cc2d-1`, `cc2d-3`, `cc2d-6`, `cc2d-12` | One, three, six, or twelve rendered views |
+
+Separate `3d-mcp` and `t0-probe` matrices provide MCP-only and text-only diagnostics. The primary reward is the deterministic `answer_score`; process compliance and optional shadow judges are reported separately. Every reported mean needs its denominator and coverage, including missing, error, incomplete, blocked, and ungated trials.
+
+### Performance records
+
+| Record | Purpose |
+|---|---|
+| [`run.json`](schemas/run-metadata.schema.json) | Dataset, harness, model, image digests, task scope, artifact hashes, and coverage |
+| [`runs_leaderboard.json`](schemas/performance.schema.json) | Native per-task results and collector summaries |
+| [`index.jsonl`](schemas/dataset-index.schema.json) | Historical task selection and archived `cc`/`ccmcp` outcomes shipped with the dataset |
+
+This repository publishes **synthetic format examples only**, not new model benchmark results. Archived dataset scores have mixed run provenance, and scorer ground-truth self-tests are not model performance. See the [performance contract](docs/performance.md) and [annotated examples](performance/examples/README.md) for score semantics, eligibility, aggregation, and missing-data rules.
+
+Exact versions and verification scope are recorded in [`resources/dataset.json`](resources/dataset.json), [`resources/harness.json`](resources/harness.json), and [`resources/images.json`](resources/images.json).
 
 ## Contributing and license
 
