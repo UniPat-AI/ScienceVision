@@ -1,33 +1,25 @@
-# Evaluation baselines
+# Evaluation
 
-## Implementation and access
+A ScienceVision run answers the same 250 questions under one **access setting**. The setting
+decides what evidence the agent may obtain; the scorer decides what counts as correct. Both are
+fixed, and a result is only comparable to another result at the same setting and scorer contract.
 
-The implementation remains in [`UniPat-AI/BabyVision-v2`](https://github.com/UniPat-AI/BabyVision-v2/tree/b47f13ac5abb54b9e287ff3131ae7e29771ec53e), pinned to `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` from `eval-baseline`. It is private; access to this documentation repository alone does not grant access to that dependency.
+## Evaluation settings
 
-Start from the ScienceVision repository root. These commands enter its `eval-baseline` subdirectory; subsequent harness commands run there.
+| Setting | Intended agent access | Reported in the paper |
+|---|---|---|
+| **3D + Scaffold** | Source artifacts and code execution | Yes |
+| **3D + Scaffold + Vision MCP** | The same source access and code execution, plus Vision MCP inspection and measurement tools | Yes |
+| **3D + Vision MCP** | Vision MCP tools only; source artifacts withheld | No |
+| **2D + Scaffold ×1** | One fixed rendered view with the agent scaffold; no source artifacts | No |
+| **2D + Scaffold ×3** | Three fixed rendered views with the agent scaffold; no source artifacts | No |
+| **2D + Scaffold ×6** | Six fixed rendered views with the agent scaffold; no source artifacts | Yes |
+| **2D + Scaffold ×12** | Twelve fixed rendered views with the agent scaffold; no source artifacts | No |
 
-```bash
-gh repo clone UniPat-AI/BabyVision-v2 eval-baseline
-cd eval-baseline
-git checkout --detach b47f13ac5abb54b9e287ff3131ae7e29771ec53e
-python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install -e ".[harbor]"
-python -m scripts.harbor.run_end2end --help
-python -m scripts.harbor.qa_gen_to_tasks --help
-```
+Use these names in reports. The driver uses shorter internal identifiers; keep those in CLI
+arguments and in stored result records, because they are what the native output fields carry.
 
-The Python project declares Python 3.10 or later. Use Python 3.12 or later for the Harbor extra: [Harbor 0.13.0 package metadata](https://pypi.org/project/harbor/0.13.0/) specifies that minimum. The upstream dependency is `harbor>=0.13`, so record the installed version and dependency lock for every real run. Run the harness on a Docker-capable host with the rendering dependencies required by the selected assets. The pinned container inventory is `linux/amd64`. This repository has not executed the complete benchmark.
-
-The default scorer is the GHCR copy of `server-20260930-h20`, pinned at `ghcr.io/unipat-ai/sciencevision-scorer@sha256:d07c59a7c89cc1c8981d20bb8d5a169d577eb2d141153804b86ff866de023062`. [Upstream PR #128](https://github.com/UniPat-AI/BabyVision-v2/pull/128) changed the registry reference while preserving that scorer release. Set `SCI3D_SCORER_IMAGE` explicitly when a prepared task package requires a different scorer, and record the selected digest.
-
-## Paper settings and harness mapping
-
-Use the paper's setting names in reports. **3D + Scaffold** provides source artifacts and code execution. **3D + Scaffold + Vision MCP** retains that source access and adds the Vision MCP interface. **3D + Vision MCP** is the MCP-only setting: source artifacts are withheld and observations come through tools. **2D + Scaffold ×1/×3/×6/×12** supplies the corresponding number of fixed rendered views with the agent scaffold, without source artifacts.
-
-The [driver source](https://github.com/UniPat-AI/BabyVision-v2/blob/b47f13ac5abb54b9e287ff3131ae7e29771ec53e/scripts/harbor/run_end2end.py) uses the internal identifiers below. Keep those identifiers in CLI arguments and native result records.
-
-| Paper setting | Internal route ID | Driver option | Agent environment |
+| Setting | Internal route ID | Driver option | Agent environment |
 |---|---|---|---|
 | **3D + Scaffold** | `cc` | `--matrix six` | `codex` |
 | **3D + Scaffold + Vision MCP** | `ccmcp` | `--matrix six` | `codex-mcp` |
@@ -37,19 +29,57 @@ The [driver source](https://github.com/UniPat-AI/BabyVision-v2/blob/b47f13ac5abb
 | **2D + Scaffold ×6** | `cc2d-6` | `--matrix six` | `codex-2d` |
 | **2D + Scaffold ×12** | `cc2d-12` | `--matrix six` | `codex-2d` |
 
-`--matrix six` is the driver's default and launches the six listed non-MCP-only routes together. **3D + Vision MCP** uses a separate `--matrix 3d-mcp` invocation with the shell tool disabled. The paper reports results for **3D + Scaffold**, **3D + Scaffold + Vision MCP**, and **2D + Scaffold ×6**; matched results for the remaining settings are not reported.
+`--matrix six` is the driver's default and launches the six non-MCP-only routes together.
+**3D + Vision MCP** is a separate `--matrix 3d-mcp` invocation with the shell tool disabled.
+`--matrix t0-probe` runs a text-only diagnostic; it is not one of the seven settings.
 
-The mapping is not a permissions attestation. The pinned external HTTP MCP profile builds a source-free agent container and keeps raw assets in the separate worker for both MCP route IDs. Its shell-enabled route alone therefore does not establish the direct source access required by **3D + Scaffold + Vision MCP**. Reproducing a paper setting requires a task contract and runtime profile that enforce its intended access, with evidence recorded in the run receipt. This repository does not supply or validate that complete reconstruction.
+A route ID is a label, not a permissions attestation. Reproducing a setting requires a task
+contract and a runtime profile that actually enforce its intended access, with the evidence
+recorded in the run receipt.
 
-`--matrix t0-probe` runs the harness's text-only diagnostic, with internal route ID `codex-text`. It is not one of the seven paper settings. Legacy Claude Code environment names also exist; they are not the current driver's default matrix.
+## Running the harness
 
-## Dataset-to-harness boundary
+The harness installs as an extra of this distribution. It needs **Python 3.12 or later**,
+because Harbor 0.13 requires it, and a Docker-capable host with the rendering dependencies the
+selected assets need. [`resources/harness.json`](../resources/harness.json) records the revision
+the reported results were produced on, and its revision note records which private line that
+revision belongs to. Until the harness subtree lands in this repository, the commands below
+describe the interface rather than an installation that runs today; the
+[release status](project.md#release-status) lists this among the items still outstanding.
 
-The review bundle and the harness use different formats. `normalized.json` provides question and answer content. The task builder requires QA records containing `task_id`, `instruction`, asset references, `answer_schema`, `ground_truth`, a scorer declaration, and the applicable tool/evaluation contract. The code derives formal eligibility from those contracts.
+```bash
+python3.12 -m venv .venv
+. .venv/bin/activate
+python -m pip install -e ".[harbor]"
+python -m scripts.harbor.run_end2end --help
+python -m scripts.harbor.qa_gen_to_tasks --help
+```
 
-Neither `index.jsonl` nor an unmodified `normalized.json` is a launch-ready task record. A unified input export for the selected dataset snapshot and pinned harness is not currently supplied. This guide records the existing interfaces and output format; it is not a complete reproduction recipe. In particular, asset selection, multi-asset roles, camera state, tolerances, and eligibility must be preserved from an approved task contract; guessing them changes the benchmark. The fixed harness includes the recent comparator fixes, but end-to-end compatibility with the selected snapshot has not been established here.
+Run a real matrix only with approved task records, a model configuration, and valid model
+credentials. `--dry-run` still builds task directories and renders views; it does not call
+models or launch Harbor jobs.
 
-For an already prepared and validated QA-record file at `prepared/tasks.jsonl` inside the harness checkout, the task builder is shown below. The `../data/sciencevision` path refers to the dataset downloaded in the [quickstart](../README.md#1-quickstart).
+## Task contract
+
+The dataset and the harness use different formats. `normalized.json` carries a question and an
+answer; the harness needs a task record that additionally declares what the answer must look
+like and how it is graded. A task record carries:
+
+| Field | Meaning |
+|---|---|
+| `task_id` | Matches the dataset's task id |
+| `instruction` | The question as the agent receives it |
+| `assets` | Asset references, with role and path |
+| `answer_schema` | The field list the answer must populate |
+| `ground_truth` | The expected value per field |
+| `scorer` | The scoring contract and its configuration |
+| tool and evaluation contract | Which tools the route may use, and whether the task is eligible |
+
+**`index.jsonl` and an unmodified `normalized.json` are not launch-ready task records.** Asset
+selection, multi-asset roles, camera state, tolerances, and eligibility must come from an
+approved contract; guessing them changes the benchmark rather than reproducing it.
+
+For a prepared record file at `prepared/tasks.jsonl`, the builder and a one-task dry run are:
 
 ```bash
 python -m scripts.harbor.qa_gen_to_tasks \
@@ -57,28 +87,107 @@ python -m scripts.harbor.qa_gen_to_tasks \
   --asset-root ../data/sciencevision \
   --out work/tasks-3d-scaffold \
   --containerized --agent-env codex
-```
 
-The driver accepts that format with `--pre-resolved`. `CODEX_MODEL` is required, as is a valid model credential configured through the runner's supported environment or authentication file. `--dry-run` still builds task directories and renders views; it does not call models or launch Harbor jobs.
-
-```bash
 python -m scripts.harbor.run_end2end \
   --tasks prepared/tasks.jsonl --pre-resolved \
-  --matrix six \
-  --set-name ScienceVision \
+  --matrix six --set-name ScienceVision \
   --asset-root ../data/sciencevision \
   --out-root work/qa --jobs-root work/smoke \
   --limit 1 --dry-run
 ```
 
-For **3D + Vision MCP**, use `--matrix 3d-mcp` in the same command and a separate `--jobs-root work/smoke-mcp-only`. This selects the tools-only invocation; it does not replace the contract and access checks above.
+`CODEX_MODEL` is required for a real run, along with a valid model credential in the runner's
+supported environment or authentication file. Use a fresh jobs directory per run, and resolve
+the local agent and worker aliases against the selected release in the
+[container guide](containers.md). Some runners check the exact local alias and fail preflight
+otherwise.
 
-Use a fresh jobs directory for each run. Preserve each route's task IDs and its explicit rendering-exclusion receipt. Resolve the local agent and worker aliases against the selected release in the [container guide](containers.md), verify their image identities, and retain that mapping in the run receipt. Some pinned shell runners check the exact local `FROM` alias; replacing it with a registry address alone can fail preflight. A bundled MCP image and a client-only wrapper plus worker are distinct runtimes.
+## Scoring standard
 
-## Scoring and outputs
+Scoring is **deterministic and fail-closed**. No model judges an answer, and no answer is
+silently graded when its contract is missing.
 
-The primary reward is the deterministic `answer_score`. Process compliance and optional shadow judges are separate diagnostics. A task without a valid supported scoring contract is ineligible; it must not silently become a model error or a regular scored zero.
+### Eligibility comes first
 
-The collector writes per-task run records and `runs_leaderboard.json`. The aggregator supports `flat`, `domain_equal`, and explicit `weighted` modes. Its official path requires positive process-gate and runtime-attestation evidence. Diagnostic aggregation must be labelled accordingly. See [performance.md](performance.md) for the native fields, coverage, and missing-data rules.
+A task must set `evaluation_eligible = true` exactly. Missing or `false` produces a **`blocked`
+result, not a score of zero**. A blocked trial is reported separately and must never be mixed
+into a mean as if the model had failed the question.
 
-[Upstream PR #127](https://github.com/UniPat-AI/BabyVision-v2/pull/127) reports 250 ground-truth self-consistency checks and scorer tests. Those are implementation checks, not model results, and they have not been independently rerun for this repository.
+The bundle supports three contracts:
+
+| Contract | For |
+|---|---|
+| `deterministic_structured_v2_1` | A structured answer with a declared field rubric |
+| `structured_deterministic_rubric_v1` | The generic form of the same |
+| `extent_voxel_tolerance_v1` | Volumetric answers judged by region membership |
+
+LLM or prose judges, mask Dice, unknown contracts, and malformed contracts stay `blocked`.
+This release never auto-grades them.
+
+### The answer
+
+The parser accepts **one JSON object**, or **one `SCI3D_FINAL_JSON:` terminal marker** followed
+by that object in the agent's final message. Nothing else is parsed out of prose. Type survives:
+`integer_equal` distinguishes `3` from `"3"`, and `vector_abs_tolerance` keeps its component
+order.
+
+### Comparators
+
+Every field in `answer_schema` names a comparator, and every comparator is implementation-pinned
+in the scorer's manifest so a scoring run can be identified by its comparator registry hash.
+Seventeen are defined:
+
+| Comparator | Matches when |
+|---|---|
+| `exact` | Same type and equal |
+| `canonical_string_equal` | Canonical forms are equal, widened by the item's declared `accepted` spellings |
+| `canonical_enum_equal` | As above, for enumerations |
+| `cited_clause_equal` | Both sides cite the same `(standard, clause)` pair; a gold that names no sub-clause does not constrain one |
+| `boolean_equal` | Both sides resolve to a boolean |
+| `integer_equal` | Both are integers of equal value; a boolean is never an integer |
+| `abs_tolerance` | Within the field's absolute tolerance |
+| `vector_abs_tolerance` | Leaf-by-leaf at any nesting depth, per-component tolerances, shape required to match |
+| `circular_tolerance` | Within tolerance on a modular scale, default modulus 360 |
+| `canonical_atom_id_equal` | Canonical atom identity, whether named or numeric |
+| `canonical_atom_identity_equal` | As above |
+| `canonical_asset_id_equal` | Canonical asset identifiers |
+| `canonical_residue_equal` | Canonical residue identifiers |
+| `canonical_space_group_equal` | Canonical space-group symbols |
+| `canonical_set_equal` | Equal as a multiset: order ignored, multiplicity counted |
+| `ordered_string_vector_equal` | Positional equality, where the index carries meaning |
+| `voxel_member_of_set` | The predicted voxel lies inside the item's packed region. The mask **is** the tolerance, so there is no numeric tolerance to tune |
+
+Tolerances live in the scorer configuration, per field, and are part of the task contract. Two
+runs at different tolerances are different measurements.
+
+### Score
+
+`answer_score` is computed **field by field**. A field either matches or it does not, and the
+score is `1.0` only when every field matched. Reported metrics:
+
+| Metric | Definition |
+|---|---|
+| `mean@3` | Each task's mean over three independent runs, then averaged over tasks |
+| `pass@3` | Share of tasks with at least one full score across three runs |
+
+For a single-run column, the metric is `mean@1`. Every reported mean needs its denominator and
+its coverage: missing, error, incomplete, blocked, and ungated trials are reported, not
+discarded. See [performance.md](performance.md) for the native fields and the aggregation
+modes.
+
+A scorer self-test that feeds ground truth back into the scorer establishes scorer consistency.
+It is not a model result and does not belong in a leaderboard.
+
+## Reproducibility receipts
+
+The scorer image is built from an explicit allow-list and writes a `scorer_manifest.json`
+recording the bundle version, source revision, source and bundle tree hashes, the task-spec
+schema hash, and a per-comparator implementation registry with its own hash. The CLI checks the
+manifest's self-hash before scoring, so a modified scorer cannot silently report as the pinned
+one.
+
+For a run receipt, record the dataset repository and its 40-character commit, the index hash,
+the harness commit, the model identifier and version, the sampling configuration, platform and
+dependency versions, each image's GHCR digest, the scorer digest, and the hashes of the task set
+and the native leaderboard. No tokens, authentication files, private addresses, or raw local
+paths belong in a submitted artifact.

@@ -1,13 +1,12 @@
 ScienceVision
 Copyright 2026 UniPat AI
 
-The documentation, schemas, and utility scripts in this repository are distributed
-under the Apache License, Version 2.0.
+Documentation, schemas, utility scripts, and the evaluation implementation in this
+repository are distributed under the MIT License. See LICENSE.
 
-The evaluation implementation is maintained separately in UniPat-AI/BabyVision-v2,
-pinned here at b47f13ac5abb54b9e287ff3131ae7e29771ec53e. That repository also declares
-Apache-2.0. This repository does not duplicate its implementation or Git history.
+The repository license does not license the dataset, third-party assets, model services,
+or all software inside container images. Their own terms apply. The selected ScienceVision
+dataset snapshot does not declare a dataset license.
 
-The repository license does not license the linked dataset, third-party assets,
-model services, or all software inside container images. Their own terms apply.
-The selected ScienceVision dataset snapshot does not declare a dataset license.
+Third-party components bundled in this repository or in its container images keep their
+own licenses and attributions.

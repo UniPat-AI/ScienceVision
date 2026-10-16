@@ -1,16 +1,18 @@
 {
   "schema_version": "sciencevision.dataset_reference.v1",
-  "verified_at": "2026-10-06",
-  "status": "existing_dataset_selected",
+  "verified_at": "2026-10-16T01:20:00+00:00",
+  "status": "release_snapshot_selected",
   "source": {
-    "repository": "elorian-ai/ScienceVision",
-    "url": "https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/0f9e91ed597a49c205960a0f96ff3d4457db682e",
+    "repository": "SueMintony/ScienceVision-v13-250",
+    "url": "https://huggingface.co/datasets/SueMintony/ScienceVision-v13-250/tree/f100c5b5a81b395673618054e6ee7894ec3b2417",
     "revision_type": "commit",
-    "revision_name": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
-    "commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
+    "revision_name": "f100c5b5a81b395673618054e6ee7894ec3b2417",
+    "commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
     "private": true,
-    "gated": "auto"
+    "gated": false
   },
+  "canonical_repository": "UnipatAI/ScienceVision",
+  "canonical_repository_status": "planned_home; the snapshot above is the version this record verifies",
   "task_count": 250,
   "domain_counts": {
     "architecture": 50,
@@ -19,25 +21,59 @@
     "mechanical-cad": 50,
     "medical": 50
   },
-  "file_count": 21653,
-  "logical_file_bytes": 8224311200,
-  "index_sha256": "d90b72139fa74c9cbe331559d2bb617d21c92dcd57e11445f41b028703864f37",
+  "file_count": 17791,
+  "logical_file_bytes": 9444410857,
+  "index_sha256": "f02ae32169ec2bb081cdfe149f88a6abb15ec3bedd875a99eb23cb46ec8ed69d",
   "layout": {
     "index": "index.jsonl",
+    "change_ledger": "v13_250_changes.md",
+    "task_ids": "v13_250_task_ids.txt",
     "task": "<domain>/<task_id>/",
-    "question_answer": "<domain>/<task_id>/normalized.json",
-    "assets": [
-      {
-        "path": "<domain>/<task_id>/assets/",
-        "task_count": 240
-      },
-      {
-        "path": "<domain>/<task_id>/",
-        "task_count": 10,
-        "note": "Architecture scene JSON and associated PNG files at task root."
-      }
+    "question": "<domain>/<task_id>/question.md",
+    "question_answer_normalized": "<domain>/<task_id>/normalized.json",
+    "expert_answer": "<domain>/<task_id>/answer.json",
+    "assets": "<domain>/<task_id>/assets/",
+    "rendered_views": "<domain>/<task_id>/views/, <domain>/<task_id>/views-aligned/",
+    "imagery": "<domain>/<task_id>/images/",
+    "trajectory": "<domain>/<task_id>/trajectory.jsonl"
+  },
+  "record_fields": {
+    "normalized.json": [
+      "task_id",
+      "set",
+      "domain",
+      "sub_domain",
+      "direction",
+      "question",
+      "answer",
+      "answer_fields",
+      "answer_match",
+      "answer_source",
+      "repairs"
     ],
-    "archived_runs": "<domain>/<task_id>/runs/<arm>/"
+    "index.jsonl": [
+      "task_id",
+      "domain",
+      "sub_domain",
+      "direction",
+      "proposed_sub_domain",
+      "set",
+      "source_run",
+      "class",
+      "reward_cc",
+      "reward_ccmcp",
+      "native_calls_cc",
+      "native_calls_ccmcp",
+      "mcp_steps_ccmcp",
+      "traj_len",
+      "views",
+      "views_aligned",
+      "runs_cc",
+      "runs_ccmcp",
+      "exc_cc",
+      "exc_ccmcp",
+      "source"
+    ]
   },
   "license": {
     "status": "unspecified_in_source",
@@ -46,16 +82,20 @@
     "repository_code_license_applies": false
   },
   "verification": {
+    "file_inventory_and_total_bytes": true,
     "index_rows_and_hash": true,
-    "normalized_questions_and_answer_objects": 250,
+    "served_files_byte_identical_to_build_staging": true,
+    "task_counts": 250,
     "full_asset_payload_checksums": false,
     "full_harness_reproduction": false
   },
   "known_limitations": [
-    "Archived scores combine different source runs; source_run is row-specific.",
-    "Some tasks depend on viewer camera state not represented by the baseline runtime.",
-    "The source card records scoring-contract limitations and retained runtime-path metadata in archived runs.",
-    "main differs from the selected pinned snapshot."
+    "v13 replaces 13 of v12's tasks; per-task comparisons hold within a measurement batch, not across batches.",
+    "The medical swap-ins are a single-rep pilot; their three-rep run was still in flight when this snapshot was assembled.",
+    "The 13 outgoing architecture tasks carry v11 measurements, so architecture rows in index.jsonl mix two batches.",
+    "Some golds are prose or identifier strings graded verbatim; the scorer-side widening for two of those families is implemented but not deployed in this snapshot.",
+    "index.jsonl records selection metadata and archived outcomes, not a runnable harness input.",
+    "The source card declares no license."
   ],
-  "canonical_repository": "elorian-ai/ScienceVision"
+  "canonical_repository_note": "This record pins the snapshot it verified. The dataset is expected to move to the canonical repository above; a move requires a new revision here rather than a silent rewrite."
 }

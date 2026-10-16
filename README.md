@@ -1,110 +1,118 @@
 <p align="center">
-  <img src="assets/sciencevision-logo.png" alt="ScienceVision project logo" width="320" />
+  <img src="assets/sciencevision-logo.png" alt="ScienceVision project logo" width="280" />
 </p>
 
 # ScienceVision
 
-ScienceVision evaluates how agents reason about scientific 3D data across architecture, biology, chemistry, mechanical CAD, and medical imaging. This repository brings together the dataset, evaluation baselines, container packages, and performance formats.
+ScienceVision is a benchmark for **observing and reasoning over scientific 3D data**: 250
+expert-authored questions, 50 each in architecture, biology, chemistry, mechanical CAD, and
+medical imaging.
 
-[1. Quickstart](#1-quickstart) · [2. Evaluation](#2-evaluation) · [3. Benchmark](#3-benchmark)
+Each task hands an agent a question and a 3D source: a building model, a protein, a CT volume, a
+CAD assembly, or a crystal. The agent must return a measurement, an identification, or a
+comparison. What the benchmark varies is **where the evidence comes from**: the source artifact
+and code execution; an inspection tool that changes views, isolates structures and measures
+geometry; or a fixed set of rendered images.
 
-## 1. Quickstart
+Answers are graded by a **deterministic scorer, not a judge model**, field by field against a
+declared contract. A task whose scoring contract is missing or invalid is reported as *blocked*,
+never as a score of zero. See [the scoring standard](docs/evaluation.md#scoring-standard).
 
-The ScienceVision dataset contains **250 tasks across five domains**, with 50 tasks per domain. The bundle includes questions, answers, scientific assets, rendered views, and archived trajectories. Start by inspecting its task index, then download the assets needed for your work. See [Benchmark](#3-benchmark) for task coverage.
+| I want to | Start here |
+|---|---|
+| get the questions, assets and expert answers | [1. Dataset](#1-dataset) |
+| see how twelve models compare | [2. Model comparison](#2-model-comparison) |
+| run my own model through the same scorer | [3. Evaluation](#3-evaluation) |
+| pull an agent or scorer image | [4. Containers](#4-containers) |
+| cite or reuse this | [5. Citing and license](#5-citing-and-license) |
 
-**Access:** this repository, the evaluation source, and GHCR packages are private. The dataset is hosted at [`elorian-ai/ScienceVision`](https://huggingface.co/datasets/elorian-ai/ScienceVision/tree/0f9e91ed597a49c205960a0f96ff3d4457db682e); it is private and gated. Use accounts authorized for each resource. Signing in alone does not grant dataset or package access.
+## 1. Dataset
 
-### Set up and inspect the task index
-
-Use Python 3.12 and an authenticated GitHub CLI (`gh`). The setup also installs the [Hugging Face CLI](https://huggingface.co/docs/huggingface_hub/en/guides/cli).
-
-```bash
-gh repo clone UniPat-AI/ScienceVision
-cd ScienceVision
-python3.12 -m venv .venv
-. .venv/bin/activate
-python -m pip install -r requirements-validation.txt huggingface_hub
-python scripts/validate_repository.py
-```
-
-Download the small metadata files first:
+**`v13-250`** holds 250 tasks, 50 per domain, with source assets, rendered views, expert answers
+and the recorded expert sessions they were selected on. It is gated: authenticate with an account
+that has been granted access.
 
 ```bash
 hf auth login
-hf download elorian-ai/ScienceVision README.md index.jsonl \
+hf download UnipatAI/ScienceVision \
   --type dataset \
-  --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
+  --revision <commit> \
   --local-dir data/sciencevision
-python scripts/check_dataset.py data/sciencevision --index-only
 ```
 
-The checks validate repository links, schemas, examples, the pinned index hash, and task counts. They do not call models or run the benchmark.
+Download a **fixed revision, not a branch**. `<commit>` and the inventory that goes with it are
+recorded in [`resources/dataset.json`](resources/dataset.json); the numbers in this repository
+are tied to that snapshot.
 
-### Download the task bundle
+Read the question and answer from `<domain>/<task_id>/normalized.json`. It is the one record
+every task has. `answer.json` carries the expert ground truth in the form the scorer reads.
 
-For the complete questions, answers, assets, and archived runs, download the same fixed revision. Its logical file contents total about **8.22 GB**.
+`v13-250` replaces 13 of `v12-250`'s tasks, keeping every sub-domain count unchanged. The
+[dataset guide](docs/dataset.md) covers the layout, the records, and the four declared
+limitations. Read them before quoting a score: two of them change what a per-task comparison
+means.
 
-```bash
-hf download elorian-ai/ScienceVision \
-  --type dataset \
-  --revision 0f9e91ed597a49c205960a0f96ff3d4457db682e \
-  --local-dir data/sciencevision
-python scripts/check_dataset.py data/sciencevision
-```
+## 2. Model comparison
 
-Read each task's common question and answer from `<domain>/<task_id>/normalized.json`. Asset paths vary by task; the [dataset guide](docs/dataset.md) describes both layouts. The check verifies common task records, not every asset checksum or harness compatibility. Use the fixed commit above because `main` has different task IDs and contents.
+Twelve models over the same 250 questions under three access settings. Mean `answer_score` on
+`[0, 1]`, ineligible trials counted zero; the two 3D settings average three runs per question,
+the six-view setting is a single run.
 
-## 2. Evaluation
+![Mean answer score under cc-3d and cc-mcp](assets/leaderboard-cc3d-vs-ccmcp.png)
 
-**Current scope:** a unified task export for the selected dataset snapshot and pinned harness is not yet supplied. The dataset contains questions, answers, and assets, but neither `index.jsonl` nor an unmodified `normalized.json` is runnable harness input. The steps below provide the existing images and evaluation interfaces; complete end-to-end reproduction of this snapshot still requires validated task and scoring contracts.
+*`cc-3d` gives the agent the source artifact and code execution. `cc-mcp` adds the inspection
+tools: change views, isolate structures, inspect slices, measure geometry.*
 
-### Evaluation settings
+| # | Model | `cc-3d` | `cc-mcp` | `cc-2d-6` |
+|--:|---|---:|---:|---:|
+| 1 | GPT-6 Astra | 0.4403 | 0.4396 | 0.1789 |
+| 2 | GPT-6.1 Sol | 0.4074 | 0.4292 | 0.1406 |
+| 3 | Claude Fable 5.1 | 0.3860 | 0.3900 | 0.2174 |
+| 4 | Claude Opus 5.5 | 0.3771 | 0.3627 | 0.1783 |
+| 5 | Gemini 4 Argon | 0.3565 | 0.3625 | 0.1006 |
+| 6 | Qwen3.8 Max 0902 | 0.3199 | 0.3099 | 0.1947 |
+| 7 | Qwen3.8 Flash | 0.2895 | 0.2968 | 0.1913 |
+| 8 | Kimi K3 | 0.2834 | 0.2693 | 0.1653 |
+| 9 | GLM-5.3 Flash | 0.2206 | 0.2283 | 0.1179 |
+| 10 | DeepSeek V4 Flash | 0.2231 | 0.2211 | 0.1054 |
+| 11 | Doubao Seed Evolving | 0.1928 | 0.1984 | 0.0887 |
+| 12 | Hunyuan-4 Preview | 0.1283 | 0.1426 | 0.0673 |
 
-The paper defines these seven access settings:
+Under both 3D settings the five closed-source models place ahead of every open-source model. No
+model reaches 0.60, so nothing is saturated. The six-view setting orders differently: Claude
+Fable 5.1 leads it.
 
-| Setting | Intended agent access | Results in the paper |
+![Mean answer score under cc-2d-6](assets/leaderboard-cc2d6.png)
+
+*Six rendered views, a single run. Evidence has to come from the supplied images.*
+
+![Per-domain mean@3 under cc-3d](assets/leaderboard-per-domain.png)
+
+*Each column carries its own scale, whose maximum sits under the discipline name, so bar length
+compares models within a discipline, not disciplines with each other.*
+
+**Two things to know before quoting any of this.** The comparison is a *splice*: each model's row
+joins a carried-over segment with a re-run segment, and those segments did not come from one
+harness. And Gemini 4 Argon covers two runs rather than three. The
+[comparison notes](docs/leaderboard.md) record the segment sources, the question-set provenance,
+and the version drift in full, and state the resulting limit plainly: *equal coverage does not
+establish a controlled comparison*.
+
+## 3. Evaluation
+
+Seven access settings, of which the paper reports three:
+
+| Setting | What the agent may use | Reported |
 |---|---|---|
-| **3D + Scaffold** | Source artifacts and code execution | Reported |
-| **3D + Scaffold + Vision MCP** | The same source access and code execution, plus Vision MCP inspection and measurement tools | Reported |
-| **3D + Vision MCP** | Vision MCP tools only; source artifacts withheld | Not reported |
-| **2D + Scaffold ×1** | One fixed rendered view with the agent scaffold; no source artifacts | Not reported |
-| **2D + Scaffold ×3** | Three fixed rendered views with the agent scaffold; no source artifacts | Not reported |
-| **2D + Scaffold ×6** | Six fixed rendered views with the agent scaffold; no source artifacts | Reported |
-| **2D + Scaffold ×12** | Twelve fixed rendered views with the agent scaffold; no source artifacts | Not reported |
+| **3D + Scaffold** | Source artifacts and code execution | Yes |
+| **3D + Scaffold + Vision MCP** | The same, plus Vision MCP inspection and measurement tools | Yes |
+| **3D + Vision MCP** | Vision MCP tools only; source artifacts withheld | No |
+| **2D + Scaffold ×1 / ×3 / ×6 / ×12** | That many fixed rendered views; no source artifacts | ×6 only |
 
-The paper reports results for the three indicated settings. The other settings do not yet have reported results matched to the same task versions, model configuration, and scoring procedure. Setting names describe intended access conditions; they do not attest to permissions in historical runs or current image profiles. See the [harness mapping and access limitations](docs/evaluation.md#paper-settings-and-harness-mapping) for internal route IDs and CLI options.
-
-### Container packages
-
-Images are hosted under **`ghcr.io/unipat-ai`**. Choose the runtime that matches the prepared task contract:
-
-| Runtime | Codex package | Claude Code package |
-|---|---|---|
-| Raw task files | [sciencevision-codex](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex) | [sciencevision-claude-code](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code) |
-| Rendered views | [sciencevision-codex-2d](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-2d) | [sciencevision-claude-code-2d](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-2d) |
-| Bundled MCP tools | [sciencevision-codex-mcp](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp) | [sciencevision-claude-code-mcp](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) |
-| Client for an external HTTP MCP worker | [sciencevision-codex-mcp-client](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp-client) | [sciencevision-claude-code-mcp-client](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp-client) |
-
-The external HTTP route also needs a compatible [sciencevision-mcp-worker](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker). Scoring uses [sciencevision-scorer](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer), with the version selected by the task contract. The [container guide](docs/containers.md) lists release tags, scorer versions, and the archived experimental runtime.
-
-All listed packages are private `linux/amd64` images. Authenticate with package read access and pull immutable GHCR digests. For example, the raw-file Codex runtime and the pinned harness's default scorer:
+The harness installs as an extra of this distribution. It needs Python 3.12 or later, because
+Harbor 0.13 requires it, and a Docker-capable host.
 
 ```bash
-docker login ghcr.io
-docker pull ghcr.io/unipat-ai/sciencevision-codex@sha256:43b4bf787e205762368aee65588b7a24bac748f267488769152209632efba04c
-docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:d07c59a7c89cc1c8981d20bb8d5a169d577eb2d141153804b86ff866de023062
-```
-
-The pinned source also uses local development aliases. Follow the [runtime-selection instructions](docs/containers.md#runtime-selection) before launching a route: bundled MCP images and client-plus-worker layouts are distinct, and some runner preflights check exact local aliases. Pulling an image alone does not configure the harness.
-
-### Evaluation harness
-
-The implementation is maintained in [`UniPat-AI/BabyVision-v2`](https://github.com/UniPat-AI/BabyVision-v2/tree/b47f13ac5abb54b9e287ff3131ae7e29771ec53e), pinned to commit `b47f13ac5abb54b9e287ff3131ae7e29771ec53e` from `eval-baseline`. With access to that repository, run the following from the ScienceVision repository root to install the Harbor extra and inspect its entry points:
-
-```bash
-gh repo clone UniPat-AI/BabyVision-v2 eval-baseline
-cd eval-baseline
-git checkout --detach b47f13ac5abb54b9e287ff3131ae7e29771ec53e
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e ".[harbor]"
@@ -112,39 +120,62 @@ python -m scripts.harbor.run_end2end --help
 python -m scripts.harbor.qa_gen_to_tasks --help
 ```
 
-Real runs require a Docker-capable host, asset-specific rendering dependencies, approved task records, a model configuration, and valid model credentials. The [evaluation guide](docs/evaluation.md) documents the required task fields, task-builder command, one-task dry run, and result collection. A dry run still builds task directories and renders views; it does not call models or launch Harbor jobs.
+### Scoring standard
 
-## 3. Benchmark
+Scoring is deterministic and **fail-closed**:
 
-### Task coverage
+- A task must set `evaluation_eligible = true`. Otherwise the result is **blocked, not zero**.
+  Blocked trials are reported separately and never mixed into a mean as a model failure.
+- An answer is **one JSON object**, or one `SCI3D_FINAL_JSON:` terminal marker carrying it. Prose
+  is not parsed. Types survive: `3` and `"3"` are different answers.
+- Every field declares a comparator. Seventeen are defined, from `exact` and `integer_equal`
+  through `abs_tolerance` and `vector_abs_tolerance` to `voxel_member_of_set`, where the mask
+  itself is the tolerance region.
+- `answer_score` is `1.0` only when **every field matched**. Reports use `mean@3` (per-task mean
+  over three runs, then averaged over tasks) and `pass@3`.
 
-| Domain | Tasks | Example subject matter |
-|---|---:|---|
-| Architecture | 50 | Geometry, alignment, clearance, and dimensional checks |
-| Biology | 50 | Molecular arrangement, contacts, and spatial selection |
-| Chemistry | 50 | Molecular geometry, torsion, occlusion, and crystal structure |
-| Mechanical CAD | 50 | Parts, assembly composition, properties, and motion |
-| Medical imaging | 50 | Volumetric geometry, slice comparisons, and spatial localization |
-| **Total** | **250** | |
+The scorer image records a manifest whose self-hash the CLI checks before scoring, so a modified
+scorer cannot report as the pinned one. [The full standard](docs/evaluation.md#scoring-standard)
+lists every comparator, the three supported contracts, the task contract, and what a run receipt
+must record.
 
-Each task connects a question to scientific source assets and an answer or scoring contract. Equal domain counts do not imply equal difficulty. See the [project overview](docs/project.md) and [dataset limitations](docs/dataset.md#interpretation-and-data-terms).
+## 4. Containers
 
-### Scoring
+Images live under **`ghcr.io/unipat-ai`**. Pick the runtime that matches the route you are
+running; scoring always uses the scorer the task contract names.
 
-The [evaluation settings](#evaluation-settings) vary the evidence and tools available to the agent. The primary reward is the deterministic `answer_score`; process compliance and optional shadow judges are reported separately. Every reported mean needs its denominator and coverage, including missing, error, incomplete, blocked, and ungated trials.
+| Route | Codex | Claude Code |
+|---|---|---|
+| Raw task files | `sciencevision-codex` | `sciencevision-claude-code` |
+| Rendered views | `sciencevision-codex-2d` | `sciencevision-claude-code-2d` |
+| Bundled MCP tools | `sciencevision-codex-mcp` | `sciencevision-claude-code-mcp` |
+| Client for an external HTTP MCP worker | `sciencevision-codex-mcp-client` | `sciencevision-claude-code-mcp-client` |
 
-### Performance records
+The external HTTP route also needs `sciencevision-mcp-worker`. Pull by digest, because a tag can
+be repointed.
 
-| Record | Purpose |
-|---|---|
-| [`run.json`](schemas/run-metadata.schema.json) | Dataset, harness, model, image digests, task scope, artifact hashes, and coverage |
-| [`runs_leaderboard.json`](schemas/performance.schema.json) | Native per-task results and collector summaries |
-| [`index.jsonl`](schemas/dataset-index.schema.json) | Historical task selection and archived outcomes shipped with the dataset, retaining their original field names |
+```bash
+docker login ghcr.io
+docker pull ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:852f66cc924105c61e5efe6f85e0b5b389e01c416f7e6c8a09fbda0a225a1c98
+docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
+```
 
-This repository publishes **synthetic format examples only**, not new model benchmark results. Archived dataset scores have mixed run provenance, and scorer ground-truth self-tests are not model performance. See the [performance contract](docs/performance.md) and [annotated examples](performance/examples/README.md) for score semantics, eligibility, aggregation, and missing-data rules.
+A package name is a **deployment layout, not an access setting**. `-mcp` does not tell you
+whether source artifacts were withheld. The [container guide](docs/containers.md) has every
+version with its digest, the bundled-versus-external distinction, and the scorer versions.
 
-Exact versions and verification scope are recorded in [`resources/dataset.json`](resources/dataset.json), [`resources/harness.json`](resources/harness.json), and [`resources/images.json`](resources/images.json).
+## 5. Citing and license
 
-## Contributing and license
+The project has a paper; its citation will be published here and on the
+[project page](https://unipat.ai/blog/ScienceVision) once settled. Until then, please describe
+results by the setting and scorer version you used rather than by a single headline number. The
+[comparison notes](docs/leaderboard.md) explain why that matters here.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Repository documentation, schemas, and utility scripts use [Apache-2.0](LICENSE). Dataset assets and container contents have separate terms; the selected dataset does not currently declare a license. See [NOTICE](NOTICE) and the [dataset guide](docs/dataset.md).
+Documentation, schemas, utility scripts, and the evaluation implementation in this repository are
+**MIT** ([LICENSE](LICENSE)). That license does **not** cover the dataset or the third-party
+assets inside it: the dataset declares no license of its own. Container contents keep their own.
+See [NOTICE](NOTICE) and the [dataset guide](docs/dataset.md#interpretation-and-data-terms).
+
+Contributions are described in [CONTRIBUTING.md](CONTRIBUTING.md). The
+[project overview](docs/project.md) records what is still required before this release can be
+read outside the organisation.

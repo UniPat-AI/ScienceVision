@@ -1,12 +1,15 @@
 {
   "schema_version": "sciencevision.harness_reference.v1",
-  "verified_at": "2026-10-06",
+  "verified_at": "2026-10-16T01:20:00+00:00",
   "repository": "UniPat-AI/BabyVision-v2",
   "url": "https://github.com/UniPat-AI/BabyVision-v2",
   "branch": "eval-baseline",
   "commit": "b47f13ac5abb54b9e287ff3131ae7e29771ec53e",
-  "license": "Apache-2.0",
+  "license": "MIT",
+  "source_license_at_pinned_revision": "Apache-2.0",
   "private": true,
+  "canonical_repository": "UniPat-AI/ScienceVision",
+  "canonical_repository_status": "planned_home; the harness subtree is not published there yet",
   "entrypoints": {
     "matrix": "scripts.harbor.run_end2end",
     "task_builder": "scripts.harbor.qa_gen_to_tasks",
@@ -26,11 +29,17 @@
     "3d-mcp",
     "t0-probe"
   ],
+  "scorer_contracts": [
+    "deterministic_structured_v2_1",
+    "structured_deterministic_rubric_v1",
+    "extent_voxel_tolerance_v1"
+  ],
   "dataset_compatibility": {
-    "dataset_commit": "0f9e91ed597a49c205960a0f96ff3d4457db682e",
-    "status": "contract_export_required_not_end_to_end_validated",
+    "dataset_commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
+    "status": "export_required_not_end_to_end_validated",
     "index_is_runnable_input": false
   },
+  "revision_note": "The harbor drivers, adapters and scorer comparators are developed across two private lines that have diverged: the Science-Vision monorepo carries them under scripts/harbor/, harbor_adapters/ and sci3d_bench/scorers/, while the eval-baseline line of BabyVision-v2 carries the continuous September-October work and the isolated scorer_bundle. The commit above pins the line the reported results were produced on, and at that revision the source declares Apache-2.0. Consolidating the two lines and relicensing the result under this repository's MIT license are preconditions for publishing the harness.",
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."
 }
