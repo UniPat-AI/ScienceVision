@@ -5,9 +5,8 @@ versions and one archived experimental runtime: sixteen versions in total, all
 `linux/amd64`.
 
 [`resources/images.json`](../resources/images.json) records, for every version, the tag, the
-immutable GHCR manifest digest, the source image, the config digest, the platform, the package
-URL, and the verification evidence. `scripts/verify_images.py` re-reads all of it from GHCR and
-Docker Hub.
+immutable GHCR manifest digest, the config digest, the platform, the package URL, and the
+verification evidence. `scripts/verify_images.py` re-reads all of it from GHCR.
 
 ## Which runtime
 
@@ -91,15 +90,12 @@ in the pinned baseline. It is kept for reproducibility of that workflow only.
 
 ## Verification
 
-The inventory was re-read from both registries on **2026-10-16** by
+The inventory was re-read from GHCR on **2026-10-16** by
 [`scripts/verify_images.py`](../scripts/verify_images.py), which fetches every manifest and its
-config blob and compares them against the recorded values. Equal config digests establish equal
-declared uncompressed rootfs layer identities and runtime configuration.
-
-The three versions added in that round are layer-identical transfers. Their compressed layer
-digests and manifest digests match their Docker Hub source. The earlier set was repushed with
-different compression, so its compressed layers and manifest digests differ from the source
-while its config digests match. The pass did not download layer payloads or run containers.
+config blob and compares them against the recorded values. A manifest digest addresses one
+immutable artifact; the config digest identifies the image content, so equal config digests
+establish equal declared uncompressed rootfs layer identities and runtime configuration. The
+pass did not download layer payloads or run containers.
 
 Future releases should retain the source revision or staged-source evidence, the build receipt,
 the manifest digest, and task-contract test evidence alongside this inventory. Container

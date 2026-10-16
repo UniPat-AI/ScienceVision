@@ -147,7 +147,6 @@ def validate_references() -> None:
         expected = item["canonical"].rsplit(":", 1)[0] + "@" + item["canonical_manifest_digest"]
         require(item["canonical_digest_reference"] == expected, "image reference mismatch")
         require(expected.startswith("ghcr.io/unipat-ai/"), "noncanonical image namespace")
-        require(item["config_digest"] == item["source_config_digest"], "source config differs")
         require(expected not in references, "duplicate image version")
         references.add(expected)
 

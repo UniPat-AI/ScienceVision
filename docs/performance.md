@@ -49,7 +49,7 @@ A `record_kind` of `benchmark` requires a nonempty scope, a numeric reward for e
 
 ## Reproduction metadata
 
-Record the exact dataset repository and 40-character commit, using that immutable commit as `revision_name`; the index hash; harness commit; model identifier/version; sampling configuration; platform and dependency versions; and each image's GHCR digest. An equivalent Docker Hub image has its own manifest digest. Include the command as an argument array without credentials, and record hashes of the task set, native leaderboard, and supporting evidence.
+Record the exact dataset repository and 40-character commit, using that immutable commit as `revision_name`; the index hash; harness commit; model identifier/version; sampling configuration; platform and dependency versions; and each image's GHCR digest. Include the command as an argument array without credentials, and record hashes of the task set, native leaderboard, and supporting evidence.
 
 No tokens, authentication files, private service addresses, raw local paths, or unreviewed trajectories belong in submitted artifacts. `record_kind: example` is reserved for synthetic documentation examples and never enters a leaderboard.
 
