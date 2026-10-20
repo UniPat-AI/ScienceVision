@@ -112,7 +112,9 @@ Seven access settings, of which the paper reports three:
 The harness is vendored in this repository (`scripts/harbor/`, `harbor_adapters/`,
 `sci3d_bench/`, `sci3d_agent/`, `scorer_bundle/`). It installs as an extra of this
 distribution. It needs Python 3.12 or later, because Harbor requires it, and a
-Docker-capable host. The `harbor` extra pins Harbor `v0.20.0`.
+Docker-capable host. The `harbor` extra pins Harbor `v0.20.0`. A deterministic replay
+sandbox, including the dataset-to-tree builder and the archived-answer scorer, lives in
+[`sandbox/`](sandbox/README.md).
 
 ```bash
 python3.12 -m venv .venv

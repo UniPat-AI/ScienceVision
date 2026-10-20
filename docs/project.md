@@ -49,7 +49,8 @@ organisation cannot follow today:
 3. **The container packages must be made public**, or the reader told how to request access.
 4. **A task export must be published.** Neither `index.jsonl` nor `normalized.json` is launchable
    harness input on its own, so the [task contract](evaluation.md#task-contract) needs a
-   conforming export alongside the dataset.
+   conforming export alongside the dataset. `sandbox/export_contracts.py` produces that export
+   from a prepared tree; the remaining step is to publish the resulting JSONL with the release.
 
 The dataset's declared limitations and the provenance notes in
 [leaderboard.md](leaderboard.md) are part of the release. Without them a reader cannot tell what
