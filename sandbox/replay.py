@@ -13,9 +13,11 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import subprocess
 import sys
 import tempfile
+import tomllib
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
@@ -91,6 +93,36 @@ def _task_id(trial: Path) -> str:
     return trial.name.split("__", 1)[0]
 
 
+def _scorer_input(contract: Path, task_id: str, directory: Path) -> Path:
+    """Return a document the scorer CLI can read.
+
+    A hardened tree keeps ground truth and the scorer out of the agent-visible
+    ``task.toml`` and passes them to the verifier through ``SCI3D_METADATA`` in
+    ``tests/test.sh``. A legacy tree carries them in ``task.toml`` directly.
+    """
+    with contract.open("rb") as handle:
+        metadata = tomllib.load(handle).get("metadata") or {}
+    if metadata.get("ground_truth") is not None and metadata.get("scorer"):
+        return contract
+
+    test_sh = contract.parent / "tests" / "test.sh"
+    if not test_sh.is_file():
+        return contract
+    match = re.search(
+        r"^export SCI3D_METADATA='(.*)'$", test_sh.read_text(encoding="utf-8"), re.MULTILINE
+    )
+    if match is None:
+        return contract
+    payload = json.loads(match.group(1))
+    payload.setdefault("task_id", task_id)
+    instruction = contract.parent / "instruction.md"
+    if instruction.is_file():
+        payload.setdefault("instruction", instruction.read_text(encoding="utf-8"))
+    output = directory / "metadata.json"
+    output.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+    return output
+
+
 def _score_trial(
     trial: Path,
     task_roots: list[Path],
@@ -124,20 +156,23 @@ def _score_trial(
         }
 
     with tempfile.TemporaryDirectory() as directory:
-        answer = Path(directory) / "answer.txt"
+        work = Path(directory)
+        answer = work / "answer.txt"
         answer.write_text(message, encoding="utf-8")
+        task_input = _scorer_input(contract, task_id, work)
+        container_task = f"/work/metadata{task_input.suffix}"
         command = [
             "docker",
             "run",
             "--rm",
             *_DEFAULT_MOUNTS,
             "-v",
-            f"{contract}:/work/task.toml:ro",
+            f"{task_input}:{container_task}:ro",
             "-v",
             f"{answer}:/work/answer.txt:ro",
             scorer_image,
             "--task",
-            "/work/task.toml",
+            container_task,
             "--answer",
             "/work/answer.txt",
         ]
