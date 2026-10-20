@@ -75,12 +75,22 @@ def _package_gold(dataset_root: Path, domain: str, task_id: str) -> Any:
     return {"value": payload.get("answer")}
 
 
-def _package_scorer(dataset_root: Path, task_id: str, scorer: dict[str, Any]) -> dict[str, Any]:
-    path = dataset_root / "verifier" / "scoring" / f"{task_id}.json"
-    if not path.is_file():
-        return scorer
-    block = json.loads(path.read_text(encoding="utf-8")).get("scorer")
-    return {**scorer, **block} if isinstance(block, dict) else scorer
+def _package_scorer(
+    dataset_root: Path,
+    domain: str,
+    task_id: str,
+    scorer: dict[str, Any],
+) -> dict[str, Any]:
+    for candidate in (
+        dataset_root / domain / task_id / "scoring.json",
+        dataset_root / "verifier" / "scoring" / f"{task_id}.json",
+    ):
+        if not candidate.is_file():
+            continue
+        block = json.loads(candidate.read_text(encoding="utf-8")).get("scorer")
+        if isinstance(block, dict):
+            return {**scorer, **block}
+    return scorer
 
 
 def _record(
@@ -92,18 +102,20 @@ def _record(
 ) -> dict[str, Any]:
     domain = str(contract.get("domain") or "")
     task_id = str(contract["task_id"])
+    declared = [asset for asset in contract.get("assets") or [] if isinstance(asset, dict)]
+    primary_index = next(
+        (index for index, asset in enumerate(declared) if asset.get("role") == "primary"),
+        0,
+    )
     resolved: list[dict[str, Any]] = []
     missing: list[str] = []
-    for index, asset in enumerate(contract.get("assets") or []):
-        if not isinstance(asset, dict):
-            continue
-        required = asset.get("role") == "primary" or index == 0
+    for index, asset in enumerate(declared):
         try:
             resolved.append(
                 _resolve_asset(asset, domain=domain, task_id=task_id, dataset_root=dataset_root)
             )
         except FileNotFoundError:
-            if required:
+            if index == primary_index:
                 raise
             missing.append(PurePosixPath(str(asset.get("repo_path") or "")).name)
     if not resolved:
@@ -116,7 +128,7 @@ def _record(
         instruction = _package_instruction(dataset_root, domain, task_id) or instruction
     if gold_source == "package":
         ground_truth = _package_gold(dataset_root, domain, task_id) or ground_truth
-        scorer = _package_scorer(dataset_root, task_id, scorer)
+        scorer = _package_scorer(dataset_root, domain, task_id, scorer)
 
     return {
         **contract,
