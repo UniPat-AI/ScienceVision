@@ -46,9 +46,18 @@ def _score(
 
     with tempfile.TemporaryDirectory() as directory:
         work = Path(directory)
+        task_input = _scorer_input(task_dir / "task.toml", task_id, work)
+        if task_input.suffix == ".json":
+            verifier_meta = json.loads(task_input.read_text(encoding="utf-8"))
+        else:
+            with task_input.open("rb") as handle:
+                verifier_meta = tomllib.load(handle).get("metadata") or {}
+        fields = (verifier_meta.get("answer_schema") or {}).get("fields")
+        if isinstance(gold, dict) and isinstance(fields, list):
+            gold = {key: gold[key] for key in fields if key in gold}
+
         answer = work / "answer.json"
         answer.write_text(json.dumps({"answer": gold}, ensure_ascii=False), encoding="utf-8")
-        task_input = _scorer_input(task_dir / "task.toml", task_id, work)
         container_task = f"/work/metadata{task_input.suffix}"
         command = [
             "docker",
