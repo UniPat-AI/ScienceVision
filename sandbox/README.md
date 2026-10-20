@@ -108,7 +108,7 @@ hosts that were not reachable when this sandbox was built.
 - It does not silently absorb missing tasks. `export_contracts.py` reports
   missing IDs, and `replay.py` reports every mismatched trial.
 
-## Freedom and exceptions
+## Freedoms and exceptions
 
 You may point `--dataset-root` at either the pinned HF snapshot or a newer
 local package. With a newer package, pass `--instruction-source package
@@ -116,3 +116,29 @@ local package. With a newer package, pass `--instruction-source package
 stored runs will then grade against the repaired contract and are expected to
 differ from the archived score. That difference is the repair, not a replay
 failure.
+
+For that newer package, use the gold self-check instead of an archived-answer
+replay:
+
+```bash
+python -m sandbox.gold_selftest \
+  --tree-root "$WORK/trees-codex/tasks-cc" \
+  --dataset-root data/v13-250-fix \
+  --scorer-image "$SCORER_IMAGE" \
+  --output "$WORK/gold-selftest.json"
+```
+
+It feeds each task's published `answer.json` back through that task's contract
+and requires `1.0`. This is a package self-consistency check, not a model
+result.
+
+To check that a rebuilt tree carries the same verifier contract as a prepared
+reference tree:
+
+```bash
+python -m sandbox.verify_contracts \
+  --rebuilt "$WORK/trees-codex" \
+  --reference /path/to/reference/task-trees \
+  --output "$WORK/contracts.json"
+```
+
