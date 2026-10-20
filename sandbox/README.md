@@ -107,6 +107,22 @@ release reproducible, pick one digest-pinned scorer, rescore the archived
 answers once, and publish that per-trial reference together with the scorer
 manifest hash. Future replays then have an exact target.
 
+## Second package
+
+The current Hugging Face fix package carries per-task `scoring.json` blocks
+with comparators the published scorer does not implement. Running the gold
+self-check with the published digest:
+
+- **243/250** golds score 1.0 after grading only the declared answer fields.
+- The remaining **7** tasks declare comparators implemented only by the local
+  `v13fix` scorer; all seven score 1.0 under that image.
+- One task shipped an `answer.json` whose `answer` carried a report-only field
+  absent from `answer.shape.fields`; filtering the answer to the declared
+  fields makes it pass.
+
+A release that ships those `scoring.json` blocks must pin a scorer that
+implements them. That is the same re-baseline the previous section calls for.
+
 ## Acceptance
 
 A trial passes when the scorer returns `status = scored` and its `score.value`
