@@ -52,6 +52,32 @@ python -m sandbox.export_contracts \
   --output contracts.jsonl
 ```
 
+## Measured result
+
+Measured on 2026-10-20 on a fresh H20 with the scoped archives, filtered to the
+v13-250 task set:
+
+| Arm | Exact trials | Mean delta |
+|---|---|---:|
+| Codex, `gpt-6.1-sol`, cc + ccmcp | 189/189 each | 0.0000 |
+| Claude Code, `deepseek-v4-flash`, cc + ccmcp, 3 reps | 194-197/205 each | +0.015 to +0.025 |
+
+The Claude Code difference is not distributed: 54 trials across the six jobs
+come from 12 tasks. On those tasks the archived run recorded
+`invalid_task_contract` (a missing tolerance) and scored 0; the current scorer
+derives the tolerance and grades the answer. The task trees themselves are
+intact: all 1,998 replayed trials carry a `task_checksum` that matches the
+current tree directory hash.
+
+**The old leaderboard is therefore not exactly reproducible.** The archived
+runs used a local scorer tag, `sci3d-scorer:harbor-0.20-v1-sv20260930` (image id
+`e7295...`), which is no longer present on either H20; the published digest
+`ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b...` is a different build,
+and the run-time source in the v11 `tree-builder` is a third. To make the
+release reproducible, pick one digest-pinned scorer, rescore the archived
+answers once, and publish that per-trial reference together with the scorer
+manifest hash. Future replays then have an exact target.
+
 ## Acceptance
 
 A trial passes when the scorer returns `status = scored` and its `score.value`

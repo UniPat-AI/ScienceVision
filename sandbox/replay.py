@@ -57,16 +57,38 @@ def _archived_score(trial: Path) -> float | None:
     return float(value) if isinstance(value, (int, float)) else None
 
 
-def _task_contract(task_roots: list[Path], task_id: str) -> Path:
+def _task_contract(task_roots: list[Path], task_id: str, route: str) -> Path:
+    other = "ccmcp" if route == "cc" else "cc"
     for root in task_roots:
         for candidate in (
+            root / f"tasks-{route}" / task_id / "task.toml",
             root / task_id / "task.toml",
-            root / "tasks-cc" / task_id / "task.toml",
-            root / "tasks-ccmcp" / task_id / "task.toml",
+            root / f"tasks-{other}" / task_id / "task.toml",
         ):
             if candidate.is_file():
                 return candidate
     raise FileNotFoundError(f"{task_id}: task.toml not found under {[str(r) for r in task_roots]}")
+
+
+def _route(job: str) -> str:
+    return "ccmcp" if "-ccmcp-" in job else "cc"
+
+
+def _task_id(trial: Path) -> str:
+    result = trial / "result.json"
+    if result.is_file():
+        payload = _read_json(result)
+        task_name = payload.get("task_name")
+        if isinstance(task_name, str) and task_name:
+            return task_name.rsplit("/", 1)[-1]
+    config = trial / "config.json"
+    if config.is_file():
+        path = (_read_json(config).get("task") or {}).get("path")
+        if path:
+            return Path(path).name
+    # Harbor truncates long trial names before the "__" suffix, so this is a
+    # last resort rather than the normal lookup.
+    return trial.name.split("__", 1)[0]
 
 
 def _score_trial(
@@ -74,10 +96,21 @@ def _score_trial(
     task_roots: list[Path],
     scorer_image: str,
     timeout: int,
+    route: str,
 ) -> dict[str, Any]:
-    task_id = trial.name.split("__", 1)[0]
-    contract = _task_contract(task_roots, task_id)
+    task_id = _task_id(trial)
     archived = _archived_score(trial)
+    try:
+        contract = _task_contract(task_roots, task_id, route)
+    except FileNotFoundError as exc:
+        return {
+            "trial": str(trial),
+            "task_id": task_id,
+            "status": "missing_contract",
+            "error": str(exc),
+            "archived": archived,
+            "matched": False,
+        }
     try:
         message = _final_message(trial / "agent" / "trajectory.json")
     except (OSError, ValueError) as exc:
@@ -181,7 +214,9 @@ def main(argv: list[str] | None = None) -> int:
 
     def run(item: tuple[str, Path]) -> dict[str, Any]:
         label, trial = item
-        record = _score_trial(trial, args.task_root, args.scorer_image, args.timeout)
+        record = _score_trial(
+            trial, args.task_root, args.scorer_image, args.timeout, _route(label)
+        )
         record["job"] = label
         return record
 
