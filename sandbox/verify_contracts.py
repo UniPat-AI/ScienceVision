@@ -66,19 +66,31 @@ def _tasks(root: Path) -> dict[str, Path]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rebuilt", type=Path, required=True)
-    parser.add_argument("--reference", type=Path, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument("--reference", type=Path)
+    source.add_argument("--contracts", type=Path)
     parser.add_argument("--output", type=Path)
     args = parser.parse_args(argv)
 
-    rebuilt = _tasks(args.rebuilt)
-    reference = _tasks(args.reference)
+    rebuilt = {task_id: _metadata(path) for task_id, path in _tasks(args.rebuilt).items()}
+    if args.contracts is not None:
+        reference = {
+            record["task_id"]: record
+            for record in (
+                json.loads(line)
+                for line in args.contracts.read_text(encoding="utf-8").splitlines()
+                if line.strip()
+            )
+        }
+    else:
+        reference = {task_id: _metadata(path) for task_id, path in _tasks(args.reference).items()}
     missing = sorted(set(reference) - set(rebuilt))
     extra = sorted(set(rebuilt) - set(reference))
 
     failures: list[dict[str, Any]] = []
     for task_id in sorted(set(rebuilt) & set(reference)):
-        new = _metadata(rebuilt[task_id])
-        old = _metadata(reference[task_id])
+        new = rebuilt[task_id]
+        old = reference[task_id]
         for field in _FIELDS:
             if new.get(field) != old.get(field):
                 failures.append({"task_id": task_id, "field": field})
