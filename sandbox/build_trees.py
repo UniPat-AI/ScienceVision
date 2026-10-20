@@ -43,16 +43,20 @@ def _resolve_asset(
     dataset_root: Path,
 ) -> dict[str, Any]:
     declared = str(asset.get("repo_path") or "")
-    candidates = [dataset_root / declared] if declared else []
     name = PurePosixPath(declared).name if declared else ""
+    if declared and (dataset_root / declared).is_file():
+        return {**asset, "repo_path": declared}
     if name:
-        candidates.extend(
-            dataset_root / domain / task_id / subdir / name
-            for subdir in ("assets", "drawings")
-        )
-    for candidate in candidates:
-        if candidate.is_file():
-            return {**asset, "repo_path": str(candidate.relative_to(dataset_root))}
+        for subdir in ("assets", "drawings"):
+            base = dataset_root / domain / task_id / subdir
+            if not base.is_dir():
+                continue
+            exact = base / name
+            if exact.is_file():
+                return {**asset, "repo_path": str(exact.relative_to(dataset_root))}
+            nested = sorted(base.rglob(name))
+            if nested:
+                return {**asset, "repo_path": str(nested[0].relative_to(dataset_root))}
     raise FileNotFoundError(f"{task_id}: asset not found: {declared or name}")
 
 

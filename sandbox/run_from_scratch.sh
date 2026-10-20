@@ -23,6 +23,7 @@ mkdir -p "$WORK"
 "$VENV/bin/pip" install --quiet --upgrade pip
 "$VENV/bin/pip" install --quiet -e "${REPO}[harbor]"
 
+pids=()
 for harness in codex claude-code; do
   for route in cc ccmcp; do
     "$VENV/bin/python" -m sandbox.build_trees \
@@ -30,8 +31,12 @@ for harness in codex claude-code; do
       --dataset-root "$DATASET" \
       --out "$WORK/trees-$harness" \
       --route "$route" \
-      --harness "$harness"
+      --harness "$harness" &
+    pids+=("$!")
   done
+done
+for pid in "${pids[@]}"; do
+  wait "$pid"
 done
 
 docker pull "$SCORER_IMAGE"
