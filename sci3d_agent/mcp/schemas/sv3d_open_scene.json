@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "oneOf": [
+    {"required": ["qid"]},
+    {"required": ["asset_path"]}
+  ],
+  "properties": {
+    "qid": {"type": "string"},
+    "asset_path": {"type": "string"},
+    "mask_path": {"type": "string"},
+    "asset_kind": {"enum": ["mesh", "ply", "nifti", "auto"], "default": "auto"},
+    "ttl_seconds": {"type": "integer", "default": 600, "minimum": 30, "maximum": 7200}
+  },
+  "additionalProperties": false
+}

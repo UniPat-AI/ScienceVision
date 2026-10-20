@@ -42,11 +42,10 @@ organisation cannot follow today:
 
 1. **The dataset must be reachable** at its canonical repository, and its license stated. The
    source card currently declares none.
-2. **The harness subtree must be consolidated and published.** The harbor drivers, adapters and
-   scorer comparators are developed across two private lines that have diverged; see the
-   revision note in [`resources/harness.json`](../resources/harness.json). The
-   [reproduction steps](evaluation.md#running-the-harness) describe the interface this
-   repository is to carry.
+2. **The harness subtree is vendored.** The pinned revision is in this repository; see the
+   revision note in [`resources/harness.json`](../resources/harness.json). The two development
+   lines it records still diverge: the vendored copy is the revision the reported results were
+   produced on, and later scorer fixes from either line are not included.
 3. **The container packages must be made public**, or the reader told how to request access.
 4. **A task export must be published.** Neither `index.jsonl` nor `normalized.json` is launchable
    harness input on its own, so the [task contract](evaluation.md#task-contract) needs a

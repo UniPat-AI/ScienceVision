@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path", "axis"],
+  "properties": {
+    "path": {"type": "string"},
+    "axis": {"enum": ["axial", "coronal", "sagittal"]},
+    "index": {"type": "integer", "minimum": 0},
+    "fraction": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "window": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "colormap": {"enum": ["gray", "bone", "hot", "viridis", "jet"], "default": "gray"},
+    "size": {"type": "integer", "minimum": 64, "maximum": 4096, "default": 512}
+  }
+}

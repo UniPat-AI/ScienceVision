@@ -1,0 +1,25 @@
+version = "1.0"
+
+[task]
+name = "sci3d/sv-medical-v1-0001"
+
+[metadata]
+domain = "medical"
+v_class = "V1"
+asset_path = "crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_001.nii.gz"
+asset_format = "nifti"
+answer_schema = { fields = ["plane", "slice_index", "window_level"], kind = "slice_selection" }
+scorer = { primary = "v1_slice_delta", secondary = [] }
+allowed_tools = ["sv3d_open_scene", "sv3d_get_state", "sv3d_camera_set_view", "sv3d_camera_orbit", "sv3d_camera_dolly", "sv3d_render", "sv3d_set_slice", "sv3d_toggle_mask", "sv_inspect_nifti"]
+forbidden_tools = []
+weights = { content = 0.7, process = 0.3 }
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 900.0
+network_mode = "public"
+
+[environment]
+build_timeout_sec = 600.0

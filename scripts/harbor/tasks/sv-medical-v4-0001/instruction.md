@@ -1,0 +1,1 @@
+Using the hippocampus_001 NIfTI volume, render left and right sagittal views of the hippocampus and answer the anatomical shape question (describe the curvature of the hippocampal body from head to tail) for each side. The two descriptions must agree once the left-right mirror transform is applied across the mid-sagittal plane.

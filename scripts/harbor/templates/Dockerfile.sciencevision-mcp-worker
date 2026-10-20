@@ -1,0 +1,68 @@
+# Private ScienceVision MCP HTTP worker. Build context is a deliberately
+# staged subset of the repository assembled by build_sciencevision_mcp_worker_image.sh.
+# This is never the model-facing agent image. The compatibility catalog below
+# contains only an asset registry and matched-QA index, never raw dataset trees
+# or viewer application code.
+FROM python:3.12-slim
+
+ARG SCI3D_SOURCE_REVISION=unknown
+LABEL org.opencontainers.image.revision="${SCI3D_SOURCE_REVISION}" \
+      org.opencontainers.image.title="ScienceVision MCP worker" \
+      io.sciencevision.image.role="mcp-worker"
+
+ARG PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+ARG PIP_TRUSTED_HOST=mirrors.aliyun.com
+# ``pyproject.toml`` currently enumerates only top-level packages, so a
+# non-editable wheel omits ``sci3d_agent.mcp``. Retain the worker-private
+# source tree on PYTHONPATH until package discovery is corrected upstream.
+# This is safe here: this image never becomes the model-facing service.
+ENV PIP_BREAK_SYSTEM_PACKAGES=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONPATH=/opt/sciencevision-src \
+    SV_REPO_ROOT=/opt/sciencevision-src \
+    SV_HTTP_PORT=8765 \
+    SV_HTTP_HOST=0.0.0.0 \
+    SV_MCP_SCHEMA_SHA256= \
+    SV_MCP_HEALTH_RECEIPT_PATH=/run/sciencevision-mcp/health.json \
+    SV_RENDER_CACHE=/var/lib/sciencevision-mcp/renders
+
+WORKDIR /opt/sciencevision-src
+COPY pyproject.toml README.md ./
+COPY sci3d_agent/ ./sci3d_agent/
+COPY harbor_adapters/ ./harbor_adapters/
+COPY sci3d_bench/ ./sci3d_bench/
+# Legacy catalog handlers resolve exactly these two registry locations beneath
+# SV_REPO_ROOT. They remain in this private worker only: no raw files named by
+# assets.json, other viewer content, or other datasets are staged here.
+COPY viewer/assets.json ./viewer/assets.json
+COPY datasets/_matched/ ./datasets/_matched/
+
+# Install the distribution for its console entry point. The worker executes
+# against its private source tree as well (see PYTHONPATH above), because the
+# current explicit setuptools package list does not include nested packages.
+# The agent-only image never receives either this source tree or raw assets.
+RUN pip install --no-cache-dir \
+        --index-url "${PIP_INDEX_URL}" --trusted-host "${PIP_TRUSTED_HOST}" \
+        "mcp>=1.0" "fastmcp>=0.5" \
+        nibabel trimesh numpy scipy scikit-image Pillow matplotlib \
+        "gemmi>=0.6,<0.8" "httpx>=0.27" \
+    && pip install --no-cache-dir --no-deps . \
+    && sciencevision-mcp --list-tools >/dev/null \
+    && python3 -c "import gemmi, nibabel, trimesh, numpy, scipy, skimage"
+
+COPY mcp_worker_entrypoint.py mcp_worker_healthcheck.py /opt/sciencevision/bin/
+RUN python3 -m py_compile /opt/sciencevision/bin/mcp_worker_entrypoint.py \
+        /opt/sciencevision/bin/mcp_worker_healthcheck.py \
+    && useradd --system --uid 10001 --create-home --home-dir /nonexistent sciencevision \
+    && mkdir -p /run/sciencevision-mcp /var/lib/sciencevision-mcp/renders /srv/sciencevision \
+    # Build checks execute as root; the actual HTTP worker runs as UID 10001.
+    # Staged source can preserve owner-only source modes, so hand its private
+    # code and entrypoint to the worker user before dropping privileges.
+    && chown -R sciencevision:sciencevision /opt/sciencevision-src /opt/sciencevision/bin /run/sciencevision-mcp /var/lib/sciencevision-mcp /srv/sciencevision
+
+USER sciencevision:sciencevision
+WORKDIR /srv/sciencevision
+EXPOSE 8765
+HEALTHCHECK --interval=2s --timeout=3s --start-period=20s --retries=30 CMD ["python3", "/opt/sciencevision/bin/mcp_worker_healthcheck.py"]
+ENTRYPOINT ["python3", "/opt/sciencevision/bin/mcp_worker_entrypoint.py"]

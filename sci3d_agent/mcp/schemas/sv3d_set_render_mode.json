@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["session_id", "mode"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "mode": {"enum": ["surface", "points", "volume", "mpr_axial", "mpr_sagittal", "mpr_coronal"]},
+    "point_size": {"type": "number", "minimum": 0.0},
+    "shading": {"enum": ["flat", "smooth", "pbr"]}
+  },
+  "additionalProperties": false
+}

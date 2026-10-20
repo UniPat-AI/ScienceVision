@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string"},
+    "include_label_hist": {"type": "boolean", "default": false}
+  }
+}

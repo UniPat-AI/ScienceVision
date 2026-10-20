@@ -1,0 +1,1 @@
+Load the kuka_iiwa URDF and render a short sequence after applying a 90-degree rotation to joint A4 (the elbow joint), annotating that joint's rotation axis and the moving forearm/wrist link in each frame.

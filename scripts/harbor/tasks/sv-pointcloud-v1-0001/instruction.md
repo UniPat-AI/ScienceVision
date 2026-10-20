@@ -1,0 +1,1 @@
+Load the laspy_simple LAS point cloud and select either a top-down (nadir) or oblique view that best exposes the dominant long-axis orientation and spatial footprint of the point distribution. Capture and return the camera parameters (position, target, up-vector, field of view) along with a screenshot of that view.

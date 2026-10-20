@@ -1,0 +1,21 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string"},
+    "view": {
+      "enum": ["front", "right", "back", "left", "top", "bottom", "iso"],
+      "description": "viewer-frame named view (cc2d-views/2); implies angle_frame=viewer_y_up"
+    },
+    "angle_frame": {
+      "enum": ["native_zup", "viewer_y_up"],
+      "default": "native_zup",
+      "description": "frame the azimuth/elevation are measured in; viewer_y_up applies the Y-up->Z-up rotation and the -90 degree azimuth shift"
+    },
+    "azimuth": {"type": "number", "default": 0.0},
+    "elevation": {"type": "number", "default": 20.0},
+    "format": {"type": "string", "description": "override extension: mmcif/cif/pdb/xyz/sdf"},
+    "size": {"type": "integer", "minimum": 64, "maximum": 4096, "default": 512}
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "required": [
+    "dataset"
+  ],
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "scanqa",
+        "sqa3d",
+        "m3d-refseg",
+        "m3d-seg-0005",
+        "embodiedscan-demo"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500,
+      "default": 50
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    }
+  },
+  "additionalProperties": false
+}

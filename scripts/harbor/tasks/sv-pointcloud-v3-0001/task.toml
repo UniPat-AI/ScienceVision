@@ -1,0 +1,25 @@
+version = "1.0"
+
+[task]
+name = "sci3d/sv-pointcloud-v3-0001"
+
+[metadata]
+domain = "pointcloud"
+v_class = "V3"
+asset_path = "crawl_data/pointcloud/las_samples/laspy_simple.las"
+asset_format = "las"
+answer_schema = { fields = ["camera", "annotation_bbox_or_point", "region_label"], kind = "visual_annotation" }
+scorer = { primary = "v3_visual_evidence", secondary = [] }
+allowed_tools = ["sv3d_open_scene", "sv3d_get_state", "sv3d_camera_set_view", "sv3d_camera_orbit", "sv3d_camera_dolly", "sv3d_render", "sv3d_render_canonical_views", "capture_annotation", "sv_inspect_pointcloud"]
+forbidden_tools = []
+weights = { content = 0.7, process = 0.3 }
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 900.0
+network_mode = "public"
+
+[environment]
+build_timeout_sec = 600.0

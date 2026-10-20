@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path", "format"],
+  "properties": {
+    "path": {"type": "string"},
+    "format": {"type": "string", "enum": ["urdf", "sdf"]}
+  }
+}

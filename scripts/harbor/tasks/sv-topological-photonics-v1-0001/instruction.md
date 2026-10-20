@@ -1,0 +1,1 @@
+Pan or zoom the band plot of nanobeam_band_d1_0p0 to display all photonic band traces across the full Brillouin zone k-space interval without clipping, ensuring the d1=0.0 parameter configuration is fully visible in the plotted region.

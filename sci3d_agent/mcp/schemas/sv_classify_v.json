@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_classify_v",
+  "type": "object",
+  "oneOf": [
+    {"required": ["qid"]},
+    {"required": ["record"]}
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "qid": {
+      "type": "string",
+      "description": "Matched-dataset qid; record is looked up via datasets/_matched/*.json."
+    },
+    "record": {
+      "type": "object",
+      "description": "Inline record (dataset, question, answer, extra?) — bypasses qid lookup.",
+      "properties": {
+        "dataset": {"type": "string"},
+        "question": {"type": "string"},
+        "answer": {"type": ["string", "null"]},
+        "extra": {"type": "object"}
+      }
+    },
+    "with_reasoning_knowledge": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include reasoning_class + knowledge_class in the output."
+    },
+    "model": {
+      "type": "string",
+      "default": "gemini-3.1-pro-preview",
+      "description": "Model id sent to Mindra proxy (OpenAI-compat). Default is the pilot model."
+    }
+  }
+}

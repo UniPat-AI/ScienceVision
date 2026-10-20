@@ -1,0 +1,25 @@
+version = "1.0"
+
+[task]
+name = "sci3d/sv-robotics-v3-0001"
+
+[metadata]
+domain = "robotics"
+v_class = "V3"
+asset_path = "crawl_data/robotics/urdf_sdf_samples/kuka_iiwa.urdf"
+asset_format = "urdf"
+answer_schema = { fields = ["frames", "annotations", "joint_axis_label"], kind = "visual_sequence_annotation" }
+scorer = { primary = "v3_visual_evidence", secondary = [] }
+allowed_tools = ["sv3d_open_scene", "sv3d_get_state", "sv3d_camera_set_view", "sv3d_camera_orbit", "sv3d_camera_dolly", "sv3d_render", "sv3d_render_canonical_views", "capture_annotation", "sv_inspect_urdf"]
+forbidden_tools = []
+weights = { content = 0.7, process = 0.3 }
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 900.0
+network_mode = "public"
+
+[environment]
+build_timeout_sec = 600.0

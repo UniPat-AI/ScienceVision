@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_rebuild_matched_index",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dry_run": {
+      "type": "boolean",
+      "default": true,
+      "description": "True (default) returns a diff/plan without touching the filesystem."
+    },
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Restrict to a subset of dataset names. Omit for all 5."
+    },
+    "output_dir": {
+      "type": "string",
+      "default": "datasets/_matched",
+      "description": "Destination dir for per-dataset JSON + index.json (repo-relative or absolute)."
+    }
+  }
+}

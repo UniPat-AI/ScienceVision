@@ -1,0 +1,15 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string"},
+    "view": {"enum": ["iso", "top", "front", "side"]},
+    "azimuth": {"type": "number"},
+    "elevation": {"type": "number"},
+    "max_points": {"type": "integer", "minimum": 100, "maximum": 5000000, "default": 500000},
+    "point_size": {"type": "number", "minimum": 0.1, "maximum": 50.0, "default": 1.5},
+    "color_by": {"enum": ["rgb", "intensity", "height"], "default": "height"},
+    "size": {"type": "integer", "minimum": 64, "maximum": 4096, "default": 512}
+  }
+}

@@ -39,13 +39,13 @@ recorded in the run receipt.
 
 ## Running the harness
 
-The harness installs as an extra of this distribution. It needs **Python 3.12 or later**,
-because Harbor 0.13 requires it, and a Docker-capable host with the rendering dependencies the
-selected assets need. [`resources/harness.json`](../resources/harness.json) records the revision
-the reported results were produced on, and its revision note records which private line that
-revision belongs to. Until the harness subtree lands in this repository, the commands below
-describe the interface rather than an installation that runs today; the
-[release status](project.md#release-status) lists this among the items still outstanding.
+The harness is vendored in this repository: `scripts/harbor/`, `harbor_adapters/`,
+`sci3d_bench/`, `sci3d_agent/` and `scorer_bundle/`. It installs as an extra of this
+distribution. It needs **Python 3.12 or later**, because Harbor requires it, and a
+Docker-capable host with the rendering dependencies the selected assets need.
+[`resources/harness.json`](../resources/harness.json) records the upstream revision the
+reported results were produced on. The `harbor` extra pins Harbor `v0.20.0`, the tag those
+runs used; Harbor is installed from its Git repository because it is not published on PyPI.
 
 ```bash
 python3.12 -m venv .venv

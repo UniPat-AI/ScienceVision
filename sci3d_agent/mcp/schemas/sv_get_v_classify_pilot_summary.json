@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_get_v_classify_pilot_summary",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": ["scanqa", "sqa3d", "m3d-refseg"],
+      "description": "Filter to one dataset; omit to return all three."
+    }
+  }
+}

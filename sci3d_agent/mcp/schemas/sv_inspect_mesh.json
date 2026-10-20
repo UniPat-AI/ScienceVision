@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string", "description": "Absolute path or repo-relative path to mesh file."}
+  }
+}

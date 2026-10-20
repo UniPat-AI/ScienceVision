@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "required": ["session_id"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "width": {"type": "integer", "default": 768, "minimum": 64, "maximum": 2048},
+    "height": {"type": "integer", "default": 768, "minimum": 64, "maximum": 2048},
+    "background": {"type": "string", "default": "#101418"},
+    "return": {"enum": ["png_b64", "url"], "default": "png_b64"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,1 @@
+Open the mmCIF file for PDB entry 1F88 and orient the camera so that all visible retinal cofactor binding regions within the bacteriorhodopsin-like structure can be inspected simultaneously with minimal mutual occlusion. Return the camera parameters (position, orientation, field of view) and a screenshot of this pose.

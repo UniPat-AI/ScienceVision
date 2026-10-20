@@ -1,0 +1,1 @@
+Examine the rendered slices of the 'hippocampus_001' NIfTI volume to classify the topology of the hippocampus mask. Determine its topological characteristics visually, without calling connected-component or morphology APIs, and provide evidence screenshots from the slices to support your classification.

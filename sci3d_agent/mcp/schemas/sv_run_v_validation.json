@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_run_v_validation",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "spec_path": {
+      "type": "string",
+      "description": "Override spec root directory; default = <repo_root>/spec/"
+    },
+    "v_levels": {
+      "type": "array",
+      "items": {"type": "string", "enum": ["V1", "V2", "V3", "V4", "V5", "V6"]},
+      "default": ["V1", "V2", "V3", "V4", "V5", "V6"]
+    }
+  }
+}

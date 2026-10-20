@@ -1,0 +1,1 @@
+Load the hippocampus_001 NIfTI volume and render the optimal coronal (and complementary sagittal) slice that best displays the hippocampal formation. Annotate the hippocampal head-body-tail boundary and delineate the bilateral medial-lateral extent of the structure. Submit the annotation geometry (voxel/world coordinates) along with a screenshot of the marked evidence view.

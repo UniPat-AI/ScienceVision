@@ -1,0 +1,17 @@
+# Prebuilt image for the PNG-only Codex baselines (sci3d-codex-2d).
+# It deliberately contains no Python, 3D inspection libraries, or MCP server.
+FROM node:22-slim
+
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' \
+        /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl bash procps ca-certificates ripgrep \
+    && rm -rf /var/lib/apt/lists/*
+
+# Pinned for the same reason as Dockerfile.codex: the blank tool-namespace
+# description 0.147.0 emits makes the provider 502, and the repair shim -- not a
+# downgrade -- is the fix. Pinning keeps npm from moving the agent under test.
+ARG CODEX_CLI_VERSION=0.147.0
+RUN npm install -g "@openai/codex@${CODEX_CLI_VERSION}" && codex --version
+
+WORKDIR /app

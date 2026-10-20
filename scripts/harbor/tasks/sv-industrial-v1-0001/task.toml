@@ -1,0 +1,25 @@
+version = "1.0"
+
+[task]
+name = "sci3d/sv-industrial-v1-0001"
+
+[metadata]
+domain = "industrial"
+v_class = "V1"
+asset_path = "crawl_data/industrial/khronos_gltf/BoomBox.glb"
+asset_format = "glb"
+answer_schema = { fields = ["azimuth", "elevation", "roll", "zoom"], kind = "camera_pose" }
+scorer = { primary = "v1_camera_delta", secondary = [] }
+allowed_tools = ["sv3d_open_scene", "sv3d_get_state", "sv3d_camera_set_view", "sv3d_camera_orbit", "sv3d_camera_dolly", "sv3d_render", "sv_inspect_mesh"]
+forbidden_tools = []
+weights = { content = 0.7, process = 0.3 }
+
+[agent]
+timeout_sec = 900.0
+
+[verifier]
+timeout_sec = 900.0
+network_mode = "public"
+
+[environment]
+build_timeout_sec = 600.0

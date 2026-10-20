@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "required": ["session_id"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "target": {
+      "oneOf": [
+        {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+        {"enum": ["bbox_center", "mask_centroid"]}
+      ]
+    },
+    "distance": {"type": "number", "exclusiveMinimum": 0.0},
+    "mask_id": {"type": "string"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path", "type"],
+  "properties": {
+    "path": {"type": "string"},
+    "type": {"type": "string", "enum": ["mmcif", "pdb", "sdf"]}
+  }
+}

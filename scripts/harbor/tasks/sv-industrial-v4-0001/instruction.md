@@ -1,0 +1,1 @@
+Render the BoomBox.glb model from multiple equivalent face-normal viewpoints (front, back, left, right) and verify whether the silhouette class of the boombox housing remains consistent after the expected 90-degree rotational transform about the vertical axis.

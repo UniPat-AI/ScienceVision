@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["dataset", "sample"],
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {"type": "string"},
+    "sample": {"type": "string"}
+  }
+}

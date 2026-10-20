@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["nifti_path", "mask_path", "axis"],
+  "properties": {
+    "nifti_path": {"type": "string"},
+    "mask_path": {"type": "string"},
+    "axis": {"enum": ["axial", "coronal", "sagittal"]},
+    "index": {"type": "integer", "minimum": 0},
+    "fraction": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+    "mask_id": {"type": ["integer", "string"]},
+    "alpha": {"type": "number", "minimum": 0.0, "maximum": 1.0, "default": 0.4},
+    "colormap": {"enum": ["jet", "hot", "viridis"], "default": "jet"},
+    "window": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "size": {"type": "integer", "minimum": 64, "maximum": 4096, "default": 512}
+  }
+}

@@ -1,0 +1,1 @@
+Using the V2 · 土星合相时土星环的可见性 asset, determine Saturn's ring tilt angle (as seen by the observer) at conjunction from two equivalent observer viewpoints — first in the asset's default heliocentric-ecliptic frame, then after applying an equivalent geocentric observer transform. Report both measured ring-opening angles and confirm they agree to within the asset's angular tolerance.

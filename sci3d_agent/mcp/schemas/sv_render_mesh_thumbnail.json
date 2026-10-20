@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string"},
+    "view": {"enum": ["iso", "front", "back", "left", "right", "top", "bottom"]},
+    "angle_frame": {
+      "enum": ["asset_native", "viewer_y_up"],
+      "default": "asset_native",
+      "description": "frame orbit azimuth/elevation are measured in; viewer_y_up shifts Z-up assets by -90 degrees so the plan samples the viewer's cameras"
+    },
+    "azimuth": {"type": "number"},
+    "elevation": {"type": "number"},
+    "size": {"type": "integer", "minimum": 64, "maximum": 4096, "default": 512},
+    "bg": {"type": "string"},
+    "with_axes": {"type": "boolean", "default": false}
+  }
+}

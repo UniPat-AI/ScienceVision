@@ -1,0 +1,12 @@
+{
+  "type": "object",
+  "required": ["session_id"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "visible": {"type": "boolean"},
+    "mask_id": {"type": "string"},
+    "colormap": {"enum": ["red", "jet", "viridis", "glasbey", "label"]},
+    "alpha": {"type": "number", "minimum": 0.0, "maximum": 1.0}
+  },
+  "additionalProperties": false
+}

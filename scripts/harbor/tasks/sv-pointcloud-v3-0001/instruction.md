@@ -1,0 +1,1 @@
+Load the laspy_simple.las point cloud and render it; annotate the requested ground or structure region cue by marking the visible extremal point (e.g., the highest-elevation point) and outlining the XY footprint boundary of the scanned region.

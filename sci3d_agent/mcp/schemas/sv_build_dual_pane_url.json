@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["nifti_path", "mask_path"],
+  "additionalProperties": false,
+  "properties": {
+    "nifti_path": {"type": "string"},
+    "mask_path": {"type": "string"}
+  }
+}

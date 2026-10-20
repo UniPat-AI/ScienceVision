@@ -109,8 +109,10 @@ Seven access settings, of which the paper reports three:
 | **3D + Vision MCP** | Vision MCP tools only; source artifacts withheld | No |
 | **2D + Scaffold ×1 / ×3 / ×6 / ×12** | That many fixed rendered views; no source artifacts | ×6 only |
 
-The harness installs as an extra of this distribution. It needs Python 3.12 or later, because
-Harbor 0.13 requires it, and a Docker-capable host.
+The harness is vendored in this repository (`scripts/harbor/`, `harbor_adapters/`,
+`sci3d_bench/`, `sci3d_agent/`, `scorer_bundle/`). It installs as an extra of this
+distribution. It needs Python 3.12 or later, because Harbor requires it, and a
+Docker-capable host. The `harbor` extra pins Harbor `v0.20.0`.
 
 ```bash
 python3.12 -m venv .venv

@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "properties": {
+    "domain": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "natural",
+        "synthetic"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500,
+      "default": 50
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    }
+  },
+  "additionalProperties": false
+}

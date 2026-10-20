@@ -1,0 +1,18 @@
+# Source-free Codex agent image for the HTTP ScienceVision MCP route.
+#
+# The worker image (Dockerfile.sciencevision-mcp-worker) is the only image that
+# contains sci3d_agent, scorer packages, or raw assets. This wrapper inherits
+# the pinned Codex CLI and inspection dependencies but does not install the
+# evaluation repository or an MCP executable.
+ARG BASE_IMAGE=sci3d-codex:latest
+FROM ${BASE_IMAGE}
+
+ARG SCI3D_SOURCE_REVISION=unknown
+LABEL org.opencontainers.image.revision="${SCI3D_SOURCE_REVISION}" \
+      org.opencontainers.image.title="ScienceVision Codex MCP agent-only" \
+      io.sciencevision.image.role="agent-only"
+
+ENV SV_MCP_TRANSPORT=streamable-http \
+    SV_MCP_HTTP_SURFACE=http://127.0.0.1:8765/mcp
+
+WORKDIR /app

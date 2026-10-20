@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_validate_matched_index",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "datasets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["scanqa", "sqa3d", "m3d-refseg", "m3d-seg-0005", "embodiedscan-demo"]
+      },
+      "description": "Subset of dataset names to validate. Omit to validate all listed in index.json."
+    }
+  }
+}

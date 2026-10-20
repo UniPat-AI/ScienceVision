@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "required": ["session_id", "enabled"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "enabled": {"type": "boolean"},
+    "origin": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "normal": {
+      "type": "array",
+      "items": {"type": "number"},
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "cap": {"type": "boolean"}
+  },
+  "additionalProperties": false
+}

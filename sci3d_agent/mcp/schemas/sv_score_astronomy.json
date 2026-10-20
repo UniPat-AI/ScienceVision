@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_score_astronomy",
+  "type": "object",
+  "required": ["question_id", "predicted_answer"],
+  "additionalProperties": false,
+  "properties": {
+    "question_id": {
+      "type": "string",
+      "description": "Question id from spec/astronomy/questions.json (e.g. 'saturn_ring_occlusion_2026_conjunction')."
+    },
+    "predicted_answer": {
+      "description": "Agent predicted answer. String for V2, object {helio_distance_au, max_rel_err} for V4, number for V6."
+    },
+    "ground_truth_version": {
+      "type": "string",
+      "enum": ["V2", "V4", "V6"],
+      "default": "V6",
+      "description": "V class to grade against (used as a filter hint; ground truth is computed live from ephemeris)."
+    }
+  }
+}

@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sciencevision"
+version = "0.1.0"
+description = "ScienceVision benchmark harness: harbor drivers, adapters, MCP tools and the deterministic scorer."
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+authors = [{ name = "UniPat AI" }]
+dependencies = [
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+# Harbor is not published on PyPI. Pin the tag the reported results were
+# produced on; a floating branch is not a reproducible harness.
+harbor = [
+    "harbor @ git+https://github.com/harbor-framework/harbor@v0.20.0",
+    "gemmi>=0.7,<0.8",
+]
+mcp = [
+    "mcp>=1.0",
+    "fastmcp>=0.5",
+    "trimesh",
+    "pyrender",
+    "pyvista",
+    "vtk",
+    "nibabel",
+    "mrcfile",
+    "nilearn",
+    "laspy",
+    "gemmi>=0.7,<0.8",
+    "yourdfpy",
+    "matplotlib",
+    "Pillow",
+    "numpy",
+    "scipy",
+    "scikit-image",
+    "pyopengl",
+    "pyopengl-accelerate",
+]
+dev = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-timeout",
+    "respx>=0.21",
+    "jsonschema==4.23.0",
+]
+
+[project.scripts]
+sciencevision-mcp = "sci3d_agent.mcp.server:main"
+
+[tool.setuptools.packages.find]
+include = ["sci3d_agent*", "sci3d_bench*", "harbor_adapters*", "scripts*"]
+
+[tool.setuptools.package-data]
+"scripts.harbor" = ["tasks/*/*", "templates/*"]
+"scripts.harbor.codex_agent" = ["*.toml.example"]
+"sci3d_agent" = ["mcp/schemas/*.json"]
+"harbor_adapters.sci3d" = ["rubrics/*.md"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

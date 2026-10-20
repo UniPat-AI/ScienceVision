@@ -1,0 +1,8 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["scene_id"],
+  "properties": {
+    "scene_id": {"type": "string", "description": "ScanNet scene id, e.g. 'scene0707_00'."}
+  }
+}

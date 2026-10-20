@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "scanqa",
+        "sqa3d",
+        "m3d-refseg",
+        "m3d-seg-0005",
+        "embodiedscan-demo"
+      ]
+    },
+    "qid": {"type": "string"}
+  }
+}

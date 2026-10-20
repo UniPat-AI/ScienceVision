@@ -9,7 +9,16 @@
   "source_license_at_pinned_revision": "Apache-2.0",
   "private": true,
   "canonical_repository": "UniPat-AI/ScienceVision",
-  "canonical_repository_status": "planned_home; the harness subtree is not published there yet",
+  "canonical_repository_status": "vendored in this repository",
+  "vendored_in": "UniPat-AI/ScienceVision",
+  "vendored_subtrees": [
+    "scripts/harbor",
+    "harbor_adapters",
+    "sci3d_bench",
+    "sci3d_agent",
+    "scorer_bundle"
+  ],
+  "vendored_license": "MIT",
   "entrypoints": {
     "matrix": "scripts.harbor.run_end2end",
     "task_builder": "scripts.harbor.qa_gen_to_tasks",
@@ -39,7 +48,7 @@
     "status": "export_required_not_end_to_end_validated",
     "index_is_runnable_input": false
   },
-  "revision_note": "The harbor drivers, adapters and scorer comparators are developed across two private lines that have diverged: the Science-Vision monorepo carries them under scripts/harbor/, harbor_adapters/ and sci3d_bench/scorers/, while the eval-baseline line of BabyVision-v2 carries the continuous September-October work and the isolated scorer_bundle. The commit above pins the line the reported results were produced on, and at that revision the source declares Apache-2.0. Consolidating the two lines and relicensing the result under this repository's MIT license are preconditions for publishing the harness.",
+  "revision_note": "The harbor drivers, adapters and scorer comparators were developed across two private lines that have diverged: the Science-Vision monorepo carries them under scripts/harbor/, harbor_adapters/ and sci3d_bench/scorers/, while the eval-baseline line of BabyVision-v2 carries the continuous September-October work and the isolated scorer_bundle. The commit above pins the line the reported results were produced on, and at that revision the source declares Apache-2.0. That revision is vendored here under the MIT license; later scorer fixes from either line are not included.",
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."
 }

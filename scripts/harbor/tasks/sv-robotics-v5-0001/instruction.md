@@ -1,0 +1,1 @@
+Navigate the 3D viewer or manipulate the KUKA iiwa's joints to reach a pose and camera view that clearly reveals the requested kinematic relationship between its links, using no more than the allowed number of tool calls.

@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "required": [
+    "version"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "enum": [
+        "V2",
+        "V4",
+        "V6"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

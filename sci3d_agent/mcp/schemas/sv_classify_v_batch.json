@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "sv_classify_v_batch",
+  "type": "object",
+  "required": ["dataset"],
+  "additionalProperties": false,
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "scanqa",
+        "sqa3d",
+        "m3d-refseg",
+        "m3d-seg-0005",
+        "embodiedscan-demo",
+        "astronomy"
+      ]
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Hard cap on number of records to classify."
+    },
+    "sample": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMaximum": 1,
+      "description": "Fraction of eligible records to sample (deterministic via seed)."
+    },
+    "output_jsonl": {
+      "type": "string",
+      "description": "Output JSONL path; defaults to scripts/v_classify/out/<dataset>__<UTC>.jsonl."
+    },
+    "with_reasoning_knowledge": {
+      "type": "boolean",
+      "default": true
+    },
+    "model": {
+      "type": "string",
+      "default": "gemini-3.1-pro-preview"
+    },
+    "seed": {
+      "type": "integer",
+      "default": 0
+    },
+    "max_concurrency": {
+      "type": "integer",
+      "default": 1,
+      "minimum": 1,
+      "maximum": 8
+    }
+  }
+}

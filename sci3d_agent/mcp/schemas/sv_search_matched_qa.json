@@ -1,0 +1,45 @@
+{
+  "type": "object",
+  "properties": {
+    "dataset": {
+      "type": "string",
+      "enum": [
+        "scanqa",
+        "sqa3d",
+        "m3d-refseg",
+        "m3d-seg-0005",
+        "embodiedscan-demo"
+      ]
+    },
+    "split": {
+      "type": "string"
+    },
+    "scene_or_case_id": {
+      "type": "string"
+    },
+    "asset_kind": {
+      "type": "string"
+    },
+    "has_mask": {
+      "type": "boolean"
+    },
+    "question_contains": {
+      "type": "string"
+    },
+    "qid_prefix": {
+      "type": "string"
+    },
+    "limit": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500,
+      "default": 50
+    },
+    "offset": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0
+    }
+  },
+  "additionalProperties": false
+}

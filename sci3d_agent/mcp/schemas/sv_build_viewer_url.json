@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "required": ["asset_path"],
+  "additionalProperties": false,
+  "properties": {
+    "asset_path": {"type": "string"},
+    "viewer": {
+      "type": "string",
+      "enum": [
+        "gltf",
+        "niivue",
+        "cornerstone",
+        "molstar",
+        "pointcloud",
+        "gdsii",
+        "urdf",
+        "occt",
+        "usda",
+        "usdz",
+        "field3d",
+        "bandplot",
+        "mpbctl",
+        "saturn",
+        "photonics"
+      ]
+    },
+    "overlay": {"type": "string"},
+    "type": {"type": "string", "enum": ["mmcif", "pdb", "sdf", "mol2"]},
+    "format": {"type": "string", "enum": ["urdf", "sdf"]},
+    "series": {"type": "string"}
+  }
+}

@@ -1,0 +1,18 @@
+# Source-free Claude Code agent image for the HTTP ScienceVision MCP route.
+#
+# The MCP worker is a distinct compose service. Keeping repository source and
+# raw assets out of this image is intentional: no shell command available to
+# the model can inspect evaluator code or worker cache files from the agent
+# filesystem.
+ARG BASE_IMAGE=sci3d-claude-code:latest
+FROM ${BASE_IMAGE}
+
+ARG SCI3D_SOURCE_REVISION=unknown
+LABEL org.opencontainers.image.revision="${SCI3D_SOURCE_REVISION}" \
+      org.opencontainers.image.title="ScienceVision Claude Code MCP agent-only" \
+      io.sciencevision.image.role="agent-only"
+
+ENV SV_MCP_TRANSPORT=streamable-http \
+    SV_MCP_HTTP_SURFACE=http://127.0.0.1:8765/mcp
+
+WORKDIR /app

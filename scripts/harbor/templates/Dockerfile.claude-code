@@ -1,0 +1,44 @@
+# Prebuilt agent image for the Claude Code CLI harness (sci3d-claude-code).
+#
+# harbor's claude-code agent runs the real `claude` CLI *inside* the per-task
+# container and, on a Debian image, its install() bootstraps the CLI via
+# `curl https://downloads.claude.ai/...` — which is blocked on the H20 host
+# (connect timeout). Two tricks make it work offline-ish:
+#   1. Pre-install the CLI here (npm reaches its default registry fine).
+#   2. Drop a stub `apk` so the agent's install() takes its apk branch
+#      (`npm install -g @anthropic-ai/claude-code`, idempotent against the
+#      pre-installed copy) instead of the blocked curl branch.
+# The Aliyun Debian mirror avoids the slow/stalling default mirror under the
+# host's Docker proxy.
+#
+# Build once, reused by every claude-code task (referenced as
+# `FROM sci3d-claude-code:latest` in each task's environment/Dockerfile):
+#   bash scripts/harbor/templates/build_claude_code_image.sh
+FROM node:20-slim
+
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' \
+        /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl bash procps ca-certificates python3 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g @anthropic-ai/claude-code && claude --version
+
+# Stub apk -> install() takes the npm branch, not the blocked curl branch.
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/apk && chmod 755 /usr/local/bin/apk
+
+# Slim 3D-inspection libs so this bare coding agent can nibabel.load /
+# trimesh.load the asset COPYd to /data (build_harbor_tasks stages it) WITHOUT a
+# per-run pip install — the same slim set the claude-code-mcp image installs, so
+# the two harnesses differ only by MCP-tool availability, not by what the agent
+# can read. The GL stack (pyrender / vtk) is deliberately omitted (GL-less
+# container). The Aliyun PyPI mirror avoids the stalling default under the host
+# Docker proxy.
+ARG PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/
+ARG PIP_TRUSTED_HOST=mirrors.aliyun.com
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+RUN pip3 install --no-cache-dir \
+        --index-url "${PIP_INDEX_URL}" --trusted-host "${PIP_TRUSTED_HOST}" \
+        nibabel trimesh numpy scipy scikit-image Pillow matplotlib
+
+WORKDIR /app

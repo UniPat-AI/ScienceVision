@@ -1,0 +1,9 @@
+{
+  "type": "object",
+  "required": ["session_id", "factor"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "factor": {"type": "number", "minimum": 0.05, "maximum": 20}
+  },
+  "additionalProperties": false
+}

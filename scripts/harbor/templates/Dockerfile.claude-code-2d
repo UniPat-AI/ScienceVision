@@ -1,0 +1,28 @@
+# Prebuilt agent image for the 2D image multi-view harness (sci3d-claude-code-2d).
+#
+# Baseline ①: a vision agent that reasons over pre-rendered PNG views of a 3D
+# asset and MUST NOT touch the raw 3D file. This image therefore ships ONLY the
+# `claude` CLI (which reads PNGs natively) — deliberately NO 3D-inspection libs
+# and NO sciencevision MCP server, so even a leaked 3D
+# file would be unreadable. The task's PNG views are COPYd to /data by each
+# task's environment/Dockerfile (COPY views/ /data/).
+#
+# Same offline CLI-bootstrap tricks as sci3d-claude-code (pre-install via npm +
+# stub apk so install() skips the blocked downloads.claude.ai curl branch).
+#
+# Build once:
+#   bash scripts/harbor/templates/build_claude_code_2d_image.sh
+FROM node:20-slim
+
+RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' \
+        /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        curl bash procps ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install -g @anthropic-ai/claude-code && claude --version
+
+# Stub apk -> install() takes the npm branch, not the blocked curl branch.
+RUN printf '#!/bin/sh\nexit 0\n' > /usr/local/bin/apk && chmod 755 /usr/local/bin/apk
+
+WORKDIR /app

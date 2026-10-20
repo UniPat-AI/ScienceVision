@@ -10,3 +10,10 @@ dataset snapshot does not declare a dataset license.
 
 Third-party components bundled in this repository or in its container images keep their
 own licenses and attributions.
+
+The evaluation harness under `scripts/harbor/`, `harbor_adapters/`, `sci3d_bench/`,
+`sci3d_agent/` and `scorer_bundle/` is vendored from `UniPat-AI/BabyVision-v2` at
+commit b47f13ac5abb54b9e287ff3131ae7e29771ec53e, where it was distributed under the
+Apache License 2.0. UniPat AI, the copyright owner of that source, relicenses this
+vendored copy under the MIT License. A copy of the Apache License 2.0 is retained in
+`LICENSES/Apache-2.0.txt` for provenance.

@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "required": [
+    "dataset",
+    "sample"
+  ],
+  "properties": {
+    "dataset": {
+      "type": "string"
+    },
+    "sample": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "split": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,1 @@
+Under the default fixed pose of the KUKA iiwa robot (kuka_iiwa.urdf), judge whether the end-effector link (iiwa_link_7 or the tool flange) visually occludes the base link (iiwa_link_0) when viewed from a standard frontal or isometric perspective.

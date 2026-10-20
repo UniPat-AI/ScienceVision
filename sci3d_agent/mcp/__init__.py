@@ -1,0 +1,1 @@
+"""ScienceVision MCP server package."""

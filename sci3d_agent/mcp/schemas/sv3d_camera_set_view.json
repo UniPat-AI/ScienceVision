@@ -1,0 +1,10 @@
+{
+  "type": "object",
+  "required": ["session_id", "view"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "view": {"enum": ["front", "back", "left", "right", "top", "bottom", "iso", "reset"]},
+    "fit_bbox": {"type": "boolean", "default": true}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,16 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["path"],
+  "properties": {
+    "path": {"type": "string"},
+    "views": {
+      "type": "array",
+      "items": {"enum": ["iso", "front", "back", "left", "right", "top", "bottom"]},
+      "minItems": 1,
+      "maxItems": 8,
+      "default": ["front", "back", "left", "right", "top", "iso"]
+    },
+    "size_per_tile": {"type": "integer", "minimum": 64, "maximum": 2048, "default": 384}
+  }
+}

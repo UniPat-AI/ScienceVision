@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "required": ["session_id", "d_azimuth_deg", "d_elevation_deg"],
+  "properties": {
+    "session_id": {"type": "string"},
+    "d_azimuth_deg": {"type": "number"},
+    "d_elevation_deg": {"type": "number"},
+    "d_roll_deg": {"type": "number", "default": 0.0}
+  },
+  "additionalProperties": false
+}
