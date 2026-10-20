@@ -1,7 +1,7 @@
 # Dataset
 
-The release is **`v13-250`**: 250 expert-authored questions about scientific 3D data, 50 each in
-architecture, biology, chemistry, mechanical CAD, and medical imaging, shipped with the source
+The release is **ScienceVision**: 250 expert-authored questions about scientific 3D data, 50 each
+in architecture, biology, chemistry, mechanical CAD, and medical imaging, shipped with the source
 assets, rendered views, expert answers, and recorded trajectories they were selected on.
 
 ## Download
@@ -26,7 +26,7 @@ For a metadata-only look before committing to the full download, fetch the index
 release's own change ledger:
 
 ```bash
-hf download UnipatAI/ScienceVision README.md index.jsonl v13_250_changes.md \
+hf download UnipatAI/ScienceVision README.md index.jsonl CHANGES.md \
   --type dataset --revision <commit> --local-dir data/sciencevision
 ```
 
@@ -34,8 +34,8 @@ hf download UnipatAI/ScienceVision README.md index.jsonl v13_250_changes.md \
 
 ```text
 index.jsonl                  one row per task: selection metadata and archived outcomes
-v13_250_changes.md           the swap ledger for this release
-v13_250_task_ids.txt         all 250 task ids, one per line
+CHANGES.md                   the change ledger for this release
+task_ids.txt                 all 250 task ids, one per line
 <domain>/<task_id>/
   question.md                the question sheet a human reads
   answer.json                the expert ground truth, with its answer schema
@@ -67,15 +67,15 @@ harness needs.
 
 ## What this release is
 
-`v13-250` is `v12-250` with **13 tasks replaced**: eight architecture and five medical. Every
-swap keeps the same `sub_domain`, so all 22 buckets and all five domain counts are unchanged.
-The other 237 tasks are byte-identical to `v12-250`. The reasons and the full swap ledger are in
-[`v13_250_changes.md`](https://huggingface.co/datasets/UnipatAI/ScienceVision) in the dataset
-itself.
+This revision replaces **13 tasks** of the previous 250-question set: eight architecture and five
+medical. Every swap keeps the same `sub_domain`, so all 22 buckets and all five domain counts are
+unchanged. The other 237 tasks are byte-identical to the previous set. The reasons and the full
+change ledger are in `CHANGES.md` in the dataset itself.
 
 Each `index.jsonl` row records its own provenance in `source`: a task either carries over from
-an earlier evaluation or was swapped in at `v12` or `v13`. A row naming a `swapped_in_for` value
-carries the id of the task it replaced.
+an earlier measurement or was swapped in at a later one. A row naming a `swapped_in_for` value
+carries the id of the task it replaced. The `set` and `source` values are historical
+measurement-batch labels; they are not release names.
 
 ## Known limitations
 

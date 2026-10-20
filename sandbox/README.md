@@ -14,7 +14,7 @@ extraction difference, not sampling noise.
 | Input | What it must contain |
 |---|---|
 | Repository | this checkout, installed with `pip install -e ".[harbor]"` (Python 3.12) |
-| Dataset | a `v13-250` package: `<domain>/<task_id>/assets/...` and `normalized.json` |
+| Dataset | a ScienceVision package: `<domain>/<task_id>/assets/...` and `normalized.json` |
 | Contracts | one JSONL record per task, from `sandbox/export_contracts.py` |
 | Archived jobs | Harbor job directories holding `*/<task>/agent/trajectory.json` and `verifier/sci3d_scores.json` |
 | Scorer | a digest-pinned image, e.g. `ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b...` |
@@ -28,13 +28,13 @@ prepared tree; `build_trees.py` joins them back to the dataset.
 
 ```bash
 export WORK=/nvme1n1p3/$USER/sv-sandbox-$(date +%Y%m%d)
-export DATASET=/path/to/v13-250
+export DATASET=/path/to/sciencevision
 export CONTRACTS=/path/to/contracts.jsonl
 export SCORER_IMAGE=ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
 
 ./sandbox/run_from_scratch.sh \
-  /path/to/run/jobs/job-gpt-6.1-sol-cc-v11 \
-  /path/to/run/jobs/job-deepseek-v4-flash-cc-r1
+  /path/to/run/jobs/job-<model>-cc-r1 \
+  /path/to/run/jobs/job-<model>-ccmcp-r1
 ```
 
 The script creates a virtual environment, installs the harness, builds the
@@ -45,17 +45,17 @@ To export contracts from prepared trees:
 
 ```bash
 python -m sandbox.export_contracts \
-  --tree-root /path/to/v11-tree/tasks-cc \
-  --tree-root /path/to/v12-tree/tasks-cc \
-  --tree-root /path/to/v13-tree/tasks-cc \
-  --task-ids /path/to/v13_250_task_ids.txt \
+  --tree-root /path/to/reference-a/tasks-cc \
+  --tree-root /path/to/reference-b/tasks-cc \
+  --tree-root /path/to/reference-c/tasks-cc \
+  --task-ids /path/to/task_ids.txt \
   --output contracts.jsonl
 ```
 
 ## Measured result
 
 Measured on 2026-10-20 on a fresh H20 with the scoped archives, filtered to the
-v13-250 task set:
+250-task set:
 
 | Arm | Exact trials | Mean delta |
 |---|---|---:|
@@ -73,7 +73,7 @@ current tree directory hash.
 runs used a local scorer tag, `sci3d-scorer:harbor-0.20-v1-sv20260930` (image id
 `e7295...`), which is no longer present on either H20; the published digest
 `ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b...` is a different build,
-and the run-time source in the v11 `tree-builder` is a third. To make the
+and the run-time source in the reference `tree-builder` is a third. To make the
 release reproducible, pick one digest-pinned scorer, rescore the archived
 answers once, and publish that per-trial reference together with the scorer
 manifest hash. Future replays then have an exact target.
@@ -90,10 +90,10 @@ accessible archives do not cover all 250 tasks for every arm:
 
 | Arm | Accessible archived segment |
 |---|---|
-| Codex, `gpt-6.1-sol` | 205 v11-native tasks, one rep per route |
-| Claude Code, `deepseek-v4-flash` / `glm-5.3-flash` | 205 v11-native tasks, three reps per route |
-| Either harness, 32 v12 swap-ins | GPT: claude-code archive; deepseek/glm: scores only |
-| Either harness, 13 v13 swap-ins | GPT: archived separately; deepseek/glm: scores only |
+| Codex, `gpt-6.1-sol` | 205 tasks from the reference run, one rep per route |
+| Claude Code, `deepseek-v4-flash` / `glm-5.3-flash` | 205 tasks from the reference run, three reps per route |
+| Either harness, 32 swapped-in tasks | GPT: claude-code archive; deepseek/glm: scores only |
+| Either harness, 13 swapped-in tasks | GPT: archived separately; deepseek/glm: scores only |
 
 The 45 swap-ins are not a harness failure. GPT's published row already crosses
 harnesses on those tasks, and the deepseek/glm job directories for them live on
@@ -123,7 +123,7 @@ replay:
 ```bash
 python -m sandbox.gold_selftest \
   --tree-root "$WORK/trees-codex/tasks-cc" \
-  --dataset-root data/v13-250-fix \
+  --dataset-root data/sciencevision \
   --scorer-image "$SCORER_IMAGE" \
   --output "$WORK/gold-selftest.json"
 ```

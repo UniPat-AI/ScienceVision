@@ -5,7 +5,7 @@
   "created_at": "2026-10-06T00:00:00Z",
   "description": "Synthetic format example. Invented task IDs and model results; no model run was performed. Resource revisions are illustrative real references.",
   "dataset": {
-    "repository": "SueMintony/ScienceVision-v13-250",
+    "repository": "UnipatAI/ScienceVision",
     "revision_name": "f100c5b5a81b395673618054e6ee7894ec3b2417",
     "commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
     "index_sha256": "f02ae32169ec2bb081cdfe149f88a6abb15ec3bedd875a99eb23cb46ec8ed69d"

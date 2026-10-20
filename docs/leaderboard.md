@@ -68,10 +68,9 @@ Per-task comparisons hold within a batch, not across batches.
 
 ## Question set
 
-This comparison uses a proposed 250-question set, `v13-250`. 202 questions carry over from an
-earlier evaluation, 32 were replaced in the previous round, and 13 more were replaced in this
-one. The 13 replacement questions were measured on all twelve models; the other 237 rows are
-inherited. See the [dataset guide](dataset.md) for the release itself.
+This comparison uses the 250-question set. 202 questions carry over from an earlier evaluation,
+32 were replaced in the previous round, and 13 more were replaced in this one. The 13 replacement
+questions were measured on all twelve models; the other 237 rows are inherited.
 
 ## Version drift
 

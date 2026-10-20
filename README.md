@@ -28,7 +28,7 @@ never as a score of zero. See [the scoring standard](docs/evaluation.md#scoring-
 
 ## 1. Dataset
 
-**`v13-250`** holds 250 tasks, 50 per domain, with source assets, rendered views, expert answers
+**ScienceVision** holds 250 tasks, 50 per domain, with source assets, rendered views, expert answers
 and the recorded expert sessions they were selected on. It is gated: authenticate with an account
 that has been granted access.
 
@@ -47,10 +47,10 @@ are tied to that snapshot.
 Read the question and answer from `<domain>/<task_id>/normalized.json`. It is the one record
 every task has. `answer.json` carries the expert ground truth in the form the scorer reads.
 
-`v13-250` replaces 13 of `v12-250`'s tasks, keeping every sub-domain count unchanged. The
-[dataset guide](docs/dataset.md) covers the layout, the records, and the four declared
-limitations. Read them before quoting a score: two of them change what a per-task comparison
-means.
+This revision replaces 13 tasks of the previous 250-question set, keeping every sub-domain count
+unchanged. The [dataset guide](docs/dataset.md) covers the layout, the records, and the four
+declared limitations. Read them before quoting a score: two of them change what a per-task
+comparison means.
 
 ## 2. Model comparison
 

@@ -2,14 +2,16 @@
   "schema_version": "sciencevision.dataset_reference.v1",
   "verified_at": "2026-10-16T01:20:00+00:00",
   "status": "release_snapshot_selected",
+  "published_name": "ScienceVision",
   "source": {
-    "repository": "SueMintony/ScienceVision-v13-250",
-    "url": "https://huggingface.co/datasets/SueMintony/ScienceVision-v13-250/tree/f100c5b5a81b395673618054e6ee7894ec3b2417",
+    "repository": null,
+    "url": null,
     "revision_type": "commit",
     "revision_name": "f100c5b5a81b395673618054e6ee7894ec3b2417",
     "commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
     "private": true,
-    "gated": false
+    "gated": false,
+    "snapshot_note": "The snapshot was staged privately before the canonical repository existed. The commit and the content hashes below are the immutable identifiers; the staging repository name is not part of the release."
   },
   "canonical_repository": "UnipatAI/ScienceVision",
   "canonical_repository_status": "planned_home; the snapshot above is the version this record verifies",
@@ -26,8 +28,8 @@
   "index_sha256": "f02ae32169ec2bb081cdfe149f88a6abb15ec3bedd875a99eb23cb46ec8ed69d",
   "layout": {
     "index": "index.jsonl",
-    "change_ledger": "v13_250_changes.md",
-    "task_ids": "v13_250_task_ids.txt",
+    "change_ledger": "CHANGES.md",
+    "task_ids": "task_ids.txt",
     "task": "<domain>/<task_id>/",
     "question": "<domain>/<task_id>/question.md",
     "question_answer_normalized": "<domain>/<task_id>/normalized.json",
@@ -90,9 +92,9 @@
     "full_harness_reproduction": false
   },
   "known_limitations": [
-    "v13 replaces 13 of v12's tasks; per-task comparisons hold within a measurement batch, not across batches.",
-    "The medical swap-ins are a single-rep pilot; their three-rep run was still in flight when this snapshot was assembled.",
-    "The 13 outgoing architecture tasks carry v11 measurements, so architecture rows in index.jsonl mix two batches.",
+    "This revision replaces 13 tasks of the previous set; per-task comparisons hold within a measurement batch, not across batches.",
+    "The 13 incoming medical tasks are a single-rep pilot; their three-rep run was still in flight when this snapshot was assembled.",
+    "The 13 outgoing architecture tasks carry earlier measurements, so architecture rows in index.jsonl mix two batches.",
     "Some golds are prose or identifier strings graded verbatim; the scorer-side widening for two of those families is implemented but not deployed in this snapshot.",
     "index.jsonl records selection metadata and archived outcomes, not a runnable harness input.",
     "The source card declares no license."

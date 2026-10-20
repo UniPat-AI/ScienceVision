@@ -8,7 +8,7 @@ settings: **3D + Scaffold**, **3D + Scaffold + Vision MCP**, **3D + Vision MCP**
 
 ## The release
 
-The dataset is **`v13-250`**: 250 tasks, 50 in each of five domains.
+The dataset is **ScienceVision**: 250 tasks, 50 in each of five domains.
 
 | Domain identifier | Tasks | Example subject matter |
 |---|---:|---|

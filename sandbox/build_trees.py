@@ -6,9 +6,9 @@ does not carry: asset roles, answer schema, scorer configuration and ground
 truth. This script joins those contracts to a dataset root and emits the
 ``tasks-<route>`` tree that Harbor consumes.
 
-Both dataset layouts used by the release are supported: the ``v13-250``
-package (``<domain>/<task_id>/``) and any root that resolves the declared
-``repo_path`` directly.
+Both dataset layouts used by the release are supported: the ScienceVision
+250-task package (``<domain>/<task_id>/``) and any root that resolves the
+declared ``repo_path`` directly.
 """
 from __future__ import annotations
 
