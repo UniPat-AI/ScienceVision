@@ -67,12 +67,12 @@ def _package_instruction(dataset_root: Path, domain: str, task_id: str) -> str:
     return str(json.loads(path.read_text(encoding="utf-8")).get("question") or "")
 
 
-def _package_gold(dataset_root: Path, domain: str, task_id: str) -> Any:
+def _package_answer(dataset_root: Path, domain: str, task_id: str) -> tuple[Any, Any]:
     path = dataset_root / domain / task_id / "answer.json"
     if not path.is_file():
-        return None
+        return None, None
     payload = json.loads(path.read_text(encoding="utf-8"))
-    return {"value": payload.get("answer")}
+    return payload.get("answer"), payload.get("shape")
 
 
 def _package_scorer(
@@ -122,18 +122,24 @@ def _record(
         raise ValueError(f"{task_id}: contract has no assets")
 
     instruction = str(contract.get("instruction") or "")
+    answer_schema = contract.get("answer_schema")
     ground_truth = contract.get("ground_truth")
     scorer = contract.get("scorer") or {"primary": "exact_match", "secondary": []}
     if instruction_source == "package":
         instruction = _package_instruction(dataset_root, domain, task_id) or instruction
     if gold_source == "package":
-        ground_truth = _package_gold(dataset_root, domain, task_id) or ground_truth
+        package_gold, package_shape = _package_answer(dataset_root, domain, task_id)
+        if package_gold is not None:
+            ground_truth = {"value": package_gold}
+        if isinstance(package_shape, dict) and package_shape.get("fields"):
+            answer_schema = package_shape
         scorer = _package_scorer(dataset_root, domain, task_id, scorer)
 
     return {
         **contract,
         "domain": domain,
         "instruction": instruction,
+        "answer_schema": answer_schema,
         "ground_truth": ground_truth,
         "scorer": scorer,
         "assets": resolved,
