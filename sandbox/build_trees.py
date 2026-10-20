@@ -129,6 +129,9 @@ def _record(
         instruction = _package_instruction(dataset_root, domain, task_id) or instruction
     if gold_source == "package":
         package_gold, package_shape = _package_answer(dataset_root, domain, task_id)
+        fields = package_shape.get("fields") if isinstance(package_shape, dict) else None
+        if isinstance(package_gold, dict) and isinstance(fields, list):
+            package_gold = {key: package_gold[key] for key in fields if key in package_gold}
         if package_gold is not None:
             ground_truth = {"value": package_gold}
         if isinstance(package_shape, dict) and package_shape.get("fields"):
