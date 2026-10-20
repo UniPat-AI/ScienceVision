@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2121" height="365" viewBox="0 0 2121 365">
+  <rect width="2121" height="365" fill="#ffffff"/>
+  <rect x="8" y="8" width="2105" height="349" rx="40" fill="#ffffff" stroke="#000000" stroke-width="7"/>
+
+  <g font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700" font-size="230" fill="#000000">
+    <text x="80" y="275" fill="#1869FE">Science</text>
+    <text x="952" y="275" fill="#1869FE">V</text>
+    <text x="1097" y="275">isi</text>
+    <text x="1489" y="275">n</text>
+  </g>
+  <circle cx="1409" cy="210" r="72" fill="none" stroke="#1869FE" stroke-width="9" stroke-dasharray="22 14" stroke-linecap="round"/>
+
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1830 62 L1850 47 M1825 82 L1845 67 M1848 37 L1860 22" stroke="#1869FE" stroke-width="5"/>
+
+    <path d="M1960 62 L1960 30" stroke="#000000" stroke-width="7"/>
+    <circle cx="1960" cy="22" r="11" fill="#1869FE" stroke="#000000" stroke-width="5"/>
+    <circle cx="1957" cy="19" r="3.5" fill="#ffffff"/>
+
+    <rect x="1900" y="62" width="160" height="125" rx="34" fill="#ffffff" stroke="#000000" stroke-width="7"/>
+    <rect x="1882" y="105" width="18" height="58" rx="9" fill="#1869FE" stroke="#000000" stroke-width="5"/>
+    <rect x="2060" y="105" width="18" height="58" rx="9" fill="#1869FE" stroke="#000000" stroke-width="5"/>
+    <ellipse cx="1927" cy="128" rx="13" ry="19" fill="#000000"/>
+    <ellipse cx="1993" cy="128" rx="13" ry="19" fill="#000000"/>
+    <circle cx="1930" cy="121" r="4" fill="#ffffff"/>
+    <circle cx="1996" cy="121" r="4" fill="#ffffff"/>
+    <path d="M1942 166 Q1960 176 1978 166" fill="none" stroke="#000000" stroke-width="6"/>
+
+    <rect x="1890" y="190" width="180" height="120" rx="42" fill="#ffffff" stroke="#000000" stroke-width="7"/>
+    <path d="M1905 245 L1768 270" stroke="#000000" stroke-width="7"/>
+    <path d="M2045 245 L1930 270" stroke="#000000" stroke-width="7"/>
+
+    <g transform="rotate(-5 1845 265)">
+      <rect x="1750" y="205" width="190" height="120" rx="14" fill="#ffffff" stroke="#000000" stroke-width="7"/>
+      <path d="M1795 305 L1905 305" stroke="#1869FE" stroke-width="5"/>
+      <path d="M1795 305 L1795 225" stroke="#1869FE" stroke-width="5"/>
+      <path d="M1795 305 L1830 250" stroke="#1869FE" stroke-width="5"/>
+      <path d="M1900 299 L1905 305 L1897 309" fill="none" stroke="#1869FE" stroke-width="5"/>
+      <path d="M1789 231 L1795 225 L1801 231" fill="none" stroke="#1869FE" stroke-width="5"/>
+
+      <g stroke="#000000" stroke-width="5" fill="none">
+        <path d="M1850 235 L1886 253 L1886 287 L1850 305 L1814 287 L1814 253 Z"/>
+        <path d="M1814 253 L1850 271 L1886 253"/>
+        <path d="M1850 271 L1850 305"/>
+      </g>
+      <path d="M1850 271 L1886 287 M1850 271 L1814 287" stroke="#1869FE" stroke-width="4" stroke-dasharray="8 7" fill="none"/>
+
+      <ellipse cx="1850" cy="270" rx="62" ry="20" fill="none" stroke="#1869FE" stroke-width="5"
+               stroke-dasharray="10 8" transform="rotate(-18 1850 270)"/>
+    </g>
+
+    <circle cx="1762" cy="272" r="12" fill="#ffffff" stroke="#000000" stroke-width="6"/>
+    <circle cx="1936" cy="272" r="12" fill="#ffffff" stroke="#000000" stroke-width="6"/>
+    <path d="M1750 338 L1930 338" stroke="#1869FE" stroke-width="5" stroke-dasharray="12 10"/>
+  </g>
+</svg>

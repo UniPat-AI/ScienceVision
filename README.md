@@ -1,8 +1,7 @@
-<p align="center">
-  <img src="assets/sciencevision-logo.png" alt="ScienceVision project logo" width="280" />
-</p>
-
-# ScienceVision
+<div align="center">
+  <img src="assets/banner.png" alt="ScienceVision" width="90%" />
+  <h1>ScienceVision: A Benchmark for Observing and Reasoning over Scientific 3D Data</h1>
+</div>
 
 ScienceVision is a benchmark for **observing and reasoning over scientific 3D data**: 250
 expert-authored questions, 50 each in architecture, biology, chemistry, mechanical CAD, and
