@@ -83,19 +83,20 @@ contract per task, which is what the re-baseline below produces.
 ## Measured result
 
 Measured on 2026-10-20 on a fresh H20 with the scoped archives, filtered to the
-250-task set:
+250-task set, and with each arm replaying against the contract set exported
+from its own run root:
 
 | Arm | Exact trials | Mean delta |
 |---|---|---:|
 | Codex, `gpt-6.1-sol`, cc + ccmcp | 189/189 each | 0.0000 |
-| Claude Code, `deepseek-v4-flash`, cc + ccmcp, 3 reps | 194-197/205 each | +0.015 to +0.025 |
+| Claude Code, `deepseek-v4-flash`, cc + ccmcp, 3 reps | 197-199/205 each | +0.023 to +0.030 |
 
-The Claude Code difference is not distributed: 54 trials across the six jobs
-come from 12 tasks. On those tasks the archived run recorded
+The Claude Code difference is not distributed: 41 trials across the six jobs
+come from 9 tasks. On those tasks the archived run recorded
 `invalid_task_contract` (a missing tolerance) and scored 0; the current scorer
 derives the tolerance and grades the answer. The task trees themselves are
-intact: all 1,998 replayed trials carry a `task_checksum` that matches the
-current tree directory hash.
+intact: every replayed trial with a contract carries a `task_checksum` that
+matches the current tree directory hash.
 
 **The old leaderboard is therefore not exactly reproducible.** The archived
 runs used a local scorer tag, `sci3d-scorer:harbor-0.20-v1-sv20260930` (image id
