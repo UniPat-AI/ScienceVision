@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>QA Tasks — BabyVision-v2</title>
+<link rel="stylesheet" href="shared/style.css">
+<style>
+  /* ── Expert seed cases ─────────────────────────────────────────────────
+     Expert-authored seed QA migrated from the ScienceVision viewer
+     (match3d.html?dataset=expert-qa). Higher-value, hand-crafted cases —
+     given visual weight above the auto-generated list. */
+  #expert-seed .es-head { display:flex; align-items:center; gap:10px; margin:0 0 6px; }
+  #expert-seed h2 { font-size:18px; margin:0; }
+  #expert-seed .es-badge {
+    font-size:11px; text-transform:uppercase; letter-spacing:0.05em;
+    color:var(--accent); border:1px solid var(--accent); border-radius:999px;
+    padding:2px 10px;
+  }
+  #expert-seed .es-intro { color:var(--fg-dim); font-size:13px; margin:0 0 20px; max-width:820px; }
+  #expert-seed .es-group { margin:0 0 26px; }
+  #expert-seed .es-group h3 { font-size:14px; margin:0 0 4px; display:flex; align-items:baseline; gap:8px; }
+  #expert-seed .es-group .es-domain { color:var(--accent); }
+  #expert-seed .es-count {
+    font:11px ui-monospace, SFMono-Regular, Menlo, monospace; color:var(--fg-dim);
+    border:1px solid var(--border); border-radius:3px; padding:0 6px;
+  }
+  #expert-seed .es-blurb { color:var(--fg-dim); font-size:12px; margin:0 0 10px; }
+  #expert-seed .es-list { list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+  #expert-seed .es-item {
+    background:var(--bg2); border:1px solid var(--border);
+    border-left:3px solid var(--accent); border-radius:6px;
+    transition:border-color 0.15s, background 0.15s;
+  }
+  #expert-seed .es-item:hover { border-color:var(--accent); }
+  #expert-seed .es-link { display:block; padding:12px 14px; color:inherit; text-decoration:none; }
+  #expert-seed .es-item .es-dir { font-size:13px; font-weight:600; }
+  #expert-seed .es-chips { margin-left:8px; display:inline-flex; gap:6px; vertical-align:middle; }
+  #expert-seed .es-chip {
+    font:10px ui-monospace, SFMono-Regular, Menlo, monospace; color:var(--fg-dim);
+    text-transform:uppercase; letter-spacing:0.04em;
+    border:1px solid var(--border); border-radius:3px; padding:1px 6px;
+  }
+  #expert-seed .es-chip.hard { color:#ffa657; border-color:#ffa657; }
+  #expert-seed .es-q { font-size:13px; margin:8px 0 4px; line-height:1.45; }
+  #expert-seed .es-scene { color:var(--fg-dim); font-size:11px; }
+  #expert-seed .es-actions { margin-top:8px; display:flex; gap:14px; align-items:center; flex-wrap:wrap; }
+  #expert-seed .es-view {
+    color:var(--accent); font-size:12px; font-weight:600; text-decoration:none;
+  }
+  #expert-seed .es-view:hover { text-decoration:underline; }
+  #expert-seed .es-ans { font-size:12px; }
+  #expert-seed .es-ans summary { cursor:pointer; color:var(--fg-dim); user-select:none; }
+  #expert-seed .es-ans summary:hover { color:var(--accent); }
+  #expert-seed .es-ans .es-warn { color:#ffa657; margin-left:6px; }
+  #expert-seed .es-ans pre {
+    margin:6px 0 0; padding:8px 10px; background:var(--bg); border:1px solid var(--border);
+    border-radius:4px; overflow-x:auto; font:11px ui-monospace, SFMono-Regular, Menlo, monospace;
+    color:var(--fg);
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <a href="index.html" class="home-link" style="color:inherit;text-decoration:none">
+      <strong id="brand">BabyVision-v2</strong>
+    </a>
+    <span style="color:var(--fg-dim);margin-left:8px;font-size:12px">/ QA Tasks</span>
+  </div>
+  <div class="topbar-right">
+    <nav class="bv2-globalnav" aria-label="Global">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Doc</a>
+      <a href="assets.html">Domain 3D Assets</a>
+      <a href="qagen.html" aria-current="page" class="is-active">QA Tasks</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="/sv-annotate/">Expert</a>
+    </nav>
+    <div class="meta" id="counts">loading…</div>
+  </div>
+</header>
+<main style="padding:24px;max-width:1400px;margin:0 auto">
+  <h1 style="font-size:24px;margin:0 0 8px">QA Tasks</h1>
+  <p style="color:var(--fg-dim);margin:0 0 24px;max-width:760px">
+    Public demo cases spanning the scientific domains BabyVision-v2 covers. Each
+    card opens a live, interactive 3D case; every task ships with executable
+    ground truth (no LLM-as-judge).
+  </p>
+  <section class="bv2-task-grid" aria-label="Demo cases by domain">
+    <article class="bv2-task-card" data-domain="biology">
+      <h2>Biology</h2>
+      <p class="bv2-task-keywords">proteins &amp; small molecules · RCSB PDB · AlphaFold DB · PubChem 3D conformers</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=biology/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="medical">
+      <h2>Medical</h2>
+      <p class="bv2-task-keywords">CT / MRI / NIfTI / DICOM / NRRD · Decathlon hippocampus · IXI brain · M3D · Slicer NRRD</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=medical_spatial/q002">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="industrial">
+      <h2>机械 · Mechanical / CAD</h2>
+      <p class="bv2-task-keywords">glTF · STEP / IGES B-rep · STL / OBJ · USD · SOLIDWORKS · marble warehouse</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=helmet_caliber/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="architecture">
+      <h2>建筑 · Architecture</h2>
+      <p class="bv2-task-keywords">IFC/BIM glTF · structural frame · bridge LiDAR point cloud · per-point structural classes</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=architecture/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="embodied">
+      <h2>Embodied Scene</h2>
+      <p class="bv2-task-keywords">Genesis / Jenga simulation · physics sandbox · animated GLB</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=genesis_vp/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="astronomy">
+      <h2>Astronomy</h2>
+      <p class="bv2-task-keywords">solar-system ephemeris · planet / ring geometry · exoplanet elements</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=astronomy/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="geography">
+      <h2>Geography</h2>
+      <p class="bv2-task-keywords">citymap · OSM pilot city · building extrusion</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=manhattan_skyline/q001">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="robotics">
+      <h2>Robotics</h2>
+      <p class="bv2-task-keywords">URDF / SDF robots · KUKA iiwa · finger</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=genesis_vp/q002">View demo case →</a></p>
+    </article>
+    <article class="bv2-task-card" data-domain="chemistry">
+      <h2>Chemistry</h2>
+      <p class="bv2-task-keywords">molecules · organic matter (.mol)</p>
+      <p class="bv2-task-cta"><a href="qa_item.html?id=caffeine/q2_2">View demo case →</a></p>
+    </article>
+  </section>
+  <section id="expert-seed" aria-label="Expert seed cases" style="margin-top:44px">
+    <div class="es-head">
+      <h2>Expert Seed Cases</h2>
+      <span class="es-badge">expert-v2 · reviewed</span>
+    </div>
+    <p class="es-intro">
+      Hand-crafted seed cases contributed by domain experts, spanning three
+      domains — <strong>Chemistry</strong>, <strong>Biology</strong>, and
+      <strong>Medical</strong>. Each is reasoning-heavy and solvable from the
+      3D geometry alone (no metadata lookup or single-call solver). Open a case
+      to inspect the exact structure in a live interactive viewer, alongside the
+      expert review (tier, reviewer comments, and the V1→V2 answer diff).
+    </p>
+    <div id="expert-seed-groups" class="meta">loading…</div>
+  </section>
+  <section id="qagen-list" aria-label="Generated QA items" style="margin-top:40px"></section>
+  <p style="margin-top:32px;color:var(--fg-dim);font-size:12px">
+    The full generated QA set is listed below and grows as QA-Gen ships more
+    artifacts. See <a href="docs.html?doc=benchmark/task-families">task-families.md</a> for the canonical definitions.
+  </p>
+</main>
+<script src="shared/manifest.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function $(id) { return document.getElementById(id); }
+
+  const FAMILY_LABEL = {
+    'genesis_vp':      'Interactive Physics',
+    'medical_spatial': 'Spatial Vision',
+  };
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // Map a repo-root asset path to a path the in-viewer renderer can fetch.
+  // Viewer pages live under viewer/, so paths already under viewer/ get that
+  // prefix stripped, and anything else is reached via "../".
+  function viewerRelativePath(repoPath) {
+    if (!repoPath) return '';
+    if (repoPath.startsWith('viewer/')) return repoPath.slice('viewer/'.length);
+    return '../' + repoPath;
+  }
+
+  // Build the URL of the asset viewer page from an asset entry.
+  // Returns null if no in-browser renderer is wired for the format.
+  function assetViewerURL(asset, maskAsset) {
+    if (!asset) return null;
+    const fmt = (asset.format || '').toLowerCase();
+    const file = viewerRelativePath(asset.path);
+    // Chemistry / molecular structures -> Mol* (molstar.html).
+    if (fmt === 'mol' || fmt === 'mol2' || fmt === 'sdf' || fmt === 'pdb' || fmt === 'cif' || fmt === 'mmcif' || asset.viewer === 'molstar') {
+      let mu = 'molstar.html?file=' + encodeURIComponent(file);
+      if (fmt) mu += '&type=' + encodeURIComponent(fmt);
+      return mu;
+    }
+    if (fmt === 'glb' || fmt === 'gltf') {
+      return 'gltf.html?file=' + encodeURIComponent(file);
+    }
+    if (fmt === 'nifti' || fmt === 'nii.gz' || /\.nii(\.gz)?$/.test(asset.path || '')) {
+      let url = 'niivue.html?file=' + encodeURIComponent(file);
+      if (maskAsset && maskAsset.path) {
+        url += '&overlay=' + encodeURIComponent(viewerRelativePath(maskAsset.path));
+      }
+      return url;
+    }
+    // Geography: OSM pmtiles city model -> citymap.html (self-contained maplibre+pmtiles).
+    // citymap.html hardcodes its own data paths and keys off ?city=, not ?file=.
+    if (fmt === 'pmtiles' || asset.viewer === 'citymap') {
+      return 'citymap.html?city=' + encodeURIComponent(asset.city || 'manhattan');
+    }
+    // Infrastructure LiDAR point clouds (LAS/Draco) -> point cloud viewer.
+    if (fmt === 'las' || fmt === 'laz' || fmt === 'drc' || asset.viewer === 'pointcloud') {
+      let pu = 'pointcloud.html?file=' + encodeURIComponent(file);
+      if (asset.classes) pu += '&classes=' + encodeURIComponent(asset.classes);
+      return pu;
+    }
+    return null;
+  }
+
+  // For a referenced asset, find a paired mask asset in the same family/domain
+  // by looking for a sibling whose id endswith "_mask". Returns null when
+  // there's no overlay-capable pair (e.g. genesis_vp glbs).
+  function findMaskAsset(asset, allAssets) {
+    if (!asset || !Array.isArray(allAssets)) return null;
+    if (asset.id.endsWith('_mask')) return null;  // it IS a mask, no further mask
+    const candidate = allAssets.find(x => x.id === asset.id + '_mask');
+    return candidate || null;
+  }
+
+  function renderQaList(questions, assetsById, allAssets) {
+    const root = $('qagen-list');
+    if (!root) return;
+    if (!questions.length) return;
+    const byFamily = {};
+    for (const q of questions) {
+      (byFamily[q.family] = byFamily[q.family] || []).push(q);
+    }
+    const html = [];
+    html.push('<h2 style="font-size:16px;margin:0 0 12px">Generated QA items</h2>');
+    for (const family of Object.keys(byFamily).sort()) {
+      html.push('<div class="bv2-qagen-family-group" style="margin-bottom:16px">');
+      const label = FAMILY_LABEL[family] || family;
+      html.push('  <h3 style="font-size:12px;color:var(--fg-dim);text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 6px">' + esc(label) + '</h3>');
+      html.push('  <ol style="padding-left:24px;margin:0">');
+      for (const q of byFamily[family]) {
+        const asset = assetsById ? assetsById[q.asset_id] : null;
+        const mask = findMaskAsset(asset, allAssets);
+        const viewerHref = assetViewerURL(asset, mask);
+        const detailHref = 'qa_item.html?id=' + encodeURIComponent(q.id);
+        const meta =
+          '<code>' + esc(q.id) + '</code> · answer: ' + esc(q.answer_kind) +
+          ' · GT: ' + esc(q.ground_truth_kind) +
+          (asset ? ' · asset: <code>' + esc(asset.id) + '</code>' : ' · <em style="color:#c33">asset missing</em>');
+        const viewerLink = viewerHref
+          ? ' <a href="' + esc(viewerHref) + '" target="_blank" rel="noopener" ' +
+            'onclick="event.stopPropagation()" ' +
+            'style="color:var(--accent);font-size:11px;margin-left:8px">open 3D viewer ↗</a>'
+          : '';
+        const body =
+          '<div style="font-size:13px">' + esc(q.question) + '</div>' +
+          '<div style="color:var(--fg-dim);font-size:11px;margin-top:4px">' + meta + viewerLink + '</div>';
+        html.push(
+          '<li style="padding:0;border-bottom:1px solid var(--border)">' +
+          '<a href="' + esc(detailHref) + '" ' +
+          'style="display:block;padding:8px 12px;color:inherit;text-decoration:none" ' +
+          'class="bv2-qagen-item">' + body + '</a></li>'
+        );
+      }
+      html.push('  </ol>');
+      html.push('</div>');
+    }
+    root.innerHTML = html.join('\n');
+  }
+
+  // Pull both indexes so we can resolve question.asset_id → viewer URL.
+  function loadIndexes(m) {
+    const qagenUrl  = m.urls && m.urls.data && m.urls.data.qagen_index;
+    const assetsUrl = m.urls && m.urls.data && m.urls.data.assets_index;
+    if (!qagenUrl) return;
+    Promise.all([
+      fetch(qagenUrl,  { cache: 'no-cache' }).then(r => r.ok ? r.json() : null),
+      assetsUrl
+        ? fetch(assetsUrl, { cache: 'no-cache' }).then(r => r.ok ? r.json() : null)
+        : Promise.resolve(null),
+    ]).then(([qa, assets]) => {
+      const questions = Array.isArray(qa) ? qa : (qa && qa.questions) || [];
+      const list = (assets && Array.isArray(assets.assets)) ? assets.assets
+                 : (Array.isArray(assets) ? assets : []);
+      const byId = {};
+      for (const a of list) byId[a.id] = a;
+      renderQaList(questions, byId, list);
+    }).catch(() => { /* leave list empty if not yet present */ });
+  }
+
+  // ── Expert seed cases ──────────────────────────────────────────────────
+  // Migrated from the ScienceVision viewer (match3d.html?dataset=expert-qa).
+  // Data lives at /data/expert_qa_seed.json (served at site root, same as the
+  // other indexes) so we fetch it directly rather than routing through the
+  // manifest. Each item opens the same in-browser viewers the rest of the
+  // page uses: Mol* for molecular structures, Niivue for NIfTI volumes.
+  function seedViewerURL(item) {
+    const file = item.url_viewer;
+    if (!file) return null;
+    if (item.asset_kind === 'nifti' || /\.nii(\.gz)?$/.test(file)) {
+      return 'niivue.html?file=' + encodeURIComponent(file);
+    }
+    // molecule → Mol*. molstar.html maps the type hint (xyz|cif|mol|…) to a
+    // loader format itself, so pass the raw file extension.
+    const ext = (file.split('.').pop() || '').toLowerCase();
+    return 'molstar.html?file=' + encodeURIComponent(file) + '&type=' + encodeURIComponent(ext);
+  }
+
+  function renderExpertSeed(data) {
+    const root = $('expert-seed-groups');
+    if (!root) return;
+    const domains = (data && Array.isArray(data.domains)) ? data.domains : [];
+    if (!domains.length) { root.textContent = ''; return; }
+    // expert-v2: each case opens in the ScienceVision task viewer (tier chip +
+    // Expert Review panel + interactive 3D asset), keyed by the domain's set.
+    const SET_BY_DOMAIN = {
+      chemistry: 'ChemistryKAxis-expert-v2',
+      biology: 'BiologyKAxis-expert-v2',
+      medical: 'MedicalKAxis-expert-v2',
+    };
+    const html = [];
+    for (const g of domains) {
+      const items = Array.isArray(g.items) ? g.items : [];
+      if (!items.length) continue;
+      html.push('<div class="es-group" data-domain="' + esc(g.key) + '">');
+      html.push('  <h3><span class="es-domain">' + esc(g.label) + '</span>' +
+                '<span class="es-count">' + items.length + ' case' + (items.length === 1 ? '' : 's') + '</span></h3>');
+      if (g.blurb) html.push('  <p class="es-blurb">' + esc(g.blurb) + '</p>');
+      html.push('  <ol class="es-list">');
+      for (const it of items) {
+        const ev2Set = SET_BY_DOMAIN[g.key];
+        const caseHref = ev2Set
+          ? 'sciencevision_tasks.html?set=' + encodeURIComponent(ev2Set) + '&task=' + encodeURIComponent(it.qid)
+          : 'expert_case.html?qid=' + encodeURIComponent(it.qid);
+        const hard = (it.difficulty || '').toLowerCase() === 'hard';
+        const chips =
+          (it.difficulty ? '<span class="es-chip' + (hard ? ' hard' : '') + '">' + esc(it.difficulty) + '</span>' : '') +
+          (it.v_class ? '<span class="es-chip">' + esc(it.v_class) + '</span>' : '');
+        // The whole entry links to a single detail page holding the question,
+        // an embedded interactive 3D viewer, and the expected answer.
+        html.push(
+          '<li class="es-item">' +
+          '<a class="es-link" href="' + esc(caseHref) + '">' +
+          '<div><span class="es-dir">' + esc(it.direction_title || it.direction_id || it.qid) + '</span>' +
+          '<span class="es-chips">' + chips + '</span></div>' +
+          (it.scene ? '<div class="es-scene">' + esc(it.scene) + '</div>' : '') +
+          '<div class="es-q">' + esc(it.question) + '</div>' +
+          '<div class="es-actions">' +
+          '<span class="es-view">Open expert-v2 · question + 3D view + expert review →</span>' +
+          '<code style="color:var(--fg-dim);font-size:11px">' + esc(it.qid) + '</code>' +
+          '</div>' +
+          '</a>' +
+          '</li>'
+        );
+      }
+      html.push('  </ol>');
+      html.push('</div>');
+    }
+    root.innerHTML = html.join('\n');
+  }
+
+  function loadExpertSeed() {
+    fetch('/data/expert_qa_seed.json', { cache: 'no-cache' })
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) renderExpertSeed(data); else { const el = $('expert-seed-groups'); if (el) el.textContent = ''; } })
+      .catch(() => { const el = $('expert-seed-groups'); if (el) el.textContent = ''; });
+  }
+
+  window.ManifestReady.then((m) => {
+    $('counts').textContent = m.brand + ' v' + m.version;
+    loadIndexes(m);
+  });
+  loadExpertSeed();
+})();
+</script>
+</body>
+</html>

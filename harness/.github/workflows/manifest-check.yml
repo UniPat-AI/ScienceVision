@@ -1,0 +1,113 @@
+name: manifest-check
+
+on:
+  pull_request:
+    paths:
+      - 'viewer/manifest.json'
+      - 'viewer/manifest.local.example.json'
+      - 'viewer/shared/manifest.schema.json'
+      - 'tools/validate_manifest.py'
+      - 'tests/test_manifest_schema.py'
+      - 'pyproject.toml'
+      # NEW (Plan 2):
+      - 'docs/**/*.md'
+      - 'docs/mcp/tools/**'
+      - 'scripts/build_docs_index.py'
+      - 'scripts/build_docs_search.py'
+      - 'tests/test_docs_index.py'
+      - 'tests/test_docs_search.py'
+      - 'tests/test_mcp_pairs.py'
+      - 'docs/_index.json'
+      - 'docs/_search.json'
+      # NEW (Plan 3):
+      - 'viewer/index.html'
+      - 'viewer/assets.html'
+      - 'viewer/qagen.html'
+      - 'viewer/leaderboard.html'
+      - 'viewer/vqa.html'
+      - 'viewer/seed3d_pair.html'
+      - 'viewer/shared/bv2-home.js'
+      - 'viewer/shared/style.css'
+      - 'tests/test_manifest_domain_taxonomy.py'
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # for auto-regen push-back on PRs from same-repo branches
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # On PRs, check out the head branch directly (not the merge ref) so
+          # the auto-regen step can push commits back to it. On push events,
+          # github.head_ref is empty so checkout falls back to github.ref.
+          ref: ${{ github.head_ref || github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          # Need full history so the bot push is a fast-forward, not a force.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install dev deps
+        run: pip install -e ".[dev]"
+      - name: Validate manifest against schema
+        run: python tools/validate_manifest.py
+      - name: Validate partner-local example
+        run: python tools/validate_manifest.py --manifest viewer/manifest.local.example.json
+      - name: Run manifest schema tests
+        run: pytest tests/test_manifest_schema.py -v
+
+      # ── Docs indexes (auto-regen on PR, strict check on push to main) ──
+      #
+      # The pre-commit hook in scripts/git-hooks/pre-commit is the primary
+      # guard. This step is a safety net for: contributors who don't install
+      # the hook, contributors who bypass it with --no-verify, or merges that
+      # land via the GitHub UI from a stale base.
+      - name: Regenerate docs indexes
+        id: regen
+        run: |
+          python scripts/build_docs_index.py
+          python scripts/build_docs_search.py
+          if git diff --quiet -- docs/_index.json docs/_search.json; then
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::docs/_index.json or docs/_search.json was stale; see next step for action taken."
+            git --no-pager diff --stat docs/_index.json docs/_search.json
+          fi
+
+      - name: Fail if stale on push to main
+        if: github.event_name == 'push' && steps.regen.outputs.stale == 'true'
+        run: |
+          echo "::error::docs/_index.json or docs/_search.json is stale on main. PR-time auto-regen should have caught this; investigate why it didn't (forked PR, --no-verify with squash-merge of an old base, etc)."
+          exit 1
+
+      - name: Push auto-regen back to PR branch
+        if: github.event_name == 'pull_request' && steps.regen.outputs.stale == 'true' && github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/_index.json docs/_search.json
+          git commit -m "chore(ci): auto-regen docs/_index.json + docs/_search.json [ci-autoregen]"
+          git push origin "HEAD:${{ github.head_ref }}"
+          echo "::notice::Pushed regenerated indexes to ${{ github.head_ref }}. A new CI run will follow."
+
+      - name: Fail with hint on fork PR
+        if: github.event_name == 'pull_request' && steps.regen.outputs.stale == 'true' && github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "::error::docs/_index.json or docs/_search.json is stale, and this PR comes from a fork (auto-push-back not possible). Run locally: python scripts/build_docs_index.py && python scripts/build_docs_search.py, then commit and push."
+          exit 1
+
+      - name: Run docs index tests
+        run: pytest tests/test_docs_index.py -v
+
+      - name: Run docs search tests
+        run: pytest tests/test_docs_search.py -v
+
+      - name: Run MCP pair tests
+        run: pytest tests/test_mcp_pairs.py -v
+
+      - name: Run domain-taxonomy test
+        run: pytest tests/test_manifest_domain_taxonomy.py -v

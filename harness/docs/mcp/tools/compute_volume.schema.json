@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "compute_volume",
+  "description": "Compute the voxel volume (in mm³) of a label in a 3D mask volume.",
+  "domain": "medical",
+  "parameters": [
+    {
+      "name": "mask_path",
+      "type": "string",
+      "required": true,
+      "description": "Filesystem path to a NIfTI (.nii or .nii.gz) integer-label mask."
+    },
+    {
+      "name": "label",
+      "type": "integer",
+      "required": true,
+      "description": "The voxel value identifying the target structure (1, 2, ...). Background is typically 0."
+    },
+    {
+      "name": "spacing_override",
+      "type": "array<float>",
+      "required": false,
+      "description": "Optional [x, y, z] voxel spacing in mm. Defaults to the spacing in the NIfTI affine."
+    }
+  ],
+  "returns": {
+    "type": "object",
+    "fields": [
+      {"name": "volume_mm3", "type": "float", "description": "Total volume in cubic millimetres."},
+      {"name": "voxel_count", "type": "integer", "description": "Number of voxels with the matching label."},
+      {"name": "spacing_mm", "type": "array<float>", "description": "Spacing used in the calculation, [x, y, z] mm."}
+    ]
+  },
+  "source": "sci3d_agent/tools/medical/compute_volume.py"
+}

@@ -1,0 +1,46 @@
+schema_version: 1
+kind: qagen_run_profile
+id: architecture_catalog
+mode: catalog_only
+
+domains: [architecture]
+enabled_leaves: []
+blocked_leaves:
+  - architecture.concrete_void_localization
+  - architecture.bridge_damage_localization
+  - architecture.main_girder_deformation
+  - architecture.historic_facade_damage_repair
+  - architecture.historic_component_style_classification
+  - architecture.drawing_model_consistency
+  - architecture.utility_network_clash_detection
+  - architecture.cross_floor_alignment_validation
+  - architecture.stair_ramp_spatial_validity
+  - architecture.component_geometry_measurement
+  - architecture.section_elevation_reasoning
+
+inputs:
+  registry_mode: catalog_only
+  base: ../base.yaml
+  rubric: ../rubric.yaml
+  domain_configs: [../domains/architecture.yaml]
+  leaf_configs:
+    - ../subdomains/architecture/concrete_void_localization.yaml
+    - ../subdomains/architecture/bridge_damage_localization.yaml
+    - ../subdomains/architecture/main_girder_deformation.yaml
+    - ../subdomains/architecture/historic_facade_damage_repair.yaml
+    - ../subdomains/architecture/historic_component_style_classification.yaml
+    - ../subdomains/architecture/drawing_model_consistency.yaml
+    - ../subdomains/architecture/utility_network_clash_detection.yaml
+    - ../subdomains/architecture/cross_floor_alignment_validation.yaml
+    - ../subdomains/architecture/stair_ramp_spatial_validity.yaml
+    - ../subdomains/architecture/component_geometry_measurement.yaml
+    - ../subdomains/architecture/section_elevation_reasoning.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: true
+  production_eligible: false
+release:
+  enabled: false
+  reason: "Catalog-only profile: every architecture leaf lacks a complete verified generation chain."

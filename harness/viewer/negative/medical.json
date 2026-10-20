@@ -1,0 +1,44 @@
+[
+  {
+    "name": "mrart_sub000103_motion2",
+    "path": "/crawl_data/medical/broken/mrart/sub-000103_acq-headmotion2_T1w.nii.gz",
+    "size": 11626660,
+    "viewer": "niivue",
+    "format": "nifti",
+    "error_type": "med.motion_artifact",
+    "error_severity": "high",
+    "error_description": "MR-ART (Nárai et al., Sci Data 2022) deliberate head-motion acquisition (acq-headmotion2 = excessive motion protocol). Neuroradiologist rater score = 3 (severe) per derivatives/scores.tsv.",
+    "expected_agent_behavior": "Refuse to perform volumetry, cortical-thickness, or segmentation on motion-corrupted region; note ringing/ghosting visible in axial and sagittal slices.",
+    "source_url": "https://s3.amazonaws.com/openneuro.org/ds004173/sub-000103/anat/sub-000103_acq-headmotion2_T1w.nii.gz",
+    "source_evidence_url": "https://s3.amazonaws.com/openneuro.org/ds004173/derivatives/scores.tsv",
+    "default_view_warning": "Visible ringing/ghosting across slices; do not treat as a clean T1w for any quantitative measurement."
+  },
+  {
+    "name": "mrart_sub000148_motion1",
+    "path": "/crawl_data/medical/broken/mrart/sub-000148_acq-headmotion1_T1w.nii.gz",
+    "size": 9475911,
+    "viewer": "niivue",
+    "format": "nifti",
+    "error_type": "med.motion_artifact",
+    "error_severity": "high",
+    "error_description": "MR-ART acq-headmotion1 (mild-motion protocol) but rater score = 3 (severe) — an interesting case where mild-protocol motion still produced severe artifact. Useful for testing severity-aware motion detection.",
+    "expected_agent_behavior": "Flag as severe artifact regardless of acquisition label; do not assume protocol = severity.",
+    "source_url": "https://s3.amazonaws.com/openneuro.org/ds004173/sub-000148/anat/sub-000148_acq-headmotion1_T1w.nii.gz",
+    "source_evidence_url": "https://s3.amazonaws.com/openneuro.org/ds004173/derivatives/scores.tsv",
+    "default_view_warning": "Visible motion artifact despite mild-motion protocol label."
+  },
+  {
+    "name": "mrart_sub000149_motion2",
+    "path": "/crawl_data/medical/broken/mrart/sub-000149_acq-headmotion2_T1w.nii.gz",
+    "size": 10994673,
+    "viewer": "niivue",
+    "format": "nifti",
+    "error_type": "med.motion_artifact",
+    "error_severity": "high",
+    "error_description": "MR-ART acq-headmotion2 (excessive-motion protocol), rater score = 3. Companion case to sub-000103 from a different scanner session.",
+    "expected_agent_behavior": "Same as other motion-3 cases: refuse downstream quantitative measurement.",
+    "source_url": "https://s3.amazonaws.com/openneuro.org/ds004173/sub-000149/anat/sub-000149_acq-headmotion2_T1w.nii.gz",
+    "source_evidence_url": "https://s3.amazonaws.com/openneuro.org/ds004173/derivatives/scores.tsv",
+    "default_view_warning": "Severe motion artifact across slices."
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/measurement_receipt.schema.json",
+  "description": "Public-safe measurement receipt. Values are retained only in the private sidecar referenced by digest.",
+  "type": "object",
+  "required": [
+    "receipt_version",
+    "measurement_request_digest",
+    "target_spec_digest",
+    "source_record_digest",
+    "anonymous_scene_ref",
+    "native_operation",
+    "viewer_receipt_digest",
+    "evidence_digest",
+    "operation_args_digest",
+    "measurement_result_digest",
+    "measurement_unit",
+    "measurement_tolerance",
+    "viewer_session_digest",
+    "executor_identity_digest",
+    "private_sidecar_digest",
+    "status"
+  ],
+  "properties": {
+    "receipt_version": {"const": 2},
+    "measurement_request_digest": {"$ref": "#/definitions/digest"},
+    "target_spec_digest": {"$ref": "#/definitions/digest"},
+    "source_record_digest": {"$ref": "#/definitions/digest"},
+    "anonymous_scene_ref": {"type": "string", "pattern": "^scene://[A-Za-z0-9._:-]+$"},
+    "native_operation": {"enum": ["inspect", "isolate", "measure_distance", "measure_dihedral", "bbox", "slice"]},
+    "viewer_receipt_digest": {"$ref": "#/definitions/digest"},
+    "evidence_digest": {"$ref": "#/definitions/digest"},
+    "operation_args_digest": {"$ref": "#/definitions/digest"},
+    "measurement_result_digest": {"$ref": "#/definitions/digest"},
+    "measurement_unit": {"type": "string", "minLength": 1},
+    "measurement_tolerance": {
+      "type": "object",
+      "required": ["absolute", "unit"],
+      "properties": {
+        "absolute": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "viewer_session_digest": {"$ref": "#/definitions/digest"},
+    "executor_identity_digest": {"$ref": "#/definitions/digest"},
+    "private_sidecar_digest": {"$ref": "#/definitions/digest"},
+    "status": {"const": "completed"}
+  },
+  "additionalProperties": false,
+  "definitions": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

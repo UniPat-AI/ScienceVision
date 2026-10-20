@@ -1,0 +1,29 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.tool_accessibility
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.assembly_and_tool_envelope, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [tool_access_path_reasoning]
+seed:
+  query: {domain: mechanical_cad, subdomain: tool_accessibility, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, tool_envelope, service_pose, stable_part_identifiers]
+viewer:
+  required_operations: [inspect, isolate, rotate, explode, measure_distance]
+answer:
+  allowed_truth_modes: [expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, visual_annotation, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: tool_accessibility, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

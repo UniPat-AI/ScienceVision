@@ -1,0 +1,750 @@
+{
+  "schema_version": "sciencevision.eval_dev_subset.v1",
+  "bundle": {
+    "path_name": "ScienceVision-STEM-250-review-v7",
+    "index_sha256": "937d46d62bca8053c9b1250e0f63ab4420826329db5845eee4e87bb922f93864",
+    "rows": 250,
+    "scorable_pool": 239,
+    "clean_pool": 158
+  },
+  "pool_excluded": [
+    {
+      "task_id": "hard-110-qc",
+      "folder": "tasks/mechanical_cad/cad_assembly_interfaces/002-hard-110-qc",
+      "sub_domain": "cad_assembly_interfaces",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-114-qc",
+      "folder": "tasks/mechanical_cad/cad_assembly_interfaces/004-hard-114-qc",
+      "sub_domain": "cad_assembly_interfaces",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "sv-industrial-cadasm-vqa-vqcb-006-06-qc",
+      "folder": "tasks/mechanical_cad/cad_assembly_interfaces/009-sv-industrial-cadasm-vqa-vqcb-006-06-qc",
+      "sub_domain": "cad_assembly_interfaces",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-109-qc",
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/002-hard-109-qc",
+      "sub_domain": "cad_mechanisms_functions",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-230",
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/003-hard-230",
+      "sub_domain": "cad_mechanisms_functions",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-231",
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/005-hard-231",
+      "sub_domain": "cad_mechanisms_functions",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "sv-industrial-cadasm-vqa-vqcb-036-10",
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/007-sv-industrial-cadasm-vqa-vqcb-036-10",
+      "sub_domain": "cad_mechanisms_functions",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-271-qc",
+      "folder": "tasks/mechanical_cad/cad_parts_features/024-hard-271-qc",
+      "sub_domain": "cad_parts_features",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-019",
+      "folder": "tasks/mechanical_cad/cad_parts_features/001-hard-019",
+      "sub_domain": "cad_parts_features",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-021",
+      "folder": "tasks/mechanical_cad/cad_parts_features/002-hard-021",
+      "sub_domain": "cad_parts_features",
+      "reason": "no answer: ground_truth is empty"
+    },
+    {
+      "task_id": "hard-043",
+      "folder": "tasks/mechanical_cad/cad_parts_features/005-hard-043",
+      "sub_domain": "cad_parts_features",
+      "reason": "no answer: ground_truth is empty"
+    }
+  ],
+  "per_sub_domain": 2,
+  "rule": "rows with no answer are dropped before selection; then up to two per sub_domain, preferring evaluation_ready with no warn_kinds, then fewest warn_kinds, then lowest asset_count, then task_id ascending; a sub_domain whose clean pool cannot fill the quota is topped up from the relaxed pool, preferring a viewer family the sub_domain does not already hold; finally every remaining question carrying a free-text ground-truth field is added, outside the quota, so the text comparator always has coverage; every row outside the clean pool carries the reason",
+  "core": [
+    {
+      "task_id": "arch-dl-slope-s01",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_code_compliance/013-arch-dl-slope-s01",
+      "sub_domain": "arch_code_compliance",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "stair_ramp_spatial_validity",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "arch-zjc-clash-a02",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_code_compliance/024-arch-zjc-clash-a02",
+      "sub_domain": "arch_code_compliance",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "utility_network_clash_detection",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "arch-dl-section-e01",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_consistency_alignment/001-arch-dl-section-e01",
+      "sub_domain": "arch_consistency_alignment",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "section_elevation_reasoning",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-a1-2",
+      "free_text_fields": [
+        "evidence_summary"
+      ],
+      "folder": "tasks/architecture/arch_consistency_alignment/004-sv-arch-a1-2",
+      "sub_domain": "arch_consistency_alignment",
+      "domain": "architecture",
+      "viewer": "bim_coordination",
+      "task_type": "drawing-bim-consistency",
+      "asset_count": 2,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "arch-jdc-align-a01",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_cross_floor_alignment/005-arch-jdc-align-a01",
+      "sub_domain": "arch_cross_floor_alignment",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "cross_floor_alignment_validation",
+      "asset_count": 5,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "arch-jdc-align-a02",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_cross_floor_alignment/006-arch-jdc-align-a02",
+      "sub_domain": "arch_cross_floor_alignment",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "cross_floor_alignment_validation",
+      "asset_count": 5,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-c11-1",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_structural_defects/001-sv-arch-c11-1",
+      "sub_domain": "arch_structural_defects",
+      "domain": "architecture",
+      "viewer": "architecture_inspection",
+      "task_type": "bridge-damage-localization",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-c11-2",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_structural_defects/002-sv-arch-c11-2",
+      "sub_domain": "arch_structural_defects",
+      "domain": "architecture",
+      "viewer": "architecture_inspection",
+      "task_type": "bridge-damage-localization",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-a4-1",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_structural_deformation/001-sv-arch-a4-1",
+      "sub_domain": "arch_structural_deformation",
+      "domain": "architecture",
+      "viewer": "architecture_inspection",
+      "task_type": "girder-spatial-deformation",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-exp-05",
+      "free_text_fields": [],
+      "folder": "tasks/architecture/arch_structural_deformation/002-sv-arch-exp-05",
+      "sub_domain": "arch_structural_deformation",
+      "domain": "architecture",
+      "viewer": "architecture_inspection",
+      "task_type": "girder-spatial-deformation",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-biol-bio_docking_plausibility-0116",
+      "free_text_fields": [],
+      "folder": "tasks/biology/bio_component_configuration/001-sv-biol-bio_docking_plausibility-0116",
+      "sub_domain": "bio_component_configuration",
+      "domain": "biology",
+      "viewer": "molstar",
+      "task_type": "bio_chain_terminus_orientation",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-biol-bio_docking_plausibility-0130",
+      "free_text_fields": [],
+      "folder": "tasks/biology/bio_component_configuration/002-sv-biol-bio_docking_plausibility-0130",
+      "sub_domain": "bio_component_configuration",
+      "domain": "biology",
+      "viewer": "molstar",
+      "task_type": "bio_docking_component_absence",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-biol-bio_collision_check-0023",
+      "free_text_fields": [],
+      "folder": "tasks/biology/bio_molecular_contact/001-sv-biol-bio_collision_check-0023",
+      "sub_domain": "bio_molecular_contact",
+      "domain": "biology",
+      "viewer": "molstar",
+      "task_type": "molecular_contact_geometry",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-biol-bio_collision_check-0025",
+      "free_text_fields": [],
+      "folder": "tasks/biology/bio_molecular_contact/002-sv-biol-bio_collision_check-0025",
+      "sub_domain": "bio_molecular_contact",
+      "domain": "biology",
+      "viewer": "molstar",
+      "task_type": "bio_collision_overlap_magnitude",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-chem-chem_conformation-0004",
+      "free_text_fields": [],
+      "folder": "tasks/chemistry/chem_molecular_extent/001-sv-chem-chem_conformation-0004",
+      "sub_domain": "chem_molecular_extent",
+      "domain": "chemistry",
+      "viewer": "molstar",
+      "task_type": "chem_xyz_farthest_heavy_pair",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-chem-chem_conformation-0028",
+      "free_text_fields": [],
+      "folder": "tasks/chemistry/chem_molecular_extent/003-sv-chem-chem_conformation-0028",
+      "sub_domain": "chem_molecular_extent",
+      "domain": "chemistry",
+      "viewer": "molstar",
+      "task_type": "chem_xyz_heavy_extent",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-medi-med_ct_geometry-0000",
+      "free_text_fields": [],
+      "folder": "tasks/medical/med_imaging_geometry/001-sv-medi-med_ct_geometry-0000",
+      "sub_domain": "med_imaging_geometry",
+      "domain": "medical",
+      "viewer": "niivue",
+      "task_type": "med_ct_geometry",
+      "asset_count": 2,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-medi-med_ct_geometry-0001",
+      "free_text_fields": [],
+      "folder": "tasks/medical/med_imaging_geometry/002-sv-medi-med_ct_geometry-0001",
+      "sub_domain": "med_imaging_geometry",
+      "domain": "medical",
+      "viewer": "niivue",
+      "task_type": "med_ct_geometry",
+      "asset_count": 2,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-medi-med_lesion_point-0000",
+      "free_text_fields": [],
+      "folder": "tasks/medical/med_lesion_localization/001-sv-medi-med_lesion_point-0000",
+      "sub_domain": "med_lesion_localization",
+      "domain": "medical",
+      "viewer": "niivue",
+      "task_type": "anatomy-multi-region",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-medi-med_lesion_point-0001",
+      "free_text_fields": [],
+      "folder": "tasks/medical/med_lesion_localization/002-sv-medi-med_lesion_point-0001",
+      "sub_domain": "med_lesion_localization",
+      "domain": "medical",
+      "viewer": "niivue",
+      "task_type": "anatomy-ureter",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    }
+  ],
+  "coverage": [
+    {
+      "task_id": "hard-110",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_assembly_interfaces/001-hard-110",
+      "sub_domain": "cad_assembly_interfaces",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "cad-joint-type",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-114",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_assembly_interfaces/003-hard-114",
+      "sub_domain": "cad_assembly_interfaces",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "cad-joint-type",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-001",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_geometry_drawings/001-hard-001",
+      "sub_domain": "cad_geometry_drawings",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "depth-collapsed-planarity",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-109",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/001-hard-109",
+      "sub_domain": "cad_mechanisms_functions",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "cad-turnability",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-230-qc",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_mechanisms_functions/004-hard-230-qc",
+      "sub_domain": "cad_mechanisms_functions",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "cad-firing-interval",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved",
+        "twin_question_text_differs"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved",
+        "twin_question_text_differs"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-034",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_parts_features/003-hard-034",
+      "sub_domain": "cad_parts_features",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "assembly-occluded-count",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "hard-159",
+      "free_text_fields": [],
+      "folder": "tasks/mechanical_cad/cad_parts_features/012-hard-159",
+      "sub_domain": "cad_parts_features",
+      "domain": "mechanical-cad",
+      "viewer": "occt",
+      "task_type": "cad-handedness-chirality",
+      "asset_count": 3,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_not_yet_qc_approved"
+      ],
+      "not_clean_reasons": [
+        "answer_not_yet_qc_approved"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "sv-chem-chem_conformation-0002",
+      "free_text_fields": [],
+      "folder": "tasks/chemistry/chem_molecular_conformation/001-sv-chem-chem_conformation-0002",
+      "sub_domain": "chem_molecular_conformation",
+      "domain": "chemistry",
+      "viewer": "molstar",
+      "task_type": "chem_conformation_explicit_dihedral",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_key_may_not_match_question"
+      ],
+      "not_clean_reasons": [
+        "answer_key_may_not_match_question"
+      ],
+      "score_is_trustworthy": false
+    },
+    {
+      "task_id": "sv-chem-chem_conformation-0009",
+      "free_text_fields": [],
+      "folder": "tasks/chemistry/chem_molecular_conformation/002-sv-chem-chem_conformation-0009",
+      "sub_domain": "chem_molecular_conformation",
+      "domain": "chemistry",
+      "viewer": "molstar",
+      "task_type": "chem_conformation_explicit_dihedral",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured",
+      "warn_kinds": [
+        "answer_key_may_not_match_question"
+      ],
+      "not_clean_reasons": [
+        "answer_key_may_not_match_question"
+      ],
+      "score_is_trustworthy": false
+    }
+  ],
+  "text_path": [
+    {
+      "task_id": "arch-anzj-clash-a06",
+      "free_text_fields": [
+        "critical_location_after",
+        "critical_location_before"
+      ],
+      "folder": "tasks/architecture/arch_code_compliance/003-arch-anzj-clash-a06",
+      "sub_domain": "arch_code_compliance",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "utility_network_clash_detection",
+      "asset_count": 5,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "arch-anzj-stair-b02-underside",
+      "free_text_fields": [
+        "protection_review"
+      ],
+      "folder": "tasks/architecture/arch_code_compliance/009-arch-anzj-stair-b02-underside",
+      "sub_domain": "arch_code_compliance",
+      "domain": "architecture",
+      "viewer": "gltf",
+      "task_type": "stair_ramp_spatial_validity",
+      "asset_count": 5,
+      "has_asset_2d": true,
+      "mcp_allow_list_source": "declared",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    },
+    {
+      "task_id": "sv-arch-exp-03",
+      "free_text_fields": [
+        "relative_position"
+      ],
+      "folder": "tasks/architecture/arch_structural_defects/005-sv-arch-exp-03",
+      "sub_domain": "arch_structural_defects",
+      "domain": "architecture",
+      "viewer": "architecture_inspection",
+      "task_type": "bridge-damage-localization",
+      "asset_count": 1,
+      "has_asset_2d": false,
+      "mcp_allow_list_source": "tool_policy",
+      "evaluation_ready": true,
+      "answer_form": "structured_matching_schema",
+      "warn_kinds": [],
+      "not_clean_reasons": [],
+      "score_is_trustworthy": true
+    }
+  ],
+  "achieved": {
+    "n": 32,
+    "per_sub_domain": 2,
+    "sub_domains": [
+      "arch_code_compliance",
+      "arch_consistency_alignment",
+      "arch_cross_floor_alignment",
+      "arch_structural_defects",
+      "arch_structural_deformation",
+      "bio_component_configuration",
+      "bio_molecular_contact",
+      "cad_assembly_interfaces",
+      "cad_geometry_drawings",
+      "cad_mechanisms_functions",
+      "cad_parts_features",
+      "chem_molecular_conformation",
+      "chem_molecular_extent",
+      "med_imaging_geometry",
+      "med_lesion_localization"
+    ],
+    "viewer_families": [
+      "architecture_inspection",
+      "bim_coordination",
+      "gltf",
+      "molstar",
+      "niivue",
+      "occt"
+    ],
+    "domains": [
+      "architecture",
+      "biology",
+      "chemistry",
+      "mechanical-cad",
+      "medical"
+    ],
+    "mcp_allow_list_sources": [
+      "declared",
+      "tool_policy"
+    ],
+    "trustworthy": 23,
+    "untrustworthy": 9,
+    "by_answer_form": {
+      "structured": 11,
+      "structured_matching_schema": 21
+    },
+    "quota_met": [
+      "arch_code_compliance",
+      "arch_consistency_alignment",
+      "arch_cross_floor_alignment",
+      "arch_structural_defects",
+      "arch_structural_deformation",
+      "bio_component_configuration",
+      "bio_molecular_contact",
+      "cad_assembly_interfaces",
+      "cad_mechanisms_functions",
+      "cad_parts_features",
+      "chem_molecular_conformation",
+      "chem_molecular_extent",
+      "med_imaging_geometry",
+      "med_lesion_localization"
+    ],
+    "with_asset_2d": 11,
+    "without_asset_2d": 21,
+    "single_asset": 18,
+    "multi_asset": 14
+  },
+  "gaps": {
+    "sub_domains": [],
+    "under_quota": {
+      "cad_geometry_drawings": 1
+    },
+    "viewer_families": []
+  }
+}

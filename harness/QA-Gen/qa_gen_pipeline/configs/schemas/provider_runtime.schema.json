@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/provider_runtime.schema.json",
+  "description": "Explicitly approved, local-only provider runtime contracts with an external HTTPS endpoint approval.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "enabled",
+    "endpoint_env",
+    "endpoint_approval_path_env",
+    "credential_env",
+    "production_eligible",
+    "request",
+    "decision",
+    "providers"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_provider_runtime"},
+    "enabled": {"type": "boolean"},
+    "endpoint_env": {"const": "QAGEN_UNIV_BASE_URL"},
+    "endpoint_approval_path_env": {"const": "QAGEN_UNIV_ENDPOINT_APPROVAL_PATH"},
+    "credential_env": {"const": "QAGEN_UNIV_API_KEY"},
+    "production_eligible": {"const": false},
+    "request": {
+      "type": "object",
+      "required": ["timeout_seconds", "max_attempts", "initial_backoff_seconds"],
+      "properties": {
+        "timeout_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 120},
+        "max_attempts": {"type": "integer", "minimum": 1, "maximum": 3},
+        "initial_backoff_seconds": {"type": "number", "minimum": 0, "maximum": 2}
+      },
+      "additionalProperties": false
+    },
+    "decision": {
+      "type": "object",
+      "required": ["id", "decision", "decided_by", "decided_at", "scope"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "decision": {"const": "approved_for_local_pilot"},
+        "decided_by": {"type": "string", "minLength": 1},
+        "decided_at": {"type": "string", "minLength": 1},
+        "scope": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "providers": {
+      "type": "object",
+      "required": ["anthropic", "deepseek", "openai"],
+      "properties": {
+        "anthropic": {
+          "allOf": [
+            {"$ref": "#/definitions/provider"},
+            {"properties": {
+              "model": {"const": "claude-opus-5"},
+              "path": {"const": "/v1/messages"},
+              "wire_protocol": {"const": "anthropic_messages"},
+              "thinking": {"const": "not_applicable"}
+            }}
+          ]
+        },
+        "deepseek": {
+          "allOf": [
+            {"$ref": "#/definitions/provider"},
+            {"properties": {
+              "model": {"const": "deepseek-v4-pro"},
+              "path": {"const": "/v1/chat/completions"},
+              "wire_protocol": {"const": "openai_chat_completions"},
+              "thinking": {"const": "disabled"}
+            }}
+          ]
+        },
+        "openai": {
+          "allOf": [
+            {"$ref": "#/definitions/provider"},
+            {"properties": {
+              "model": {"const": "gpt-5.6-sol"},
+              "path": {"const": "/v1/chat/completions"},
+              "wire_protocol": {"const": "openai_chat_completions"},
+              "thinking": {"const": "not_applicable"}
+            }}
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "provider": {
+      "type": "object",
+      "required": ["enabled", "model", "path", "wire_protocol", "thinking", "output_protocol", "usage_accounting", "multimodal"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "model": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "pattern": "^/v1/"},
+        "wire_protocol": {"enum": ["anthropic_messages", "openai_chat_completions"]},
+        "thinking": {"enum": ["disabled", "not_applicable"]},
+        "output_protocol": {"const": "json_schema_object"},
+        "usage_accounting": {"const": "provider_cost_or_reservation_upper_bound"},
+        "multimodal": {
+          "type": "object",
+          "required": ["supports_image_input", "supports_data_url"],
+          "properties": {
+            "supports_image_input": {"type": "boolean"},
+            "supports_data_url": {"type": "boolean"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

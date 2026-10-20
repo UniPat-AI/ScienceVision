@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_bundle_submission.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "submission_id", "bundle_id", "bundle_manifest_sha256", "batch_id", "expert_id", "results", "payload_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.expert_bundle_submission.v2"},
+    "contract_version": {"const": "sciencevision.expert_exchange.v2"},
+    "submission_id": {"type": "string", "pattern": "^sub_[0-9a-f]{24}$"},
+    "bundle_id": {"type": "string", "pattern": "^bndl_[0-9a-f]{24}$"},
+    "bundle_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "results": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

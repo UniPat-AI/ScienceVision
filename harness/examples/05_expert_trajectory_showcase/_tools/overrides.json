@@ -1,0 +1,6 @@
+{
+  "_comment": "导出后对文本做的人工修订（错别字 / 标点）。key = task_id；replacements = [[原文, 改后], ...]，会应用到 answer.reasoning 与 trajectory.final_result.reasoning 以及所有 keyframe.expert_note。原始值保存在 showcase.text_overrides 里。",
+  "sv-medi-med_ct_geometry-0000": {
+    "replacements": [["先看3d图，判断是否穿越中点,", "先看3d图，判断是否穿越中点"]]
+  }
+}

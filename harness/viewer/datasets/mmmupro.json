@@ -1,0 +1,31 @@
+[
+  {
+    "name": "mmmupro",
+    "label": "MMMU-Pro",
+    "modality": "shortcut-resistant MCQ",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/MMMU/MMMU_Pro",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "std10": {
+        "rows": 1730,
+        "jsonl": "/out_samples/mmmupro/std10.jsonl",
+        "first_qid": "mmmupro-std10-00-000000"
+      },
+      "std4": {
+        "rows": 1730,
+        "jsonl": "/out_samples/mmmupro/std4.jsonl",
+        "first_qid": "mmmupro-std4-00-000000"
+      },
+      "vision": {
+        "rows": 1730,
+        "jsonl": "/out_samples/mmmupro/vision.jsonl",
+        "first_qid": "mmmupro-vision-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 3673,
+    "total_rows": 5190
+  }
+]

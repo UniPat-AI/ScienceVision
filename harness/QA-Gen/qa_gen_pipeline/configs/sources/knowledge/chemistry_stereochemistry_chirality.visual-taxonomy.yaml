@@ -1,0 +1,59 @@
+schema_version: 1
+kind: qagen_visual_taxonomy_source
+id: chemistry-stereochemistry-chirality-visual-taxonomy
+leaf_id: chemistry.stereochemistry_chirality
+source_status: local_reference
+production_approval: false
+
+reference_sources:
+  - repo_path: QA-Gen/docs/Question-Rubric.md
+    content_digest: sha256:67bd4bd91f1e970e3366c7a92c3daa3e38326bbd77a047df427e8bde0a668875
+    use: canonical_quality_rubric
+  - repo_path: docs/superpowers/specs/2026-05-14-v1-v6-classification-design.md
+    content_digest: sha256:955d5e217bc40efb3799c244759bd89c308034c506f69d4f6f2c0229eb7290ff
+    use: approved_visual_taxonomy_definition
+
+content:
+  visual_target_types:
+    - tetrahedral_stereocenter
+    - four_substituent_path_geometry
+    - mirror_related_configuration
+    - non_stereogenic_control_site
+
+  forbidden_shortcuts:
+    - raw_asset_read
+    - metadata_lookup
+    - network_search
+    - arbitrary_compute
+    - compound_identity_lookup
+    - line_notation_stereochemistry
+    - coordinate_parser
+    - stereochemistry_toolkit
+
+  evidence_requirements:
+    required_viewer_operations:
+      - inspect
+      - rotate
+    required_evidence:
+      - digest-bound viewer trace
+      - visual annotation of each claimed center
+      - visual annotation of the four compared substituent paths
+      - final orientation or view state used for the judgment
+    allowed_truth_modes:
+      - expert_visual_judgment
+      - visual_annotation
+
+  requirements:
+    asset_requirements:
+      - anonymous scene reference with no public compound identity
+      - complete local connectivity for each evaluated center
+      - all required substituents represented or explicitly visible through controlled inspection
+      - stable anonymous atom labels for evidence binding
+    viewer_requirements:
+      - controlled inspect and rotate operations
+      - stable scene state across evidence capture
+      - center and substituent-path highlighting or equivalent visual annotation
+      - no raw file, metadata, network, or automated stereochemistry access
+    answer_modes:
+      - structured center assessment with evidence references
+      - categorical configuration only when the reviewed observability preconditions hold

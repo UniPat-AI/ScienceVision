@@ -1,0 +1,28 @@
+schema_version: 1
+kind: qagen_selection_source_spec
+id: v32_bcm522_sixroute_selection
+source_mode: committed_local_selection
+selection:
+  schema_version: sciencevision.eval_v32_selection.v1
+  input_filename: V32_BCM522_SIXROUTE_SELECTION.json
+  file_sha256: sha256:75ae4cbb771d42ff68811b2e06a82ca34cb00749f888673518dac937336463d6
+  id_sha256: 149b29605da6cd2862e427dacb4d1098b106d23eb95b248ffdf6dc0bdf1846d4
+  total: 60
+  domain_counts:
+    biology: 20
+    chemistry: 20
+    medical: 20
+historical_origin:
+  repository: SueMarsR/Science-Vision
+  commit: 7cc8754d709df31ff2c1dacb3185520221943bd5
+  path: docs/harbor/V32_BCM522_SIXROUTE_SELECTION.json
+asset_package:
+  expected_basename: scale-v3.2-bcm522-question-assets-bundle-20260826-v1.1.0
+  package_id: scale-v3.2-bcm522-question-assets-bundle-20260826-v1.1.0
+local_only: true
+production_eligible: false
+reference_owners:
+  - repo_path: QA-Gen/qa_gen_pipeline/inputs/selections/V32_BCM522_SIXROUTE_SELECTION.json
+    purpose: Frozen local development input imported byte-for-byte from the historical evaluation selection.
+  - repo_path: docs/harbor/V32_BCM522_SIXROUTE_SELECTION.json
+    purpose: Historical origin recorded for provenance; the content is pinned by commit and file digest above.

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_feedback_source_snapshot",
+  "id": "v3_2_expert_feedback",
+  "status": "source_captured_not_generation_authority",
+  "purpose": "Preserve review evidence and its provenance. This source does not by itself authorize a task, a truth value, or a release.",
+  "source": {
+    "provider": "lark_sheets",
+    "source_locator": "https://ncn595olgbv0.feishu.cn/wiki/PSg5w2nRFi0QMlkMaEcc7vu0n1g?sheet=WKRDN6",
+    "wiki_node_token": "PSg5w2nRFi0QMlkMaEcc7vu0n1g",
+    "workbook_token": "V0VRssAFehkzj7teGcIc3fFPn1d",
+    "workbook_title": "v3.2 版本内部专家反馈表",
+    "revision": 326,
+    "node_updated_at": "2026-08-27T16:32:17Z",
+    "read_at": "2026-08-28T07:38:16Z",
+    "read_identity": "user",
+    "sheets": [
+      {
+        "sheet_id": "038b9e",
+        "title": "生物",
+        "grid": {"rows": 202, "columns": 22},
+        "read_range": "A1:V202",
+        "content_digest": "sha256:9ed673d9b415a7c5bda9610f527080c258cf603c1b57ae807769bdb0b0c51587",
+        "has_more": false,
+        "raw_snapshot_committed": false
+      },
+      {
+        "sheet_id": "pTsWAG",
+        "title": "化学",
+        "grid": {"rows": 199, "columns": 22},
+        "read_range": "A1:V199",
+        "content_digest": "sha256:f88ce2b11c52849e222b3f1a74cb84b32311390724f6c78f91d768b2b7b3ef3b",
+        "has_more": false,
+        "raw_snapshot_committed": false
+      },
+      {
+        "sheet_id": "WKRDN6",
+        "title": "医疗影像",
+        "grid": {"rows": 208, "columns": 22},
+        "read_ranges": [
+          "A1:V30",
+          "A31:V60",
+          "A61:V90",
+          "A91:V120",
+          "A121:V150",
+          "A151:V180",
+          "A181:V208"
+        ],
+        "canonical_content_range": "A1:V208",
+        "content_digest": "sha256:8d44df355f9e86913dcf818e14e8e47e048c7414707d16f6e78e02edf27cb9b4",
+        "digest_algorithm": "sha256 of the UTF-8 annotated_csv returned by csv-get, with the final line-feed emitted by jq -r",
+        "has_more": false,
+        "raw_snapshot_committed": true,
+        "raw_snapshot_path": "raw/medical_imaging.rows.json"
+      }
+    ]
+  },
+  "external_review_evidence": {
+    "kind": "user_provided_local_html_review",
+    "filename": "题型审查-医学外壳几何内核.html",
+    "title": "医学外壳，几何内核",
+    "content_digest": "sha256:74739d6d9bf97246c2315e73365263306e51fdfe5ca737b95bb55bb944bf7e3a",
+    "observed_at": "2026-08-28",
+    "scope": "Medical audit evidence. It is not a ground-truth source and does not replace expert review."
+  },
+  "thread_user_feedback": {
+    "source_type": "direct_user_feedback",
+    "received_at": "2026-08-28",
+    "verbatim_summary": "Bio/Chem/Medical 都存在 measurement saturation，缺少性质判断/属性分析。measurement题仅少数配额；property/attribute/comparison题为主；逐域列可支持family与GT provenance类型；agent不能单独创造GT。",
+    "latest_medical_direction": [
+      "subdomain=question type；asset facets独立",
+      "M3D-RefSeg doctor description变semantic GT（finding/location/impression，按原标注粒度，不虚构器官）",
+      "no mask/overlay",
+      "solver-facing prompt不得暴露viewer工具、操作步骤或内部实现描述",
+      "localize-then-measure中hidden mask仅reference、宽容差",
+      "MSD Task04 hippocampus label1 anterior/label2 posterior禁止merge",
+      "coverage去重防35题同dataset同kernel伪多样性"
+    ],
+    "evidence_boundary": "This is a product-direction input from the current thread, not a quotation from the Feishu workbook."
+  },
+  "identity_policy": "Committed artifacts pseudonymize reviewers. The source content digest binds the unredacted live read.",
+  "artifact_paths": {
+    "raw_medical": "raw/medical_imaging.rows.json",
+    "explicit_feedback": "normalized/explicit_feedback.json",
+    "structural_rows": "normalized/structural_rows.json",
+    "derived_claims": "derived/triage_claims.json"
+  },
+  "accepted_policy_paths": {
+    "biology.bio_multi_structure_compare": "accepted/biology/bio_multi_structure_compare.json",
+    "biology.docking_pose_plausibility": "accepted/biology/docking_pose_plausibility.json",
+    "biology.molecular_collision_check": "accepted/biology/molecular_collision_check.json",
+    "chemistry.conformation_analysis": "accepted/chemistry/conformation_analysis.json",
+    "chemistry.coordination_chemistry": "accepted/chemistry/coordination_chemistry.json",
+    "chemistry.crystallography_packing": "accepted/chemistry/crystallography_packing.json",
+    "chemistry.reactive_conformation": "accepted/chemistry/reactive_conformation.json",
+    "chemistry.stereochemistry_chirality": "accepted/chemistry/stereochemistry_chirality.json",
+    "chemistry.steric_accessibility": "accepted/chemistry/steric_accessibility.json",
+    "medical.anatomical_region": "accepted/medical/anatomical_region.json",
+    "medical.imaging_feature_assessment": "accepted/medical/imaging_feature_assessment.json",
+    "medical.lesion_localization": "accepted/medical/lesion_localization.json"
+  },
+  "artifact_content_digests": {
+    "accepted/biology/bio_multi_structure_compare.json": "sha256:4cd09ba8ae3f51a6c3e20dc787f36f65af36503e8320ec3df0070d34087b7757",
+    "accepted/biology/docking_pose_plausibility.json": "sha256:3dcb989e9c98188a1ab5bed4b21e8fc9080bd73e6772a81af70d328ee24b6d82",
+    "accepted/biology/molecular_collision_check.json": "sha256:98115627d6a04c97430023a9eb75f24231155981f131d57cc04f0ad7d2844306",
+    "accepted/chemistry/conformation_analysis.json": "sha256:b9f684ed1a1cb96ae8e2ecaba7ef8c1c96db2c53768a49db12c01a0d831ba1bd",
+    "accepted/chemistry/coordination_chemistry.json": "sha256:017348d0b2d215caafce047d453d9870ed0e7e9504d3f7a33cd8690c5d9e6675",
+    "accepted/chemistry/crystallography_packing.json": "sha256:c37b2651933cd3b8131147d8c79183644a37f28acf8b7a254ffb9399ef0973ac",
+    "accepted/chemistry/reactive_conformation.json": "sha256:2418d801c7f0e19dbc6c1ff35b4636883824c55360dff2a2b5a95062d36213e6",
+    "accepted/chemistry/stereochemistry_chirality.json": "sha256:067c1a2e4803d1b9ed8c536ad242840c200f5a880d852585aa723c60f9c261b2",
+    "accepted/chemistry/steric_accessibility.json": "sha256:ddfb0efd6b97ef113ce3cad504ffbe9d4e3c237418de1304f97173d500216a80",
+    "accepted/medical/anatomical_region.json": "sha256:26585b2ee1785b56b858b425f4b4b1ea8581862bcb8d44f115c93ff787a42d4c",
+    "accepted/medical/imaging_feature_assessment.json": "sha256:7c23f73bab66c1a96c64fe45e79887562eb27ece807fad980514e7de04799fb3",
+    "accepted/medical/lesion_localization.json": "sha256:dbf483cf94e8b95b511b7e78fccef2e23f4c43af03bee2fb647cff54904b0963",
+    "raw/medical_imaging.rows.json": "sha256:cbf41f8a488c53155da1fef51e6818c2db68af0c2d8faf446fce4cabe6de86c6",
+    "normalized/explicit_feedback.json": "sha256:28be808ea5d89fb976c257587e8c2398a78fad5ebece39a4a7d5ee8bfbc1c611",
+    "normalized/structural_rows.json": "sha256:92adcf0329be201256211dfcfd9182c2a23e095309aec51e09849a71cd452e63",
+    "derived/triage_claims.json": "sha256:31fdff0930bbc0cbe852610d9d5326fc1e3e601b16afa6460e623e1b853c6d71",
+    "../../../../../docs/question-family-gt-redesign.md": "sha256:a5d8daaed4f06a6898654643af4e0f93db887475614347daa4a41dc10fa15633",
+    "../../../../../docs/v3.2-expert-feedback-triage.md": "sha256:b714f3b87ef6a8f01d0a2a92aca44143baff1dbc46e370d2099f285924eeef52"
+  },
+  "generation_boundary": {
+    "approved_knowledge_snapshot": false,
+    "approved_ground_truth": false,
+    "generation_eligible": false,
+    "release_eligible": false
+  }
+}

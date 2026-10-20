@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "dataset": "embodiedscan-demo",
+  "generated_at": "2026-05-19T10:22:58+00:00",
+  "policy": "strict_present_on_disk",
+  "count": 3,
+  "records": [
+    {
+      "qid": "embodiedscan-demo-office",
+      "dataset": "embodiedscan-demo",
+      "split": "demo",
+      "scene_or_case_id": "office",
+      "question": "",
+      "answer": null,
+      "asset_kind": "ply",
+      "path_repo": "datasets/EmbodiedScan/demo_data/openscan/office/mesh.ply",
+      "url_viewer": "/datasets/EmbodiedScan/demo_data/openscan/office/mesh.ply",
+      "extra": {
+        "no_qa": true
+      }
+    },
+    {
+      "qid": "embodiedscan-demo-restroom",
+      "dataset": "embodiedscan-demo",
+      "split": "demo",
+      "scene_or_case_id": "restroom",
+      "question": "",
+      "answer": null,
+      "asset_kind": "ply",
+      "path_repo": "datasets/EmbodiedScan/demo_data/openscan/restroom/mesh.ply",
+      "url_viewer": "/datasets/EmbodiedScan/demo_data/openscan/restroom/mesh.ply",
+      "extra": {
+        "no_qa": true
+      }
+    },
+    {
+      "qid": "embodiedscan-demo-restroom2",
+      "dataset": "embodiedscan-demo",
+      "split": "demo",
+      "scene_or_case_id": "restroom2",
+      "question": "",
+      "answer": null,
+      "asset_kind": "ply",
+      "path_repo": "datasets/EmbodiedScan/demo_data/openscan/restroom2/mesh.ply",
+      "url_viewer": "/datasets/EmbodiedScan/demo_data/openscan/restroom2/mesh.ply",
+      "extra": {
+        "no_qa": true
+      }
+    }
+  ]
+}

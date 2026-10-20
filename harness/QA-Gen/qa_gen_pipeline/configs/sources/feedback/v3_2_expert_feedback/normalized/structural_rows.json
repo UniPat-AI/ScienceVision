@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_feedback_structural_rows",
+  "source_snapshot": "v3_2_expert_feedback.medical_imaging",
+  "records": [
+    {
+      "source_rows": [3, 4, 5, 6],
+      "classification": "reviewer_subdomain_placeholder",
+      "reviewer": "reviewer_a",
+      "subdomain_label": "病灶定位",
+      "feedback_present": false,
+      "task_ids_present": false,
+      "interpretation_limit": "Do not synthesize a distinct feedback record or bind these rows to a task."
+    },
+    {
+      "source_rows": [8, 9, 10, 11],
+      "classification": "task_association_without_feedback",
+      "reviewer": "reviewer_b",
+      "task_ids": [
+        "sv-medi-med_mri_anatomy-0032",
+        "sv-medi-med_mri_anatomy-0081",
+        "sv-medi-med_mri_anatomy-0101",
+        "sv-medi-med_mri_anatomy-0190"
+      ],
+      "subdomain_label": "解剖区域划分",
+      "feedback_present": false,
+      "interpretation_limit": "These can be reviewed as related examples, but are not four additional reviewer judgments."
+    },
+    {
+      "source_rows": [12, 13, 14, 15, 16, 17],
+      "classification": "category_placeholder",
+      "subdomain_label": "病症特征判断",
+      "feedback_present": false,
+      "task_ids_present": false,
+      "interpretation_limit": "This label alone cannot authorize a requirement, a task family, or a negative judgment."
+    },
+    {
+      "source_row_range": {"start": 18, "end": 208},
+      "classification": "empty_grid_range",
+      "feedback_present": false,
+      "interpretation_limit": "All 22 columns are empty for every row in this inclusive range."
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "generated_at": "2026-06-05T04:38:16+00:00",
+  "domains": {
+    "pathvqa": {
+      "count": 1,
+      "sha": "9a698d45",
+      "url": "/viewer/datasets/pathvqa.json?v=9a698d45"
+    },
+    "cadvqa": {
+      "count": 1,
+      "sha": "21597e55",
+      "url": "/viewer/datasets/cadvqa.json?v=21597e55"
+    },
+    "scanqa": {
+      "count": 1,
+      "sha": "7a886ead",
+      "url": "/viewer/datasets/scanqa.json?v=7a886ead"
+    },
+    "sqa3d": {
+      "count": 1,
+      "sha": "2387f705",
+      "url": "/viewer/datasets/sqa3d.json?v=2387f705"
+    },
+    "3dsrbench": {
+      "count": 1,
+      "sha": "3757781b",
+      "url": "/viewer/datasets/3dsrbench.json?v=3757781b"
+    },
+    "vsibench": {
+      "count": 1,
+      "sha": "b3b4bf16",
+      "url": "/viewer/datasets/vsibench.json?v=b3b4bf16"
+    },
+    "embodiedscan": {
+      "count": 1,
+      "sha": "cae961ef",
+      "url": "/viewer/datasets/embodiedscan.json?v=cae961ef"
+    },
+    "vqarad": {
+      "count": 1,
+      "sha": "da9ef048",
+      "url": "/viewer/datasets/vqarad.json?v=da9ef048"
+    },
+    "slake": {
+      "count": 1,
+      "sha": "8fea0788",
+      "url": "/viewer/datasets/slake.json?v=8fea0788"
+    },
+    "omnimedvqa": {
+      "count": 1,
+      "sha": "c8a23b74",
+      "url": "/viewer/datasets/omnimedvqa.json?v=c8a23b74"
+    },
+    "gmaimmbench": {
+      "count": 1,
+      "sha": "0e82601c",
+      "url": "/viewer/datasets/gmaimmbench.json?v=0e82601c"
+    },
+    "m3dvqa": {
+      "count": 1,
+      "sha": "42a8207c",
+      "url": "/viewer/datasets/m3dvqa.json?v=42a8207c"
+    },
+    "m3drefseg": {
+      "count": 1,
+      "sha": "5e1975b2",
+      "url": "/viewer/datasets/m3drefseg.json?v=5e1975b2"
+    },
+    "designqa": {
+      "count": 1,
+      "sha": "cbf6e0e4",
+      "url": "/viewer/datasets/designqa.json?v=cbf6e0e4"
+    },
+    "scienceqa": {
+      "count": 1,
+      "sha": "8cf54edd",
+      "url": "/viewer/datasets/scienceqa.json?v=8cf54edd"
+    },
+    "mmmu": {
+      "count": 1,
+      "sha": "9f934304",
+      "url": "/viewer/datasets/mmmu.json?v=9f934304"
+    },
+    "mmmupro": {
+      "count": 1,
+      "sha": "ee2ea3f6",
+      "url": "/viewer/datasets/mmmupro.json?v=ee2ea3f6"
+    },
+    "scifibench": {
+      "count": 1,
+      "sha": "f7cbada8",
+      "url": "/viewer/datasets/scifibench.json?v=f7cbada8"
+    },
+    "charxiv": {
+      "count": 1,
+      "sha": "e47843d3",
+      "url": "/viewer/datasets/charxiv.json?v=e47843d3"
+    },
+    "spiqa": {
+      "count": 1,
+      "sha": "949e1d7d",
+      "url": "/viewer/datasets/spiqa.json?v=949e1d7d"
+    },
+    "mmsci": {
+      "count": 1,
+      "sha": "14d2668b",
+      "url": "/viewer/datasets/mmsci.json?v=14d2668b"
+    },
+    "astrollava": {
+      "count": 1,
+      "sha": "5248baaa",
+      "url": "/viewer/datasets/astrollava.json?v=5248baaa"
+    },
+    "physbench": {
+      "count": 1,
+      "sha": "81b7bb78",
+      "url": "/viewer/datasets/physbench.json?v=81b7bb78"
+    },
+    "scienceboard": {
+      "count": 1,
+      "sha": "faefb0ea",
+      "url": "/viewer/datasets/scienceboard.json?v=faefb0ea"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/v32_viewer_truth_evidence.schema.json",
+  "description": "Private proof that a viewer-measurement source truth was produced from a new controlled viewer receipt and evidence packet.",
+  "type": "object",
+  "required": ["source_record_digest", "viewer_receipt_digest", "evidence_digest", "answer"],
+  "properties": {
+    "source_record_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "viewer_receipt_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "evidence_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "answer": {"type": "object", "minProperties": 1}
+  },
+  "additionalProperties": false
+}

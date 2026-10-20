@@ -1,0 +1,41 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/compiled_selection_batch_lock_approval.schema.json",
+  "description": "Local human approval receipt for one digest-bound compiled-selection batch lock.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "decision",
+    "scope",
+    "subject_digest",
+    "reviewer",
+    "reviewed_at"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_compiled_selection_batch_lock_approval"},
+    "id": {"type": "string", "minLength": 1},
+    "decision": {"const": "approved"},
+    "scope": {
+      "enum": [
+        "compiled_selection_batch.mapping",
+        "compiled_selection_batch.routing",
+        "compiled_selection_batch.config",
+        "compiled_selection_batch.seed",
+        "compiled_selection_batch.knowledge",
+        "compiled_selection_batch.viewer",
+        "compiled_selection_batch.ground_truth_registry",
+        "compiled_selection_batch.inventory_batch"
+      ]
+    },
+    "subject_digest": {"$ref": "#/$defs/digest"},
+    "reviewer": {"type": "string", "minLength": 1},
+    "reviewed_at": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  }
+}

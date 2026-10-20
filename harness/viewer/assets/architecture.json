@@ -1,0 +1,158 @@
+[
+  {
+    "name": "Building-Architecture",
+    "path": "/crawl_data/architecture/bim_ifc/Building-Architecture.glb",
+    "size": 107864,
+    "viewer": "arch-model",
+    "format": "glb",
+    "note": "建筑专业模型 — 图纸↔3D 联动 (平面/正立面/侧立面 矢量图纸 + 交互式 3D)",
+    "plan": "/crawl_data/architecture/bim_ifc/drawings/Building-Architecture/plan.svg",
+    "elev_front": "/crawl_data/architecture/bim_ifc/drawings/Building-Architecture/elev_front.svg",
+    "elev_side": "/crawl_data/architecture/bim_ifc/drawings/Building-Architecture/elev_side.svg",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Building-Architecture.ifc"
+  },
+  {
+    "name": "Building-Hvac",
+    "path": "/crawl_data/architecture/bim_ifc/Building-Hvac.glb",
+    "size": 94740,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "暖通/MEP 专业模型 — 对应设备管线图纸",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Building-Hvac.ifc"
+  },
+  {
+    "name": "Building-Landscaping",
+    "path": "/crawl_data/architecture/bim_ifc/Building-Landscaping.opt.glb",
+    "size": 28480,
+    "viewer": "arch-model",
+    "format": "glb",
+    "note": "场地/景观专业模型 (已压缩 .opt.glb) — 图纸↔3D 联动 (平面/正立面/侧立面 矢量图纸 + 交互式 3D)",
+    "plan": "/crawl_data/architecture/bim_ifc/drawings/Building-Landscaping/plan.svg",
+    "elev_front": "/crawl_data/architecture/bim_ifc/drawings/Building-Landscaping/elev_front.svg",
+    "elev_side": "/crawl_data/architecture/bim_ifc/drawings/Building-Landscaping/elev_side.svg",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Building-Landscaping.ifc"
+  },
+  {
+    "name": "Building-Structural",
+    "path": "/crawl_data/architecture/bim_ifc/Building-Structural.glb",
+    "size": 145692,
+    "viewer": "arch-model",
+    "format": "glb",
+    "note": "结构专业模型 — 图纸↔3D 联动 (平面/正立面/侧立面 矢量图纸 + 交互式 3D)",
+    "plan": "/crawl_data/architecture/bim_ifc/drawings/Building-Structural/plan.svg",
+    "elev_front": "/crawl_data/architecture/bim_ifc/drawings/Building-Structural/elev_front.svg",
+    "elev_side": "/crawl_data/architecture/bim_ifc/drawings/Building-Structural/elev_side.svg",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Building-Structural.ifc"
+  },
+  {
+    "name": "Infra-Bridge",
+    "path": "/crawl_data/architecture/bim_ifc/Infra-Bridge.glb",
+    "size": 1161092,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "桥梁专业模型 — 对应桥梁结构/总体布置图纸",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Infra-Bridge.ifc"
+  },
+  {
+    "name": "Infra-Landscaping",
+    "path": "/crawl_data/architecture/bim_ifc/Infra-Landscaping.opt.glb",
+    "size": 190224,
+    "viewer": "arch-model",
+    "format": "glb",
+    "note": "基础设施场地/景观模型 (已压缩 .opt.glb) — 图纸↔3D 联动 (平面/正立面/侧立面 矢量图纸 + 交互式 3D)",
+    "plan": "/crawl_data/architecture/bim_ifc/drawings/Infra-Landscaping/plan.svg",
+    "elev_front": "/crawl_data/architecture/bim_ifc/drawings/Infra-Landscaping/elev_front.svg",
+    "elev_side": "/crawl_data/architecture/bim_ifc/drawings/Infra-Landscaping/elev_side.svg",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Infra-Landscaping.ifc"
+  },
+  {
+    "name": "Infra-Plumbing",
+    "path": "/crawl_data/architecture/bim_ifc/Infra-Plumbing.glb",
+    "size": 627804,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "给排水/管网专业模型 — 对应市政管线图纸",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Infra-Plumbing.ifc"
+  },
+  {
+    "name": "Infra-Rail",
+    "path": "/crawl_data/architecture/bim_ifc/Infra-Rail.glb",
+    "size": 247112,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "轨道专业模型 — 对应线路/轨道平纵断面图纸",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Infra-Rail.ifc"
+  },
+  {
+    "name": "Infra-Road",
+    "path": "/crawl_data/architecture/bim_ifc/Infra-Road.glb",
+    "size": 288352,
+    "viewer": "arch-model",
+    "format": "glb",
+    "note": "道路专业模型 — 图纸↔3D 联动 (平面/正立面/侧立面 矢量图纸 + 交互式 3D)",
+    "plan": "/crawl_data/architecture/bim_ifc/drawings/Infra-Road/plan.svg",
+    "elev_front": "/crawl_data/architecture/bim_ifc/drawings/Infra-Road/elev_front.svg",
+    "elev_side": "/crawl_data/architecture/bim_ifc/drawings/Infra-Road/elev_side.svg",
+    "ifc_download": "/crawl_data/architecture/bim_ifc/Infra-Road.ifc"
+  },
+  {
+    "name": "Banwol-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Banwol-Bridge.drc",
+    "size": 4556655,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Banwol-Bridge.las"
+  },
+  {
+    "name": "Ipbuk-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Ipbuk-Bridge.drc",
+    "size": 4412980,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Ipbuk-Bridge.las"
+  },
+  {
+    "name": "Palgok-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Palgok-Bridge.drc",
+    "size": 4306805,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Palgok-Bridge.las"
+  },
+  {
+    "name": "Seokdap-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Seokdap-Bridge.drc",
+    "size": 4735995,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Seokdap-Bridge.las"
+  },
+  {
+    "name": "Ssanghak-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Ssanghak-Bridge.drc",
+    "size": 5282354,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Ssanghak-Bridge.las"
+  },
+  {
+    "name": "Wonli-Bridge",
+    "path": "/crawl_data/architecture/bridge_pcl/Wonli-Bridge.drc",
+    "size": 4732281,
+    "viewer": "pointcloud",
+    "format": "drc",
+    "note": "桥梁 LiDAR 点云 — per-point 结构标签 (Background,Superstructure,Column,Pier Cap,Guardrail); 探伤几何底座",
+    "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+    "las_download": "/crawl_data/architecture/bridge_pcl/Wonli-Bridge.las"
+  }
+]

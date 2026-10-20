@@ -1,0 +1,32 @@
+schema_version: 1
+kind: qagen_viewer_adapter_config
+adapter_id: molstar-chirality-host-v1
+
+# The implementation exists, but a tracked template cannot name the private
+# workspace registry created by `viewer chirality-prepare`.
+enabled: false
+implementation:
+  module: qagen.viewer.chirality_host
+  factory: MolstarChiralityHostAdapter.from_registry_path
+
+backend_contract:
+  kind: sciencevision_molstar_browser_v1
+  session_source_path: null
+  open_schema_path: null
+
+scene_registry:
+  path: null
+  anonymous_lookup: true
+  solver_visible: false
+
+security:
+  network_access: false
+  accepts_solver_asset_identifiers: false
+  exposes_raw_asset_metadata: false
+  exposes_raw_asset_bytes: false
+  arbitrary_compute: false
+  attested_evidence: true
+
+operations:
+  allowed: [rotate, render]
+  native_measurements: []

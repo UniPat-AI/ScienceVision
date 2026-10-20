@@ -1,0 +1,56 @@
+{
+  "schema_version": "sciencevision.qa_qc.source_lock.v1",
+  "reviewed_batch": "scale-v1-reviewed-20260808",
+  "reviewed_at": "2026-08-08",
+  "source_dataset": "scale-v1",
+  "qc_schema_version": "1.4",
+  "source_files": [
+    {
+      "domain": "biology",
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-biology_final_tasks.jsonl",
+      "sha256": "6fa1e5096485faf2460dd245bfd85a4967b93bbe8b1f7fad9364e8128aa59117",
+      "task_count": 327
+    },
+    {
+      "domain": "chemistry",
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-chemistry_final_tasks.jsonl",
+      "sha256": "b4b40c5f74159d88fef1a9cb7e861c9c1d46438720a427040e262e39420fd670",
+      "task_count": 401
+    },
+    {
+      "domain": "medical",
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-medical_final_tasks.jsonl",
+      "sha256": "9c105c7dcfb059a1edae0fb9e9bcf81c5a07bbe3d334d667403605643427e86d",
+      "task_count": 839
+    }
+  ],
+  "qc_files": [
+    {
+      "domain": "biology",
+      "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/task_classifications.jsonl",
+      "classification_sha256": "bcbb100af0333b6aa79065fcb9630450b6a9a3963e61954284b5541a85b1b70f",
+      "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/report.json",
+      "report_sha256": "1d9fc70621f3a8a3f8112a83d630abb04fea46ba2686e8ff8f1149acabfb0f72",
+      "qc_schema_version": "1.4",
+      "task_count": 327
+    },
+    {
+      "domain": "chemistry",
+      "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/task_classifications.jsonl",
+      "classification_sha256": "47be6585657668c5c29c159dcd26431c5295e54b81e2b228f83117e20239f71d",
+      "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/report.json",
+      "report_sha256": "e61963aeb61ae7443ab9a843df89805abf43570574ffab7f42a022908eb5eb55",
+      "qc_schema_version": "1.4",
+      "task_count": 401
+    },
+    {
+      "domain": "medical",
+      "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/task_classifications.jsonl",
+      "classification_sha256": "e339bbba9785cf7ccae1fd6cd6a07f8da05839d71b12e83767c07f573d485e29",
+      "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/report.json",
+      "report_sha256": "4e0bb4971ee0defffa64b74535e7767ff5e34ec605207fab73b0a757db934a77",
+      "qc_schema_version": "1.4",
+      "task_count": 839
+    }
+  ]
+}

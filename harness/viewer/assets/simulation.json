@@ -1,0 +1,299 @@
+[
+  {
+    "name": "001-L-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/001-L-M.stl",
+    "size": 405684,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "001-R-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/001-R-M.stl",
+    "size": 389784,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "002-L-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/002-L-M.stl",
+    "size": 314684,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "002-R-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/002-R-M.stl",
+    "size": 317784,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "003-L-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/003-L-M.stl",
+    "size": 381484,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "003-R-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/003-R-M.stl",
+    "size": 349184,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "004-L-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/004-L-M.stl",
+    "size": 316184,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "004-R-M (STL)",
+    "path": "/crawl_data/simulation/comsol/figshare_28545548__ear_canal_stl/004-R-M.stl",
+    "size": 376084,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (figshare_28545548__ear_canal_stl)",
+    "record": "figshare_28545548__ear_canal_stl"
+  },
+  {
+    "name": "Relay54 (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__akashlevy__NEM-Relay-CAD/Relay54.mph",
+    "size": 19393905,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__akashlevy__NEM-Relay-CAD)",
+    "record": "github__akashlevy__NEM-Relay-CAD"
+  },
+  {
+    "name": "mesh (STL)",
+    "path": "/crawl_data/simulation/comsol/github__akashlevy__NEM-Relay-CAD/mesh.stl",
+    "size": 1469684,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (github__akashlevy__NEM-Relay-CAD)",
+    "record": "github__akashlevy__NEM-Relay-CAD"
+  },
+  {
+    "name": "PFM_KGD (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sana-shv__PFM-COMSOL/PFM_KGD.mph",
+    "size": 3541435,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sana-shv__PFM-COMSOL)",
+    "record": "github__sana-shv__PFM-COMSOL"
+  },
+  {
+    "name": "PFM_concrete_gravity_dam (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sana-shv__PFM-COMSOL/PFM_concrete_gravity_dam.mph",
+    "size": 4760321,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sana-shv__PFM-COMSOL)",
+    "record": "github__sana-shv__PFM-COMSOL"
+  },
+  {
+    "name": "coupled (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sergiolucarini__UMAT4COMSOL/coupled.mph",
+    "size": 1642746,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sergiolucarini__UMAT4COMSOL)",
+    "record": "github__sergiolucarini__UMAT4COMSOL"
+  },
+  {
+    "name": "crystalplasticity (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sergiolucarini__UMAT4COMSOL/crystalplasticity.mph",
+    "size": 2915426,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sergiolucarini__UMAT4COMSOL)",
+    "record": "github__sergiolucarini__UMAT4COMSOL"
+  },
+  {
+    "name": "elastoplastic (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sergiolucarini__UMAT4COMSOL/elastoplastic.mph",
+    "size": 449674,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sergiolucarini__UMAT4COMSOL)",
+    "record": "github__sergiolucarini__UMAT4COMSOL"
+  },
+  {
+    "name": "neohookean (.mph)",
+    "path": "/crawl_data/simulation/comsol/github__sergiolucarini__UMAT4COMSOL/neohookean.mph",
+    "size": 3271450,
+    "viewer": "raw",
+    "format": "mph",
+    "note": "COMSOL Multiphysics binary — opaque archive (github__sergiolucarini__UMAT4COMSOL)",
+    "record": "github__sergiolucarini__UMAT4COMSOL"
+  },
+  {
+    "name": "UMAT4COMSOL_manuscript (PDF)",
+    "path": "/crawl_data/simulation/comsol/github__sergiolucarini__UMAT4COMSOL/UMAT4COMSOL_manuscript.pdf",
+    "size": 4322378,
+    "viewer": "raw",
+    "format": "pdf",
+    "note": "companion document (github__sergiolucarini__UMAT4COMSOL)",
+    "record": "github__sergiolucarini__UMAT4COMSOL"
+  },
+  {
+    "name": "sample_comsol_v (.vtu)",
+    "path": "/crawl_data/simulation/comsol/github__sersolmaz__CFD_AR_VR/sample_comsol_v.vtu",
+    "size": 6565624,
+    "viewer": "field3d",
+    "format": "vtu",
+    "note": "COMSOL-exported unstructured field (github__sersolmaz__CFD_AR_VR)",
+    "record": "github__sersolmaz__CFD_AR_VR"
+  },
+  {
+    "name": "Supplementary_Material_1 (PDF)",
+    "path": "/crawl_data/simulation/comsol/github__sersolmaz__CFD_AR_VR/Supplementary_Material_1.pdf",
+    "size": 842943,
+    "viewer": "raw",
+    "format": "pdf",
+    "note": "companion document (github__sersolmaz__CFD_AR_VR)",
+    "record": "github__sersolmaz__CFD_AR_VR"
+  },
+  {
+    "name": "basemesh (.h5)",
+    "path": "/crawl_data/simulation/comsol/zenodo_16812462__cardiac_scar_pinn/basemesh.h5",
+    "size": 4448076,
+    "viewer": "field3d",
+    "format": "h5",
+    "note": "COMSOL/PINN HDF5 mesh (zenodo_16812462__cardiac_scar_pinn)",
+    "record": "zenodo_16812462__cardiac_scar_pinn"
+  },
+  {
+    "name": "scarmesh_1 (.h5)",
+    "path": "/crawl_data/simulation/comsol/zenodo_16812462__cardiac_scar_pinn/scarmesh_1.h5",
+    "size": 5410432,
+    "viewer": "field3d",
+    "format": "h5",
+    "note": "COMSOL/PINN HDF5 mesh (zenodo_16812462__cardiac_scar_pinn)",
+    "record": "zenodo_16812462__cardiac_scar_pinn"
+  },
+  {
+    "name": "8_sublayers (STL)",
+    "path": "/crawl_data/simulation/comsol/zenodo_18552513__magnonic_woodpile/8_sublayers.stl",
+    "size": 22350684,
+    "viewer": "gltf",
+    "format": "stl",
+    "note": "COMSOL-derived geometry (zenodo_18552513__magnonic_woodpile)",
+    "record": "zenodo_18552513__magnonic_woodpile"
+  },
+  {
+    "name": "Genesis: MPM multi-material",
+    "path": "/viewer/datasets/genesis/mpm_multi.glb",
+    "size": 24785768,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Genesis MPM: elastic box + liquid + plastic sphere (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: PBD cloth",
+    "path": "/viewer/datasets/genesis/cloth.glb",
+    "size": 14342832,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Genesis PBD: two cloths draping (animated mesh)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: SPH+MPM coupling",
+    "path": "/viewer/datasets/genesis/sphmpm.glb",
+    "size": 7030896,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Genesis SPH water + MPM elastic duck (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: PBD liquid",
+    "path": "/viewer/datasets/genesis/pbdliquid.glb",
+    "size": 7516064,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Genesis PBD liquid splash (animated point cloud)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: FEM elastic ball",
+    "path": "/viewer/datasets/genesis/soft_anim.glb",
+    "size": 777536,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Genesis FEM elastic ball impact (animated mesh)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: rigid contype",
+    "path": "/viewer/datasets/genesis/contype.glb",
+    "size": 2619992,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "刚体碰撞过滤: 3 彩色 box + dragon (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: Franka cube grasp",
+    "path": "/viewer/datasets/genesis/franka_cube.glb",
+    "size": 764028,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Franka 机械臂抓取方块 - position control (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: Franka grasp (SAP)",
+    "path": "/viewer/datasets/genesis/franka_grasp.glb",
+    "size": 1213536,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "Franka 机械臂 SAP 抓取刚体方块 (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: MPM sand wheel",
+    "path": "/viewer/datasets/genesis/sand_wheel.glb",
+    "size": 7675092,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "MPM 沙喷射落到 4 个交错轮子 (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: MPM cut dragon",
+    "path": "/viewer/datasets/genesis/cut_dragon.glb",
+    "size": 34744976,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "MPM 弹性龙被十字切刀切开, CPIC (animated)",
+    "record": "genesis_sim"
+  },
+  {
+    "name": "Genesis: IPC robot cloth",
+    "path": "/viewer/datasets/genesis/ipc_cloth.glb",
+    "size": 1483168,
+    "viewer": "genesis",
+    "format": "glb",
+    "note": "IPC: Franka + 2 FEM 布料下垂搭落方块阵 (animated)",
+    "record": "genesis_sim"
+  }
+]

@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.utility_network_clash_detection
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [architecture.discipline_clash_screening, architecture.mep_network_clash, A5_clash_overlap]
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.utility_network_geometry, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [utility_network_clash_localization]
+seed:
+  query: {domain: architecture, subdomain: utility_network_clash_detection, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, stable_component_identifiers, stated_clearance_threshold]
+viewer:
+  required_operations: [inspect, isolate, rotate, section_cut, measure_distance]
+answer:
+  allowed_truth_modes: [visual_annotation, expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, visual_annotation, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: DTIhdK07zooaiKxrViecJwqGnad, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: utility geometry, clash truth, and approved knowledge are missing."}

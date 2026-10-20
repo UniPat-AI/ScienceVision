@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "set_name": "Genesis_VP_Hard",
+  "set_version": "v1",
+  "task_counts": {
+    "generated_total": 2,
+    "kept_total": 2,
+    "filtered_total": 0,
+    "kept_ratio": 1.0
+  },
+  "token_usage": {
+    "total_tokens_total": 0
+  },
+  "cost": {
+    "cost_usd_total": 0.0
+  },
+  "by_physics_class": {
+    "mpm_fracture": 1,
+    "mpm_granular": 1
+  },
+  "ground_truth_status_distribution": {
+    "needs_rollout": 2
+  },
+  "scope_note": "v1 ships the 2 tasks present in the source whitelist (embodied/qa/genesis_vp.jsonl). The 2 aspirational Genesis_VP tasks (force-controlled grasp, FEM cloth) land when their source questions do."
+}

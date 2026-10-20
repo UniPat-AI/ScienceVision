@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_asset_manifest_fixture",
+  "fixture": {
+    "local_only": true,
+    "production_eligible": false
+  },
+  "fixture_payload": {
+    "assets": [
+      {
+        "opaque_asset_ref": "fixture-asset-biology-001",
+        "domain": "biology",
+        "subdomain": "docking_pose_plausibility",
+        "anonymous_scene_ref": "scene-fixture-biology-001"
+      },
+      {
+        "opaque_asset_ref": "fixture-asset-chemistry-001",
+        "domain": "chemistry",
+        "subdomain": "stereochemistry_chirality",
+        "anonymous_scene_ref": "scene-fixture-chemistry-001"
+      },
+      {
+        "opaque_asset_ref": "fixture-asset-medical-001",
+        "domain": "medical",
+        "subdomain": "anatomical_region",
+        "anonymous_scene_ref": "scene-fixture-medical-001"
+      }
+    ]
+  },
+  "fixture_payload_digest": "sha256:bc75ca471e483b6a09b8f69df1b76d7f7f004bac0f2a89fe734482015857e020"
+}

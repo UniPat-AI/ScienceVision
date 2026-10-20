@@ -1,0 +1,40 @@
+{
+  "advisories": {
+    "report_clause_coverage": {
+      "extra": [],
+      "missing": [],
+      "row_count": 0
+    }
+  },
+  "dataset_version": "scale-v2.3",
+  "gates": [
+    "carried_through",
+    "rewritten",
+    "prose_is_natural",
+    "no_spelled_measurements",
+    "self_scores"
+  ],
+  "instruction_contract": "sciencevision.natural_instruction.v1",
+  "outputs": {
+    "ScienceVision_scale-v2.3-biology_candidate_tasks.jsonl": {
+      "rows": 327,
+      "sha256": "ac6e4a51beafa00f84bd9bf1c86d4a6bb0d59478dfb2562f85fd493948983015"
+    },
+    "ScienceVision_scale-v2.3-chemistry_candidate_tasks.jsonl": {
+      "rows": 401,
+      "sha256": "ab792a03daa8620ea5fdc041721bf6147a796a62b05ae49384089d359416464b"
+    },
+    "ScienceVision_scale-v2.3-medical_candidate_tasks.jsonl": {
+      "rows": 605,
+      "sha256": "b72e72e5332a9890e1d52bbffdc1214dac0aaa3ad3cc1040a351c7cfca591d95"
+    },
+    "ScienceVision_scale-v2.3_physical_asset_questions.jsonl": {
+      "rows": 854,
+      "sha256": "bd9915840fb4017150bd26100154c2009c9e6252011f899e50cff32ecbc5a79c"
+    }
+  },
+  "physical_asset_question_count": 854,
+  "schema_version": "sciencevision.qa_gen.build_manifest.v1",
+  "source_dataset_version": "scale-v2.2",
+  "subquestion_count": 1333
+}

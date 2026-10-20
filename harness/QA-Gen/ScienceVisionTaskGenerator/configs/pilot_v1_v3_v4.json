@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "assets_path": "viewer/assets.json",
+  "matched_index_path": "datasets/_matched/index.json",
+  "runs_dir": "data/runs",
+  "target_domains": [
+    "biology",
+    "medical",
+    "industrial",
+    "robotics",
+    "pointcloud",
+    "topological_photonics",
+    "astronomy"
+  ],
+  "v_classes": ["V1", "V3", "V4"],
+  "tasks_per_cell": 2,
+  "max_tasks": null,
+  "include_extension_domains": false
+}

@@ -1,0 +1,21 @@
+[
+  {
+    "name": "3dsrbench",
+    "label": "3DSRBench",
+    "modality": "2D multi-view + spatial",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/ccvl/3DSRBench",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 5157,
+        "jsonl": "/out_samples/3dsrbench/test.jsonl",
+        "first_qid": "3dsrbench-test-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 1827,
+    "total_rows": 5157
+  }
+]

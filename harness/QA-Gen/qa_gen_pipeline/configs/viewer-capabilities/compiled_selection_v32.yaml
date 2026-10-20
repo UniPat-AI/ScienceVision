@@ -1,0 +1,82 @@
+schema_version: 1
+kind: qagen_compiled_selection_viewer_capability_mapping
+id: compiled_selection_v32_local_viewer_capabilities
+status: local_review_only
+profiles:
+  - id: molstar_mcp_local_review_v1
+    viewer_family: molstar
+    source_viewers:
+      - molstar_deployed
+    asset_formats:
+      - bcif
+      - cif
+      - mmcif
+      - mol
+      - mol2
+      - pdb
+      - sdf
+      - xyz
+    leaf_coverage:
+      - biology.molecular_collision_check
+      - biology.docking_pose_plausibility
+      - chemistry.steric_accessibility
+      - chemistry.conformation_analysis
+    source_operation_aliases:
+      viewer_rotate: rotate
+      viewer_zoom: zoom
+      viewer_measure_distance: measure_distance
+      viewer_measure_dihedral: measure_dihedral
+    controlled_operations:
+      - inspect
+      - isolate
+      - render
+      - rotate
+      - zoom
+      - measure_distance
+      - measure_dihedral
+    native_measurement_operations:
+      - measure_distance
+      - measure_dihedral
+    unsupported_operations:
+      - measure_angle
+      - measure_area
+      - measure_volume
+    evidence:
+      mcp_adapter: viewer/shared/molstar-mcp-adapter.js
+      render_bridge: qagen.viewer.chirality_host plus qagen.reviewer_bundle
+      scope: existing_local_implementation_only
+  - id: niivue_mcp_local_review_v1
+    viewer_family: niivue
+    source_viewers:
+      - niivue_deployed
+    asset_formats:
+      - nii
+      - nii.gz
+    leaf_coverage:
+      - medical.volumetric_target_geometry
+    source_operation_aliases:
+      viewer_rotate: rotate
+      viewer_zoom: zoom
+      viewer_slice: slice
+      viewer_window_level: window_level
+      viewer_bbox: bbox
+    controlled_operations:
+      - inspect
+      - render
+      - rotate
+      - zoom
+      - slice
+      - window_level
+      - bbox
+      - overlay_compare
+    native_measurement_operations: []
+    unsupported_operations:
+      - measure_distance
+      - measure_angle
+      - measure_dihedral
+      - measure_area
+      - measure_volume
+    evidence:
+      mcp_adapter: viewer/shared/niivue-mcp-adapter.js
+      render_bridge: qagen.reviewer_bundle
+      scope: existing_local_implementation_only

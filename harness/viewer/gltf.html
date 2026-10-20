@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<title>Three.js mesh viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/GLTFLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/DRACOLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/KTX2Loader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/libs/meshopt_decoder.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/OBJLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/PLYLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/STLLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/TrackballControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/environments/RoomEnvironment.js">
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #info { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; }
+  /* When embedded in an iframe (e.g. match3d.html previews) the topbar
+     and info overlay just steal pixels from a small viewport. The
+     `embedded` class — set in JS when window.self !== window.top — drops
+     them, giving the canvas the full iframe height. */
+  body.embedded .topbar,
+  body.embedded #info { display: none !important; }
+  body.embedded #scene { height: 100vh; top: 0; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Three.js</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">glTF / GLB · STL · OBJ · PLY · OrbitControls (drag/scroll)</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="info">drag = rotate · scroll = zoom · right-drag = pan</div>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { attachCutaway } from '/viewer/shared/cutaway.js';
+import { applyCamFromUrl } from '/viewer/shared/cam_url.js';
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+// Detect iframe embedding (match3d.html previews) and reclaim the
+// pixels otherwise eaten by the topbar + info overlay. Done before
+// renderer.setSize so the canvas sizing is correct from frame 1.
+if (window.self !== window.top) {
+  document.body.classList.add('embedded');
+}
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // clamp DPR: bound fragment cost on hi-DPI / software-WebGL (issue 70)
+// Force-layout once so canvas.clientWidth/Height reflect the actual
+// post-CSS dimensions (iframes occasionally report 0 if we sample too
+// early in the init pass).
+canvas.getBoundingClientRect();
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+// GLTFLoader singleton with Draco / Meshopt / KTX2 decoders wired in.
+// Required for compressed glTF assets using KHR_draco_mesh_compression,
+// EXT_meshopt_compression, or KHR_texture_basisu. Decoders are no-ops
+// for uncompressed glTF, so attaching them has no downside.
+// KTX2Loader.detectSupport(renderer) MUST run after renderer is built;
+// it inspects WebGL extensions to pick the GPU-native target format
+// (ASTC / BC7 / ETC2 / RGBA8).
+const DECODER_BASE = '/viewer/shared/vendor/three/0.160.0/examples/jsm/';
+const dracoLoader = new DRACOLoader().setDecoderPath(DECODER_BASE + 'libs/draco/gltf/');
+const ktx2Loader  = new KTX2Loader().setTranscoderPath(DECODER_BASE + 'libs/basis/').detectSupport(renderer);
+const gltfLoader  = new GLTFLoader()
+  .setDRACOLoader(dracoLoader)
+  .setKTX2Loader(ktx2Loader)
+  .setMeshoptDecoder(MeshoptDecoder);
+
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.001, 1000);
+camera.position.set(0.5, 0.4, 1.2);
+
+// TrackballControls (not OrbitControls): OrbitControls clamps polar
+// angle to [0, π] so dragging up/down hits a hard wall at the poles —
+// that's the "rotation gets stuck at a certain angle" the user reported.
+// TrackballControls lets the camera tumble freely on any axis. We pay
+// for that with a tilting horizon, which is fine for inspection work
+// (orbit controls' fixed horizon was only meaningful when we also
+// pinned camera.up, which the fit math already handles for first
+// presentation; from there users want freedom).
+const controls = new TrackballControls(camera, canvas);
+// Speeds picked to feel similar to the previous OrbitControls at
+// zoomSpeed=3.5: TrackballControls' zoomSpeed default 1.2 was too
+// slow inside the small match3d iframes.
+controls.rotateSpeed = 2.5;
+controls.zoomSpeed = 1.8;
+controls.panSpeed = 1.0;
+controls.staticMoving = false;
+controls.dynamicDampingFactor = 0.2;
+// Allow extreme close-ups + generous pull-back. Match the earlier
+// minDistance for sub-cm details, max for big scenes.
+controls.minDistance = 0.005;
+controls.maxDistance = 200;
+
+// MCP single-shot camera override. When ?cam=<base64url(JSON)> is
+// present, we honor it and skip the auto-fit framing on first load.
+// This is how sv3d_render PNGs become comparable to the live viewer.
+const camFromUrl = applyCamFromUrl(camera, controls, params);
+
+const KEYLIGHT = new THREE.DirectionalLight(0xffffff, 1.2);
+KEYLIGHT.position.set(2, 3, 2);
+scene.add(KEYLIGHT);
+scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+const cutaway = attachCutaway({ THREE, renderer, scene });
+
+// ── Coordinate-axis gizmo (opt-in via ?axes=1) ──────────────────────────────
+// A small labelled X/Y/Z triad in the bottom-right corner that tumbles with
+// the camera, so the viewer always shows the model's own CAD coordinate frame
+// (OCC/cascadio keeps the STEP frame — no Y-up rewrite — so blue Z here is the
+// part's authored Z). Opt-in so other embeds of this shared viewer are
+// untouched. When on, we take over clearing: autoClear=false + a manual
+// full-viewport clear each frame, then the triad is drawn over a cleared
+// depth buffer in a corner viewport.
+const SHOW_AXES = params.get('axes') === '1' || params.get('axes') === 'true';
+let axisScene = null, axisCamera = null;
+const AXIS_VP = 118; // gizmo viewport size in px
+const _gizmoDir = new THREE.Vector3();
+if (SHOW_AXES) {
+  axisScene = new THREE.Scene();
+  const helper = new THREE.AxesHelper(1);
+  helper.material.depthTest = false;
+  helper.material.toneMapped = false;
+  axisScene.add(helper);
+  const mkLabel = (text, css) => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const ctx = c.getContext('2d');
+    ctx.font = 'bold 46px system-ui, sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = css; ctx.fillText(text, 32, 34);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+    const spr = new THREE.Sprite(new THREE.SpriteMaterial(
+      { map: tex, depthTest: false, transparent: true, toneMapped: false }));
+    spr.scale.set(0.45, 0.45, 0.45);
+    return spr;
+  };
+  const lx = mkLabel('X', '#ff6b6b'); lx.position.set(1.3, 0, 0);
+  const ly = mkLabel('Y', '#63e06b'); ly.position.set(0, 1.3, 0);
+  const lz = mkLabel('Z', '#6ba8ff'); lz.position.set(0, 0, 1.3);
+  axisScene.add(lx, ly, lz);
+  axisCamera = new THREE.PerspectiveCamera(50, 1, 0.1, 10);
+  // We drive clearing manually now (see the render loop). Pin the clear
+  // colour to the scene background so the manual clear() paints the right
+  // dark backdrop from the very first frame.
+  renderer.autoClear = false;
+  renderer.setClearColor(0x0d1117, 1);
+}
+
+function fitAndAdd(obj) {
+  // Position the camera in world space — no geometry mutation, no
+  // confusing scale-vs-position ordering. (Prior attempt scaled the
+  // mesh then translated by sphere.center, but three.js applies
+  // world = position + scale*v so the scale doesn't propagate to the
+  // translation; the sphere centre ended up several metres off-origin.)
+  scene.add(obj);
+  if (camFromUrl) {
+    cutaway.setRoot(obj);
+    return;
+  }
+  const box = new THREE.Box3().setFromObject(obj);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+
+  // Auto-detect the vertical axis from bbox geometry. The shortest
+  // axis is overwhelmingly the up axis for anything that has a floor —
+  // ScanNet/SQA3D/EmbodiedScan PLY files are Z-up (z = room height
+  // ~2.5m, x/y = floor plane ~4-6m) and three.js defaults to Y-up,
+  // which would render the room lying on its side.
+  //
+  // The detection rule looks at the SORTED axis lengths
+  // [shortest, mid, longest]:
+  //   • `shortest < 0.7 × longest`  →  one axis is clearly shorter
+  //   • `mid >= 0.5 × longest`      →  the other two axes look like
+  //                                    a floor plane (roughly comparable)
+  // The earlier rule required `shortest < threshold × every_other_dim`,
+  // which failed on rectangular rooms like scene0426_00 where the floor
+  // plane is itself oblong (e.g. 4×3): the test against the *narrower*
+  // floor edge rejected the case even though the room obviously had a
+  // floor. The sorted-dim form fixes that. Generic ~cubic CAD assets
+  // (ratios near 1.0) still don't trigger.
+  const dims = [size.x, size.y, size.z];
+  const sortedDims = [...dims].sort((a, b) => a - b);
+  const [shortest, mid, longest] = sortedDims;
+  const isClearlyVertical =
+    longest > 0 &&
+    shortest < 0.70 * longest &&
+    mid >= 0.50 * longest;
+  const minAxis = dims.indexOf(shortest);
+
+  let camDir;
+  // `lookTarget` is what controls.target points at — i.e. the on-screen
+  // centre of the frame. For indoor scenes we deliberately bias it
+  // *above the floor* (≈30 % up the room height) instead of the bbox
+  // centroid, so the floor settles into the lower portion of the frame
+  // and the ceiling into the upper portion. Without this bias the
+  // camera looks straight at the geometric centre, which puts the floor
+  // halfway up the viewport — the "floor not at the bottom" report.
+  const lookTarget = center.clone();
+
+  if (isClearlyVertical) {
+    // The shortest axis is "up". Tell three.js so OrbitControls
+    // orbits around it correctly (yaw stays in the floor plane).
+    const up = new THREE.Vector3();
+    up.setComponent(minAxis, 1);
+    camera.up.copy(up);
+
+    // Camera direction: in the floor plane (the two non-up axes) plus
+    // a small lift toward up — the classic 3/4 architectural look.
+    camDir = new THREE.Vector3();
+    const horizAxes = [0, 1, 2].filter((i) => i !== minAxis);
+    camDir.setComponent(horizAxes[0], 0.7);
+    camDir.setComponent(horizAxes[1], 0.7);
+    camDir.setComponent(minAxis, 0.35);
+    camDir.normalize();
+
+    // Move target down ~20 % of room height along the up axis so the
+    // camera looks slightly down — pushes the floor to the bottom of
+    // the frame. We bias *down from centroid* rather than *up from
+    // box.min* because centroid-relative makes the magnitude scale
+    // with room height (small rooms move a little, tall rooms move a
+    // lot) without re-introducing parameters per-scene.
+    const dropAlongUp = size.getComponent(minAxis) * 0.20;
+    lookTarget.setComponent(
+      minAxis,
+      lookTarget.getComponent(minAxis) - dropAlongUp,
+    );
+  } else {
+    // No clearly vertical axis — assume default Y-up, legacy 3/4 view.
+    camera.up.set(0, 1, 0);
+    camDir = new THREE.Vector3(0.45, 0.35, 0.85).normalize();
+  }
+
+  // Fit to the *longest single axis* of the bounding box rather than
+  // the AABB-circumscribing sphere. For an oblong shape like a ScanNet
+  // room (4×3×2.5 m) the sphere's radius is sqrt(2²+1.5²+1.25²)=2.8m
+  // but the dominant axis half-length is only 2.0m — sphere fit framed
+  // the room at ~70% of viewport; max-axis fit pushes that to ~92%.
+  // Corners along the diagonal can graze the edge of the viewport,
+  // which is fine: the user has full orbit controls to inspect them.
+  const effRadius = Math.max(size.x, size.y, size.z) * 0.5;
+  const fovRad = camera.fov * Math.PI / 180;
+  const dist = effRadius / Math.sin(fovRad / 2);
+  // Anchor camera position on lookTarget (not bbox centroid). Both
+  // would put lookTarget at the centre of the frame, but anchoring on
+  // lookTarget keeps the framing distance exactly `dist`; anchoring on
+  // centroid makes the actual eye→target distance slightly longer
+  // (sqrt(dist² + bias²)), giving a marginally wider zoom-out. Tiny
+  // effect, but the simpler invariant is easier to reason about when
+  // tweaking the bias.
+  camera.position.copy(lookTarget).add(camDir.multiplyScalar(dist));
+  camera.near = Math.max(effRadius * 0.001, 1e-3);
+  camera.far = effRadius * 100;
+  camera.updateProjectionMatrix();
+  controls.target.copy(lookTarget);
+  controls.minDistance = effRadius * 0.01;
+  controls.maxDistance = effRadius * 50;
+  controls.update();
+  cutaway.setRoot(obj);
+}
+
+function loadByExt(file) {
+  // Strip any ?query / #hash before sniffing the extension — callers may
+  // append a cache-busting `?v=…` (the loaders below still fetch the full
+  // `file` string, so the bust is preserved).
+  const lower = file.toLowerCase().split(/[?#]/)[0];
+  if (lower.endsWith('.gltf') || lower.endsWith('.glb')) {
+    gltfLoader.load(file, g => fitAndAdd(g.scene), undefined, onErr);
+  } else if (lower.endsWith('.stl')) {
+    new STLLoader().load(file, geom => {
+      geom.computeVertexNormals();
+      const material = new THREE.MeshStandardMaterial({ color: 0x9aa7d0, metalness: 0.1, roughness: 0.6 });
+      fitAndAdd(new THREE.Mesh(geom, material));
+    }, undefined, onErr);
+  } else if (lower.endsWith('.obj')) {
+    new OBJLoader().load(file, obj => {
+      obj.traverse(c => {
+        if (c.isMesh && !c.material?.map) {
+          c.material = new THREE.MeshStandardMaterial({ color: 0xc4b59a, metalness: 0.05, roughness: 0.7 });
+        }
+      });
+      fitAndAdd(obj);
+    }, undefined, onErr);
+  } else if (lower.endsWith('.ply')) {
+    // Progressive load — parses ASCII header from the streaming response,
+    // shows a THREE.Points cloud after every BATCH vertices arrive, then
+    // replaces with a THREE.Mesh once faces are decoded. Falls back to
+    // the bundled PLYLoader when the file is ASCII or uses an exotic
+    // list-property layout the streaming parser doesn't recognise.
+    // See docs/ViewerPerformanceOptimization.md §2.4.
+    loadPlyProgressive(file).catch(err => {
+      console.warn('progressive PLY failed, falling back to PLYLoader:', err);
+      new PLYLoader().load(file, geom => {
+        geom.computeVertexNormals();
+        const hasColor = geom.hasAttribute('color');
+        const material = new THREE.MeshStandardMaterial({
+          vertexColors: hasColor,
+          color: hasColor ? 0xffffff : 0xa8b4c7,
+          metalness: 0.05, roughness: 0.7,
+        });
+        fitAndAdd(new THREE.Mesh(geom, material));
+      }, undefined, onErr);
+    });
+  } else {
+    onErr(new Error('Unsupported extension: ' + lower));
+  }
+}
+
+function onErr(err) {
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="error-box">Failed to load:\n' + (err?.message || err) + '</div>');
+}
+
+// ── Progressive PLY loader ──────────────────────────────────────────────────
+// Streams a binary PLY response, decodes the ASCII header on the fly, and
+// renders THREE.Points after every BATCH vertices arrive (Phase 1). Once
+// the body is fully read the face list is decoded and a THREE.Mesh
+// replaces the points (Phase 2). The point cloud already shows the scene
+// shape and colours after ~5 % of the file has been transferred — for a
+// 7 MB ScanNet PLY that's roughly 350 KB instead of waiting for all 7 MB.
+//
+// Tradeoffs:
+//   - Only handles binary_little_endian / binary_big_endian. ASCII PLY
+//     and unknown property-list layouts surface as throws and the caller
+//     falls back to PLYLoader, which buffers the entire file.
+//   - Only x/y/z and red/green/blue (uchar) per-vertex are extracted.
+//     Normals, alpha, custom attributes are skipped (offset-based reader
+//     ignores any property it didn't index).
+//   - Face lists are assumed to be `property list <ucount> <uindex>`
+//     where ucount is uchar and uindex is uint32 / int32. Quads and
+//     larger n-gons are fan-triangulated.
+const PLY_BATCH = 8000;
+
+const PROP_TYPE_BYTES = {
+  char: 1, uchar: 1, int8: 1, uint8: 1,
+  short: 2, ushort: 2, int16: 2, uint16: 2,
+  int: 4, uint: 4, int32: 4, uint32: 4, float: 4, float32: 4,
+  double: 8, float64: 8,
+};
+
+function parsePlyHeader(buf, len) {
+  // Returns { headerEnd, format, vertexCount, faceCount, vertexStride,
+  //           xOff, yOff, zOff, rOff, gOff, bOff, hasColor, faceListType }
+  // or null if "end_header\n" hasn't been seen yet in the first `len` bytes.
+  const sentinel = 'end_header\n';
+  // Cap header search at 64 KB so a corrupted binary blob doesn't make us
+  // scan the entire file looking for ASCII text.
+  const scanLen = Math.min(len, 65536);
+  let headerText = '';
+  for (let i = 0; i < scanLen; i++) headerText += String.fromCharCode(buf[i]);
+  const idx = headerText.indexOf(sentinel);
+  if (idx < 0) return null;
+  const headerEnd = idx + sentinel.length;
+  const lines = headerText.slice(0, headerEnd).split('\n');
+  const out = {
+    headerEnd,
+    format: null,
+    vertexCount: 0,
+    faceCount: 0,
+    vertexStride: 0,
+    xOff: -1, yOff: -1, zOff: -1,
+    rOff: -1, gOff: -1, bOff: -1,
+    hasColor: false,
+    faceListCountType: null,  // e.g. 'uchar'
+    faceListIndexType: null,  // e.g. 'uint'
+  };
+  let currentElement = null;
+  let stride = 0;
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line || line.startsWith('comment')) continue;
+    if (line.startsWith('format ')) {
+      const parts = line.split(/\s+/);
+      out.format = parts[1];  // 'ascii' / 'binary_little_endian' / 'binary_big_endian'
+    } else if (line.startsWith('element ')) {
+      const parts = line.split(/\s+/);
+      currentElement = parts[1];
+      const count = Number(parts[2]);
+      if (currentElement === 'vertex') out.vertexCount = count;
+      else if (currentElement === 'face') out.faceCount = count;
+    } else if (line.startsWith('property ')) {
+      const parts = line.split(/\s+/);
+      if (currentElement === 'vertex') {
+        const ptype = parts[1];
+        const pname = parts[2];
+        const sz = PROP_TYPE_BYTES[ptype];
+        if (!sz) throw new Error('PLY: unknown vertex property type: ' + ptype);
+        if (pname === 'x') out.xOff = stride;
+        else if (pname === 'y') out.yOff = stride;
+        else if (pname === 'z') out.zOff = stride;
+        else if (pname === 'red'   || pname === 'r') out.rOff = stride;
+        else if (pname === 'green' || pname === 'g') out.gOff = stride;
+        else if (pname === 'blue'  || pname === 'b') out.bOff = stride;
+        stride += sz;
+      } else if (currentElement === 'face' && parts[1] === 'list') {
+        // property list <countType> <indexType> vertex_indices
+        out.faceListCountType = parts[2];
+        out.faceListIndexType = parts[3];
+      }
+    }
+  }
+  out.vertexStride = stride;
+  out.hasColor = out.rOff >= 0 && out.gOff >= 0 && out.bOff >= 0;
+  if (out.format !== 'binary_little_endian' && out.format !== 'binary_big_endian') {
+    throw new Error('PLY: streaming parser only handles binary formats, got ' + out.format);
+  }
+  if (out.xOff < 0 || out.yOff < 0 || out.zOff < 0) {
+    throw new Error('PLY: missing x/y/z properties');
+  }
+  if (out.faceCount > 0) {
+    if (out.faceListCountType !== 'uchar' && out.faceListCountType !== 'uint8') {
+      throw new Error('PLY: face list count type ' + out.faceListCountType + ' not supported');
+    }
+    const idxBytes = PROP_TYPE_BYTES[out.faceListIndexType];
+    if (idxBytes !== 4) {
+      throw new Error('PLY: face index type ' + out.faceListIndexType + ' not supported (need 4-byte)');
+    }
+  }
+  return out;
+}
+
+function extractVertices(view, h, fromIdx, toIdx, posArr, colArr) {
+  // Reads vertices [fromIdx, toIdx) from the bound DataView and writes
+  // their positions/colours into posArr/colArr at the same indices.
+  // posArr and colArr are pre-sized Float32Arrays (positions = 3·vertexCount,
+  // colors = 3·vertexCount). Caller guarantees the view covers the byte
+  // range for the requested vertices.
+  //
+  // Vertex bytes start at h.headerEnd within the DataView's buffer — the
+  // body offset must be added on top of the per-vertex stride or we read
+  // garbage from the ASCII header region (NaN floats and bogus colours).
+  const le = h.format === 'binary_little_endian';
+  const stride = h.vertexStride;
+  const xOff = h.xOff, yOff = h.yOff, zOff = h.zOff;
+  const rOff = h.rOff, gOff = h.gOff, bOff = h.bOff;
+  const bodyStart = h.headerEnd;
+  for (let i = fromIdx; i < toIdx; i++) {
+    const base = bodyStart + i * stride;
+    const o3 = i * 3;
+    posArr[o3]     = view.getFloat32(base + xOff, le);
+    posArr[o3 + 1] = view.getFloat32(base + yOff, le);
+    posArr[o3 + 2] = view.getFloat32(base + zOff, le);
+    if (h.hasColor && colArr) {
+      // uchar 0..255 → float 0..1
+      colArr[o3]     = view.getUint8(base + rOff) / 255;
+      colArr[o3 + 1] = view.getUint8(base + gOff) / 255;
+      colArr[o3 + 2] = view.getUint8(base + bOff) / 255;
+    }
+  }
+}
+
+function buildFaceIndex(view, h, faceBytesStart) {
+  // Decodes the variable-length face list starting at `faceBytesStart`
+  // into a Uint32Array of triangle indices. Quads and n-gons are
+  // fan-triangulated (face[0,1,2], face[0,2,3], ...).
+  const le = h.format === 'binary_little_endian';
+  const indices = [];
+  let offset = faceBytesStart;
+  for (let f = 0; f < h.faceCount; f++) {
+    const n = view.getUint8(offset); offset += 1;
+    if (n < 3) { offset += n * 4; continue; }
+    const first = view.getUint32(offset, le);
+    let prev = view.getUint32(offset + 4, le);
+    offset += 8;
+    for (let k = 2; k < n; k++) {
+      const next = view.getUint32(offset, le);
+      offset += 4;
+      indices.push(first, prev, next);
+      prev = next;
+    }
+  }
+  return new Uint32Array(indices);
+}
+
+async function loadPlyProgressive(url) {
+  const resp = await fetch(url);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  const reader = resp.body.getReader();
+  const chunks = [];
+  let totalBytes = 0;
+
+  // Phase 0: accumulate bytes until the ASCII header is complete.
+  let header = null;
+  while (!header) {
+    const { value, done } = await reader.read();
+    if (done) {
+      throw new Error('PLY: EOF before end_header');
+    }
+    chunks.push(value);
+    totalBytes += value.length;
+    // Concatenate and try to parse — only re-concat when we've gained
+    // enough new bytes to plausibly contain end_header.
+    const merged = new Uint8Array(totalBytes);
+    let p = 0;
+    for (const c of chunks) { merged.set(c, p); p += c.length; }
+    header = parsePlyHeader(merged, totalBytes);
+    if (header) {
+      chunks.length = 0;
+      chunks.push(merged);
+    }
+  }
+
+  const h = header;
+  const positions = new Float32Array(h.vertexCount * 3);
+  const colors = h.hasColor ? new Float32Array(h.vertexCount * 3) : null;
+
+  // Phase 1: streaming THREE.Points.
+  const pointGeom = new THREE.BufferGeometry();
+  pointGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  if (colors) pointGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  pointGeom.setDrawRange(0, 0);
+  const pointMat = new THREE.PointsMaterial({
+    size: 0.012,
+    vertexColors: !!colors,
+    color: colors ? 0xffffff : 0xa8b4c7,
+    sizeAttenuation: true,
+  });
+  const points = new THREE.Points(pointGeom, pointMat);
+
+  let pointsAddedToScene = false;
+  let verticesProcessed = 0;
+  const vertexBytesEnd = h.headerEnd + h.vertexCount * h.vertexStride;
+
+  // Inner loop: drain reader, append chunks, decode any newly-complete
+  // vertex batches, render after each batch.
+  let merged = chunks[0];  // includes header still
+  chunks.length = 0;
+
+  async function drain() {
+    while (true) {
+      // How many full vertices are decodable now? We need bytes
+      // [headerEnd, headerEnd + verticesAvailable * stride] in `merged`.
+      const usableBytes = Math.min(merged.length, vertexBytesEnd);
+      const verticesAvailable = Math.floor(
+        (usableBytes - h.headerEnd) / h.vertexStride
+      );
+      if (verticesAvailable - verticesProcessed >= PLY_BATCH ||
+          (verticesAvailable === h.vertexCount && verticesProcessed < h.vertexCount)) {
+        const view = new DataView(merged.buffer, merged.byteOffset, merged.byteLength);
+        extractVertices(view, h, verticesProcessed, verticesAvailable, positions, colors);
+        pointGeom.attributes.position.needsUpdate = true;
+        if (colors) pointGeom.attributes.color.needsUpdate = true;
+        pointGeom.setDrawRange(0, verticesAvailable);
+        if (!pointsAddedToScene) {
+          // First batch: position the camera using the AABB of the
+          // vertices loaded so far. This is approximate (the AABB
+          // tightens as more verts arrive) but good enough for the
+          // first frame, and the user can orbit afterwards.
+          pointGeom.computeBoundingBox();
+          fitAndAdd(points);
+          pointsAddedToScene = true;
+        }
+        verticesProcessed = verticesAvailable;
+      }
+      if (verticesProcessed === h.vertexCount) break;
+      const { value, done } = await reader.read();
+      if (done) break;
+      // Append into merged.
+      const next = new Uint8Array(merged.length + value.length);
+      next.set(merged, 0);
+      next.set(value, merged.length);
+      merged = next;
+    }
+  }
+  await drain();
+
+  // Drain any remaining bytes beyond vertex data (face list).
+  while (merged.length < vertexBytesEnd ||
+         (h.faceCount > 0 && merged.length < vertexBytesEnd + 1)) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const next = new Uint8Array(merged.length + value.length);
+    next.set(merged, 0);
+    next.set(value, merged.length);
+    merged = next;
+  }
+  // Read until EOF for face data.
+  while (true) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    const next = new Uint8Array(merged.length + value.length);
+    next.set(merged, 0);
+    next.set(value, merged.length);
+    merged = next;
+  }
+
+  if (h.faceCount === 0) {
+    // Pure point cloud — nothing more to do. Phase 1 result is final.
+    return;
+  }
+
+  // Phase 2: build the index buffer + Mesh, swap in.
+  const view = new DataView(merged.buffer, merged.byteOffset, merged.byteLength);
+  const indices = buildFaceIndex(view, h, vertexBytesEnd);
+  const meshGeom = new THREE.BufferGeometry();
+  meshGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  if (colors) meshGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  meshGeom.setIndex(new THREE.BufferAttribute(indices, 1));
+  meshGeom.computeVertexNormals();
+  const meshMat = new THREE.MeshStandardMaterial({
+    vertexColors: !!colors,
+    color: colors ? 0xffffff : 0xa8b4c7,
+    metalness: 0.05, roughness: 0.7,
+  });
+  const mesh = new THREE.Mesh(meshGeom, meshMat);
+  // Replace the points with the mesh, then RE-FIT the camera using the
+  // complete mesh AABB. Phase 1's fitAndAdd(points) ran against the
+  // first-batch AABB, which is usually a thin sliver of vertices and
+  // fails the Z-up sorted-dims heuristic
+  // (shortest < 0.7×longest && mid >= 0.5×longest). Without re-fitting,
+  // camera.up stays at the default Y-up for ScanNet-style Z-up PLYs and
+  // the room renders on its side. Re-fitting on the full mesh AABB also
+  // restores the floor-down lookTarget bias from PR #11 and re-roots the
+  // cutaway tool on the mesh (otherwise it still points at the removed
+  // points object). fitAndAdd() does scene.add(mesh) itself, so we don't
+  // add it explicitly here.
+  scene.remove(points);
+  pointGeom.dispose();
+  pointMat.dispose();
+  fitAndAdd(mesh);
+}
+
+if (!file) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">No ?file= query param.</div>');
+} else {
+  loadByExt(file);
+}
+
+window.addEventListener('resize', () => {
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+  // TrackballControls reads canvas size at construction time to map
+  // input coords; without this, pointer dragging gets miscalibrated
+  // after a resize and rotation feels off-centre.
+  controls.handleResize();
+});
+
+renderer.setAnimationLoop(() => {
+  controls.update();
+  if (SHOW_AXES) {
+    const W = canvas.clientWidth, H = canvas.clientHeight;
+    // Main scene, full viewport (we own clearing now).
+    renderer.setViewport(0, 0, W, H);
+    renderer.clear();
+    renderer.render(scene, camera);
+    // Mirror the main camera's orientation onto the gizmo camera so the
+    // triad tumbles in lock-step with the model.
+    _gizmoDir.subVectors(camera.position, controls.target).normalize().multiplyScalar(3);
+    axisCamera.position.copy(_gizmoDir);
+    axisCamera.up.copy(camera.up);
+    axisCamera.lookAt(0, 0, 0);
+    // Draw the triad over a cleared depth buffer in a corner viewport.
+    renderer.clearDepth();
+    renderer.setViewport(W - AXIS_VP - 10, 10, AXIS_VP, AXIS_VP);
+    renderer.render(axisScene, axisCamera);
+  } else {
+    renderer.render(scene, camera);
+  }
+});
+</script>
+</body>
+</html>

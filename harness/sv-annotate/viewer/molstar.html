@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mol* viewer — Science Vision</title>
+<link rel="stylesheet" href="/sv-annotate/viewer/shared/style.css">
+<script src="/sv-annotate/viewer/shared/neg-banner.js" defer></script>
+<script src="/sv-annotate/viewer/shared/capture/annotate-shell.js" type="module"></script>
+<link rel="stylesheet" href="/sv-annotate/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.css">
+<link rel="preload" as="script" href="/sv-annotate/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.js">
+<style>
+  #viewer { width: 100vw; height: calc(100vh - 49px); position: fixed; top: 49px; left: 0; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/sv-annotate/">← Shell</a><strong>Mol*</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">PDB / mmCIF / SDF / MOL2</div>
+</header>
+<div id="viewer"></div>
+<script src="/sv-annotate/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  const format = params.get('type') || 'mmcif';   // mmcif | pdb | sdf | mol2
+  document.getElementById('filename').textContent = file ? file.split('/').pop() + '  ·  fmt=' + format : '(no file)';
+  if (!file) {
+    document.getElementById('viewer').innerHTML = '<div class="error-box">No ?file= query param.</div>';
+  } else {
+    // Map our format aliases to Mol*'s loader format identifiers.
+    const FORMAT_ALIAS = {
+      mmcif: 'mmcif',
+      cif:   'mmcif',
+      pdb:   'pdb',
+      bcif:  'mmbcif',
+      sdf:   'sdf',
+      mol:   'mol',
+      mol2:  'mol2',
+      xyz:   'xyz',
+    };
+    const molFormat = FORMAT_ALIAS[format] || format;
+
+    molstar.Viewer.create('viewer', {
+      layoutIsExpanded: false,
+      layoutShowControls: true,
+      layoutShowSequence: true,
+      layoutShowLog: false,
+      viewportShowExpand: true,
+      viewportShowSelectionMode: false,
+      pdbProvider: 'rcsb',
+    }).then(viewer => {
+      if (params.get('annotate')) window.__sv_viewer = viewer;
+      return viewer.loadStructureFromUrl(file, molFormat);
+    })
+      .catch(err => {
+        document.getElementById('viewer').innerHTML =
+          '<div class="error-box">Failed to load (format=' + molFormat + '):\n' + err + '</div>';
+      });
+  }
+</script>
+</body>
+</html>

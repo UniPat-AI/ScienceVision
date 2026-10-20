@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen://schemas/viewer-evidence-packet/v1",
+  "description": "Provider evidence may cite only host-attested viewer receipts; legacy fixture evidence remains isolated to the fixture adapter.",
+  "oneOf": [
+    {"$ref": "#/definitions/provider"},
+    {"$ref": "#/definitions/fixture"}
+  ],
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "provider": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "candidate_digest",
+        "viewer_profile_digest",
+        "viewer_operations",
+        "host_evidence_digest",
+        "receipt_digests",
+        "work_item_id",
+        "state_transition"
+      ],
+      "properties": {
+        "artifact_kind": {"const": "provider_attested_viewer_evidence"},
+        "candidate_digest": {"$ref": "#/definitions/digest"},
+        "viewer_profile_digest": {"$ref": "#/definitions/digest"},
+        "viewer_operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["rotate", "render"]}
+        },
+        "host_evidence_digest": {"$ref": "#/definitions/digest"},
+        "receipt_digests": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"$ref": "#/definitions/digest"}
+        },
+        "work_item_id": {"type": "string", "minLength": 1},
+        "state_transition": {"type": "null"}
+      },
+      "additionalProperties": false
+    },
+    "fixture": {
+      "type": "object",
+      "required": [
+        "artifact_kind",
+        "candidate_digest",
+        "viewer_profile_digest",
+        "viewer_operations",
+        "observations",
+        "work_item_id",
+        "state_transition"
+      ],
+      "properties": {
+        "artifact_kind": {"const": "fixture_viewer_evidence"},
+        "candidate_digest": {"$ref": "#/definitions/digest"},
+        "viewer_profile_digest": {"$ref": "#/definitions/digest"},
+        "viewer_operations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "observations": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "work_item_id": {"type": "string", "minLength": 1},
+        "state_transition": {"type": "null"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

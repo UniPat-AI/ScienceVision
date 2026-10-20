@@ -1,0 +1,12 @@
+# Let `matianyi` start/stop/restart/reload/status the BabyVision viewer
+# without re-entering the sudo password every time.
+#
+# Source of truth: /home/matianyi/BabyVision-v2/deploy/babyvision-viewer.sudoers
+# Installed copy:  /etc/sudoers.d/babyvision-viewer  (mode 0440, validated with `visudo -c -f`)
+
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl start babyvision-viewer
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl stop babyvision-viewer
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl restart babyvision-viewer
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl reload babyvision-viewer
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl status babyvision-viewer
+matianyi ALL=(root) NOPASSWD: /usr/bin/systemctl status babyvision-viewer.service

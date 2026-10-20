@@ -1,0 +1,56 @@
+# .mirror-include — authoritative manifest consumed by
+# tools/sync_from_sciencevision.py. Each non-empty, non-comment line is
+# a glob evaluated relative to the ScienceVision source repo root.
+# `**` matches recursively; `*` matches a single path segment.
+
+# --- Code: agent + viewer + supporting scripts ---
+sci3d_agent/**
+viewer/**
+scripts/match/**
+scripts/sam_service/**
+tools/setup_worktree_data_links.sh
+tools/sync_vendor.py
+tests/mcp/**
+# Source-pinned regression for the solver-facing Mol* MCP anonymity boundary.
+tests/viewer/test_molstar_mcp_adapter.cjs
+
+# --- Eval harness (Harbor): scored-route adapters + run drivers ---
+# The `scripts/harbor/*.py` / `*.sh` segments are single-level on purpose:
+# scripts/harbor/tasks/ and tasks-qagen/ hold staged task trees carrying
+# benchmark questions and internal image references, and are not mirrored.
+harbor_adapters/**
+scripts/harbor/*.py
+scripts/harbor/*.sh
+scripts/harbor/templates/**
+tests/harbor_adapters/**
+
+# --- QA-gen pipeline (lives at repo root in ScienceVision) ---
+QA-Gen/ScienceVisionTaskGenerator/**
+QA-Gen/scripts/**
+QA-Gen/tasks/MedicalKAxisPilot/**
+QA-Gen/tasks/HelmetNutCaliber/**
+QA-Gen/tasks/ChemistryKAxis-expert-v2/**
+QA-Gen/tasks/BiologyKAxis-expert-v2/**
+QA-Gen/tasks/MedicalKAxis-expert-v2/**
+QA-Gen/tasks/scale-v2.3/**
+
+# --- QA-gen vNext package and its reviewed design inputs ---
+QA-Gen/qa_gen_pipeline/**
+QA-Gen/docs/Question-Rubric.md
+QA-Gen/docs/QA-gen-pipeline-vNext-plan.md
+QA-Gen/docs/QA-gen-pipeline-target.md
+QA-Gen/docs/question-family-gt-redesign.md
+QA-Gen/docs/v3.2-expert-feedback-triage.md
+
+# --- 3D-grounded whitelist indices (metadata only, no raw assets) ---
+datasets/_matched/*.json
+
+# --- Subset of ScienceVision documentation ---
+docs/CrawlDataAndViewer.md
+docs/DataSourcesAndFormats.md
+docs/mcp/MCP_SERVER_SPEC.md
+docs/mcp/MCP_ROLLOUT_PLAN.md
+docs/qa-gen/**
+docs/evaluation/**
+docs/Tools.md
+docs/3d_assets_inventory.md

@@ -1,0 +1,105 @@
+schema_version: 1
+kind: qagen_model_routing
+enabled: true
+routing_status: approved_local_pilot
+run_eligibility: approved_local_pilot
+production_eligible: false
+
+# Explicit opt-in policy for the local provider pilot. The default routing file
+# remains disabled, and this policy never authorizes production use.
+providers:
+  anthropic:
+    configured: true
+    credential_ref: env:QAGEN_UNIV_API_KEY
+    endpoint: runtime:provider_runtime
+    availability_status: contract_implemented
+    approval_status: approved_for_local_pilot
+    local_only: true
+    production_eligible: false
+    allowed_models: [claude-opus-5]
+  deepseek:
+    configured: true
+    credential_ref: env:QAGEN_UNIV_API_KEY
+    endpoint: runtime:provider_runtime
+    availability_status: contract_implemented
+    approval_status: approved_for_local_pilot
+    local_only: true
+    production_eligible: false
+    allowed_models: [deepseek-v4-pro]
+  openai:
+    configured: true
+    credential_ref: env:QAGEN_UNIV_API_KEY
+    endpoint: runtime:provider_runtime
+    availability_status: contract_implemented
+    approval_status: approved_for_local_pilot
+    local_only: true
+    production_eligible: false
+    allowed_models: [gpt-5.6-sol]
+
+roles:
+  brief_builder:
+    enabled: true
+    provider: anthropic
+    allowed_models: [claude-opus-5]
+    max_tokens: 9500
+    max_cost_usd: 0.25
+    max_latency_seconds: 45
+    input_schema: qagen://schemas/task-brief/input/v1
+    output_schema: qagen://schemas/task-brief/output/v1
+  author:
+    enabled: true
+    provider: deepseek
+    allowed_models: [deepseek-v4-pro]
+    max_tokens: 20000
+    max_cost_usd: 2.00
+    max_latency_seconds: 120
+    input_schema: qagen://schemas/author/input/v1
+    output_schema: qagen://schemas/candidate/v1
+  truth_builder:
+    enabled: true
+    provider: deepseek
+    allowed_models: [deepseek-v4-pro]
+    max_tokens: 19000
+    max_cost_usd: 1.25
+    max_latency_seconds: 90
+    input_schema: qagen://schemas/truth-builder/input/v1
+    output_schema: qagen://schemas/author-truth-receipt/v1
+  evidence_worker:
+    enabled: true
+    provider: deepseek
+    allowed_models: [deepseek-v4-pro]
+    max_tokens: 14000
+    max_cost_usd: 0.50
+    max_latency_seconds: 75
+    input_schema: qagen://schemas/evidence-worker/input/v1
+    output_schema: qagen://schemas/viewer-evidence-packet/v1
+  verifier:
+    enabled: true
+    provider: openai
+    allowed_models: [gpt-5.6-sol]
+    max_tokens: 18500
+    max_cost_usd: 1.00
+    max_latency_seconds: 90
+    input_schema: qagen://schemas/verifier/input/v1
+    output_schema: qagen://schemas/verification-result/v1
+  rewriter:
+    enabled: true
+    provider: deepseek
+    allowed_models: [deepseek-v4-pro]
+    max_tokens: 19000
+    max_cost_usd: 1.50
+    max_latency_seconds: 120
+    input_schema: qagen://schemas/rewriter/input/v1
+    output_schema: qagen://schemas/candidate/v1
+
+fixture_adapter:
+  kind: qagen_local_fixture_adapter
+  enabled: false
+  local_only: true
+  production_eligible: false
+  provider: fixture
+  model: deterministic-fixture
+  credential_ref: null
+  endpoint: null
+  availability_status: local_fixture_only
+  approval_status: not_approved

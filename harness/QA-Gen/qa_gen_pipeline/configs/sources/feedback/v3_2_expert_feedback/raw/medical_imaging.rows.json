@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_feedback_sheet_raw_snapshot",
+  "id": "v3_2_expert_feedback.medical_imaging",
+  "representation": "complete_grid_with_empty_ranges",
+  "identity_redaction": {
+    "column": "A",
+    "policy": "Reviewer names are pseudonymized in this committed snapshot; no re-identification mapping is committed."
+  },
+  "source": {
+    "sheet_id": "WKRDN6",
+    "sheet_title": "医疗影像",
+    "revision": 326,
+    "grid": {"rows": 208, "columns": 22},
+    "source_content_digest": "sha256:8d44df355f9e86913dcf818e14e8e47e048c7414707d16f6e78e02edf27cb9b4",
+    "source_read_ranges": [
+      "A1:V30",
+      "A31:V60",
+      "A61:V90",
+      "A91:V120",
+      "A121:V150",
+      "A151:V180",
+      "A181:V208"
+    ]
+  },
+  "columns": {
+    "A": "反馈人",
+    "B": "序号",
+    "C": "task_id",
+    "D": "sub-domain",
+    "E": "feedback",
+    "F": "截图",
+    "G": "",
+    "H": "",
+    "I": "",
+    "J": "",
+    "K": "",
+    "L": "",
+    "M": "",
+    "N": "",
+    "O": "",
+    "P": "",
+    "Q": "",
+    "R": "",
+    "S": "",
+    "T": "",
+    "U": "",
+    "V": ""
+  },
+  "cell_default": "",
+  "row_encoding": "Only non-empty cells are written below. Every omitted column in a listed row and every cell in empty_row_ranges equals cell_default.",
+  "rows": [
+    {
+      "source_row": 1,
+      "cells": {
+        "A": "反馈人",
+        "B": "序号",
+        "C": "task_id",
+        "D": "sub-domain",
+        "E": "feedback",
+        "F": "截图"
+      }
+    },
+    {
+      "source_row": 2,
+      "cells": {
+        "A": "reviewer_a",
+        "C": "sv-medi-med_mri_anatomy-0135",
+        "D": "病灶定位",
+        "E": "1、所有case题面基本一样，并且没有临床影像学专业性。我倾向于作出修改：1️⃣去掉拗口的参数题面，修改为对应的临床场景，原数据库应该是有的。",
+        "F": "The target is the region carrying mask label 1 in the segmentation supplied with this CT volume. A bounding box extent includes both bounding voxels, so along each axis it equals the difference between the two bounds plus 1. The axial axis is axis 2 of the sampling grid. Voxel indices count from 0, and each one lies inside the bounding box it is reported for. If several slices tie, report the one with the lowest index.\nPlace a target relative to the image FOV midpoint. Select the target overlay and inspect its centroid. Locate the inclusive bounding-box maximum, locate the inclusive bounding-box minimum, classify centroid side relative to the FOV midpoint and find the smallest maximum-area axial index.\nAnswer format"
+      }
+    },
+    {"source_row": 3, "cells": {"A": "reviewer_a", "D": "病灶定位"}},
+    {"source_row": 4, "cells": {"A": "reviewer_a", "D": "病灶定位"}},
+    {"source_row": 5, "cells": {"A": "reviewer_a", "D": "病灶定位"}},
+    {"source_row": 6, "cells": {"A": "reviewer_a", "D": "病灶定位"}},
+    {
+      "source_row": 7,
+      "cells": {
+        "A": "reviewer_b",
+        "B": "6",
+        "C": "sv-medi-med_mri_anatomy-0006",
+        "D": "解剖区域划分",
+        "E": "题面本身不够通俗易懂，测量是可以完成的，但是和医学的影像及诊断没有太大关系，不太会在医学真实场景里面这么表示考察。如果只是识图测距离是没有问题的，但是我看不出用医学影像这些ct片子的意义在哪里。如果说能够让ai自己去从没有标记的影像里面去发现问题，并指出哪部分是哪个器官，发生了什么问题，我觉得会不会更好一些。"
+      }
+    },
+    {"source_row": 8, "cells": {"A": "reviewer_b", "B": "32", "C": "sv-medi-med_mri_anatomy-0032", "D": "解剖区域划分"}},
+    {"source_row": 9, "cells": {"A": "reviewer_b", "B": "81", "C": "sv-medi-med_mri_anatomy-0081", "D": "解剖区域划分"}},
+    {"source_row": 10, "cells": {"A": "reviewer_b", "B": "101", "C": "sv-medi-med_mri_anatomy-0101", "D": "解剖区域划分"}},
+    {"source_row": 11, "cells": {"A": "reviewer_b", "B": "190", "C": "sv-medi-med_mri_anatomy-0190", "D": "解剖区域划分"}},
+    {"source_row": 12, "cells": {"D": "病症特征判断"}},
+    {"source_row": 13, "cells": {"D": "病症特征判断"}},
+    {"source_row": 14, "cells": {"D": "病症特征判断"}},
+    {"source_row": 15, "cells": {"D": "病症特征判断"}},
+    {"source_row": 16, "cells": {"D": "病症特征判断"}},
+    {"source_row": 17, "cells": {"D": "病症特征判断"}}
+  ],
+  "empty_row_ranges": [
+    {"start": 18, "end": 208, "all_cells_equal": ""}
+  ],
+  "validation": {
+    "non_empty_physical_rows": 17,
+    "explicit_feedback_rows": [2, 7],
+    "structural_only_rows": [3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+    "verified_complete_to_row": 208
+  }
+}

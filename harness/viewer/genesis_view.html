@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Genesis viewer (minimal) — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  #scene { width:100vw; height:calc(100vh - 49px); display:block; position:fixed; top:49px; left:0; }
+  .error-box { position:fixed; top:60px; left:12px; background:#3d1418; color:#ffb3b3;
+    border:1px solid #6e2530; padding:10px 14px; border-radius:4px;
+    font:12px ui-monospace,monospace; white-space:pre-wrap; z-index:20; max-width:80vw; }
+  #hud { position:fixed; bottom:12px; left:12px; background:rgba(13,17,23,0.85);
+    padding:6px 10px; border-radius:4px; border:1px solid #30363d;
+    font:11px ui-monospace,monospace; color:#8b949e; z-index:10; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Genesis View</strong> <span id="fn" class="meta"></span></div>
+  <div class="meta">minimal · GLB/PLY · drag=rotate scroll=zoom · 支持 morph 动画</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="hud">loading…</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+// 极简: 只加载 three 核心 + GLTFLoader + OrbitControls (经 importmap 解析 bare specifier)。
+// 不碰 KTX2 / PMREM / DRACO / Trackball / cutaway —— 这些是 gltf.html 多出来、可能抛错的部分。
+// 用 HemisphereLight 代替 PMREM 环境光 (不依赖 WebGL float 扩展)。
+// 注意: GLTFLoader 内部用 `import ... from 'three'`, 所以必须有 importmap, 不能纯绝对路径。
+const hud = document.getElementById('hud');
+function err(m){ document.body.insertAdjacentHTML('beforeend','<div class="error-box">'+m+'</div>'); hud.textContent='ERROR'; }
+
+let THREE, GLTFLoader, OrbitControls, MeshoptDecoder;
+try {
+  THREE = await import('three');
+  ({ GLTFLoader } = await import('three/addons/loaders/GLTFLoader.js'));
+  ({ OrbitControls } = await import('three/addons/controls/OrbitControls.js'));
+  ({ MeshoptDecoder } = await import('three/addons/libs/meshopt_decoder.module.js'));
+} catch(e){ err('模块加载失败:\n'+(e.message||e)); throw e; }
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('fn').textContent = file ? file.split('/').pop() : '(no file)';
+if (!file){ err('No ?file= query param.'); }
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // clamp DPR (issue 70)
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x12161c);
+// 简单光照, 不用 PMREM/RoomEnvironment
+scene.add(new THREE.HemisphereLight(0xffffff, 0x303040, 2.0));
+const dir = new THREE.DirectionalLight(0xffffff, 1.5); dir.position.set(3,5,2); scene.add(dir);
+
+const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth/canvas.clientHeight, 0.001, 1000);
+const controls = new OrbitControls(camera, renderer.domElement);
+
+let mixer=null, clip=null, action=null;
+const clock = new THREE.Clock();
+
+function fit(obj){
+  const box=new THREE.Box3().setFromObject(obj);
+  const c=box.getCenter(new THREE.Vector3()), s=box.getSize(new THREE.Vector3());
+  const r=Math.max(s.x,s.y,s.z)*0.5 || 1;
+  const dist=r/Math.sin((camera.fov*Math.PI/180)/2)*1.5;
+  camera.up.set(0,1,0);
+  const d=new THREE.Vector3(0.6,0.45,1.0).normalize();
+  camera.position.copy(c).add(d.multiplyScalar(dist));
+  camera.near=r*0.001; camera.far=r*200; camera.updateProjectionMatrix();
+  controls.target.copy(c); controls.update();
+  return {nv:0, r};
+}
+
+if (file){
+  try {
+    const buf = await (await fetch(file)).arrayBuffer();
+    await new Promise((res,rej)=> new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).parse(buf,'',g=>{
+      const root=g.scene;
+      let pts=0, tris=0;
+      root.traverse(o=>{
+        if(o.isPoints){ pts+=o.geometry.getAttribute('position').count;
+          o.material=new THREE.PointsMaterial({size:0.02,sizeAttenuation:true,
+            vertexColors:!!o.geometry.getAttribute('color'),
+            color:o.geometry.getAttribute('color')?0xffffff:0x88bbff}); }
+        if(o.isMesh){ tris+=o.geometry.index?o.geometry.index.count/3:o.geometry.getAttribute('position').count/3;
+          if(o.material){ o.material.side=THREE.DoubleSide; } }
+      });
+      scene.add(root); fit(root);
+      if(g.animations && g.animations.length){
+        mixer=new THREE.AnimationMixer(root); clip=g.animations[0];
+        action=mixer.clipAction(clip); action.play();
+      }
+      hud.textContent = `${pts?pts+' pts':''}${pts&&tris?' · ':''}${tris?Math.round(tris)+' tris':''}${clip?' · anim '+clip.duration.toFixed(1)+'s (loop)':''}`;
+      res();
+    }, rej));
+  } catch(e){ err('加载/解析失败:\n'+(e.message||e)); }
+}
+
+renderer.setAnimationLoop(()=>{
+  const dt=clock.getDelta();
+  if(mixer) mixer.update(dt);
+  controls.update();
+  renderer.render(scene,camera);
+});
+window.addEventListener('resize',()=>{
+  renderer.setSize(canvas.clientWidth,canvas.clientHeight,false);
+  camera.aspect=canvas.clientWidth/canvas.clientHeight; camera.updateProjectionMatrix();
+});
+</script>
+</body>
+</html>

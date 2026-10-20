@@ -1,0 +1,35 @@
+{
+  "$schema": "shared/manifest.schema.json",
+  "brand": "BabyVision-v2 (Partner — Example Corp)",
+  "version": "0.1.1",
+  "generated_at": "2026-06-19T00:00:00Z",
+  "counts": {
+    "assets": 1234,
+    "qagen": 56,
+    "mcp_tools": 75,
+    "leaderboard_entries": 0
+  },
+  "data": {
+    "assets_index": "../../private-data/assets.index.json",
+    "qagen_index":  "../../private-data/qagen_index.json",
+    "leaderboard":  "../../private-data/leaderboard.json"
+  },
+  "docs": {
+    "tree_index":   "../docs/_index.json",
+    "search_index": "../docs/_search.json",
+    "base_url":     "../docs/"
+  },
+  "domains": [
+    { "id": "biology",               "label": "Biology",               "color": "#f78166", "shipped": false },
+    { "id": "medical",               "label": "Medical",               "color": "#56d364", "shipped": false },
+    { "id": "embodied",              "label": "Embodied",              "color": "#ffa657", "shipped": false },
+    { "id": "robotics",              "label": "Robotics",              "color": "#ff9a47", "shipped": false },
+    { "id": "geography",             "label": "Geography",             "color": "#79c0ff", "shipped": false },
+    { "id": "astronomy",             "label": "Astronomy",             "color": "#d2a8ff", "shipped": false },
+    { "id": "topological_photonics", "label": "Topological Photonics", "color": "#ff7b72", "shipped": false },
+    { "id": "photonics",             "label": "Photonics",             "color": "#ffd166", "shipped": false },
+    { "id": "simulation",            "label": "Simulation",            "color": "#a5d6ff", "shipped": false },
+    { "id": "climate",               "label": "Climate",               "color": "#3fb950", "shipped": false },
+    { "id": "industrial",            "label": "Industrial",            "color": "#c79aff", "shipped": false }
+  ]
+}

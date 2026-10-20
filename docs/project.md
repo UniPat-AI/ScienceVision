@@ -42,10 +42,10 @@ organisation cannot follow today:
 
 1. **The dataset must be reachable** at its canonical repository, and its license stated. The
    source card currently declares none.
-2. **The harness subtree is vendored.** The pinned revision is in this repository; see the
-   revision note in [`resources/harness.json`](../resources/harness.json). The two development
-   lines it records still diverge: the vendored copy is the revision the reported results were
-   produced on, and later scorer fixes from either line are not included.
+2. **The harness is vendored under `harness/`.** The whole `eval-baseline` branch is present
+   at source commit `6fd95252e81fb153432add0f2400d9ee1eea6697`; the reported results were
+   produced on `b47f13ac5abb54b9e287ff3131ae7e29771ec53e`. Both revisions are recorded in
+   [`resources/harness.json`](../resources/harness.json).
 3. **The container packages must be made public**, or the reader told how to request access.
 4. **A task export must be published.** Neither `index.jsonl` nor `normalized.json` is launchable
    harness input on its own, so the [task contract](evaluation.md#task-contract) needs a

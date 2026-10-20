@@ -1,0 +1,8 @@
+schema_version: 1
+kind: qagen_revision_intake
+enabled: false
+reason: "Revision import is deferred until a read-only manifest contract is implemented."
+
+reference_owners:
+  - repo_path: QA-Gen/tasks
+    purpose: existing_task_owner

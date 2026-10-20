@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Video — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  main { padding: 24px; max-width: 1400px; margin: 0 auto; }
+  video { max-width: 100%; max-height: 80vh; background: #000; border: 1px solid var(--border); border-radius: 4px; }
+  .meta { color: var(--fg-dim); font-size: 12px; margin-top: 8px;
+          font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+          word-break: break-all; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Video</strong> <span id="filename" class="meta"></span></div>
+</header>
+<main>
+  <video id="player" controls></video>
+  <div class="meta" id="srcline"></div>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+  if (!file) {
+    document.querySelector('main').insertAdjacentHTML('beforeend',
+      '<div class="error-box">No ?file= query param.</div>');
+  } else {
+    const v = document.getElementById('player');
+    v.src = file;
+    document.getElementById('srcline').textContent = file;
+  }
+</script>
+</body>
+</html>

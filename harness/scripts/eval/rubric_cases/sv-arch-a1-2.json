@@ -1,0 +1,299 @@
+{
+  "task_id": "sv-arch-a1-2",
+  "sub_domain": "arch_consistency_alignment",
+  "domain": "architecture",
+  "viewer": "bim_coordination",
+  "folder": "tasks/architecture/arch_consistency_alignment/004-sv-arch-a1-2",
+  "question_en": "A6/V4 - Service Penetration Through Structural Elements\n\nDuring building coordination, service components such as pipes, ducts, and conduits may pass through or near structural elements. Determining whether such penetrations are intentional or create potential conflicts requires understanding the spatial relationship between components in three dimensions.\n\nObject:\nTwo anonymous building components in the supplied scene. One represents a structural element and the other represents a building service component. Each component is independently selectable.\n\nQuestion:\nInspect the two components using plan, front, side, and isometric views. Determine whether the service component penetrates the structural element or passes through its structural boundary. If a penetration exists, identify the approximate penetration location and describe the visible evidence supporting the judgment.\n\nThe assessment must rely only on visual information from the 3D scene. Do not use filenames, object metadata, source paths, or raw coordinate data.\n\nReturn one JSON object with exactly these fields:\n\npenetration_detected, penetration_location, evidence_summary",
+  "ground_truth": "The service components do not extend beyond the structural components; the model contains no construction errors.",
+  "ground_truth_source": "expert_submission",
+  "rubric_status": "draft - written to exercise the mechanism, awaiting expert sign-off",
+  "proposed_rubric": {
+    "required": [
+      {
+        "any": [
+          "service",
+          "services",
+          "pipe",
+          "pipes",
+          "duct",
+          "ducts",
+          "conduit",
+          "conduits"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "within",
+          "inside",
+          "not beyond",
+          "no penetration",
+          "do not extend",
+          "does not extend"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "construction error",
+          "construction errors",
+          "no error",
+          "no errors"
+        ],
+        "negated": true
+      }
+    ],
+    "forbidden": [],
+    "source": "authored",
+    "notes": "A6/V4 service penetrations: none extend beyond structure, no errors"
+  },
+  "derived_rubric": {
+    "required": [
+      {
+        "any": [
+          "service"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "components",
+          "component"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "not"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "extend"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "beyond"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "structural"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "components",
+          "component"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "model"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "contains",
+          "contain"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "construction"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "errors",
+          "error"
+        ],
+        "negated": true
+      }
+    ],
+    "forbidden": [],
+    "source": "derived",
+    "notes": "extracted from the ground-truth sentence; cannot see paraphrase"
+  },
+  "derived_group_count": 11,
+  "cases": [
+    {
+      "label": "paraphrase, correct",
+      "answer": "The pipes stay within the structural elements; there are no construction errors.",
+      "authored": {
+        "value": 1.0,
+        "degraded": false,
+        "matched": [
+          "service",
+          "within",
+          "construction error"
+        ],
+        "missed": [],
+        "required": 3,
+        "groups": [
+          {
+            "any_of": [
+              "service",
+              "services",
+              "pipe",
+              "pipes",
+              "duct",
+              "ducts",
+              "conduit",
+              "conduits"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "pipes"
+            ]
+          },
+          {
+            "any_of": [
+              "within",
+              "inside",
+              "not beyond",
+              "no penetration",
+              "do not extend",
+              "does not extend"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "within"
+            ]
+          },
+          {
+            "any_of": [
+              "construction error",
+              "construction errors",
+              "no error",
+              "no errors"
+            ],
+            "negated": true,
+            "matched": true,
+            "reason": "negated, and the answer negates it",
+            "alternatives_present": [
+              "construction errors"
+            ]
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.1818,
+        "degraded": true,
+        "matched": [
+          "construction",
+          "errors"
+        ],
+        "missed": [
+          "service",
+          "components",
+          "not",
+          "extend",
+          "beyond",
+          "structural",
+          "components",
+          "model",
+          "contains"
+        ],
+        "required": 11
+      }
+    },
+    {
+      "label": "contradicts the reference",
+      "answer": "The pipes extend beyond the structural elements and there are construction errors.",
+      "authored": {
+        "value": 0.3333,
+        "degraded": false,
+        "matched": [
+          "service"
+        ],
+        "missed": [
+          "within",
+          "construction error"
+        ],
+        "required": 3,
+        "groups": [
+          {
+            "any_of": [
+              "service",
+              "services",
+              "pipe",
+              "pipes",
+              "duct",
+              "ducts",
+              "conduit",
+              "conduits"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "pipes"
+            ]
+          },
+          {
+            "any_of": [
+              "within",
+              "inside",
+              "not beyond",
+              "no penetration",
+              "do not extend",
+              "does not extend"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          },
+          {
+            "any_of": [
+              "construction error",
+              "construction errors",
+              "no error",
+              "no errors"
+            ],
+            "negated": true,
+            "matched": false,
+            "reason": "present but affirmative - the group requires a negator governing it",
+            "alternatives_present": [
+              "construction errors"
+            ]
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.0,
+        "degraded": true,
+        "matched": [],
+        "missed": [
+          "service",
+          "components",
+          "not",
+          "extend",
+          "beyond",
+          "structural",
+          "components",
+          "model",
+          "contains",
+          "construction",
+          "errors"
+        ],
+        "required": 11
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.assembly_bom_relation
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [mechanical_cad.drawing_assembly_consistency]
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.assembly_with_bom_relation_truth, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [assembly_relation_reasoning]
+seed:
+  query: {domain: mechanical_cad, subdomain: assembly_bom_relation, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, stable_part_identifiers, paired_bom]
+viewer:
+  required_operations: [inspect, isolate, rotate, explode]
+answer:
+  allowed_truth_modes: [expert_visual_judgment]
+evidence:
+  required: [viewer_trace, cross_representation_evidence]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: assembly_bom_relation, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

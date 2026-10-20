@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title data-i18n="expert.documentTitle">ScienceVision 专家审核</title>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/mcp/task-mcp-controls.css">
+  <link rel="stylesheet" href="/mcp/task-trajectory.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="identity">
+      <strong data-i18n="expert.brand">ScienceVision 专家审核</strong>
+      <span id="package-meta" data-i18n="expert.packageLoading">正在加载任务包…</span>
+    </div>
+    <div class="header-actions">
+      <span id="progress" aria-live="polite"></span>
+      <button id="viewer-focus-toggle" type="button" aria-pressed="false" hidden data-i18n="expert.focusViewer">专注查看器</button>
+      <button id="save-draft" type="button" disabled data-i18n="expert.saveDraft">保存草稿</button>
+      <button id="export-results" type="button" disabled data-i18n="expert.exportResults">导出结果</button>
+      <button id="logout" type="button" hidden data-i18n="expert.signOut">退出登录</button>
+    </div>
+  </header>
+
+  <main id="workspace" class="workspace">
+    <aside class="task-rail" data-i18n-aria-label="expert.tasksRailLabel" aria-label="已分配任务">
+      <div class="rail-head">
+        <label for="task-filter" data-i18n="expert.tasksLabel">任务</label>
+        <select id="task-filter">
+          <option value="all" data-i18n="expert.filter.all">全部</option>
+          <option value="complete" data-i18n="expert.filter.complete">已完成</option>
+          <option value="incomplete" data-i18n="expert.filter.incomplete">未完成</option>
+        </select>
+      </div>
+      <nav id="task-list" class="task-list"></nav>
+    </aside>
+
+    <section class="review-pane">
+      <div class="question-pane">
+        <details class="task-guide" open>
+          <summary data-i18n="expert.guide.summary">操作指南：这一页怎么做</summary>
+          <p class="task-guide-flow" data-i18n="expert.guide.flow">整体流程：左侧选题 → 在 3D 查看器里观察并截图取证 → 判定题目是否有效 → 写答案与推理过程 → 右上角提交结果。</p>
+          <ol class="task-guide-steps">
+            <li><strong data-i18n="expert.guide.s1.title">01 选题</strong><span data-i18n="expert.guide.s1.io">输入：左侧「任务」列表，可用「未完成」筛选 → 产出：右侧显示题目、说明与对应的 3D 场景</span></li>
+            <li><strong data-i18n="expert.guide.s2.title">02 观察场景</strong><span data-i18n="expert.guide.s2.io">输入：在 3D 查看器里拖拽旋转、滚轮缩放；右上角「专注查看器」把整个工作区交给查看器 → 产出：看清题目要判断的结构</span></li>
+            <li><strong data-i18n="expert.guide.s3.title">03 采集截图</strong><span data-i18n="expert.guide.s3.io">输入：查看器上方工具条的「截图」按钮，再在弹窗预览里拖拽框选范围 → 产出：「复制选区」复制到剪贴板，或「下载 PNG」存成图片证据，并同时存下一份同名 JSON，记录任务、裁剪范围与截图时的视角</span></li>
+            <li><strong data-i18n="expert.guide.s4.title">04 判定题目</strong><span data-i18n="expert.guide.s4.io">输入：「任务校验」选 有效／无效／不确定，并在「校验反馈」写清理由 → 产出：这道题本身的质量结论，管理员据此返修题目</span></li>
+            <li><strong data-i18n="expert.guide.s5.title">05 作答</strong><span data-i18n="expert.guide.s5.io">输入：「答案」写结论，「推理过程」写关键判断依据，「尝试次数」记录这是第几次 → 产出：每次输入自动保存到本地，状态显示在表单下方</span></li>
+            <li><strong data-i18n="expert.guide.s6.title">06 提交</strong><span data-i18n="expert.guide.s6.io">输入：右上角「提交结果」（在线）或「导出结果」（离线任务包）→ 产出：结果回到管理员端等待质检</span></li>
+          </ol>
+          <p class="task-guide-note" data-i18n="expert.guide.cameraNote">查看器右上角那三个相机按钮来自 Mol* 自带的工具条，鼠标悬停即可看到中文提示：「重置缩放」（Reset Zoom）只改远近，把整个结构重新装进画面；「主轴摆正」（Orient Axes）按分子自身的主轴摆正，即把结构放平；「重置坐标轴」（Reset Axes）回到坐标系的 X／Y／Z 方向。后两个的差别就在于对齐的参照物：一个看分子形状，一个看坐标轴。</p>
+          <p class="task-guide-note" data-i18n="expert.guide.measureNote">要量原子间距离：点查看器右上角的「切换选择模式」（Toggle Selection Mode）进入选择模式，依次点中两个原子，再展开左侧面板 → 「结构工具」（Structure Tools）→「测量」（Measurements）→「距离」（Distance），画面上就会标出以 Å 为单位的距离；量完再点一次同一个按钮退出，避免后面的点击继续加选。</p>
+          <p class="task-guide-note" data-i18n="expert.guide.symmetryNote">结构文件常常只带非对称单元，周期镜像分子默认不在画面里。要看镜像：展开左侧面板 →「结构」（Structure）区的结构预设按钮，选「晶体接触」（Crystal Contacts，画出 5 Å 内的邻近镜像链，最适合判断最近接触）、「晶胞」（Unit Cell，填满整个晶胞）或「超胞」（Super Cell）；也可以在结构条目的「类型」（Type）里把「模型」（Model）换成「对称副本」（Symmetry Mates），并调其中的 radius 参数。这些入口只在文件带晶体对称信息时才出现——如果都找不到，说明该文件不含对称信息，请在「任务校验」里判为无效并写明原因。</p>
+          <p class="task-guide-note" data-i18n="expert.guide.reasoningNote">推理过程只记语义关键的那几步：真正改变你判断的操作（例如放大一次仍看不清，于是继续放大到原子层级），不用记录每一次鼠标移动。在「录制 Ground Truth」面板里保存一步本身就是这样一次关键操作，所以每一条保存下来的步骤都要写说明，缺一条就提交不了。</p>
+          <p class="task-guide-next" data-i18n="expert.guide.next">下一步：回到左侧列表继续下一题，已完成的任务会在列表里标出来。</p>
+        </details>
+        <div class="question-head">
+          <span id="task-domain" class="domain"></span>
+          <code id="task-id"></code>
+        </div>
+        <h1 id="task-title" data-i18n="expert.selectTask">请选择一个任务</h1>
+        <p id="task-instruction"></p>
+        <form id="response-form" hidden>
+          <div class="field-row">
+            <label for="validation-status" data-i18n="expert.validationLabel">任务校验</label>
+            <select id="validation-status">
+              <option value="uncertain" data-i18n="expert.validation.uncertain">不确定</option>
+              <option value="valid" data-i18n="expert.validation.valid">有效</option>
+              <option value="invalid" data-i18n="expert.validation.invalid">无效</option>
+            </select>
+          </div>
+          <label for="validation-feedback" data-i18n="expert.validationFeedbackLabel">校验反馈</label>
+          <textarea id="validation-feedback" rows="3"></textarea>
+          <label for="answer" data-i18n="expert.answerLabel">答案</label>
+          <textarea id="answer" rows="5"></textarea>
+          <label for="reasoning" data-i18n="expert.reasoningLabel">推理过程</label>
+          <textarea id="reasoning" rows="7"></textarea>
+          <fieldset class="key-steps">
+            <legend data-i18n="expert.steps.legend">关键操作</legend>
+            <p class="steps-hint" data-i18n="expert.steps.hint">只记真正改变判断的那几步，并写清它为什么关键；不用记录每一次鼠标移动。</p>
+            <ol id="step-list" class="step-list"></ol>
+            <div class="step-entry">
+              <label class="step-action-label" for="step-action" data-i18n="expert.steps.actionLabel">操作</label>
+              <select id="step-action">
+                <option value="zoom_in" data-i18n="expert.steps.action.zoomIn">放大</option>
+                <option value="zoom_out" data-i18n="expert.steps.action.zoomOut">缩小</option>
+                <option value="rotate" data-i18n="expert.steps.action.rotate">旋转</option>
+                <option value="pan" data-i18n="expert.steps.action.pan">平移</option>
+                <option value="slice" data-i18n="expert.steps.action.slice">切换切面</option>
+                <option value="measure" data-i18n="expert.steps.action.measure">测量</option>
+                <option value="isolate" data-i18n="expert.steps.action.isolate">隔离结构</option>
+                <option value="reset_view" data-i18n="expert.steps.action.resetView">复位视角</option>
+                <option value="screenshot" data-i18n="expert.steps.action.screenshot">截图取证</option>
+                <option value="other" data-i18n="expert.steps.action.other">其他</option>
+              </select>
+              <label class="step-note-label" for="step-note" data-i18n="expert.steps.noteLabel">为什么关键</label>
+              <input id="step-note" type="text" maxlength="500"
+                     data-i18n-placeholder="expert.steps.notePlaceholder"
+                     placeholder="例如：放大一次仍看不清配体，于是继续放大到原子层级">
+              <button id="step-add" type="button" class="step-add" data-i18n="expert.steps.add">记录这一步</button>
+            </div>
+            <span id="step-status" role="status" aria-live="polite"></span>
+          </fieldset>
+          <div class="form-foot">
+            <label class="attempt" for="attempt" data-i18n="expert.attemptLabel">尝试次数</label>
+            <input id="attempt" type="number" min="1" step="1" value="1">
+            <span id="save-status" role="status" aria-live="polite"></span>
+          </div>
+        </form>
+      </div>
+      <div class="sv-task-frame-wrap sv-mcp-frame-layout">
+        <div class="sv-task-viewer-bar">
+          <span class="sv-task-viewer-title" data-i18n="expert.viewerBarTitle">3D 查看器</span>
+        </div>
+        <iframe class="sv-task-frame" id="sv-task-frame" data-i18n-title="expert.viewerTitle" title="ScienceVision 3D 查看器"></iframe>
+        <details class="sv-mcp-controls" id="sv-mcp-controls"></details>
+      </div>
+    </section>
+  </main>
+
+  <div id="error-banner" role="alert" hidden></div>
+  <script src="/i18n.js"></script>
+  <script src="/mcp/task-mcp-controls.js"></script>
+  <script src="/mcp/task-trajectory.js"></script>
+  <script src="/expert-app.js"></script>
+  <script src="/viewer/shared/task-screenshot.js"></script>
+</body>
+</html>

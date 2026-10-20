@@ -1,0 +1,116 @@
+{
+  "version": "molstar.v1",
+  "viewer": "molstar",
+  "tools": [
+    {
+      "name": "viewer_get_state",
+      "description": "Return the current Mol* camera pose and loaded structures.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_reset",
+      "description": "Restore the initial Mol* camera and structure visibility.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_orbit",
+      "description": "Orbit the Mol* camera by yaw and pitch degrees around its current target.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "yaw_deg": {"type": "number", "minimum": -180, "maximum": 180, "default": 0},
+          "pitch_deg": {"type": "number", "minimum": -89, "maximum": 89, "default": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_zoom",
+      "description": "Zoom the Mol* camera by a positive factor. Factor > 1 moves closer.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 8}},
+        "required": ["factor"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure",
+      "description": "Start an atom-bound distance, angle, or dihedral measurement and record the completed result.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {"type": "string", "enum": ["distance", "angle", "dihedral"]},
+          "commit": {"type": "boolean"},
+          "atoms": {"type": "array"},
+          "value": {"type": "string"}
+        },
+        "required": ["kind"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_clear_measurements",
+      "description": "Clear every Mol* distance, angle, and dihedral annotation.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_switch_structure",
+      "description": "Show exactly one loaded structure and hide the others.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "structure_id": {"type": "string"},
+          "index": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_symmetry",
+      "description": "Apply a Mol* trajectory preset: the model only, crystal contacts, the unit cell, or a super cell.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "type": "string",
+            "enum": ["model", "crystal_contacts", "unit_cell", "super_cell"]
+          }
+        },
+        "required": ["preset"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_camera",
+      "description": "Restore an absolute Mol* camera pose. Internal utility used to snap the view back to a recorded trajectory head; never an expert action and never recorded.",
+      "visibility": "internal",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "camera": {
+            "type": "object",
+            "properties": {
+              "position": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+              "target": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+              "up": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+              "zoom": {"type": "number"}
+            },
+            "required": ["position", "target"],
+            "additionalProperties": true
+          }
+        },
+        "required": ["camera"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

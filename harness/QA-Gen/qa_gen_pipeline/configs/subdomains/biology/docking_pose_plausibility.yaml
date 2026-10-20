@@ -1,0 +1,46 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: biology.docking_pose_plausibility
+domain: biology
+status: sample_compile_eligible
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: fixture_only
+  release: blocked
+
+visual_skills:
+  - local_spatial_relationship
+seed:
+  query:
+    domain: biology
+    subdomain: docking_pose_plausibility
+    required_status: fixture_verified
+  locked_ref: fixture-seed-inventory@sha256:8d54773301679be57a45fdd27415e77ecfee837b9ee22acd171e1422361f14be
+asset:
+  locked_ref: fixture-asset-manifest@sha256:bc75ca471e483b6a09b8f69df1b76d7f7f004bac0f2a89fe734482015857e020
+  required_conditions:
+    - anonymous_scene
+viewer:
+  locked_ref: fixture-viewer-definition@sha256:9c73378950b3a20f99fef89d380e859553579ac04276bac77fb67b468d7445c3
+  required_operations:
+    - inspect
+    - isolate
+    - rotate
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+evidence:
+  required:
+    - viewer_trace
+    - visual_annotation
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      coverage: source_only
+  locked_refs:
+    - fixture-subdomain-knowledge:biology.docking_pose_plausibility@sha256:337f51b1f8960a8bdb077e47d5b4169e100465320a828abb6770facc6c7ecdac
+release:
+  eligible: false
+  reason: "This leaf is a local fixture compile example, not production approved."

@@ -1,0 +1,345 @@
+{
+  "task_id": "sv-arch-exp-05",
+  "sub_domain": "arch_structural_deformation",
+  "domain": "architecture",
+  "viewer": "architecture_inspection",
+  "folder": "tasks/architecture/arch_structural_deformation/002-sv-arch-exp-05",
+  "question_en": "A3/V3 - Deformation Pattern Identification and Critical Region Localization on MG1\nCompare the registered MG1 baseline and deformed solids. Determine whether the deformation pattern is symmetric about the midspan. Identify the regions with maximum vertical deflection and maximum torsional distortion based on visible geometric evidence. Provide annotated views showing the identified critical regions and supporting observations.",
+  "ground_truth": "The overall deformation pattern is symmetric, with the largest deformation at the mid-span of the bridge; no twisting occurs.",
+  "ground_truth_source": "expert_submission",
+  "rubric_status": "draft - written to exercise the mechanism, awaiting expert sign-off",
+  "proposed_rubric": {
+    "required": [
+      {
+        "any": [
+          "symmetric",
+          "symmetry"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "mid-span",
+          "midspan",
+          "mid span",
+          "midpoint",
+          "centre",
+          "center"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "twist",
+          "twisting",
+          "torsion",
+          "torsional"
+        ],
+        "negated": true
+      }
+    ],
+    "forbidden": [],
+    "source": "authored",
+    "notes": "MG1 deformation pattern: symmetric, peak at mid-span, no torsion"
+  },
+  "derived_rubric": {
+    "required": [
+      {
+        "any": [
+          "overall"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "deformation"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "pattern"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "symmetric"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "largest"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "mid"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "span"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "bridge"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "twisting"
+        ],
+        "negated": true
+      },
+      {
+        "any": [
+          "occurs",
+          "occur"
+        ],
+        "negated": true
+      }
+    ],
+    "forbidden": [],
+    "source": "derived",
+    "notes": "extracted from the ground-truth sentence; cannot see paraphrase"
+  },
+  "derived_group_count": 10,
+  "cases": [
+    {
+      "label": "paraphrase, correct",
+      "answer": "The deformation is symmetric with the largest deflection at midspan; there is no torsion.",
+      "authored": {
+        "value": 1.0,
+        "degraded": false,
+        "matched": [
+          "symmetric",
+          "mid-span",
+          "twist"
+        ],
+        "missed": [],
+        "required": 3,
+        "groups": [
+          {
+            "any_of": [
+              "symmetric",
+              "symmetry"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "symmetric"
+            ]
+          },
+          {
+            "any_of": [
+              "mid-span",
+              "midspan",
+              "mid span",
+              "midpoint",
+              "centre",
+              "center"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "midspan"
+            ]
+          },
+          {
+            "any_of": [
+              "twist",
+              "twisting",
+              "torsion",
+              "torsional"
+            ],
+            "negated": true,
+            "matched": true,
+            "reason": "negated, and the answer negates it",
+            "alternatives_present": [
+              "torsion"
+            ]
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.3,
+        "degraded": true,
+        "matched": [
+          "deformation",
+          "symmetric",
+          "largest"
+        ],
+        "missed": [
+          "overall",
+          "pattern",
+          "mid",
+          "span",
+          "bridge",
+          "twisting",
+          "occurs"
+        ],
+        "required": 10
+      }
+    },
+    {
+      "label": "contradicts the reference",
+      "answer": "The deformation is symmetric with the largest deflection at midspan; twisting occurs.",
+      "authored": {
+        "value": 0.6667,
+        "degraded": false,
+        "matched": [
+          "symmetric",
+          "mid-span"
+        ],
+        "missed": [
+          "twist"
+        ],
+        "required": 3,
+        "groups": [
+          {
+            "any_of": [
+              "symmetric",
+              "symmetry"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "symmetric"
+            ]
+          },
+          {
+            "any_of": [
+              "mid-span",
+              "midspan",
+              "mid span",
+              "midpoint",
+              "centre",
+              "center"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "midspan"
+            ]
+          },
+          {
+            "any_of": [
+              "twist",
+              "twisting",
+              "torsion",
+              "torsional"
+            ],
+            "negated": true,
+            "matched": false,
+            "reason": "present but affirmative - the group requires a negator governing it",
+            "alternatives_present": [
+              "twisting"
+            ]
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.3,
+        "degraded": true,
+        "matched": [
+          "deformation",
+          "symmetric",
+          "largest"
+        ],
+        "missed": [
+          "overall",
+          "pattern",
+          "mid",
+          "span",
+          "bridge",
+          "twisting",
+          "occurs"
+        ],
+        "required": 10
+      }
+    },
+    {
+      "label": "unrelated",
+      "answer": "The bridge is made of steel and has three spans.",
+      "authored": {
+        "value": 0.0,
+        "degraded": false,
+        "matched": [],
+        "missed": [
+          "symmetric",
+          "mid-span",
+          "twist"
+        ],
+        "required": 3,
+        "groups": [
+          {
+            "any_of": [
+              "symmetric",
+              "symmetry"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          },
+          {
+            "any_of": [
+              "mid-span",
+              "midspan",
+              "mid span",
+              "midpoint",
+              "centre",
+              "center"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          },
+          {
+            "any_of": [
+              "twist",
+              "twisting",
+              "torsion",
+              "torsional"
+            ],
+            "negated": true,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.1,
+        "degraded": true,
+        "matched": [
+          "bridge"
+        ],
+        "missed": [
+          "overall",
+          "deformation",
+          "pattern",
+          "symmetric",
+          "largest",
+          "mid",
+          "span",
+          "twisting",
+          "occurs"
+        ],
+        "required": 10
+      }
+    }
+  ]
+}

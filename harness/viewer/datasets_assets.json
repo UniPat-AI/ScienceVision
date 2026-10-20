@@ -1,0 +1,614 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-05T04:38:16+00:00",
+  "datasets": [
+    {
+      "name": "pathvqa",
+      "label": "PathVQA",
+      "modality": "pathology",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/flaviagiammarino/path-vqa",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 6719,
+          "jsonl": "/out_samples/pathvqa/test.jsonl",
+          "first_qid": "pathvqa-test-00-000000",
+          "zh_jsonl": "/out_samples/pathvqa/test.zh.jsonl"
+        },
+        "train": {
+          "rows": 19654,
+          "jsonl": "/out_samples/pathvqa/train.jsonl",
+          "first_qid": "pathvqa-train-00-000000"
+        },
+        "val": {
+          "rows": 6259,
+          "jsonl": "/out_samples/pathvqa/val.jsonl",
+          "first_qid": "pathvqa-val-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 4288,
+      "total_rows": 32632
+    },
+    {
+      "name": "cadvqa",
+      "label": "CAD-VQA",
+      "modality": "CAD (mechanical parts)",
+      "task_type": "MCQ",
+      "source": "github.com/asgsaeid/cad_vqa",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 85,
+          "jsonl": "/out_samples/cadvqa/test.jsonl",
+          "first_qid": "cadvqa-test-000000",
+          "zh_jsonl": "/out_samples/cadvqa/test.zh.jsonl"
+        }
+      },
+      "skipped": {},
+      "pool_size": 102,
+      "total_rows": 85
+    },
+    {
+      "name": "scanqa",
+      "label": "ScanQA",
+      "modality": "3D point cloud + RGB-D",
+      "task_type": "open-ended QA",
+      "source": "github.com/ATR-DBI/ScanQA",
+      "answer_kind": "string",
+      "availability": "data_partial",
+      "unavailable_reason": "ScanNet 3D scenes are TOS-gated; QA loaded but scenes need separate request",
+      "status": "partial-data",
+      "splits": {
+        "test_w_obj": {
+          "rows": 4976,
+          "jsonl": "/out_samples/scanqa/test_w_obj.jsonl",
+          "first_qid": "scanqa-test_w_obj-000000"
+        },
+        "test_wo_obj": {
+          "rows": 6149,
+          "jsonl": "/out_samples/scanqa/test_wo_obj.jsonl",
+          "first_qid": "scanqa-test_wo_obj-000000"
+        },
+        "train": {
+          "rows": 25563,
+          "jsonl": "/out_samples/scanqa/train.jsonl",
+          "first_qid": "scanqa-train-000000"
+        },
+        "val": {
+          "rows": 4675,
+          "jsonl": "/out_samples/scanqa/val.jsonl",
+          "first_qid": "scanqa-val-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 41363
+    },
+    {
+      "name": "sqa3d",
+      "label": "SQA3D",
+      "modality": "3D scene + situated viewpoint",
+      "task_type": "open-ended QA",
+      "source": "zenodo.org/record/7792397",
+      "answer_kind": "string",
+      "availability": "data_partial",
+      "unavailable_reason": "ScanNet 3D scenes are TOS-gated; QA loaded but scenes need separate request",
+      "status": "partial-data",
+      "splits": {
+        "test": {
+          "rows": 3519,
+          "jsonl": "/out_samples/sqa3d/test.jsonl",
+          "first_qid": "sqa3d-test-000000"
+        },
+        "val": {
+          "rows": 3261,
+          "jsonl": "/out_samples/sqa3d/val.jsonl",
+          "first_qid": "sqa3d-val-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 6780
+    },
+    {
+      "name": "3dsrbench",
+      "label": "3DSRBench",
+      "modality": "2D multi-view + spatial",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/ccvl/3DSRBench",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 5157,
+          "jsonl": "/out_samples/3dsrbench/test.jsonl",
+          "first_qid": "3dsrbench-test-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 1827,
+      "total_rows": 5157
+    },
+    {
+      "name": "vsibench",
+      "label": "VSI-Bench",
+      "modality": "egocentric video + spatial",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/nyu-visionx/VSI-Bench",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 2362,
+          "jsonl": "/out_samples/vsibench/test.jsonl",
+          "first_qid": "vsibench-test-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 274,
+      "total_rows": 2362
+    },
+    {
+      "name": "embodiedscan",
+      "label": "EmbodiedScan",
+      "modality": "3D scenes + 1M views",
+      "task_type": "open-ended QA",
+      "source": "github.com/OpenRobotLab/EmbodiedScan",
+      "answer_kind": "string",
+      "availability": "data_unavailable",
+      "unavailable_reason": "Raw scenes huge — only code/annotations fetched; no QA on disk",
+      "status": "disabled",
+      "splits": {},
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 0
+    },
+    {
+      "name": "vqarad",
+      "label": "VQA-RAD",
+      "modality": "radiology",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/flaviagiammarino/vqa-rad",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 451,
+          "jsonl": "/out_samples/vqarad/test.jsonl",
+          "first_qid": "vqarad-test-00-000000"
+        },
+        "train": {
+          "rows": 1793,
+          "jsonl": "/out_samples/vqarad/train.jsonl",
+          "first_qid": "vqarad-train-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 314,
+      "total_rows": 2244
+    },
+    {
+      "name": "slake",
+      "label": "SLAKE",
+      "modality": "radiology + segmentation",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/BoKelvin/SLAKE",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 2094,
+          "jsonl": "/out_samples/slake/test.jsonl",
+          "first_qid": "slake-test-000000"
+        },
+        "train": {
+          "rows": 9835,
+          "jsonl": "/out_samples/slake/train.jsonl",
+          "first_qid": "slake-train-000000"
+        },
+        "val": {
+          "rows": 2099,
+          "jsonl": "/out_samples/slake/val.jsonl",
+          "first_qid": "slake-val-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 642,
+      "total_rows": 14028
+    },
+    {
+      "name": "omnimedvqa",
+      "label": "OmniMedVQA",
+      "modality": "12 medical imaging modalities",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/foreverbeliever/OmniMedVQA",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "open": {
+          "rows": 88996,
+          "jsonl": "/out_samples/omnimedvqa/open.jsonl",
+          "first_qid": "omnimedvqa-open-000000"
+        },
+        "restricted": {
+          "rows": 38999,
+          "jsonl": "/out_samples/omnimedvqa/restricted.jsonl",
+          "first_qid": "omnimedvqa-restricted-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 81456,
+      "total_rows": 127995
+    },
+    {
+      "name": "gmaimmbench",
+      "label": "GMAI-MMBench",
+      "modality": "38 medical modalities",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/OpenGVLab/GMAI-MMBench",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 6808,
+          "jsonl": "/out_samples/gmaimmbench/test.jsonl",
+          "first_qid": "gmaimmbench-test-01-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 6754,
+      "total_rows": 6808
+    },
+    {
+      "name": "m3dvqa",
+      "label": "M3D-VQA",
+      "modality": "3D CT / MRI volumetric",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/GoodBaiBai88/M3D-VQA",
+      "answer_kind": "string",
+      "availability": "data_unavailable",
+      "unavailable_reason": "Companion M3D-Cap (image source) was DMCA-disabled on HF; QA text loaded but no images",
+      "status": "disabled",
+      "splits": {
+        "test": {
+          "rows": 13791,
+          "jsonl": "/out_samples/m3dvqa/test.jsonl",
+          "first_qid": "m3dvqa-test-000000"
+        },
+        "test5k": {
+          "rows": 5000,
+          "jsonl": "/out_samples/m3dvqa/test5k.jsonl",
+          "first_qid": "m3dvqa-test5k-000000"
+        },
+        "val": {
+          "rows": 14067,
+          "jsonl": "/out_samples/m3dvqa/val.jsonl",
+          "first_qid": "m3dvqa-val-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 32858
+    },
+    {
+      "name": "m3drefseg",
+      "label": "M3D-RefSeg",
+      "modality": "3D CT + segmentation + referring text",
+      "task_type": "referring segmentation",
+      "source": "huggingface.co/datasets/GoodBaiBai88/M3D-RefSeg",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 555,
+          "jsonl": "/out_samples/m3drefseg/test.jsonl",
+          "first_qid": "m3drefseg-test-000000"
+        },
+        "train": {
+          "rows": 2222,
+          "jsonl": "/out_samples/m3drefseg/train.jsonl",
+          "first_qid": "m3drefseg-train-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 332,
+      "total_rows": 2777
+    },
+    {
+      "name": "designqa",
+      "label": "DesignQA",
+      "modality": "engineering / CAD docs",
+      "task_type": "open-ended QA",
+      "source": "github.com/anniedoris/design_qa",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "rule_definition": {
+          "rows": 62,
+          "jsonl": "/out_samples/designqa/rule_definition.jsonl",
+          "first_qid": "designqa-rule_definition-000000"
+        },
+        "rule_dimension_context": {
+          "rows": 120,
+          "jsonl": "/out_samples/designqa/rule_dimension_context.jsonl",
+          "first_qid": "designqa-rule_dimension_context-000000"
+        },
+        "rule_dimension_detailed_context": {
+          "rows": 120,
+          "jsonl": "/out_samples/designqa/rule_dimension_detailed_context.jsonl",
+          "first_qid": "designqa-rule_dimension_detailed_context-000000"
+        },
+        "rule_functional_performance": {
+          "rows": 32,
+          "jsonl": "/out_samples/designqa/rule_functional_performance.jsonl",
+          "first_qid": "designqa-rule_functional_performance-000000"
+        },
+        "rule_presence": {
+          "rows": 124,
+          "jsonl": "/out_samples/designqa/rule_presence.jsonl",
+          "first_qid": "designqa-rule_presence-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 212,
+      "total_rows": 458
+    },
+    {
+      "name": "scienceqa",
+      "label": "ScienceQA",
+      "modality": "K-12 science (mixed)",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/derek-thomas/ScienceQA",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 4241,
+          "jsonl": "/out_samples/scienceqa/test.jsonl",
+          "first_qid": "scienceqa-test-00-000000"
+        },
+        "train": {
+          "rows": 12726,
+          "jsonl": "/out_samples/scienceqa/train.jsonl",
+          "first_qid": "scienceqa-train-00-000000"
+        },
+        "val": {
+          "rows": 4241,
+          "jsonl": "/out_samples/scienceqa/val.jsonl",
+          "first_qid": "scienceqa-val-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 7803,
+      "total_rows": 21208
+    },
+    {
+      "name": "mmmu",
+      "label": "MMMU",
+      "modality": "college science",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/MMMU/MMMU",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "dev": {
+          "rows": 150,
+          "jsonl": "/out_samples/mmmu/dev.jsonl",
+          "first_qid": "mmmu-dev-Accounting-000000"
+        },
+        "test": {
+          "rows": 10500,
+          "jsonl": "/out_samples/mmmu/test.jsonl",
+          "first_qid": "mmmu-test-Accounting-000000"
+        },
+        "val": {
+          "rows": 900,
+          "jsonl": "/out_samples/mmmu/val.jsonl",
+          "first_qid": "mmmu-val-Accounting-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 10414,
+      "total_rows": 11550
+    },
+    {
+      "name": "mmmupro",
+      "label": "MMMU-Pro",
+      "modality": "shortcut-resistant MCQ",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/MMMU/MMMU_Pro",
+      "answer_kind": "mcq",
+      "status": "ready",
+      "splits": {
+        "std10": {
+          "rows": 1730,
+          "jsonl": "/out_samples/mmmupro/std10.jsonl",
+          "first_qid": "mmmupro-std10-00-000000"
+        },
+        "std4": {
+          "rows": 1730,
+          "jsonl": "/out_samples/mmmupro/std4.jsonl",
+          "first_qid": "mmmupro-std4-00-000000"
+        },
+        "vision": {
+          "rows": 1730,
+          "jsonl": "/out_samples/mmmupro/vision.jsonl",
+          "first_qid": "mmmupro-vision-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 3673,
+      "total_rows": 5190
+    },
+    {
+      "name": "scifibench",
+      "label": "SciFIBench",
+      "modality": "scientific paper figures",
+      "task_type": "MCQ",
+      "source": "huggingface.co/datasets/jonathan-roberts1/SciFIBench",
+      "answer_kind": "mcq",
+      "availability": "out_of_scope",
+      "unavailable_reason": "Paper figures (caption ↔ figure matching) — outside Sci3D 3D/medical/CAD scope",
+      "status": "disabled",
+      "splits": {
+        "CS_Caption2Figure": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/CS_Caption2Figure.jsonl",
+          "first_qid": "scifibench-CS_Caption2Figure-00-000000"
+        },
+        "CS_Figure2Caption": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/CS_Figure2Caption.jsonl",
+          "first_qid": "scifibench-CS_Figure2Caption-00-000000"
+        },
+        "Caption2Figure": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/Caption2Figure.jsonl",
+          "first_qid": "scifibench-Caption2Figure-00-000000"
+        },
+        "Figure2Caption": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/Figure2Caption.jsonl",
+          "first_qid": "scifibench-Figure2Caption-00-000000"
+        },
+        "General_Caption2Figure": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/General_Caption2Figure.jsonl",
+          "first_qid": "scifibench-General_Caption2Figure-00-000000"
+        },
+        "General_Figure2Caption": {
+          "rows": 500,
+          "jsonl": "/out_samples/scifibench/General_Figure2Caption.jsonl",
+          "first_qid": "scifibench-General_Figure2Caption-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 2192,
+      "total_rows": 3000
+    },
+    {
+      "name": "charxiv",
+      "label": "CharXiv",
+      "modality": "arXiv chart QA",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/princeton-nlp/CharXiv",
+      "answer_kind": "string",
+      "availability": "out_of_scope",
+      "unavailable_reason": "arXiv chart QA — outside Sci3D 3D/medical/CAD scope",
+      "status": "disabled",
+      "splits": {
+        "test": {
+          "rows": 6615,
+          "jsonl": "/out_samples/charxiv/test.jsonl",
+          "first_qid": "charxiv-test-00-000000-d1"
+        },
+        "val": {
+          "rows": 5000,
+          "jsonl": "/out_samples/charxiv/val.jsonl",
+          "first_qid": "charxiv-val-00-000000-d1"
+        }
+      },
+      "skipped": {},
+      "pool_size": 2323,
+      "total_rows": 11615
+    },
+    {
+      "name": "spiqa",
+      "label": "SPIQA",
+      "modality": "scientific paper figs + tables",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/google/spiqa",
+      "answer_kind": "string",
+      "availability": "out_of_scope",
+      "unavailable_reason": "Paper figures + tables — outside Sci3D 3D/medical/CAD scope",
+      "status": "disabled",
+      "splits": {
+        "testA": {
+          "rows": 666,
+          "jsonl": "/out_samples/spiqa/testA.jsonl",
+          "first_qid": "spiqa-testA-000-00"
+        }
+      },
+      "skipped": {},
+      "pool_size": 666,
+      "total_rows": 666
+    },
+    {
+      "name": "mmsci",
+      "label": "MMSci",
+      "modality": "Nature Communications figures",
+      "task_type": "MCQ",
+      "source": "github.com/Leezekun/MMSci",
+      "answer_kind": "mcq",
+      "availability": "out_of_scope",
+      "unavailable_reason": "Nature Communications 2D paper figures — outside Sci3D 3D/medical/CAD scope",
+      "status": "disabled",
+      "splits": {},
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 0
+    },
+    {
+      "name": "astrollava",
+      "label": "AstroLLaVA",
+      "modality": "astronomy image VQA",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/UniverseTBD/AstroLLaVA_convos",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "train": {
+          "rows": 5517,
+          "jsonl": "/out_samples/astrollava/train.jsonl",
+          "first_qid": "astrollava-train-00-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 4570,
+      "total_rows": 5517
+    },
+    {
+      "name": "physbench",
+      "label": "PhysBench",
+      "modality": "physical-world video",
+      "task_type": "open-ended QA",
+      "source": "huggingface.co/datasets/USC-PSI-Lab/PhysBench",
+      "answer_kind": "string",
+      "status": "ready",
+      "splits": {
+        "test": {
+          "rows": 3931,
+          "jsonl": "/out_samples/physbench/test.jsonl",
+          "first_qid": "physbench-test-000009"
+        },
+        "val": {
+          "rows": 65,
+          "jsonl": "/out_samples/physbench/val.jsonl",
+          "first_qid": "physbench-val-000000"
+        }
+      },
+      "skipped": {},
+      "pool_size": 10009,
+      "total_rows": 3996
+    },
+    {
+      "name": "scienceboard",
+      "label": "ScienceBoard",
+      "modality": "OS-level multi-domain agent",
+      "task_type": "agent task (not VQA)",
+      "source": "github.com/OS-Copilot/ScienceBoard",
+      "answer_kind": "string",
+      "availability": "out_of_scope",
+      "unavailable_reason": "OS-level agent operation tasks — not VQA, outside Sci3D scope",
+      "status": "disabled",
+      "splits": {},
+      "skipped": {},
+      "pool_size": 0,
+      "total_rows": 0
+    }
+  ]
+}

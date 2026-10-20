@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-05-19T10:22:58+00:00",
+  "policy": "strict_present_on_disk",
+  "scope": "tier1_3d_grounded",
+  "files": [
+    {
+      "dataset": "scanqa",
+      "path_repo": "datasets/_matched/scanqa.json",
+      "count": 7173
+    },
+    {
+      "dataset": "sqa3d",
+      "path_repo": "datasets/_matched/sqa3d.json",
+      "count": 578
+    },
+    {
+      "dataset": "m3d-refseg",
+      "path_repo": "datasets/_matched/m3d-refseg.json",
+      "count": 2777
+    },
+    {
+      "dataset": "m3d-seg-0005",
+      "path_repo": "datasets/_matched/m3d-seg-0005.json",
+      "count": 20
+    },
+    {
+      "dataset": "embodiedscan-demo",
+      "path_repo": "datasets/_matched/embodiedscan-demo.json",
+      "count": 3
+    }
+  ],
+  "total": 10551
+}

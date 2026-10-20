@@ -1,0 +1,555 @@
+[
+  {
+    "pilot_id": "seed3d_2.0_astrollava",
+    "generator": {
+      "model": "doubao-seed3d-2-0",
+      "vendor": "Volcengine Ark",
+      "interface": "console-manual",
+      "run_date": "2026-05-18"
+    },
+    "pilot": {
+      "verdict": {
+        "code": "no-go",
+        "narrow_go": "Near-spherical natural bodies viewed nearly head-on; QA that does not depend on the unseen hemisphere.",
+        "summary": "1-of-3 partial pass. Even the partial pass produces a misleading back side and a 2× exaggerated principal crater. Do not use as reference 3D.",
+        "reviewer_model": "claude-opus-4-7",
+        "reviewed_at": "2026-05-18"
+      },
+      "cross_sample_findings": [
+        {
+          "id": "no-real-back-side",
+          "title": "Seed3D 2.0 has no real back side",
+          "body": "The Mimas RIGHT-view depth heatmap is perfectly radially symmetric — the model fills unseen geometry by mirroring the visible front, not by reconstruction. This is a structural property of single-image image-to-3D and won't change with prompting."
+        },
+        {
+          "id": "uniform-500k-budget",
+          "title": "Uniform 500K-face budget regardless of subject complexity",
+          "body": "All 3 outputs hit the cap to within 0.05%. Compact convex objects oversample; thin / multi-component objects starve and collapse to 2.5D."
+        },
+        {
+          "id": "acceptance-not-pixel-size",
+          "title": "Image acceptance threshold is not purely pixel size",
+          "body": "Mir at 466×310 was accepted; Ida at 473×246 was rejected; Ida at 905×655 was accepted. Provisional rule: short-edge ≥ ~300 px AND subject occupies ≥ ~30% of frame."
+        },
+        {
+          "id": "category-map",
+          "title": "Output quality category map",
+          "body": "Compact + ~spherical + well-lit + single subject → partial pass (Mimas). Irregular + secondary subject in frame → fail (Ida). Thin / multi-module hardware → fail (Mir)."
+        }
+      ],
+      "source_doc_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/RESULTS_pilot.md"
+    },
+    "samples": [
+      {
+        "key": "mir",
+        "name": "Mir space station",
+        "apod_id": "1995-09-15",
+        "category": "man-made / complex topology",
+        "geometry_verdict": "fail-2.5d",
+        "qa_uplift_verdict": "fail",
+        "verdict_summary": "bbox volume only 0.9% filled. Solar panels are 1-vertex-thick plates; truss extruded from foreground edge pixels with no back side. Any non-input-angle spatial-reasoning question returns invented geometry.",
+        "source_2d": {
+          "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/spacecraft_or_station__1995-09-15.png",
+          "resolution": [
+            466,
+            310
+          ],
+          "caption_source": "AstroLLaVA / APOD 1995-09-15",
+          "caption_short": "Russian Mir station over Earth. Solar panels + antennas + multiple modules."
+        },
+        "output_3d": {
+          "glb_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_unzipped/spacecraft_or_station__1995-09-15_doubao-seed3d-2-0/pbr/mesh_textured_pbr.glb",
+          "zip_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/spacecraft_or_station__1995-09-15_doubao-seed3d-2-0.zip",
+          "vertices": 291515,
+          "faces": 499749,
+          "extents": [
+            0.332,
+            0.507,
+            1.0
+          ],
+          "watertight": false,
+          "volume_over_bbox": 0.009
+        },
+        "evidence_renders": [
+          {
+            "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_renders/spacecraft_or_station__1995-09-15_doubao-seed3d-2-0_overview.png",
+            "kind": "overview",
+            "caption": "4-view overview: front silhouette resembles Mir; right/left collapse to a near-2D fan."
+          }
+        ],
+        "ai_critique": {
+          "source": "gpt-5.5",
+          "critiqued_at": "2026-05-18",
+          "status": "complete",
+          "issues": [
+            {
+              "id": "mir-3d-01",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.thin_truss",
+              "title": "主体太细长，刚度不足",
+              "body": "中间像一根很长的管子，挂了很多板、杆和舱段。真实空间站如果这么长，通常会用桁架而不是单根细管，因为单管抗弯和抗扭能力差。姿态调整、对接、热胀冷缩、太阳翼转动都会让它振动。",
+              "suggested_fix": "把主轴改成三角桁架、箱形桁架，或者分成多个粗短模块连接。"
+            },
+            {
+              "id": "mir-3d-02",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.panel_layout",
+              "title": "太阳能板位置太杂，遮挡风险高",
+              "body": "图里的矩形板有的贴近主轴，有的在侧面，有的和其他结构角度接近。这样容易出现互相遮挡阳光、被主体阴影挡住、姿态变化时发电效率不稳定。",
+              "suggested_fix": "太阳能板成对布置，左右对称，离主体远一点，并有清晰的旋转机构。"
+            },
+            {
+              "id": "mir-3d-03",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.semantics.thermal_mix",
+              "title": "散热器和太阳能板功能混在一起",
+              "body": "这些板如果是太阳能板，需要朝太阳；如果是散热器，通常希望朝向深空并避开太阳直晒。两者朝向需求不同。现在所有板都像同一种东西，功能不明确。",
+              "suggested_fix": "太阳能板做成蓝黑色阵列，散热器做成浅色或金属色平板，分别布置在不同方向。"
+            },
+            {
+              "id": "mir-3d-04",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.semantics.missing_propulsion",
+              "title": "缺少明显的推进和姿态控制系统",
+              "body": "航天器需要小喷口、推进剂舱、反作用飞轮或姿态控制喷嘴。图里有些圆形部件像喷口，但没有形成清晰的推进器布局。长条结构如果要转向，需要分布式姿控喷嘴，不然控制会很困难。",
+              "suggested_fix": "在两端和重心附近加小型 RCS 喷嘴组，尾部或服务舱加主推进模块。"
+            },
+            {
+              "id": "mir-3d-05",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.geometry.mass_imbalance",
+              "title": "重心和结构载荷不均衡",
+              "body": "右侧有较多板和较粗的节点，左侧是一根很长的杆。整体看起来质量分布不均。如果推进器不穿过质心，点火会让它旋转。",
+              "suggested_fix": "把大型舱段、推进剂舱、电池、反作用飞轮集中在中部，把轻量化天线和传感器伸到两端。"
+            },
+            {
+              "id": "mir-3d-06",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.geometry.fragile_boom",
+              "title": "外伸长杆太脆弱",
+              "body": "左下方那根带小球的长杆、两端尖细杆都很容易在发射振动、展开过程、微流星体撞击中受损。真实航天器一般会非常轻、明确是天线、磁强计杆或传感器臂，而且会有展开铰链和锁定机构。",
+              "suggested_fix": "给长杆加铰链、支撑拉索，或者让它看起来是可展开设备。"
+            },
+            {
+              "id": "mir-3d-07",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.semantics.missing_dock_hab",
+              "title": "没有明显的对接口或居住舱",
+              "body": "如果这是空间站，应该能看到压力舱、对接口、气闸、货运飞船停靠位、舷窗或实验舱。现在它更像无人探测器或轨道平台，不太像有人空间站。",
+              "suggested_fix": "在中部或一端加入几个较粗的圆柱舱段和标准对接口。"
+            },
+            {
+              "id": "mir-3d-08",
+              "applies_to": "3d",
+              "severity": "low",
+              "type": "synth.geometry.spurious_spikes",
+              "title": "尖刺状端部不太实用",
+              "body": "两端像长矛一样的结构视觉上很酷，但工程上用途不明确。航天器通常不会做太多尖锐长刺，因为它们增加碰撞风险、发射包络困难，也不利于维修和对接。",
+              "suggested_fix": "如果用作长波天线、磁强计杆、粒子探测器支架可以保留；否则建议缩短或改成天线阵列。"
+            },
+            {
+              "id": "mir-3d-09",
+              "applies_to": "3d",
+              "severity": "low",
+              "type": "synth.semantics.missing_thermal_control",
+              "title": "缺少热控细节",
+              "body": "真实航天器表面会有隔热毯、散热片、管线、热控涂层。这个模型整体都像同一种金属蓝紫材质，虽然好看，但功能感弱。",
+              "suggested_fix": "主体用白色 / 金色 / 金属灰隔热材料，太阳能板用深蓝，散热器用浅灰或白色。"
+            },
+            {
+              "id": "mir-3d-10",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.semantics.scale_mismatch",
+              "title": "作为「空间站」偏小，作为「无人航天器」更合理",
+              "body": "如果它是空间站，当前结构太单薄，生活和维护空间不足。如果它是无人航天器、深空探测器、轨道通信平台、科幻中继站、军用 / 科研平台则更合理。",
+              "suggested_fix": "若想保留「空间站」身份，需补齐压力舱、对接口与居住舱体积。"
+            },
+            {
+              "id": "mir-2d-01",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.solar_panel_alignment",
+              "title": "太阳能板数量和方向有点混乱",
+              "body": "图里有多组长条板，但它们不完全共面，也不像有统一的太阳跟踪机构。真实空间站会尽量让太阳翼有清晰的旋转轴，方便持续对日。各组板角度差异大可能造成发电效率不稳定、部分太阳翼被舱体遮挡、姿态控制更复杂。"
+            },
+            {
+              "id": "mir-2d-02",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.geometry.mass_imbalance",
+              "title": "结构布局偏「拼装感」，重心可能不理想",
+              "body": "右侧有较多舱段和设备，左侧相对空。整体质量分布看起来偏一边。真实航天器当然可以不对称，但推进器、姿态控制喷嘴和动量轮布局要配合重心，否则调整姿态时容易产生不想要的旋转。"
+            },
+            {
+              "id": "mir-2d-03",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.missing_radiator",
+              "title": "缺少明显的散热系统",
+              "body": "空间站不只需要太阳能板，也需要散热器。图里长条板看上去都像太阳能电池板，但没有清楚看到大型白色散热板或散热片。如果这是有人空间站或大功率平台，散热系统应该非常显眼。"
+            },
+            {
+              "id": "mir-2d-04",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.geometry.boom_endpoint",
+              "title": "长杆末端的「小盒子」用途不明确",
+              "body": "右下方那根长杆末端有一个方形 / 块状物。它可以解释成传感器、磁强计、天线、摄像机或实验载荷，但如果它比较重，单根细杆支撑会有振动和结构强度问题。"
+            },
+            {
+              "id": "mir-2d-05",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.missing_dock_hab",
+              "title": "对接口和舱段功能不够清楚",
+              "body": "如果这是空间站，应该能看出对接端口、气闸舱、居住舱、服务舱、实验舱等。图里有几个圆柱体和节点，但功能边界不太清晰。尤其右侧长圆柱像飞船或服务舱，但它和主站连接方式看起来比较紧凑。"
+            },
+            {
+              "id": "mir-2d-06",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.geometry.clearance",
+              "title": "部分结构太靠近，可能互相干涉",
+              "body": "右侧圆柱、太阳翼、竖向舱段和下方长杆都比较接近。如果太阳翼需要转动，或者飞船需要对接 / 分离，这些部件可能会互相挡住路径。真实设计通常会给太阳翼旋转、机械臂操作、对接飞船靠近路径留出明显的安全空间。"
+            },
+            {
+              "id": "mir-2d-07",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.scale_mismatch",
+              "title": "作为有人空间站，体积偏小",
+              "body": "如果它是载人空间站，压力舱容积看起来不大，生活区、储物、实验设备、生命保障系统空间可能不足。它更像小型早期空间站、无人科研平台、军事 / 侦察轨道站，或科幻作品里的紧凑型空间站。"
+            },
+            {
+              "id": "mir-2d-08",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.orientation_neutral",
+              "title": "画面里的「垂直 / 水平」本身不是问题",
+              "body": "它在地球边缘旁边看起来像「竖着」或「横着」，但太空里没有固定上下。只要姿态控制、通信、太阳能板朝向、散热方向合理，这种姿态完全可以。"
+            }
+          ]
+        },
+        "pilot_id": "seed3d_2.0_astrollava"
+      },
+      {
+        "key": "mimas",
+        "name": "Mimas (Cassini PIA12569)",
+        "apod_id": "1995-09-24",
+        "category": "natural / ~spherical",
+        "geometry_verdict": "partial-pass",
+        "qa_uplift_verdict": "fail-misleading",
+        "verdict_summary": "bbox aspect 0.84 : 1.00 : 0.996 — flattened ~16% along one axis vs real Mimas. Volume / bbox = 0.48 (sphere = 0.52). Observed deepest crater is 0.092 of radius, almost twice the real Herschel (0.05). Back side is procedurally mirrored from front.",
+        "source_2d": {
+          "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/moon_surface__1995-09-24__PIA12569.png",
+          "resolution": [
+            1500,
+            1500
+          ],
+          "caption_source": "AstroLLaVA / APOD 1995-09-24 (Cassini PIA12569 hi-res replacement)",
+          "caption_short": "Mimas with Herschel crater. Cassini PIA12569 replaces the original APOD GIF (352×309)."
+        },
+        "output_3d": {
+          "glb_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_unzipped/moon_surface__1995-09-24__PIA12569_doubao-seed3d-2-0/pbr/mesh_textured_pbr.glb",
+          "zip_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/moon_surface__1995-09-24__PIA12569_doubao-seed3d-2-0.zip",
+          "vertices": 266293,
+          "faces": 499988,
+          "extents": [
+            0.842,
+            1.0,
+            0.996
+          ],
+          "watertight": false,
+          "volume_over_bbox": 0.48,
+          "ellipsoid_fit_abc": [
+            0.41,
+            0.5,
+            0.49
+          ]
+        },
+        "evidence_renders": [
+          {
+            "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_renders/moon_surface__1995-09-24__PIA12569_doubao-seed3d-2-0_overview.png",
+            "kind": "overview",
+            "caption": "4-view scatter overview."
+          },
+          {
+            "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_renders/mimas_6view_depth_v2.png",
+            "kind": "depth-6view",
+            "caption": "RIGHT view (looking down +X) is a perfectly radially-symmetric concentric-ring depth pattern. Real moons are not rotationally symmetric about a side axis — the model filled the back by mirroring the front."
+          },
+          {
+            "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_renders/mimas_cross_sections.png",
+            "kind": "cross-sections",
+            "caption": "Equatorial: actual outline (blue) is not an ellipse — spurious +0.43 spike at top, frayed bottom. Meridional: stray bulge at y ≈ −0.55 outside the rest-of-body bbox."
+          }
+        ],
+        "ai_critique": {
+          "source": "claude-opus-4-7",
+          "critiqued_at": "2026-05-18",
+          "status": "complete",
+          "issues": [
+            {
+              "id": "mimas-3d-01",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.mirrored_back",
+              "title": "RIGHT 视角是径向对称同心圆 — 背面是镜像伪造的",
+              "body": "depth-from-ellipsoid 6-view 中，RIGHT (+X) 视角呈现一个完美居中、径向对称的同心圆深度图案 —— 中心一个深蓝小点，向外环绕成圈。真实月亮的侧视面不会是关于一根侧轴的旋转对称图形。这说明 Seed3D 没有重建背面，而是把可见正面绕某根轴做了旋转 / 镜像填充。任何依赖「背面长什么样」的 QA 都会拿到捏造答案。",
+              "suggested_fix": "图像-到-3D 这一类单视角模型只能输出「正面 + 程序化背面」，不可信。要彻底解决需要换 multi-view 重建（TripoSR、InstantMesh、Hunyuan3D）。在 viewer 里至少给背面区域加一个「synthesized, not observed」遮罩或半透明标记。"
+            },
+            {
+              "id": "mimas-3d-02",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.crater_exaggeration",
+              "title": "中心凹陷比真实 Herschel 深近 2 倍",
+              "body": "title 说明：观测到最深向内偏离 = 0.092 × 半径，而真实 Herschel 火山口深度 ≈ 0.05 × 半径（130 km 宽，10 km 深）。FRONT 视角 depth heatmap 中心确有一团向内蓝色，地理位置大致对得上 Herschel，但深度被几乎放大了一倍。基于这个 mesh 回答「Herschel 多深」会得到错误数值。",
+              "suggested_fix": "若把这个 mesh 用作 QA 参考，需要先把深度缩放校正到 Herschel 真实深宽比 (~0.05 × radius)，或者直接拒绝深度类问题。"
+            },
+            {
+              "id": "mimas-3d-03",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.spurious_appendage",
+              "title": "子午切面 y ≈ −0.55 处长出真实 Mimas 上不存在的鼓包",
+              "body": "meridional 切面图中蓝色实线 (Seed3D mesh) 在 y ≈ −0.55 位置显著外凸，越出红色虚线 (拟合椭球) 与绿色虚线 (real Mimas profile)。真实 Mimas 在该纬度无任何显著突起。这是 Seed3D 把输入图南半球深阴影错误解读为真实几何凸起后挤出的伪结构。基于此 mesh 任何「Mimas 南半球地形特征」回答都是杜撰。",
+              "suggested_fix": "在源图阴影区域显著的情况下，模型不应假设阴影 = 几何特征。临时 workaround：对该区域做 depth clipping 到拟合椭球。"
+            },
+            {
+              "id": "mimas-3d-04",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.geometry.equatorial_spike",
+              "title": "赤道切面顶端有一根 +0.43 高度的尖刺",
+              "body": "equatorial 切面图蓝色实线在顶端 (~+y 方向) 有一根明显窄峰，顶到 y ≈ +0.43，宽度只占数度经度。真实 Mimas 赤道剖面平滑近椭圆，无任何此类窄高凸起。同样是单点伪几何，会让「Mimas 北极地形」类问题产生「有山峰」之类的虚假回答。",
+              "suggested_fix": "可作为后处理 outlier filter 的检测目标 —— 任何 1-σ 之外的点状外凸都该被压回拟合椭球。"
+            },
+            {
+              "id": "mimas-3d-05",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.geometry.flattened_axis",
+              "title": "沿 X 轴被压扁约 16%，超过真实 Mimas 的扁率",
+              "body": "bbox aspect 0.84 : 1.00 : 0.996（拟合椭球 a=0.41, b=0.50, c=0.49）。真实 Mimas 形状 ~0.92 : 1.00 : 0.92（轻度扁球）。Seed3D 把 X 轴额外压扁了一倍。基于此 mesh 测「Mimas 直径比」类 QA 会偏差 ~8%。",
+              "suggested_fix": "若做几何 QA，先把模型 rescale 到真实 a:b:c (e.g. 来自 NASA 公开 ellipsoid 参数) 再使用。"
+            },
+            {
+              "id": "mimas-3d-06",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.semantics.no_view_distinction",
+              "title": "front / back / left / right 四视角几乎一样，丢失定向性",
+              "body": "4-view overview 中 front / back / left / right 四张轮廓图差别非常小，都是带麻点的圆。真实月亮做 4-view overview 时，front (含 Herschel) 与 back (无 Herschel) 应当在轮廓和坑分布上一眼可辨。这里的均一性等价于「整个 mesh 几乎是有纹理的球」，不是「带 Herschel 标志的 Mimas」。",
+              "suggested_fix": "这是 mirrored-back 缺陷的另一个症状（mimas-3d-01）。同一个根因。"
+            },
+            {
+              "id": "mimas-3d-07",
+              "applies_to": "3d",
+              "severity": "low",
+              "type": "synth.geometry.surface_noise",
+              "title": "表面散点状几何噪声 — 不是真坑而是 high-frequency jitter",
+              "body": "4-view 各角度都能看到密集的白点 / 黑点 sprinkle 状噪声。这与 Cassini 真实图像里大小不一的离散小坑不同 —— Seed3D 在不知道某区域真实地形的情况下，倾向于用 high-frequency 颗粒去填充以「看起来有坑」。基于此 mesh 数小坑 (crater counting) 会得到无意义的数字。",
+              "suggested_fix": "若做 crater counting 类 QA 必须直接看 2D 原图，不可走 mesh。"
+            },
+            {
+              "id": "mimas-3d-08",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.coverage.herschel_position",
+              "title": "Herschel 在 mesh 上的位置看不出来落在哪个半球",
+              "body": "FRONT depth 中心确实有 Herschel-like 凹陷，但因为 RIGHT view 是镜像填充（mimas-3d-01），无法判断 Herschel 究竟落在前导半球 (leading hemisphere) 还是后随半球 (trailing hemisphere)。真实 Mimas 上 Herschel 位于前导半球 ~14°W，是公开知识。基于此 mesh 回答「Herschel 在哪个半球」是 50/50 蒙。",
+              "suggested_fix": "对 single-view image-to-3D 输出，「特征经度」必须从 2D 原图 + 公开 ephemeris 推断，不可从 3D mesh 读取。"
+            },
+            {
+              "id": "mimas-2d-01",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.lighting_bias",
+              "title": "强斜射光照让 Herschel 看起来比实际更深",
+              "body": "PIA12569 原图中 Herschel 火山口位于明暗分界附近，长长的阴影使陡边和中央峰看起来比正午光照下更深、更立体。这本身不是错误 (Cassini 摄影是这样)，但任何下游 image-to-3D 工具都会把阴影深度直接读成几何深度 —— 这是 mimas-3d-02 (深度被夸大近 2 倍) 的源头。",
+              "suggested_fix": "对依赖 image-to-3D 的下游流水线，应优先选择正午接近无影的图像作为输入；或在管线中显式做 shape-from-shading 反阴影。"
+            },
+            {
+              "id": "mimas-2d-02",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.coverage.single_hemisphere",
+              "title": "单帧只能看到大约一个半球，背面信息为零",
+              "body": "Cassini 这一幅是单视角拍摄，只覆盖朝向相机的一面 (≈ 50% 表面)。背面没有任何观测信息。任何只看这张图的工具 (无论模型还是人) 都不可能知道背面长什么样。这是后续 mimas-3d-01 (背面是程序化镜像) 必然发生的根本原因 —— 不是模型选错，而是输入信息不足。",
+              "suggested_fix": "若必须做 3D 重建，至少补 1–2 张其他视角的 Cassini / Voyager 图像；ScienceVision 23 个 benchmark 中 AstroLLaVA 现有 QA 大多是单视角，对此基本无能为力。"
+            },
+            {
+              "id": "mimas-2d-03",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.scale_no_reference",
+              "title": "图中没有比例参考物，绝对尺寸只能靠先验给出",
+              "body": "纯黑背景，无前景星点（曝光被压暗），无飞行器结构入帧。Mimas 直径 (~396 km)、Herschel 直径 (~130 km) 的绝对数值无法从图中测量，只能由 caption / 先验知识给出。Seed3D 输出 mesh 时也只能套一个任意单位 bbox，再后续把 bbox 缩放到真实直径需要外部 metadata。",
+              "suggested_fix": "image-to-3D 流水线在没有比例参考时，应在输出元数据里强制写明「尺度未定，需外部赋值」，而不是默认 mesh 单位 = 米。"
+            }
+          ]
+        },
+        "pilot_id": "seed3d_2.0_astrollava"
+      },
+      {
+        "key": "ida",
+        "name": "Asteroid 243 Ida + Dactyl",
+        "apod_id": "1995-06-30",
+        "category": "natural / irregular",
+        "geometry_verdict": "fail",
+        "qa_uplift_verdict": "fail",
+        "verdict_summary": "bbox aspect 0.39 : 0.28 : 1.00 — extremely elongated (superficially Ida-like). LEFT view shows a comb-toothed phantom appendage. RIGHT view shows a deep C-shaped concavity — the body is split into a half-moon, not a closed solid. Dactyl moon merged into spurious surface features.",
+        "source_2d": {
+          "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/asteroid__1995-06-30.png",
+          "resolution": [
+            905,
+            655
+          ],
+          "caption_source": "AstroLLaVA / APOD 1995-06-30 (NASA/JPL PIA00069 hi-res replacement)",
+          "caption_short": "Asteroid 243 Ida + tiny moon Dactyl."
+        },
+        "output_3d": {
+          "glb_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_unzipped/asteroid__1995-06-30_doubao-seed3d-2-0/pbr/mesh_textured_pbr.glb",
+          "zip_path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/asteroid__1995-06-30_doubao-seed3d-2-0.zip",
+          "vertices": 267064,
+          "faces": 500000,
+          "extents": [
+            0.393,
+            0.283,
+            1.0
+          ],
+          "watertight": false,
+          "volume_over_bbox": 0.21
+        },
+        "evidence_renders": [
+          {
+            "path": "/datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/_renders/asteroid__1995-06-30_doubao-seed3d-2-0_overview.png",
+            "kind": "overview",
+            "caption": "Comb-toothed appendage on LEFT view; deep C-shaped concavity on RIGHT view."
+          }
+        ],
+        "ai_critique": {
+          "source": "claude-opus-4-7",
+          "critiqued_at": "2026-05-18",
+          "status": "complete",
+          "issues": [
+            {
+              "id": "ida-3d-01",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.open_shell",
+              "title": "BACK 视角是空心 C 形 — 整个 mesh 不是闭合实体",
+              "body": "4-view overview 中 BACK 视角清晰显示一个 C 形大缺口 —— 物体被切去一大块，露出空腔。watertight = False (来自 _mesh_stats.json) 与此一致。任何依赖「Ida 是封闭固体」的几何计算（体积、惯性矩、撞击截面）在此 mesh 上会产生未定义结果。这跟 Mir 的 2.5D 是同一类病因 —— Seed3D 把背向相机的一面留空。",
+              "suggested_fix": "这类 mesh 必须先 watertighting (e.g. ball-pivoting 闭合 + Poisson 重建) 才能做体积类 QA；但闭合后的背面几何仍然是程序化的，不是真实 Ida。"
+            },
+            {
+              "id": "ida-3d-02",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.geometry.phantom_appendage",
+              "title": "LEFT 视角长出一排梳齿状尖刺 — 不存在的几何",
+              "body": "4-view overview LEFT 视角显示一排平行的尖刺状条纹，像梳齿、像羽毛。真实 Ida 是一个 56×24×21 km 的拉长不规则体，表面有坑但绝无任何排列整齐的梳齿状结构。最可能解释：Seed3D 把输入图中 Ida 表面阴影沟槽 (尤其是其腰部那道明显的明暗分界) 错误外推为 3D 凸起 / 凹槽阵列。",
+              "suggested_fix": "这是 mimas-2d-01 同一个病的更严重表现：Seed3D 把 2D 阴影读成 3D 几何。对深阴影对比强烈的小天体输入，模型完全不可信。"
+            },
+            {
+              "id": "ida-3d-03",
+              "applies_to": "3d",
+              "severity": "high",
+              "type": "synth.coverage.dactyl_lost",
+              "title": "Dactyl 卫星完全丢失，无任何独立几何体",
+              "body": "原图中 Ida 右侧约 1/40 直径处有清晰的小球 Dactyl —— 这是该图像被 AstroLLaVA 选为 QA 数据的核心 (asteroid + moon)。4-view overview 中没有任何独立的小球；Dactyl 要么被丢弃，要么被合并到 Ida 主体的某个表面伪起伏中。任何关于「这颗小行星有几颗卫星 / 多大 / 在哪」的 QA 在此 mesh 上完全无法回答。",
+              "suggested_fix": "Seed3D 只输出单一连通 mesh —— 多体场景 (主体 + 卫星 / 主体 + 飞船) 必须切成多次任务分别生成，再在场景里手动放置。这是流水线层面的限制，不是参数能调的。"
+            },
+            {
+              "id": "ida-3d-04",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.geometry.elongation_correct_but_brittle",
+              "title": "拉长比例 0.39 : 0.28 : 1.00 表面正确，但容积严重不足",
+              "body": "bbox aspect 0.39 : 0.28 : 1.00 与真实 Ida 的拉长比 (~0.43 : 0.38 : 1.00) 大致接近 —— 长轴与短轴的比例可信。但 volume / bbox = 0.21（与 Ida 真实 ~0.40 比少近一半），这是因为 BACK 缺口和 RIGHT 半月牙形把内部体积大幅扣掉。所以「Ida 看上去是不是细长的」可信，「Ida 体积多大」不可信。",
+              "suggested_fix": "对此 mesh 限定可回答的 QA 类型：仅长宽比 / silhouette aspect 类，禁止体积 / 质量 / 密度类。"
+            },
+            {
+              "id": "ida-3d-05",
+              "applies_to": "3d",
+              "severity": "medium",
+              "type": "synth.semantics.no_definite_orientation",
+              "title": "front / back 在 mesh 上难以与原图对齐 — 失去定向参考",
+              "body": "FRONT 视角看着像原图正脸，但因为 BACK 是空心 C，没法用「先看 back 再看 front」交叉验证哪一侧对应原图哪一面。Ida 真实自转轴方向 (~167° pole)、长轴指向都是公开数据，但此 mesh 无法和这些参考系对齐。",
+              "suggested_fix": "对单视角重建出的 mesh，必须从源图相机姿态 (Galileo 当时的轨道几何) 反推 mesh 坐标系，而不是默认 mesh 自带正确朝向。"
+            },
+            {
+              "id": "ida-3d-06",
+              "applies_to": "3d",
+              "severity": "low",
+              "type": "synth.geometry.surface_noise",
+              "title": "FRONT 表面散点噪声 — 类似 Mimas，是统计填充而非真实坑分布",
+              "body": "FRONT 视角能看到密集白点纹理覆盖整个表面。这与 Galileo 实拍 Ida 的真实坑大小分布 (有几个 ~5 km 的大坑 + 大量小坑) 不一致 —— 实际是 Seed3D 在不确定区域用 high-frequency 颗粒填充。crater counting 类 QA 用此 mesh 会得到伪数据。",
+              "suggested_fix": "与 Mimas 同。crater counting 必须直接看 2D 原图。"
+            },
+            {
+              "id": "ida-3d-07",
+              "applies_to": "3d",
+              "severity": "low",
+              "type": "synth.semantics.lost_color_albedo",
+              "title": "丢失了 Ida 的浅黄褐色反照率信息",
+              "body": "原图中 Ida 呈典型 S-type 小行星的灰黄褐色，反照率约 0.24。3D overview 是单灰色 mesh —— 即便底层 GLB 携带 baseColorTexture，4-view overview 渲染没保留任何颜色信息。任何「Ida 是什么颜色」「Ida 反照率多少」类 QA 在 overview 渲染上看不到答案。",
+              "suggested_fix": "viewer 的 3D 视角应该走 PBR 渲染（gltf.html 的 baseColorTexture 4096²）而不是 grey shader；overview 只是纯几何调试图。"
+            },
+            {
+              "id": "ida-2d-01",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.coverage.dactyl_size_disparity",
+              "title": "Dactyl 仅占图像 1×1 px 量级，单视角重建几乎不可能保留",
+              "body": "原图中 Ida 长轴跨度 ~700 px，Dactyl 直径仅 ~10 px (1.4 mile vs 36 mile 的物理尺寸比)。任何下游 image-to-3D 工具拿到这张图都很难把 Dactyl 当作独立物体而非噪声 —— 这不是 Seed3D 独有的问题，是输入信息密度不足。",
+              "suggested_fix": "对包含微小卫星 / 伴星 / 多体场景的天文图，必须先在 2D 阶段裁剪并放大每一个体单独喂模型，再合成。"
+            },
+            {
+              "id": "ida-2d-02",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.semantics.shadow_groove",
+              "title": "腰部明暗分界给单视角重建造成系统性陷阱",
+              "body": "原图中 Ida 腰部有一道清晰的横向明暗分界（晨昏线类阴影）。这种带状阴影对单视角 image-to-3D 是已知陷阱 —— 模型常把它误读为「这里有一道沟槽」并外推成几何凹陷阵列。ida-3d-02 (LEFT 梳齿) 几乎肯定是这个陷阱触发的。",
+              "suggested_fix": "对天文小天体输入，应主动剔除 day-night terminator 横跨主体的图像，或选择正午光照单。"
+            },
+            {
+              "id": "ida-2d-03",
+              "applies_to": "2d",
+              "severity": "low",
+              "type": "synth.coverage.single_hemisphere",
+              "title": "单帧仅可见一面，无法重建另一半",
+              "body": "Galileo 此次飞越只拍到 Ida 的一面 (~50% 表面)，另一半完全未观测。这是和 Mimas 同款的根本性约束。任何依赖 Ida 完整三轴几何的 QA 必须基于公开 shape model (~25960 facet 的 Thomas et al. 1996 模型)，而不是 image-to-3D 输出。",
+              "suggested_fix": "ScienceVision 若需要 Ida 真实 3D，应直接使用 Thomas 1996 公开 shape model，不走 image-to-3D 流水线。"
+            }
+          ]
+        },
+        "pilot_id": "seed3d_2.0_astrollava"
+      }
+    ],
+    "not_run": [
+      {
+        "key": "venera13",
+        "input_image": "datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/lander_probe__1995-09-27__wikicommons.png",
+        "reason": "Mir-class predicted failure; not worth the API call",
+        "predicted_failure_mode": "thin instrument frame in foreground + textured ground"
+      },
+      {
+        "key": "apollo14_lm",
+        "input_image": "datasets/_curated_2d/_seed3d_pilot/AstroLLaVA/moon_apparatus__1995-12-09.png",
+        "reason": "Mir-class predicted failure",
+        "predicted_failure_mode": "complex multi-module hardware against low-contrast background"
+      }
+    ]
+  }
+]

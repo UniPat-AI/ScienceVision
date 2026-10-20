@@ -1,0 +1,72 @@
+[
+  {
+    "name": "khronos_negativescaletest",
+    "path": "/crawl_data/industrial/broken/khronos/NegativeScaleTest.glb",
+    "size": 62568,
+    "viewer": "gltf",
+    "format": "glb",
+    "error_type": "ind.negative_scale",
+    "error_severity": "medium",
+    "error_description": "Khronos test model with a node negative-scale matrix. CCW vertex winding becomes CW under the transform; naive back-face culling renders the geometry inside-out.",
+    "expected_agent_behavior": "Detect winding-flip from the negative determinant of the node transform; render with consistent winding or explicitly report the negative-scale edge case.",
+    "source_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/NegativeScaleTest/glTF-Binary/NegativeScaleTest.glb",
+    "source_evidence_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/NegativeScaleTest/README.md",
+    "default_view_warning": "Renders normally if the engine handles negative scale; with broken back-face culling the model looks inside-out."
+  },
+  {
+    "name": "khronos_simplesparseaccessor",
+    "path": "/crawl_data/industrial/broken/khronos/SimpleSparseAccessor.gltf",
+    "size": 1756,
+    "viewer": "gltf",
+    "format": "gltf",
+    "error_type": "ind.sparse_accessor",
+    "error_severity": "low",
+    "error_description": "Mesh whose vertex POSITION accessor is sparse: only the top-left and bottom-right vertices are overridden from the baseline buffer. Tests parser support for the sparse-accessor optimization.",
+    "expected_agent_behavior": "Apply sparse indices/values overrides to baseline buffer; silently dropping them yields a flat (non-displaced) mesh — that is a parser bug.",
+    "source_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SimpleSparseAccessor/glTF/SimpleSparseAccessor.gltf",
+    "source_evidence_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SimpleSparseAccessor/README.md",
+    "default_view_warning": "Should show two vertices visibly displaced from the baseline plane; a flat quad means the sparse accessor was ignored."
+  },
+  {
+    "name": "khronos_trianglewithoutindices",
+    "path": "/crawl_data/industrial/broken/khronos/TriangleWithoutIndices.gltf",
+    "size": 747,
+    "viewer": "gltf",
+    "format": "gltf",
+    "error_type": "ind.no_indices",
+    "error_severity": "low",
+    "error_description": "Single CCW triangle, no index buffer — vertex stream consumed in declared order. Minimum-viable mesh that tests engines which incorrectly assume indices are mandatory.",
+    "expected_agent_behavior": "Render the triangle from the vertex stream directly; raising a parse error here is a spec-violation by the engine.",
+    "source_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/TriangleWithoutIndices/glTF/TriangleWithoutIndices.gltf",
+    "source_evidence_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/TriangleWithoutIndices/README.md",
+    "default_view_warning": "Renders as a single CCW triangle; a blank scene means the engine refused a mesh without indices."
+  },
+  {
+    "name": "khronos_multiuvtest",
+    "path": "/crawl_data/industrial/broken/khronos/MultiUVTest.glb",
+    "size": 43004,
+    "viewer": "gltf",
+    "format": "glb",
+    "error_type": "ind.multi_uv",
+    "error_severity": "medium",
+    "error_description": "Two UV sets: TEXCOORD_0 for the base color, TEXCOORD_1 for a logo decal. Tests engines that only honor the first UV channel and silently drop the second.",
+    "expected_agent_behavior": "Sample both UV streams; missing logo decal on the rendered surface indicates TEXCOORD_1 was dropped.",
+    "source_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/MultiUVTest/glTF-Binary/MultiUVTest.glb",
+    "source_evidence_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/MultiUVTest/README.md",
+    "default_view_warning": "Logo decal must be visible on the surface; absence means multi-UV not supported by the engine."
+  },
+  {
+    "name": "khronos_specglossvsmetalrough",
+    "path": "/crawl_data/industrial/broken/khronos/SpecGlossVsMetalRough.glb",
+    "size": 9984544,
+    "viewer": "gltf",
+    "format": "glb",
+    "error_type": "ind.multi_uv",
+    "error_severity": "medium",
+    "error_description": "Two water bottles side-by-side: one uses KHR_materials_pbrSpecularGlossiness, the other the core PBR metallic-roughness model. Engines lacking the extension fall back to default material and render the two bottles visibly differently.",
+    "expected_agent_behavior": "Either support both material models so the bottles match, or refuse load with a clear extension-missing error. Silent fallback to default material is a failure mode.",
+    "source_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SpecGlossVsMetalRough/glTF-Binary/SpecGlossVsMetalRough.glb",
+    "source_evidence_url": "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/SpecGlossVsMetalRough/README.md",
+    "default_view_warning": "Both bottles should look nearly identical; visible difference indicates the pbrSpecularGlossiness extension is not supported."
+  }
+]

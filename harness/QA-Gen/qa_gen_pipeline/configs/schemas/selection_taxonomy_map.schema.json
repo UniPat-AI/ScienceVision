@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/selection_taxonomy_map.schema.json",
+  "description": "Human-reviewed mapping from a frozen external selection taxonomy to vNext leaf IDs.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "selection_id_sha256",
+    "selection_file_sha256",
+    "generation_strategy_by_source_access_track",
+    "review",
+    "mappings"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "kind": {"const": "qagen_selection_taxonomy_mapping"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "selection_id_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "selection_file_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "generation_strategy_by_source_access_track": {
+      "description": "Approved route policy for all source tracks in this frozen selection. The compiler copies the matched value into every batch row.",
+      "type": "object",
+      "required": ["raw_compute", "viewer_measurement"],
+      "properties": {
+        "raw_compute": {"const": "reauthor_on_asset"},
+        "viewer_measurement": {"const": "preserve_intent"}
+      },
+      "additionalProperties": false
+    },
+    "review": {
+      "type": "object",
+      "required": ["decision", "reviewer", "reviewed_at", "rationale"],
+      "properties": {
+        "decision": {"const": "approved"},
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "minLength": 1},
+        "rationale": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "mappings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["source_leaf", "target_leaf", "rationale"],
+        "properties": {
+          "source_leaf": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"},
+          "target_leaf": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"},
+          "rationale": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

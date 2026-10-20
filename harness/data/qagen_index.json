@@ -1,0 +1,536 @@
+{
+  "version": 1,
+  "generated_at": "2026-07-03T00:00:00Z",
+  "questions": [
+    {
+      "id": "genesis_vp/q001",
+      "family": "genesis_vp",
+      "asset_id": "embodied/genesis_vp/cut_dragon",
+      "question": "Under a 5 N transverse force applied at the marked vertebra, will the dragon fracture into two disconnected pieces within 200 simulation steps?",
+      "answer_kind": "boolean",
+      "ground_truth_kind": "deterministic_simulation",
+      "domain": "embodied",
+      "answer_schema": {
+        "kind": "boolean"
+      },
+      "ground_truth": {
+        "type": "deterministic_simulation",
+        "value": null,
+        "status": "needs_rollout",
+        "repro": {
+          "solver": "MPM Elastic + CPIC",
+          "dt": 0.004,
+          "substeps": 10,
+          "rollout_steps": 200,
+          "grid_density": 64,
+          "deterministic": true
+        }
+      },
+      "asset_file": "embodied/assets/cut_dragon.glb"
+    },
+    {
+      "id": "genesis_vp/q002",
+      "family": "genesis_vp",
+      "asset_id": "embodied/genesis_vp/sand_wheel",
+      "question": "After rotating the wheel by 90 degrees clockwise, what fraction of the granular sand pile (initially resting at the wheel base) remains within a 0.1 m radius of the rotation axis?",
+      "answer_kind": "numeric_range",
+      "ground_truth_kind": "deterministic_simulation",
+      "domain": "embodied",
+      "answer_schema": {
+        "kind": "numeric_range"
+      },
+      "ground_truth": {
+        "type": "deterministic_simulation",
+        "value": null,
+        "status": "needs_rollout",
+        "repro": {
+          "solver": "MPM Sand (granular)",
+          "dt": 0.003,
+          "substeps": 10,
+          "rollout_steps": 150,
+          "grid_density": 64,
+          "deterministic": true
+        }
+      },
+      "asset_file": "embodied/assets/sand_wheel.glb"
+    },
+    {
+      "id": "medical_spatial/q001",
+      "family": "medical_spatial",
+      "asset_id": "medical/medical_spatial/ixi_brain_demo_mask",
+      "question": "What is the total volume in mm^3 of the labelled region in the segmentation mask?",
+      "answer_kind": "numeric",
+      "ground_truth_kind": "mcp_compute_volume",
+      "domain": "medical",
+      "answer_schema": {
+        "kind": "numeric"
+      },
+      "ground_truth": {
+        "type": "mcp_compute_volume",
+        "value": 1307903.625,
+        "unit": "mm^3",
+        "status": "computed",
+        "repro": {
+          "fg_voxels": 387527,
+          "voxel_volume_mm3": 3.375,
+          "voxel_spacing_mm": [
+            1.5,
+            1.5,
+            1.5
+          ],
+          "tool": "scipy.ndimage / nibabel"
+        }
+      },
+      "asset_file": "medical/assets/mask.nii.gz"
+    },
+    {
+      "id": "medical_spatial/q002",
+      "family": "medical_spatial",
+      "asset_id": "medical/medical_spatial/ixi_brain_demo",
+      "question": "Counting connected components in the segmentation mask (6-connectivity), how many distinct regions are present?",
+      "answer_kind": "integer",
+      "ground_truth_kind": "deterministic_topology",
+      "domain": "medical",
+      "answer_schema": {
+        "kind": "integer"
+      },
+      "ground_truth": {
+        "type": "deterministic_topology",
+        "value": 4,
+        "status": "computed",
+        "repro": {
+          "connectivity": 6,
+          "component_sizes_voxels": [
+            387524,
+            1,
+            1,
+            1
+          ],
+          "tool": "scipy.ndimage.label (3D, structure=generate_binary_structure(3,1))"
+        }
+      },
+      "asset_file": "medical/assets/mask.nii.gz"
+    },
+    {
+      "id": "astronomy/q001",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "Frame a view of Saturn at its 2026 conjunction that best exposes the ring-plane orientation relative to the Earth line of sight while keeping Saturn centred. Report the camera pose.",
+      "answer_kind": "camera_pose",
+      "ground_truth_kind": "expert_camera_pose",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "camera_pose",
+        "fields": [
+          "azimuth",
+          "elevation",
+          "roll",
+          "zoom"
+        ]
+      },
+      "ground_truth": {
+        "type": "expert_camera_pose",
+        "value": null,
+        "status": "needs_expert_annotation",
+        "notes": "Optimal ring-exposing viewpoint; annotate against the rendered scene."
+      }
+    },
+    {
+      "id": "astronomy/q002",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "As seen from Earth at Saturn's 2026 conjunction, is the ring plane open (face-on), edge-on, or in an intermediate orientation?",
+      "answer_kind": "categorical",
+      "ground_truth_kind": "ephemeris_subobserver_latitude",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "categorical",
+        "classes": [
+          "open",
+          "intermediate",
+          "edge-on"
+        ]
+      },
+      "ground_truth": {
+        "type": "ephemeris_subobserver_latitude",
+        "value": "intermediate",
+        "status": "computed",
+        "evidence": {
+          "ObsSub_LAT_deg": -6.17,
+          "rule": "|B|<5 edge-on; 5<=|B|<=20 intermediate; |B|>20 open",
+          "abs_B_deg": 6.17
+        }
+      }
+    },
+    {
+      "id": "astronomy/q003",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "On the rendered Saturn-at-conjunction scene, annotate the ring-plane line and label its inclination relative to the Earth line of sight.",
+      "answer_kind": "visual_annotation",
+      "ground_truth_kind": "camera_plus_image_annotation",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "visual_annotation",
+        "fields": [
+          "annotation_line_or_region",
+          "target_label"
+        ]
+      },
+      "ground_truth": {
+        "type": "camera_plus_image_annotation",
+        "value": null,
+        "status": "needs_expert_annotation",
+        "notes": "Draw ring-plane line; label inclination (~6 deg from Earth at this epoch)."
+      }
+    },
+    {
+      "id": "astronomy/q004",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "Saturn's apparent ring-opening angle (sub-observer latitude B) is observer-dependent. Measure B from Earth and from Mars at the 2026 conjunction and report both, and whether they agree to within 1 degree.",
+      "answer_kind": "structured",
+      "ground_truth_kind": "ephemeris_subobserver_latitude",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "structured",
+        "fields": {
+          "earth_B_deg": "float",
+          "mars_B_deg": "float",
+          "agree_within_1deg": "bool"
+        }
+      },
+      "ground_truth": {
+        "type": "ephemeris_subobserver_latitude",
+        "status": "computed",
+        "value": {
+          "earth_B_deg": -6.17,
+          "mars_B_deg": -8.42,
+          "agree_within_1deg": false,
+          "delta_deg": 2.25
+        },
+        "evidence": {
+          "earth_file": "astronomy/assets/saturn_from_earth_2026_conjunction.json",
+          "mars_file": "astronomy/assets/saturn_from_mars_2026_conjunction.json"
+        }
+      }
+    },
+    {
+      "id": "astronomy/q005",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "Using the fewest viewer camera operations, align the view with the Earth line of sight at Saturn's conjunction to demonstrate ring visibility, and return the final view.",
+      "answer_kind": "tool_trace",
+      "ground_truth_kind": "minimal_trace_or_upper_bound",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "tool_trace",
+        "fields": [
+          "steps",
+          "final_camera",
+          "success"
+        ]
+      },
+      "ground_truth": {
+        "type": "minimal_trace_or_upper_bound",
+        "value": null,
+        "status": "needs_expert_annotation",
+        "notes": "Provide a reference minimal operation count / trajectory upper bound."
+      }
+    },
+    {
+      "id": "astronomy/q006",
+      "family": "saturn_ring_geometry",
+      "asset_id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "question": "Integrated ring-geometry challenge at Saturn's 2026 conjunction: (1) frame the ring-exposing viewpoint, (2) measure the ring-opening angle B and verify it against a second observer frame, (3) classify ring visibility, and (4) annotate the ring plane relative to the line of sight. Report all sub-answers.",
+      "answer_kind": "composite_ring_geometry",
+      "ground_truth_kind": "composite_ring_geometry",
+      "domain": "astronomy",
+      "answer_schema": {
+        "kind": "composite_ring_geometry",
+        "fields": [
+          "final_camera",
+          "ring_opening_angle_deg",
+          "visibility_class",
+          "variant_agreement",
+          "annotation_line_or_region",
+          "target_label"
+        ]
+      },
+      "ground_truth": {
+        "type": "composite_ring_geometry",
+        "status": "partially_computed",
+        "value": {
+          "ring_opening_angle_deg": -6.17,
+          "visibility_class": "intermediate",
+          "variant_agreement": {
+            "earth_B_deg": -6.17,
+            "mars_B_deg": -8.42,
+            "agree_within_1deg": false
+          }
+        },
+        "notes": "camera pose + annotation still need expert/rendered annotation; angle + visibility + variant computed from ephemeris."
+      }
+    },
+    {
+      "id": "biology/q001",
+      "family": "rhodopsin",
+      "asset_id": "biology/rhodopsin/1F88",
+      "question": "Load the mmCIF structure of bovine rhodopsin (PDB 1F88) and identify which structural region of the protein is most prominently exposed on the extracellular side of the seven-transmembrane helix bundle. Then apply two successive geometry-preserving rotations to the model (for example, a 90° rotation about the y-axis followed by a 120° rotation about the x-axis), re-evaluating the same visibility question after each rotation. The reported molecular region (e.g., the retinal-binding pocket, an extracellular loop, or a specific transmembrane helix) and the final visibility label must remain consistent across both rotated views once the rotations are accounted for.",
+      "answer_kind": "variant_agreement",
+      "ground_truth_kind": "rotation_invariant_label",
+      "domain": "biology",
+      "answer_schema": {
+        "kind": "variant_agreement",
+        "fields": [
+          "variant_answers",
+          "agreement"
+        ]
+      },
+      "ground_truth": {
+        "type": "rotation_invariant_label",
+        "value": null,
+        "status": "needs_review",
+        "notes": "Seed imported from ScienceVision sv-biology-v4-0001; rotation-invariant visibility label needs rendered/expert annotation before benchmark release.",
+        "source_asset": "viewer/datasets/biology/1F88.cif"
+      },
+      "asset_file": "viewer/datasets/biology/1F88.cif"
+    },
+    {
+      "id": "caffeine/q2_2",
+      "family": "caffeine",
+      "asset_id": "chemistry/caffeine/2519_caffeine",
+      "question": "Are the three ring nitrogens N1, N3 and N7 all sp2-hybridized?",
+      "answer_kind": "boolean",
+      "ground_truth_kind": "deterministic_topology",
+      "domain": "chemistry",
+      "answer_schema": {
+        "kind": "boolean"
+      },
+      "ground_truth": {
+        "type": "deterministic_topology",
+        "value": true,
+        "status": "computed",
+        "repro": {
+          "source_asset": "chemistry/assets/2519_caffeine.mol",
+          "engine": "sciencevision_taskgen.chem",
+          "deterministic": true,
+          "detail": {
+            "N1_N3_N7_hybridization": [
+              "sp2",
+              "sp2",
+              "sp2"
+            ],
+            "in_plane_deviation_A": [
+              0.0001,
+              0.0,
+              0.0003
+            ],
+            "rationale": "All three N sit in the ring plane with 3 sigma neighbours (2 ring bonds + N-CH3), i.e. trigonal sp2; p-orbital perpendicular feeds the aromatic pi."
+          }
+        }
+      },
+      "asset_file": "chemistry/assets/2519_caffeine.mol"
+    },
+    {
+      "id": "caffeine/qs_1",
+      "family": "caffeine",
+      "asset_id": "chemistry/caffeine/2519_caffeine",
+      "question": "What is the ratio of the carbonyl O...O distance to the shortest (aromatic) C-C bond length in caffeine?",
+      "answer_kind": "numeric",
+      "ground_truth_kind": "deterministic_geometry",
+      "domain": "chemistry",
+      "answer_schema": {
+        "kind": "numeric"
+      },
+      "ground_truth": {
+        "type": "deterministic_geometry",
+        "value": 3.43,
+        "status": "computed",
+        "repro": {
+          "source_asset": "chemistry/assets/2519_caffeine.mol",
+          "engine": "sciencevision_taskgen.chem",
+          "deterministic": true,
+          "detail": {
+            "O_O_distance_A": 4.692,
+            "shortest_cc_bond_A": 1.368,
+            "shortest_cc_bond": "C4=C5 (aromatic fused edge)",
+            "ratio": 3.43,
+            "n_cc_bonds": 2,
+            "all_cc_bonds": [
+              {
+                "i": 6,
+                "j": 7,
+                "elements": "CC",
+                "order": 2,
+                "length": 1.368
+              },
+              {
+                "i": 6,
+                "j": 8,
+                "elements": "CC",
+                "order": 1,
+                "length": 1.427
+              }
+            ],
+            "trap_note": "No sp3 C-C bond (1.54 A) exists in caffeine. NOTE: caffeine has TWO C-C bonds (C4=C5 ~1.37 A aromatic, and C5-C6 ~1.43 A) -- the sample doc's claim of a single C-C bond is incorrect; C4=C5 is merely the shortest."
+          }
+        }
+      },
+      "asset_file": "chemistry/assets/2519_caffeine.mol"
+    },
+    {
+      "id": "helmet_caliber/q001",
+      "family": "helmet_caliber",
+      "asset_id": "industrial/helmet_caliber/damaged_helmet",
+      "question": "This is a CAD model of a protective helmet. Several corrugated hoses hang from its lower front, each ending in a metal fitting. From a face-on view the fittings appear to be different sizes.\n\nHow many distinct calibers (true physical bore / inner diameter) of fitting are actually present?",
+      "answer_kind": "integer",
+      "ground_truth_kind": "perception_judgement",
+      "domain": "industrial",
+      "answer_schema": {
+        "kind": "integer"
+      },
+      "ground_truth": {
+        "type": "perception_judgement",
+        "value": 1,
+        "status": "computed",
+        "repro": {
+          "method": "active_3d_inspection_only",
+          "decisive_view": "front/below/left 3-4 with front visor shell clipped away (Cutaway Z+ ~60%)",
+          "n_connectors_visible": 4,
+          "n_distinct_calibers": 1,
+          "n_styles": 2,
+          "reasoning": "All hoses share the same fitting model / same bore; the apparent size differences in any single face-on 2D view are a perspective (depth) illusion. Outward styles = 2 (a ribbing variant), but caliber (bore diameter) = 1.",
+          "constraints": [
+            "no_mesh_parse",
+            "no_instance_count",
+            "answer_from_rendered_pixels"
+          ],
+          "deterministic": true
+        }
+      },
+      "asset_file": "industrial/assets/DamagedHelmet.glb"
+    },
+    {
+      "id": "manhattan_skyline/q001",
+      "family": "manhattan_skyline",
+      "asset_id": "geography/osm_pilot/manhattan",
+      "question": "Open the Manhattan 3D city map and choose a camera pose (looking across the extruded building heights) that shows the Midtown supertall cluster around the Empire State Building as a group, with minimal mutual occlusion between the tall towers. Return the camera parameters and a screenshot.",
+      "answer_kind": "numeric",
+      "ground_truth_kind": "expert_camera_pose",
+      "domain": "geography",
+      "answer_schema": {
+        "kind": "numeric"
+      },
+      "ground_truth": {
+        "type": "expert_camera_pose",
+        "value": null,
+        "status": "needs_review",
+        "repro": {
+          "viewer": "citymap",
+          "city": "manhattan",
+          "target": "Midtown supertall cluster around the Empire State Building",
+          "metric": "target_visibility_score",
+          "must_be_derived_from_3d_interaction": true,
+          "not_allowed_as_answer": [
+            "camera_pose_only",
+            "trace_only",
+            "metadata_lookup"
+          ]
+        }
+      },
+      "asset_file": "geography/assets/manhattan.pmtiles",
+      "source_task_id": "sv-geography-v1-0001",
+      "v_class": "V1"
+    },
+    {
+      "id": "manhattan_skyline/q002",
+      "family": "manhattan_skyline",
+      "asset_id": "geography/osm_pilot/manhattan",
+      "question": "Using the provided oblique view looking uptown along an avenue, decide whether the target landmark building (for example the Empire State Building) remains clearly visible or is substantially occluded by nearer, taller foreground buildings in the extruded skyline. Return a binary visibility judgment and cite the rendered view.",
+      "answer_kind": "boolean",
+      "ground_truth_kind": "rendered_visibility_label",
+      "domain": "geography",
+      "answer_schema": {
+        "kind": "boolean"
+      },
+      "ground_truth": {
+        "type": "rendered_visibility_label",
+        "value": null,
+        "status": "needs_review",
+        "repro": {
+          "viewer": "citymap",
+          "city": "manhattan",
+          "target": "Empire State Building",
+          "must_be_derived_from_3d_interaction": true,
+          "not_allowed_as_answer": [
+            "camera_pose_only",
+            "trace_only",
+            "metadata_lookup"
+          ]
+        }
+      },
+      "asset_file": "geography/assets/manhattan.pmtiles",
+      "source_task_id": "sv-geography-v2-0001",
+      "v_class": "V2"
+    },
+    {
+      "id": "industrial_cad/q001",
+      "family": "industrial_cad",
+      "asset_id": "industrial/cad/occt_bearing",
+      "question": "In this CAD bearing model, how many rolling elements (balls or rollers) are arranged between the inner and outer races?",
+      "answer_kind": "integer",
+      "ground_truth_kind": "human_verified",
+      "domain": "industrial",
+      "answer_schema": {
+        "kind": "integer"
+      },
+      "ground_truth": {
+        "type": "human_verified",
+        "value": null,
+        "status": "needs_review"
+      },
+      "asset_file": "crawl_data/industrial/step_iges_samples/occt_bearing.iges"
+    },
+    {
+      "id": "architecture/q001",
+      "family": "architecture",
+      "asset_id": "architecture/bim/building_structural",
+      "question": "In this structural BIM model, how many above-ground storeys does the primary column grid span?",
+      "answer_kind": "integer",
+      "ground_truth_kind": "human_verified",
+      "domain": "architecture",
+      "answer_schema": {
+        "kind": "integer"
+      },
+      "ground_truth": {
+        "type": "human_verified",
+        "value": null,
+        "status": "needs_review"
+      },
+      "asset_file": "crawl_data/architecture/bim_ifc/Building-Structural.glb"
+    },
+    {
+      "id": "architecture/q002",
+      "family": "architecture",
+      "asset_id": "architecture/infra/banwol_bridge",
+      "question": "In this bridge LiDAR point cloud, are the deck points spatially continuous across the full span, or is there a visible gap between deck segments?",
+      "answer_kind": "categorical",
+      "ground_truth_kind": "human_verified",
+      "domain": "architecture",
+      "answer_schema": {
+        "kind": "categorical",
+        "enums": {
+          "continuity": ["continuous", "gap_present"]
+        },
+        "fields": ["continuity"]
+      },
+      "ground_truth": {
+        "type": "human_verified",
+        "value": null,
+        "status": "needs_review"
+      },
+      "asset_file": "crawl_data/architecture/bridge_pcl/Banwol-Bridge.drc"
+    }
+  ]
+}

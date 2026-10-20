@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Vendor check — BabyVision-v2</title>
+<link rel="stylesheet" href="vendor/prism-tomorrow.css">
+<style>
+  body { background: #0d1117; color: #c9d1d9; font: 14px/1.5 -apple-system, system-ui, sans-serif; padding: 24px; max-width: 760px; }
+  h1 { font-size: 18px; margin: 0 0 16px; }
+  h2 { font-size: 14px; margin: 24px 0 8px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.05em; }
+  .ok   { color: #56d364; }
+  .fail { color: #f85149; }
+  pre  { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 10px; overflow-x: auto; }
+  code { font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; }
+  ul.checks { list-style: none; padding: 0; }
+  ul.checks li { padding: 3px 0; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+</style>
+</head>
+<body>
+<h1>Vendor check</h1>
+
+<h2>Status</h2>
+<ul class="checks" id="checks"></ul>
+
+<h2>Marked render demo</h2>
+<div id="marked-out"></div>
+
+<h2>Prism highlight demo</h2>
+<pre><code class="language-python" id="prism-out">def hello():
+    return "world"</code></pre>
+
+<h2>Lunr search demo</h2>
+<div id="lunr-out"></div>
+
+<script src="vendor/marked.min.js"></script>
+<script src="vendor/prism.min.js"></script>
+<script src="vendor/prism/prism-python.min.js"></script>
+<script src="vendor/prism/prism-bash.min.js"></script>
+<script src="vendor/prism/prism-json.min.js"></script>
+<script src="vendor/prism/prism-javascript.min.js"></script>
+<script src="vendor/prism/prism-typescript.min.js"></script>
+<script src="vendor/prism/prism-yaml.min.js"></script>
+<script src="vendor/prism/prism-markdown.min.js"></script>
+<script src="vendor/prism/prism-docker.min.js"></script>
+<script src="vendor/lunr.min.js"></script>
+<script>
+  const list = document.getElementById('checks');
+  function line(ok, label, detail) {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="' + (ok ? 'ok' : 'fail') + '">' + (ok ? '✓' : '✗') + '</span> ' + label + (detail ? ' — ' + detail : '');
+    list.appendChild(li);
+  }
+  // 1. marked
+  try {
+    const html = marked.parse('# Hi\n\n**bold** and `code`.');
+    document.getElementById('marked-out').innerHTML = html;
+    line(/<h1>/.test(html) && /<strong>/.test(html), 'marked.parse', 'rendered h1 + strong');
+  } catch (e) { line(false, 'marked.parse', e.message); }
+  // 2. Prism + languages
+  try {
+    Prism.highlightAllUnder(document.body);
+    const out = document.getElementById('prism-out').innerHTML;
+    line(/token/.test(out), 'Prism.highlightAllUnder', 'token spans applied');
+    const langs = ['python', 'bash', 'json', 'javascript', 'typescript', 'yaml', 'markdown', 'docker'];
+    for (const l of langs) {
+      const has = Prism.languages[l] !== undefined;
+      line(has, 'Prism.languages.' + l, has ? 'loaded' : 'MISSING');
+    }
+  } catch (e) { line(false, 'Prism', e.message); }
+  // 3. lunr
+  try {
+    const idx = lunr(function () {
+      this.ref('id'); this.field('text');
+      this.add({ id: 1, text: 'manifest layer' });
+      this.add({ id: 2, text: 'docs search index' });
+    });
+    const hits = idx.search('manifest');
+    document.getElementById('lunr-out').textContent = JSON.stringify(hits);
+    line(hits.length === 1 && hits[0].ref === '1', 'lunr search', 'expected 1 hit on id=1');
+  } catch (e) { line(false, 'lunr', e.message); }
+</script>
+</body>
+</html>

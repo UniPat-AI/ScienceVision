@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_task.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "package_id", "batch_id", "expert_id", "assignment_id", "task_id", "task_revision_sha256", "task"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.expert_task.v1"},
+    "contract_version": {"const": "sciencevision.offline_exchange.v1"},
+    "package_id": {"type": "string"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "assignment_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "task_revision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "task": {"type": "object"}
+  }
+}

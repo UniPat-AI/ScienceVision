@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/measurement_request.schema.json",
+  "description": "Private, exact replay request for a previously validated TargetSpec. It carries no answer or measurement result.",
+  "type": "object",
+  "required": [
+    "request_version",
+    "request_id",
+    "request_mode",
+    "target_spec_digest",
+    "source_record_digest",
+    "scene_inventory_digest",
+    "anonymous_scene_ref",
+    "candidate_plan_digest",
+    "candidate_digest",
+    "native_operation",
+    "selector",
+    "answer_fields"
+  ],
+  "properties": {
+    "request_version": {"const": 1},
+    "request_id": {"type": "string", "pattern": "^measurement-[a-z0-9][a-z0-9_-]{0,95}$"},
+    "request_mode": {"enum": ["candidate", "preauthor_native_measurement_pilot"]},
+    "target_spec_digest": {"$ref": "#/definitions/digest"},
+    "source_record_digest": {"$ref": "#/definitions/digest"},
+    "scene_inventory_digest": {"$ref": "#/definitions/digest"},
+    "anonymous_scene_ref": {"type": "string", "pattern": "^scene://[A-Za-z0-9._:-]+$"},
+    "candidate_plan_digest": {"$ref": "#/definitions/digest"},
+    "candidate_digest": {"$ref": "#/definitions/digest"},
+    "native_operation": {"enum": ["inspect", "isolate", "measure_distance", "measure_dihedral", "bbox", "slice"]},
+    "selector": {"type": "object", "minProperties": 2},
+    "answer_fields": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+  },
+  "additionalProperties": false,
+  "definitions": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

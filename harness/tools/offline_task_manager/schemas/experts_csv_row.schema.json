@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.experts_csv.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["expert_id", "name", "domains"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.experts_csv.v1"},
+    "expert_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "name": {"type": "string", "minLength": 1},
+    "domains": {"type": "string", "minLength": 1}
+  }
+}

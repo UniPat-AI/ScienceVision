@@ -1,0 +1,195 @@
+{
+  "asset_closure": {
+    "bytes": 5581980948,
+    "files": 1307,
+    "manifest_sha256": "504f8152d24d8939322288834807400ad6fa60229832afd35c0cefe90b07682c"
+  },
+  "ct_target_mapping_audit": {
+    "mapping_source": "datasets/_matched/m3d-refseg.json",
+    "mask_text_mismatches": 0,
+    "observed_nonzero_label_count_distribution": {
+      "1": 37,
+      "10": 6,
+      "11": 3,
+      "12": 3,
+      "13": 1,
+      "14": 1,
+      "2": 30,
+      "3": 40,
+      "4": 26,
+      "5": 20,
+      "6": 8,
+      "7": 7,
+      "8": 8,
+      "9": 3
+    },
+    "old_laterality_exact_matches": 54,
+    "old_non_midline_direction_matches": 54,
+    "old_non_midline_targets": 184,
+    "old_to_recomputed_laterality": {
+      "left->left": 46,
+      "left->right": 78,
+      "midline->left": 83,
+      "midline->right": 78,
+      "right->left": 52,
+      "right->right": 8
+    },
+    "path_mismatches": 0,
+    "qid_join_missing": 0,
+    "registry_label_count_discrepancies": [
+      {
+        "mask_repo_path": "datasets/M3D-RefSeg/M3D_RefSeg/s0021/mask.nii.gz",
+        "observed_mask_label_values": [
+          2,
+          3,
+          4
+        ],
+        "registry_mask_label_count": 4
+      }
+    ],
+    "same_target_text_or_gt_conflicts": 0,
+    "selected_target_labels_absent": 0,
+    "source_cases": 193,
+    "source_rows": 579,
+    "source_rows_per_case": 3,
+    "target_group_size_distribution": {
+      "1": 188,
+      "2": 80,
+      "3": 77
+    },
+    "targets_per_case_distribution": {
+      "1": 77,
+      "2": 80,
+      "3": 36
+    },
+    "unique_target_labels": 345
+  },
+  "dataset": "scale-v2.1",
+  "inputs": [
+    {
+      "byte_size": 27861,
+      "path": "QA-Gen/ScienceVisionTaskGenerator/schemas/sciencevision_task.schema.json",
+      "sha256": "17c09ff130c673675194895964c9f8e5a418113690c162d9499a8288b26e4657"
+    },
+    {
+      "byte_size": 1164627,
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-biology_final_tasks.jsonl",
+      "sha256": "6fa1e5096485faf2460dd245bfd85a4967b93bbe8b1f7fad9364e8128aa59117"
+    },
+    {
+      "byte_size": 1455649,
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-chemistry_final_tasks.jsonl",
+      "sha256": "b4b40c5f74159d88fef1a9cb7e861c9c1d46438720a427040e262e39420fd670"
+    },
+    {
+      "byte_size": 3551566,
+      "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-medical_final_tasks.jsonl",
+      "sha256": "9c105c7dcfb059a1edae0fb9e9bcf81c5a07bbe3d334d667403605643427e86d"
+    },
+    {
+      "byte_size": 476024,
+      "path": "QA-Gen/tasks/scale-v2/ScienceVision_scale-v2-biology_candidate_tasks.jsonl",
+      "sha256": "1a5f2274290bf83860ebac2e83e4b68ddbeff5c84bea4a2551b8136d2b848b77"
+    },
+    {
+      "byte_size": 3540328,
+      "path": "QA-Gen/tasks/scale-v2/ScienceVision_scale-v2-medical_candidate_tasks.jsonl",
+      "sha256": "d5c817de907326e7e35b6b19f471ddba77ccc80649c2b4e05fecdd89679bd53a"
+    },
+    {
+      "byte_size": 611513,
+      "path": "QA-Gen/tasks/scale-v2/quarantine/ScienceVision_scale-v2-biology_quarantine_tasks.jsonl",
+      "sha256": "780e4a6a2d040e1adfaebd1ac35dbc0c6a6431c9bce57ca83d0111a1c936a12a"
+    },
+    {
+      "byte_size": 1372372,
+      "path": "QA-Gen/tasks/scale-v2/quarantine/ScienceVision_scale-v2-chemistry_quarantine_tasks.jsonl",
+      "sha256": "111e95adabc8806ce2e5a65fb70c547af563b259d503bc84484650bac64eba65"
+    },
+    {
+      "byte_size": 2618295,
+      "path": "datasets/_matched/m3d-refseg.json",
+      "sha256": "8e0b790fabc33cf63a5844d09e236353d7ecdd9b59649458b89a06fd6eb19cbb"
+    },
+    {
+      "byte_size": 2481,
+      "path": "docs/qa-gen/SCALE_V1_REVIEWED_20260808_LOCK.json",
+      "sha256": "b70fd2e249d7ceafc51c83a66aa4bdf0f33ec94b2f83c011795416381121e27e"
+    },
+    {
+      "byte_size": 3688170,
+      "path": "outputs/qa-qc/scale-v1-chemistry-compute-20260808/results.json",
+      "sha256": "a208fa5c187af211d69201c0a0d2632bf81f16a6c4c27bfcc0ddfc14d4aeb1f7"
+    },
+    {
+      "byte_size": 81710,
+      "path": "scripts/qa_gen_scale_v2_1.py",
+      "sha256": "8208deaaa3b3fd591daf55067399af4012912d4ce710d6fc9694981e6ce90fda"
+    }
+  ],
+  "oracle_versions": {
+    "binding": "explicit_atom_distance.v2.1.0",
+    "collision": "collision_vdw_overlap.v2.1.0",
+    "conformation": "ordered_xyz_dihedral.v2.1.0",
+    "ct": "nifti_target_label_ras_geometry.v2.1.1",
+    "reuse": "locked_scale_v2_reuse.v2.1.0"
+  },
+  "runtime_versions": {
+    "gemmi": "0.7.5",
+    "nibabel": "5.3.2",
+    "numpy": "2.5.1",
+    "rdkit": "2026.3.5"
+  },
+  "scale_v1_reviewed_lock": {
+    "path": "docs/qa-gen/SCALE_V1_REVIEWED_20260808_LOCK.json",
+    "sha256": "b70fd2e249d7ceafc51c83a66aa4bdf0f33ec94b2f83c011795416381121e27e",
+    "verified_files": [
+      {
+        "byte_size": 1164627,
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-biology_final_tasks.jsonl",
+        "sha256": "6fa1e5096485faf2460dd245bfd85a4967b93bbe8b1f7fad9364e8128aa59117"
+      },
+      {
+        "byte_size": 1455649,
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-chemistry_final_tasks.jsonl",
+        "sha256": "b4b40c5f74159d88fef1a9cb7e861c9c1d46438720a427040e262e39420fd670"
+      },
+      {
+        "byte_size": 3551566,
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-medical_final_tasks.jsonl",
+        "sha256": "9c105c7dcfb059a1edae0fb9e9bcf81c5a07bbe3d334d667403605643427e86d"
+      },
+      {
+        "byte_size": 6360416,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/report.json",
+        "sha256": "1d9fc70621f3a8a3f8112a83d630abb04fea46ba2686e8ff8f1149acabfb0f72"
+      },
+      {
+        "byte_size": 2185748,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/task_classifications.jsonl",
+        "sha256": "bcbb100af0333b6aa79065fcb9630450b6a9a3963e61954284b5541a85b1b70f"
+      },
+      {
+        "byte_size": 18605446,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/report.json",
+        "sha256": "e61963aeb61ae7443ab9a843df89805abf43570574ffab7f42a022908eb5eb55"
+      },
+      {
+        "byte_size": 6782097,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/task_classifications.jsonl",
+        "sha256": "47be6585657668c5c29c159dcd26431c5295e54b81e2b228f83117e20239f71d"
+      },
+      {
+        "byte_size": 4945207,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/report.json",
+        "sha256": "4e0bb4971ee0defffa64b74535e7767ff5e34ec605207fab73b0a757db934a77"
+      },
+      {
+        "byte_size": 1313230,
+        "path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/task_classifications.jsonl",
+        "sha256": "e339bbba9785cf7ccae1fd6cd6a07f8da05839d71b12e83767c07f573d485e29"
+      }
+    ]
+  },
+  "schema_version": "sciencevision.qa_gen.scale_v2_1.source_lock.v1"
+}

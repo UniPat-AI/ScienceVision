@@ -1,0 +1,143 @@
+[
+  {
+    "name": "hippocampus_001",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_001.nii.gz",
+    "size": 49874,
+    "viewer": "niivue",
+    "format": "nifti",
+    "overlay": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_001.nii.gz"
+  },
+  {
+    "name": "hippocampus_003",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_003.nii.gz",
+    "size": 75632,
+    "viewer": "niivue",
+    "format": "nifti",
+    "overlay": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_003.nii.gz"
+  },
+  {
+    "name": "hippocampus_004",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_004.nii.gz",
+    "size": 87109,
+    "viewer": "niivue",
+    "format": "nifti",
+    "overlay": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_004.nii.gz"
+  },
+  {
+    "name": "hippocampus_006",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_006.nii.gz",
+    "size": 78933,
+    "viewer": "niivue",
+    "format": "nifti",
+    "overlay": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_006.nii.gz"
+  },
+  {
+    "name": "hippocampus_007",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_007.nii.gz",
+    "size": 83038,
+    "viewer": "niivue",
+    "format": "nifti",
+    "overlay": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_007.nii.gz"
+  },
+  {
+    "name": "hippocampus_002 (test)",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTs/hippocampus_002.nii.gz",
+    "size": 52128,
+    "viewer": "niivue",
+    "format": "nifti"
+  },
+  {
+    "name": "hippocampus_005 (test)",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTs/hippocampus_005.nii.gz",
+    "size": 75007,
+    "viewer": "niivue",
+    "format": "nifti"
+  },
+  {
+    "name": "hippocampus_009 (test)",
+    "path": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTs/hippocampus_009.nii.gz",
+    "size": 62657,
+    "viewer": "niivue",
+    "format": "nifti"
+  },
+  {
+    "name": "anatomical.nii",
+    "path": "/crawl_data/medical/nibabel_samples/anatomical.nii",
+    "size": 68002,
+    "viewer": "niivue",
+    "format": "nifti"
+  },
+  {
+    "name": "example4d.nii.gz",
+    "path": "/crawl_data/medical/nibabel_samples/example4d.nii.gz",
+    "size": 346451,
+    "viewer": "niivue",
+    "format": "nifti"
+  },
+  {
+    "name": "mr_head.nrrd",
+    "path": "/crawl_data/medical/slicer_nrrd/mr_head.nrrd",
+    "size": 6607313,
+    "viewer": "niivue",
+    "format": "nrrd"
+  },
+  {
+    "name": "hippo_001_m3d (M3D)",
+    "path": "/crawl_data/medical/m3d_samples/derived/hippo_001_m3d.nii.gz",
+    "size": 7298702,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "M3D 输入张量 (1×32×256×256, [0,1], no real spacing) — 派生 NIfTI 用单位 affine，仅供人眼检查；解剖比例不真实",
+    "npy_download": "/crawl_data/medical/m3d_samples/hippo_001_m3d.npy",
+    "derived_from": "m3d_npy"
+  },
+  {
+    "name": "IXI002-Guys-0828-T1",
+    "path": "/crawl_data/medical/ixi_brain/IXI002-Guys-0828-T1.nii.gz",
+    "size": 7340139,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "IXI Brain MRI 代表样本（来自 HF 镜像 pzarzycki/mri-oasis-1-ixi-pre）"
+  },
+  {
+    "name": "IXI012-HH-1211-T1",
+    "path": "/crawl_data/medical/ixi_brain/IXI012-HH-1211-T1.nii.gz",
+    "size": 10759966,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "IXI Brain MRI 代表样本（来自 HF 镜像 pzarzycki/mri-oasis-1-ixi-pre）"
+  },
+  {
+    "name": "pulseq_hybrid_T1 (qCEST 3T)",
+    "path": "/crawl_data/medical/qcest_brain/pulseq_hybrid_T1.nii",
+    "size": 7419232,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "MultiB0_B1_qCEST_brain — 3T anatomical T1，可叠加 grey_matter 分割",
+    "overlay": "/crawl_data/medical/qcest_brain/grey_matter.nii"
+  },
+  {
+    "name": "grey_matter (qCEST 灰质分割)",
+    "path": "/crawl_data/medical/qcest_brain/grey_matter.nii",
+    "size": 412512,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "MultiB0_B1_qCEST_brain — 二值 mask，建议叠加在 pulseq_hybrid_T1 之上"
+  },
+  {
+    "name": "white_matter (qCEST 白质分割)",
+    "path": "/crawl_data/medical/qcest_brain/white_matter.nii",
+    "size": 412512,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "MultiB0_B1_qCEST_brain — 二值 mask，建议叠加在 pulseq_hybrid_T1 之上"
+  },
+  {
+    "name": "B0B1_mask (qCEST B0+B1 mask)",
+    "path": "/crawl_data/medical/qcest_brain/B0B1_mask.nii",
+    "size": 412512,
+    "viewer": "niivue",
+    "format": "nifti",
+    "note": "MultiB0_B1_qCEST_brain — 二值 mask，建议叠加在 pulseq_hybrid_T1 之上"
+  }
+]

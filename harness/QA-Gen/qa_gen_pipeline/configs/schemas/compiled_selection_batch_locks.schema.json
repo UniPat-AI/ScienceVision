@@ -1,0 +1,284 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/compiled_selection_batch_locks.schema.json",
+  "description": "Human-approved, digest-bound inputs for a compiled selection batch. This document contains no legacy questions, answers, or raw asset paths.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "selection_batch_digest",
+    "ground_truth_registry",
+    "mapping",
+    "routing",
+    "budget",
+    "retry_policy",
+    "job_bindings"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_compiled_selection_batch_locks"},
+    "selection_batch_digest": {"$ref": "#/definitions/digest"},
+    "ground_truth_registry": {
+      "description": "Approved external source registry imported into a private immutable plan snapshot. The path is resolved relative to this lock bundle when it is not absolute.",
+      "type": "object",
+      "required": ["status", "path", "content_digest", "approval_digest", "approval_receipt"],
+      "properties": {
+        "status": {"const": "approved"},
+        "path": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "approval_digest": {"$ref": "#/definitions/digest"},
+        "approval_receipt": {"$ref": "#/definitions/approval_receipt"}
+      },
+      "additionalProperties": false
+    },
+    "mapping": {"$ref": "#/definitions/approved_lock"},
+    "routing": {
+      "type": "object",
+      "required": ["status", "content_digest", "approval_digest", "approval_receipt", "roles"],
+      "properties": {
+        "status": {"const": "approved"},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "approval_digest": {"$ref": "#/definitions/digest"},
+        "approval_receipt": {"$ref": "#/definitions/approval_receipt"},
+        "roles": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "type": "object",
+            "required": ["role", "provider", "model", "prompt_digest"],
+            "properties": {
+              "role": {
+                "enum": [
+                  "brief_builder",
+                  "author",
+                  "truth_builder",
+                  "evidence_worker",
+                  "verifier",
+                  "rewriter"
+                ]
+              },
+              "provider": {"type": "string", "minLength": 1},
+              "model": {"type": "string", "minLength": 1},
+              "prompt_digest": {"$ref": "#/definitions/digest"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "inventory_batch": {
+      "type": "object",
+      "required": [
+        "status",
+        "content_digest",
+        "approval_digest",
+        "approval_receipt",
+        "batch_receipt"
+      ],
+      "properties": {
+        "status": {"const": "approved"},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "approval_digest": {"$ref": "#/definitions/digest"},
+        "approval_receipt": {"$ref": "#/definitions/approval_receipt"},
+        "batch_receipt": {"$ref": "#/definitions/private_replay_reference"}
+      },
+      "additionalProperties": false
+    },
+    "executor_build": {
+      "description": "Optional local executor identity attestation. When present, its receipt is carried into the immutable plan, approval, and run before live provider execution.",
+      "type": "object",
+      "required": ["receipt"],
+      "properties": {
+        "receipt": {"$ref": "#/definitions/private_replay_reference"}
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["total_max_tokens", "total_max_cost_usd"],
+      "properties": {
+        "total_max_tokens": {"type": "integer", "minimum": 1},
+        "total_max_cost_usd": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "retry_policy": {
+      "type": "object",
+      "required": ["max_retries_per_stage", "retry_backoff_seconds"],
+      "properties": {
+        "max_retries_per_stage": {"type": "integer", "minimum": 0, "maximum": 5},
+        "retry_backoff_seconds": {"type": "number", "minimum": 0, "maximum": 300}
+      },
+      "additionalProperties": false
+    },
+    "job_bindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "slot_digest",
+          "target_leaf",
+          "strategy",
+          "source_asset_set_digest",
+          "ground_truth_record",
+          "config",
+          "seed",
+          "knowledge",
+          "viewer"
+        ],
+        "properties": {
+          "slot_digest": {"$ref": "#/definitions/digest"},
+          "target_leaf": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"},
+          "question_family_id": {
+            "description": "Exact family selected before authoring when the approved knowledge snapshot carries an accepted feedback policy.",
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]*$"
+          },
+          "strategy": {"enum": ["preserve_intent", "reauthor_on_asset"]},
+          "source_asset_set_digest": {"$ref": "#/definitions/digest"},
+          "ground_truth_record": {"$ref": "#/definitions/ground_truth_record_identity"},
+          "config": {"$ref": "#/definitions/approved_lock"},
+          "seed": {"$ref": "#/definitions/approved_lock"},
+          "knowledge": {"$ref": "#/definitions/approved_lock"},
+          "viewer": {
+            "type": "object",
+            "required": [
+              "status",
+              "content_digest",
+              "approval_digest",
+              "approval_receipt",
+              "anonymous_scene_ref",
+              "allowed_operations",
+              "capability_mapping"
+            ],
+            "properties": {
+              "status": {"const": "approved"},
+              "content_digest": {"$ref": "#/definitions/digest"},
+              "approval_digest": {"$ref": "#/definitions/digest"},
+              "approval_receipt": {"$ref": "#/definitions/approval_receipt"},
+              "anonymous_scene_ref": {"type": "string", "minLength": 1},
+              "allowed_operations": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"type": "string", "minLength": 1},
+                "uniqueItems": true
+              },
+              "capability_mapping": {
+                "type": "object",
+                "required": ["mapping_id", "content_digest", "profile_id", "profile_digest", "receipt"],
+                "properties": {
+                  "mapping_id": {"type": "string", "minLength": 1},
+                  "content_digest": {"$ref": "#/definitions/digest"},
+                  "profile_id": {"type": "string", "minLength": 1},
+                  "profile_digest": {"$ref": "#/definitions/digest"},
+                  "receipt": {"$ref": "#/definitions/approval_receipt"}
+                },
+                "additionalProperties": false
+              },
+              "fresh_replay": {
+                "type": "object",
+                "required": ["lock_set", "registry", "receipt"],
+                "properties": {
+                  "lock_set": {"$ref": "#/definitions/private_replay_reference"},
+                  "registry": {"$ref": "#/definitions/private_replay_reference"},
+                  "receipt": {"$ref": "#/definitions/private_replay_reference"}
+                },
+                "additionalProperties": false
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "approved_lock": {
+      "type": "object",
+      "required": ["status", "content_digest", "approval_digest", "approval_receipt"],
+      "properties": {
+        "status": {"const": "approved"},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "approval_digest": {"$ref": "#/definitions/digest"},
+        "approval_receipt": {"$ref": "#/definitions/approval_receipt"}
+      },
+      "additionalProperties": false
+    },
+    "approval_receipt": {
+      "type": "object",
+      "required": ["path", "content_digest"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "private_replay_reference": {
+      "type": "object",
+      "required": ["path", "content_digest"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "allowed_answer_schema": {
+      "type": "object",
+      "required": ["shape", "fields"],
+      "properties": {
+        "shape": {"type": "string", "minLength": 1},
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    },
+    "ground_truth_record_identity": {
+      "description": "Identity and allowed answer form for the sole approved registry record a job may cite. It has no answer value.",
+      "type": "object",
+      "required": [
+        "source_type",
+        "source_id",
+        "source_digest",
+        "record_id",
+        "record_digest",
+        "answer_digest",
+        "allowed_answer_schema"
+      ],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "expert_annotation",
+            "curated_source_label",
+            "rule_evaluated_structure",
+            "paired_comparison",
+            "measurement_receipt"
+          ]
+        },
+        "source_id": {"type": "string", "minLength": 1},
+        "source_digest": {"$ref": "#/definitions/digest"},
+        "record_id": {"type": "string", "minLength": 1},
+        "record_digest": {"$ref": "#/definitions/digest"},
+        "answer_digest": {"$ref": "#/definitions/digest"},
+        "allowed_answer_schema": {"$ref": "#/definitions/allowed_answer_schema"},
+        "measurement_receipt_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"source_type": {"const": "measurement_receipt"}}, "required": ["source_type"]},
+          "then": {"required": ["measurement_receipt_digest"]},
+          "else": {"not": {"required": ["measurement_receipt_digest"]}}
+        }
+      ]
+    }
+  }
+}

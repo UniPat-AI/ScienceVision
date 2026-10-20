@@ -1,0 +1,286 @@
+{
+  "schema_version": "1.0",
+  "title": "Expert seed cases",
+  "source": "ScienceVision expert-qa seed (match3d.html?dataset=expert-qa)",
+  "generated_at": "2026-07-21T19:32:57+00:00",
+  "count": 15,
+  "domains": [
+    {
+      "key": "chemistry",
+      "label": "Chemistry",
+      "blurb": "Conformation, crystal packing, binding pose, chirality — reasoned from 3D geometry alone.",
+      "items": [
+        {
+          "qid": "sv-chem-conformation-01",
+          "direction_id": "chem_conformation",
+          "direction_title": "Conformational analysis",
+          "scene": "Conformational analysis · QM9 conformer 99795 (XYZ)",
+          "question": "For the two largest substituents across the central rotatable bond in the displayed conformer, is their arrangement anti, gauche, or eclipsed? Report the governing dihedral angle.",
+          "answer": "\"{\\\"relationship\\\": \\\"gauche\\\", \\\"dihedral_deg\\\": 68, \\\"reasoning\\\": \\\"largest substituents offset ~60 deg about the central bond\\\"}\"",
+          "difficulty": "medium",
+          "v_class": "V2",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "metadata_lookup_answer",
+            "smiles_to_conformer_api"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/qm_conformers/qm9_99795.xyz"
+        },
+        {
+          "qid": "sv-chem-conformation-02",
+          "direction_id": "chem_conformation",
+          "direction_title": "Conformational analysis",
+          "scene": "Conformational analysis · QM9 conformer 99186 (XYZ)",
+          "question": "Is there an intramolecular hydrogen bond in the displayed conformer, and would it survive a 180-degree flip of the terminal polar group?",
+          "answer": "\"{\\\"h_bond_present\\\": \\\"true\\\", \\\"survives_flip\\\": \\\"false\\\", \\\"donor_acceptor\\\": \\\"O-H...N\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V4",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "metadata_lookup_answer",
+            "hbond_detect_api"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/qm_conformers/qm9_99186.xyz"
+        },
+        {
+          "qid": "sv-chem-crystal-packing-03",
+          "direction_id": "chem_crystal_packing",
+          "direction_title": "Crystal packing",
+          "scene": "Crystal packing · COD crystal 1501802 (CIF)",
+          "question": "Identify the dominant intermolecular packing motif in the displayed crystal structure, and the groups that participate.",
+          "answer": "\"{\\\"motif\\\": \\\"hydrogen-bonded chain\\\", \\\"participating_groups\\\": \\\"hydroxyl + carbonyl\\\", \\\"dimensionality\\\": \\\"one-dimensional chain\\\"}\"",
+          "difficulty": "medium",
+          "v_class": "V3",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "symmetry_expansion_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/cod_cif/cod_1501802.cif"
+        },
+        {
+          "qid": "sv-chem-crystal-packing-04",
+          "direction_id": "chem_crystal_packing",
+          "direction_title": "Crystal packing",
+          "scene": "Crystal packing · COD crystal 1503705 (CIF)",
+          "question": "Does the displayed crystal form a discrete hydrogen-bonded motif, a one-dimensional chain, a two-dimensional sheet, or a three-dimensional network? Name the main interaction and its plane/direction.",
+          "answer": "\"{\\\"packing_type\\\": \\\"three-dimensional network\\\", \\\"main_interaction\\\": \\\"C-H...O contacts\\\", \\\"plane_direction\\\": \\\"propagates along all three axes\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V6",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "symmetry_expansion_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/cod_cif/cod_1503705.cif"
+        },
+        {
+          "qid": "sv-chem-binding-pose-05",
+          "direction_id": "chem_binding_pose",
+          "direction_title": "Protein-ligand binding pose",
+          "scene": "Protein-ligand binding pose · 6LU7",
+          "question": "Which ligand atom forms the most geometrically plausible hydrogen bond with the catalytic His41/Cys145 region of Mpro? Give the atom pair, interaction type, and the ligand's donor/acceptor role.",
+          "answer": "\"{\\\"ligand_atom\\\": \\\"O3\\\", \\\"protein_atom\\\": \\\"HIS41_NE2\\\", \\\"interaction\\\": \\\"hydrogen bond\\\", \\\"ligand_role\\\": \\\"acceptor\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V3",
+          "answer_kind": "relation_with_value",
+          "forbidden_tools": [
+            "interaction_fingerprint_api",
+            "plip_detect",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/6LU7.cif"
+        },
+        {
+          "qid": "sv-chem-optimization-vector-06",
+          "direction_id": "chem_optimization_vector",
+          "direction_title": "Molecular optimization vector",
+          "scene": "Molecular optimization vector · 4EY7",
+          "question": "Which substitution vector extends the ligand into the unoccupied gorge subpocket without a steric clash? Justify why the alternatives are rejected.",
+          "answer": "\"{\\\"selected_vector\\\": \\\"C\\\", \\\"target_region\\\": \\\"unoccupied peripheral anionic site\\\", \\\"rejected_A\\\": \\\"steric clash with Trp286\\\", \\\"rejected_B\\\": \\\"solvent-exposed\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V4",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "pocket_detection_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/4EY7.cif"
+        },
+        {
+          "qid": "sv-chem-chirality-07",
+          "direction_id": "chem_chirality",
+          "direction_title": "Stereochemistry / chirality",
+          "scene": "Stereochemistry / chirality · ibuprofen (MOL)",
+          "question": "Locate the chiral center(s) in the displayed molecule and assign the R/S configuration from the 3D geometry.",
+          "answer": "\"{\\\"chiral_centers\\\": [\\\"C2\\\"], \\\"configuration\\\": {\\\"C2\\\": \\\"S\\\"}}\"",
+          "difficulty": "medium",
+          "v_class": "V2",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "cip_assignment_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/small_molecules_derived/3672_ibuprofen.mol"
+        },
+        {
+          "qid": "sv-chem-chirality-08",
+          "direction_id": "chem_chirality",
+          "direction_title": "Stereochemistry / chirality",
+          "scene": "Stereochemistry / chirality · penicillin_g (MOL)",
+          "question": "How many stereocenters does the displayed molecule contain, and where are they located within the fused beta-lactam / thiazolidine ring system?",
+          "answer": "\"{\\\"n_stereocenters\\\": 3, \\\"locations\\\": [\\\"C3\\\", \\\"C5\\\", \\\"C6\\\"]}\"",
+          "difficulty": "hard",
+          "v_class": "V2",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "cip_assignment_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/small_molecules_derived/5904_penicillin_g.mol"
+        }
+      ]
+    },
+    {
+      "key": "biology",
+      "label": "Biology",
+      "blurb": "Docking-pose plausibility and molecular collision checks on protein–ligand complexes.",
+      "items": [
+        {
+          "qid": "sv-biol-docking-pose-plausibility-01",
+          "direction_id": "bio_docking_pose_plausibility",
+          "direction_title": "Docking pose plausibility",
+          "scene": "Docking pose plausibility · 6LU7",
+          "question": "Given the visible protein-ligand interactions, is the displayed ligand pose geometrically plausible? Cite the key supporting interactions. (Decoy poses for this complex ship in crawl_data/biology/docking_poses.)",
+          "answer": "\"{\\\"plausible\\\": \\\"true\\\", \\\"key_evidence\\\": [\\\"H-bond to catalytic region\\\", \\\"hydrophobic burial of aryl group\\\"], \\\"concerns\\\": \\\"none in the native pose\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V3",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "docking_score_api",
+            "rmsd_to_native_lookup",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/6LU7.cif"
+        },
+        {
+          "qid": "sv-biol-docking-pose-plausibility-02",
+          "direction_id": "bio_docking_pose_plausibility",
+          "direction_title": "Docking pose plausibility",
+          "scene": "Docking pose plausibility · 1HVR",
+          "question": "Among the displayed ligand poses for this complex, which one is the most geometrically plausible, and which competing pose is least plausible and why? (native + decoys under crawl_data/biology/docking_poses.)",
+          "answer": "\"{\\\"selected_pose\\\": \\\"native\\\", \\\"rejected_pose\\\": \\\"decoy_2\\\", \\\"reason\\\": \\\"decoy_2 buries a charged group without a compensating partner\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V4",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "docking_score_api",
+            "rmsd_to_native_lookup"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/1HVR.cif"
+        },
+        {
+          "qid": "sv-biol-molecular-collision-check-03",
+          "direction_id": "bio_molecular_collision_check",
+          "direction_title": "Molecular collision check",
+          "scene": "Molecular collision check · 4EY7",
+          "question": "Does the displayed complex contain a severe non-bonded clash between the ligand and the receptor? If so, name the atom pair and the distance.",
+          "answer": "\"{\\\"clash_present\\\": \\\"false\\\", \\\"atom_1\\\": null, \\\"atom_2\\\": null, \\\"min_distance_A\\\": null}\"",
+          "difficulty": "medium",
+          "v_class": "V2",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "clash_score_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/4EY7.cif"
+        },
+        {
+          "qid": "sv-biol-molecular-collision-check-04",
+          "direction_id": "bio_molecular_collision_check",
+          "direction_title": "Molecular collision check",
+          "scene": "Molecular collision check · 2RH1",
+          "question": "Is any polar ligand group buried in a hydrophobic environment without a compensating hydrogen bond or salt bridge? Identify it if present.",
+          "answer": "\"{\\\"unsatisfied_polar_present\\\": \\\"false\\\", \\\"group\\\": null, \\\"environment\\\": \\\"polar groups face solvent or H-bond partners\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V3",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "interaction_fingerprint_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "molecule",
+          "url_viewer": "/crawl_data/biology/rcsb_pdb_mmcif/2RH1.cif"
+        }
+      ]
+    },
+    {
+      "key": "medical",
+      "label": "Medical",
+      "blurb": "Anatomical delineation and arbitrary-plane / 3D-extent reasoning on CT / MRI volumes.",
+      "items": [
+        {
+          "qid": "sv-medi-anatomical-region-01",
+          "direction_id": "med_anatomical_region",
+          "direction_title": "Anatomical region delineation",
+          "scene": "Anatomical region delineation · hippocampus_001 (MSD Task04)",
+          "question": "Delineate the boundary between the anterior and posterior hippocampus, and state on which oblique plane the separation is clearest.",
+          "answer": "\"{\\\"structure\\\": \\\"hippocampus\\\", \\\"best_plane\\\": \\\"oblique-coronal\\\", \\\"boundary_slice_range\\\": [12, 15]}\"",
+          "difficulty": "medium",
+          "v_class": "V3",
+          "answer_kind": "categorical_with_value",
+          "forbidden_tools": [
+            "segmentation_mask_lookup",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "nifti",
+          "url_viewer": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_001.nii.gz"
+        },
+        {
+          "qid": "sv-medi-mri-arbitrary-plane-02",
+          "direction_id": "med_mri_arbitrary_plane",
+          "direction_title": "Arbitrary-angle reslice",
+          "scene": "Arbitrary-angle reslice · IXI002-Guys-0828-T1",
+          "question": "Which single oblique reslice plane best captures the full anterior-posterior extent of the target structure in one view? Report the plane normal.",
+          "answer": "\"{\\\"plane_normal\\\": [0.0, 0.71, 0.71], \\\"rationale\\\": \\\"aligns with the long axis crossing multiple axial slices\\\"}\"",
+          "difficulty": "medium",
+          "v_class": "V1",
+          "answer_kind": "camera_pose_only",
+          "forbidden_tools": [
+            "slice_index_lookup"
+          ],
+          "asset_kind": "nifti",
+          "url_viewer": "/crawl_data/medical/ixi_brain/IXI002-Guys-0828-T1.nii.gz"
+        },
+        {
+          "qid": "sv-medi-lesion-3d-extent-03",
+          "direction_id": "med_lesion_3d_extent",
+          "direction_title": "Irregular 3D extent",
+          "scene": "Irregular 3D extent · hippocampus_003 (MSD Task04)",
+          "question": "Estimate the three-dimensional bounding extent of the target structure and report how many axial slices it spans and what it wraps around.",
+          "answer": "\"{\\\"slices_spanned\\\": 14, \\\"bbox_extent_mm\\\": [22, 31, 19], \\\"wraps_around\\\": \\\"adjacent ventricle\\\"}\"",
+          "difficulty": "hard",
+          "v_class": "V6",
+          "answer_kind": "numeric_with_value",
+          "forbidden_tools": [
+            "volume_stats_api",
+            "metadata_lookup_answer"
+          ],
+          "asset_kind": "nifti",
+          "url_viewer": "/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_003.nii.gz"
+        }
+      ]
+    }
+  ]
+}

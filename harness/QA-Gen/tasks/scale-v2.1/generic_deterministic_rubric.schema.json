@@ -1,0 +1,53 @@
+{
+  "$id": "sciencevision.generic_deterministic_rubric.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "fields": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "comparison": {
+            "enum": [
+              "exact",
+              "absolute_tolerance"
+            ]
+          },
+          "field": {
+            "type": "string"
+          },
+          "periodic_modulus": {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          "tolerance": {
+            "minimum": 0,
+            "type": "number"
+          },
+          "unit": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "field",
+          "comparison"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "sciencevision.generic_deterministic_rubric.v1"
+    },
+    "strict_json_object": {
+      "const": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "strict_json_object",
+    "fields"
+  ],
+  "type": "object"
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Manifest check — BabyVision-v2</title>
+<style>
+  body { background: #0d1117; color: #c9d1d9; font: 14px/1.5 -apple-system, system-ui, sans-serif; padding: 24px; }
+  h1 { font-size: 18px; }
+  table { border-collapse: collapse; margin-top: 12px; }
+  th, td { padding: 4px 12px; text-align: left; border-bottom: 1px solid #30363d; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  th { color: #8b949e; }
+  .ok { color: #56d364; }
+  .fail { color: #f85149; }
+</style>
+</head>
+<body>
+<h1>Manifest check</h1>
+<div id="status">loading…</div>
+<table id="fields" hidden>
+  <thead><tr><th>field</th><th>value</th></tr></thead>
+  <tbody></tbody>
+</table>
+<h2 style="margin-top:24px;font-size:14px">Domains</h2>
+<table id="domains" hidden>
+  <thead><tr><th>id</th><th>label</th><th>color</th><th>shipped</th></tr></thead>
+  <tbody></tbody>
+</table>
+<script src="shared/manifest.js"></script>
+<script>
+  window.ManifestReady.then((m) => {
+    document.getElementById('status').innerHTML = '<span class="ok">OK — Manifest loaded.</span>';
+    const ftbody = document.querySelector('#fields tbody');
+    [
+      ['brand', m.brand],
+      ['version', m.version],
+      ['generated_at', m.generated_at],
+      ['counts.assets', m.counts.assets],
+      ['counts.qagen', m.counts.qagen],
+      ['counts.mcp_tools', m.counts.mcp_tools],
+      ['counts.leaderboard_entries', m.counts.leaderboard_entries],
+      ['data.assets_index (raw)', m.data.assets_index],
+      ['urls.data.assets_index (resolved)', m.urls.data.assets_index],
+      ['docs.tree_index (raw)', m.docs.tree_index],
+      ['urls.docs.tree_index (resolved)', m.urls.docs.tree_index],
+      ['urls.docs.search_index (resolved)', m.urls.docs.search_index],
+      ['urls.docs.base_url (resolved)', m.urls.docs.base_url],
+    ].forEach(([k, v]) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${k}</td><td>${v}</td>`;
+      ftbody.appendChild(tr);
+    });
+    document.getElementById('fields').hidden = false;
+
+    const dtbody = document.querySelector('#domains tbody');
+    m.domains.forEach((d) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td>${d.id}</td><td>${d.label}</td>` +
+        `<td style="color:${d.color}">${d.color}</td>` +
+        `<td>${d.shipped ? '✓' : '—'}</td>`;
+      dtbody.appendChild(tr);
+    });
+    document.getElementById('domains').hidden = false;
+  }).catch((err) => {
+    document.getElementById('status').innerHTML =
+      '<span class="fail">FAIL: ' + err.message + '</span>';
+  });
+</script>
+</body>
+</html>

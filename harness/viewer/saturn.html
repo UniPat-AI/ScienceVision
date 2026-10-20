@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Saturn body+ring viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #info {
+    position: fixed; bottom: 12px; left: 12px;
+    background: rgba(13,17,23,0.88); padding: 10px 14px; border-radius: 4px;
+    border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #c9d1d9;
+    max-width: 480px; line-height: 1.5;
+  }
+  #info b { color: #f0f6fc; }
+  #info .b-val { font-size: 14px; color: #ffa657; }
+  #info .verdict {
+    display: inline-block; padding: 2px 8px; margin-left: 8px;
+    border-radius: 3px; font-weight: bold;
+  }
+  #info .verdict-edge { background: #3a1d1d; color: #ffa198; }
+  #info .verdict-face { background: #1d3a23; color: #56d364; }
+  #info .verdict-int  { background: #2d2a1c; color: #d2a8ff; }
+  #info a { color: #58a6ff; text-decoration: none; }
+  #info a:hover { text-decoration: underline; }
+  #legend {
+    position: fixed; top: 60px; right: 12px;
+    background: rgba(13,17,23,0.88); padding: 6px 10px; border-radius: 4px;
+    border: 1px solid #30363d; font: 10px ui-monospace, monospace; color: #8b949e;
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Saturn observer</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">three.js sphere + ring · ephemeris-driven tilt</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="legend">drag = rotate · scroll = zoom · right-drag = pan</div>
+<div id="info">
+  <div><b>Sub-observer latitude (B)</b>: <span class="b-val" id="b-val">…</span>
+       <span id="verdict" class="verdict">…</span></div>
+  <div id="epoch">epoch: …</div>
+  <div id="source">source: …</div>
+</div>
+<div id="gl-error" style="display:none; position:fixed; top:49px; left:0; right:0; bottom:0;
+  z-index:10; background:#0d1117; color:#ff7b72; font:13px/1.6 ui-monospace,monospace;
+  padding:28px; overflow:auto; white-space:pre-wrap;"></div>
+
+<!-- Diagnostic: a classic (non-module) script so it also catches ES-module
+     load/parse/eval failures, which otherwise leave the canvas silently blank
+     (fires a window 'error' event with no in-page trace). -->
+<script>
+(function () {
+  function show(msg) {
+    var el = document.getElementById('gl-error');
+    if (!el) return;
+    el.style.display = 'block';
+    el.textContent = (el.textContent ? el.textContent + '\n' : '') + msg;
+  }
+  window.__glShowError = show;
+  window.addEventListener('error', function (e) {
+    if (e && e.message) show('[error] ' + e.message + (e.filename ? '  @ ' + e.filename + ':' + e.lineno : ''));
+    else if (e && e.target && e.target.src) show('[load failed] ' + e.target.src);
+  }, true);
+  window.addEventListener('unhandledrejection', function (e) {
+    show('[promise] ' + (e && e.reason ? (e.reason.stack || e.reason.message || e.reason) : 'unknown'));
+  });
+})();
+</script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ---- URL params ----
+const params = new URLSearchParams(location.search);
+const file = params.get('file');  // ephemeris JSON path
+// Optional texture overrides so the viewer works outside the /crawl_data tree
+// (e.g. served from viewer/datasets/astronomy/ on the public BabyVision site).
+const bodyTexUrl = params.get('body') || '/crawl_data/astronomy/textures/2k_saturn.jpg';
+const ringTexUrl = params.get('ring') || '/crawl_data/astronomy/textures/2k_saturn_ring_alpha.png';
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+// ---- Scene ----
+const canvas = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+} catch (err) {
+  if (window.__glShowError) {
+    window.__glShowError('WebGL unavailable — the 3D model cannot render.\n' +
+      (err && err.message ? err.message : String(err)));
+  }
+  throw err;
+}
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+
+const camera = new THREE.PerspectiveCamera(35, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+camera.position.set(0, 0, 5);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+// ---- Lighting (simple Sun-from-side directional) ----
+scene.add(new THREE.AmbientLight(0x404040, 1.6));
+const sun = new THREE.DirectionalLight(0xfff0e0, 1.2);
+sun.position.set(5, 0, 2);
+scene.add(sun);
+
+// ---- Saturn group: body + ring ----
+const saturnGroup = new THREE.Group();
+scene.add(saturnGroup);
+
+// Real Saturn: equatorial radius 60268 km, polar 54364 km, flattening 0.098.
+// Ring inner 74500 km (D ring inner edge), outer 140180 km (A ring outer edge).
+// Normalize so equatorial radius = 1.
+const R_eq = 1.0;
+const FLATTENING = 0.098;
+const RING_INNER = 74500 / 60268;     // 1.236
+const RING_OUTER = 140180 / 60268;    // 2.327
+
+// Body — UV sphere, textured. Polar axis = Y; flatten by scaling Y.
+const bodyGeom = new THREE.SphereGeometry(R_eq, 96, 64);
+const bodyMat = new THREE.MeshStandardMaterial({
+  color: 0xeeddbb, roughness: 0.95, metalness: 0,
+});
+const body = new THREE.Mesh(bodyGeom, bodyMat);
+body.scale.y = 1 - FLATTENING;
+saturnGroup.add(body);
+
+// Ring — annular geometry in body's equatorial (XZ) plane → normal = Y axis.
+// We orient the saturnGroup so its Y axis (polar) is the ring normal; tilting
+// the group around camera-perpendicular axis sets ring tilt as seen by viewer.
+const ringGeom = new THREE.RingGeometry(RING_INNER, RING_OUTER, 256, 1);
+// Default RingGeometry lies in XY plane; rotate to XZ so the ring's normal is +Y.
+ringGeom.rotateX(-Math.PI / 2);
+// Generate radial UVs so the alpha texture (1D radial) maps from inner→outer.
+{
+  const uv = ringGeom.attributes.uv;
+  const pos = ringGeom.attributes.position;
+  for (let i = 0; i < uv.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i);
+    const r = Math.hypot(x, z);
+    const t = (r - RING_INNER) / (RING_OUTER - RING_INNER);
+    uv.setXY(i, t, 0.5);
+  }
+  uv.needsUpdate = true;
+}
+const ringMat = new THREE.MeshBasicMaterial({
+  color: 0xeae0c8,
+  side: THREE.DoubleSide,
+  transparent: true,
+  depthWrite: false,
+});
+const ring = new THREE.Mesh(ringGeom, ringMat);
+saturnGroup.add(ring);
+
+// ---- Texture loading (best-effort; fallback to flat color on 404) ----
+const tx = new THREE.TextureLoader();
+tx.load(
+  bodyTexUrl,
+  (t) => { t.colorSpace = THREE.SRGBColorSpace; bodyMat.map = t; bodyMat.needsUpdate = true; },
+  undefined,
+  () => console.warn('Saturn body texture unavailable; using flat color'),
+);
+tx.load(
+  ringTexUrl,
+  (t) => {
+    t.colorSpace = THREE.SRGBColorSpace;
+    ringMat.map = t;
+    ringMat.alphaMap = t;
+    ringMat.needsUpdate = true;
+  },
+  undefined,
+  () => console.warn('Saturn ring texture unavailable; using flat color'),
+);
+
+// ---- Ephemeris parsing — extract median ObsSub-LAT (B angle) from HORIZONS JSON ----
+// HORIZONS observer-mode response is text with $$SOE / $$EOE markers; columns
+// follow the QUANTITIES list in the request. For our questions we requested
+// '1,9,14,15,17,18,23,24,28' which puts ObsSub-LAT at fixed offset.
+function parseObserverEphemeris(jsonText) {
+  const data = JSON.parse(jsonText);
+  const result = data.result || '';
+  const soe = result.indexOf('$$SOE');
+  const eoe = result.indexOf('$$EOE');
+  if (soe < 0 || eoe < 0) return null;
+  const block = result.slice(soe + 5, eoe).trim();
+  const rows = block.split('\n').filter((l) => l.trim());
+  if (!rows.length) return null;
+  // Find ObsSub-LAT column index from the header line (lives just before $$SOE).
+  const preamble = result.slice(0, soe);
+  const hdr = preamble.split('\n').reverse().find((l) => l.includes('ObsSub-LAT'));
+  // Pick the median row (one halfway between START_TIME and STOP_TIME).
+  const mid = rows[Math.floor(rows.length / 2)];
+  // Token positions: after the date, columns are space-separated numerics.
+  // For our QUANTITIES the row format is:
+  //   YYYY-Mon-DD HH:MM  RA(3 tok)  DEC(3 tok)  APmag  S-brt  ObsSub-LON  ObsSub-LAT  ...
+  // Date(2)+RA(3)+DEC(3)+APmag+S-brt = 10 tokens before the sub-observer pair,
+  // so tok[10]/tok[11] is LON/LAT.
+  const tok = mid.trim().split(/\s+/);
+  const lon = parseFloat(tok[10]);
+  const lat = parseFloat(tok[11]);
+  const epoch = `${tok[0]} ${tok[1]} UTC`;
+  if (Number.isNaN(lat)) return null;
+  return { B: lat, lon, epoch, raw: mid.trim() };
+}
+
+function classifyB(B) {
+  const a = Math.abs(B);
+  if (a < 5) return { label: 'edge-on', cls: 'verdict-edge' };
+  if (a > 20) return { label: 'face-on', cls: 'verdict-face' };
+  return { label: 'intermediate', cls: 'verdict-int' };
+}
+
+// ---- Apply default tilt (~6° to show something even before ephemeris loads) ----
+saturnGroup.rotation.x = THREE.MathUtils.degToRad(6);
+
+if (file) {
+  fetch(file)
+    .then((r) => r.text())
+    .then((txt) => {
+      const eph = parseObserverEphemeris(txt);
+      if (!eph) {
+        document.getElementById('b-val').textContent = '(parse failed)';
+        document.getElementById('source').innerHTML = `source: <a href="${file}">${file}</a>`;
+        return;
+      }
+      // Tilt Saturn so ring makes angle B with the camera's view direction.
+      // Rotation around X (camera-horizontal) tips the ring up/down.
+      saturnGroup.rotation.x = THREE.MathUtils.degToRad(eph.B);
+      // Update info panel.
+      document.getElementById('b-val').textContent = `${eph.B.toFixed(2)}°`;
+      const v = classifyB(eph.B);
+      const verdictEl = document.getElementById('verdict');
+      verdictEl.textContent = v.label;
+      verdictEl.className = `verdict ${v.cls}`;
+      document.getElementById('epoch').textContent = `epoch: ${eph.epoch}`;
+      document.getElementById('source').innerHTML = `source: <a href="${file}">${file.split('/').pop()}</a>`;
+    })
+    .catch((err) => {
+      document.getElementById('b-val').textContent = '(fetch error)';
+      document.getElementById('source').textContent = `source: ${err.message}`;
+    });
+} else {
+  document.getElementById('b-val').textContent = '6.00° (default — no ephemeris loaded)';
+  document.getElementById('verdict').textContent = 'intermediate';
+  document.getElementById('verdict').className = 'verdict verdict-int';
+  document.getElementById('epoch').textContent = 'epoch: (none — open with ?file=… to drive from ephemeris)';
+}
+
+// ---- Resize + animate ----
+// Never size the drawing buffer to 0 (blank canvas when embedded in an iframe
+// that is still laying out); re-size on a ResizeObserver so a late layout heals.
+function resize() {
+  const w = canvas.clientWidth  || window.innerWidth        || 1;
+  const h = canvas.clientHeight || (window.innerHeight - 49) || 1;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+resize();
+window.addEventListener('resize', resize);
+if (window.ResizeObserver) { new ResizeObserver(resize).observe(canvas); }
+
+function animate() {
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+schema_version: 1
+kind: qagen_rubric_lock
+
+document:
+  repo_path: QA-Gen/docs/Question-Rubric.md
+  digest_algorithm: sha256
+  digest: sha256:67bd4bd91f1e970e3366c7a92c3daa3e38326bbd77a047df427e8bde0a668875
+
+release_thresholds:
+  authenticity:
+    required: 2
+    maximum: 2
+  correctness:
+    required: 1
+    maximum: 1
+  three_d_relevance:
+    required: 1
+    maximum: 1
+
+fixture_policy:
+  fixture_compile_uses_this_lock: true
+  fixture_compile_is_release_eligible: false
+  local_only: true
+  production_eligible: false

@@ -1,0 +1,11 @@
+#sv-annotate { position: fixed; top: 49px; right: 0; width: 320px; height: calc(100vh - 49px);
+  background: rgba(13,17,23,0.96); border-left: 1px solid #30363d; color: #c9d1d9;
+  font: 13px ui-monospace, monospace; padding: 12px; overflow-y: auto; z-index: 50; }
+#sv-annotate h3 { margin: 0 0 8px; font-size: 13px; color: #58a6ff; }
+#sv-annotate .q { white-space: pre-wrap; line-height: 1.45; margin-bottom: 10px; }
+#sv-annotate .vclass { display: inline-block; background: #1f6feb; color: #fff; border-radius: 3px; padding: 1px 6px; font-size: 11px; }
+#sv-annotate button { background: #238636; color: #fff; border: 0; border-radius: 4px; padding: 7px 10px; cursor: pointer; width: 100%; margin-top: 6px; }
+#sv-annotate button.secondary { background: #21262d; border: 1px solid #30363d; }
+#sv-annotate .cp-count { color: #8b949e; font-size: 11px; margin-top: 4px; }
+#sv-annotate textarea, #sv-annotate input { width: 100%; background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; border-radius: 4px; padding: 5px; margin-top: 4px; box-sizing: border-box; }
+#sv-annotate .err { color: #f85149; font-size: 11px; white-space: pre-wrap; margin-top: 6px; }

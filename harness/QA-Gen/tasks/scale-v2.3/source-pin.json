@@ -1,0 +1,30 @@
+{
+  "files": {
+    "ScienceVision_scale-v2.2-biology_candidate_tasks.jsonl": {
+      "byte_size": 4194523,
+      "sha256": "5c2adc0a345a9b74a6fa2b7e7d02e71202a485dc3390ec906d094c490db62d7f"
+    },
+    "ScienceVision_scale-v2.2-chemistry_candidate_tasks.jsonl": {
+      "byte_size": 5050093,
+      "sha256": "f2b0e94a870b4de6e1243fb70f75cebaad3b23686e6ea655613c5c74b9b04da0"
+    },
+    "ScienceVision_scale-v2.2-medical_candidate_tasks.jsonl": {
+      "byte_size": 7827564,
+      "sha256": "fc19cd5365591172d7bfb525aa0cffaedb2bba574dd48bb2017160c8ac898274"
+    },
+    "asset_groups.jsonl": {
+      "byte_size": 445350,
+      "sha256": "bd58862a745371b7423eb8d35448e363ab33b3fe6d87095d399c175ffbc5c3fe"
+    },
+    "asset_profiles.jsonl": {
+      "byte_size": 3988133,
+      "sha256": "6e9b0305d287ff896e6f8debd9c9ffe7170f2d398ee49a92d13987b918d3d6a1"
+    }
+  },
+  "schema_version": "sciencevision.qa_gen.source_pin.v1",
+  "source_clean": true,
+  "source_commit": "43efeb47c6eaf6a74c4579f5c042145fadc5d457",
+  "source_dataset_version": "scale-v2.2",
+  "source_dir": "QA-Gen/tasks/scale-v2.2",
+  "source_tree": "a1d0a1ee0f1bb306090eb0e02843b6c910728ffb"
+}

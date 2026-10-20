@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "load_nifti",
+  "description": "Load a NIfTI volume and return its metadata (shape, affine, voxel spacing).",
+  "domain": "medical",
+  "parameters": [
+    {
+      "name": "path",
+      "type": "string",
+      "required": true,
+      "description": "Filesystem path to a .nii or .nii.gz file."
+    }
+  ],
+  "returns": {
+    "type": "object",
+    "fields": [
+      {"name": "shape", "type": "array<integer>", "description": "Volume dimensions as [x, y, z]."},
+      {"name": "spacing_mm", "type": "array<float>", "description": "Voxel spacing in mm."},
+      {"name": "affine", "type": "array<array<float>>", "description": "4x4 NIfTI affine matrix mapping voxel index → world (mm) coordinates."},
+      {"name": "dtype", "type": "string", "description": "Numpy dtype string of the volume data."}
+    ]
+  },
+  "source": "sci3d_agent/tools/io/load_nifti.py"
+}

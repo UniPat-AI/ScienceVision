@@ -1,0 +1,26 @@
+[
+  {
+    "name": "vqarad",
+    "label": "VQA-RAD",
+    "modality": "radiology",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/flaviagiammarino/vqa-rad",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 451,
+        "jsonl": "/out_samples/vqarad/test.jsonl",
+        "first_qid": "vqarad-test-00-000000"
+      },
+      "train": {
+        "rows": 1793,
+        "jsonl": "/out_samples/vqarad/train.jsonl",
+        "first_qid": "vqarad-train-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 314,
+    "total_rows": 2244
+  }
+]

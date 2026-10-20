@@ -1,0 +1,48 @@
+[
+  {
+    "name": "scifibench",
+    "label": "SciFIBench",
+    "modality": "scientific paper figures",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/jonathan-roberts1/SciFIBench",
+    "answer_kind": "mcq",
+    "availability": "out_of_scope",
+    "unavailable_reason": "Paper figures (caption ↔ figure matching) — outside Sci3D 3D/medical/CAD scope",
+    "status": "disabled",
+    "splits": {
+      "CS_Caption2Figure": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/CS_Caption2Figure.jsonl",
+        "first_qid": "scifibench-CS_Caption2Figure-00-000000"
+      },
+      "CS_Figure2Caption": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/CS_Figure2Caption.jsonl",
+        "first_qid": "scifibench-CS_Figure2Caption-00-000000"
+      },
+      "Caption2Figure": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/Caption2Figure.jsonl",
+        "first_qid": "scifibench-Caption2Figure-00-000000"
+      },
+      "Figure2Caption": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/Figure2Caption.jsonl",
+        "first_qid": "scifibench-Figure2Caption-00-000000"
+      },
+      "General_Caption2Figure": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/General_Caption2Figure.jsonl",
+        "first_qid": "scifibench-General_Caption2Figure-00-000000"
+      },
+      "General_Figure2Caption": {
+        "rows": 500,
+        "jsonl": "/out_samples/scifibench/General_Figure2Caption.jsonl",
+        "first_qid": "scifibench-General_Figure2Caption-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 2192,
+    "total_rows": 3000
+  }
+]

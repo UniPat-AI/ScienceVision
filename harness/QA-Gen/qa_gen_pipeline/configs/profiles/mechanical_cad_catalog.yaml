@@ -1,0 +1,42 @@
+schema_version: 1
+kind: qagen_run_profile
+id: mechanical_cad_catalog
+mode: catalog_only
+
+domains: [mechanical_cad]
+enabled_leaves: []
+blocked_leaves:
+  - mechanical_cad.assembly_interference_clearance
+  - mechanical_cad.assembly_bom_relation
+  - mechanical_cad.manufacturability_draft_undercut
+  - mechanical_cad.drawing_section_consistency
+  - mechanical_cad.drawing_feature_to_3d_region_mapping
+  - mechanical_cad.tool_accessibility
+  - mechanical_cad.gdt_validation
+  - mechanical_cad.motion_envelope
+  - mechanical_cad.pointcloud_assembly_qc
+
+inputs:
+  registry_mode: catalog_only
+  base: ../base.yaml
+  rubric: ../rubric.yaml
+  domain_configs: [../domains/mechanical_cad.yaml]
+  leaf_configs:
+    - ../subdomains/mechanical_cad/assembly_interference_clearance.yaml
+    - ../subdomains/mechanical_cad/assembly_bom_relation.yaml
+    - ../subdomains/mechanical_cad/manufacturability_draft_undercut.yaml
+    - ../subdomains/mechanical_cad/drawing_section_consistency.yaml
+    - ../subdomains/mechanical_cad/drawing_feature_to_3d_region_mapping.yaml
+    - ../subdomains/mechanical_cad/tool_accessibility.yaml
+    - ../subdomains/mechanical_cad/gdt_validation.yaml
+    - ../subdomains/mechanical_cad/motion_envelope.yaml
+    - ../subdomains/mechanical_cad/pointcloud_assembly_qc.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: true
+  production_eligible: false
+release:
+  enabled: false
+  reason: "Catalog-only profile: CAD has zero approved local knowledge snapshots and no complete verified generation chain."

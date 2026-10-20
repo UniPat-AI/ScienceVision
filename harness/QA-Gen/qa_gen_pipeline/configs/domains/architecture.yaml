@@ -1,0 +1,41 @@
+schema_version: 1
+kind: qagen_domain_config
+id: architecture
+domain_status: catalog_only
+catalog_leaves:
+  - architecture.concrete_void_localization
+  - architecture.bridge_damage_localization
+  - architecture.main_girder_deformation
+  - architecture.historic_facade_damage_repair
+  - architecture.historic_component_style_classification
+  - architecture.drawing_model_consistency
+  - architecture.utility_network_clash_detection
+  - architecture.cross_floor_alignment_validation
+  - architecture.stair_ramp_spatial_validity
+  - architecture.component_geometry_measurement
+  - architecture.section_elevation_reasoning
+
+policy:
+  allowed_viewer_operations:
+    - inspect
+    - isolate
+    - rotate
+    - section_cut
+    - overlay_compare
+    - measure_distance
+    - measure_area
+    - measure_volume
+  forbidden_capabilities:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+
+viewer_defaults:
+  required_capabilities:
+    - anonymous_scene
+    - controlled_session_request
+    - stated_scale_and_unit
+    - stated_coordinate_frame

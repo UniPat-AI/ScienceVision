@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<title>Point Cloud (LAS/Draco) viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #info { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; max-width: 360px; }
+  #info b { color: var(--domain-pcl); }
+  #controls { position: fixed; top: 60px; left: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #c9d1d9; }
+  #controls label { display: block; margin: 4px 0; }
+  #controls input[type=range] { width: 140px; vertical-align: middle; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Point Cloud</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">LAS 1.x / Draco · three.js Points</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="controls">
+  <label>point size <input id="psize" type="range" min="1" max="8" value="2" step="0.5"></label>
+  <label>color by
+    <select id="cmode">
+      <option value="rgb">RGB (if available)</option>
+      <option value="z">Z height (rainbow)</option>
+      <option value="intensity">Intensity (gray)</option>
+      <option value="classification">Classification (labels)</option>
+    </select>
+  </label>
+</div>
+<div id="legend" style="position:fixed;top:60px;right:12px;background:rgba(13,17,23,0.85);padding:8px 12px;border-radius:4px;border:1px solid #30363d;font:11px ui-monospace,monospace;color:#c9d1d9;display:none"></div>
+<div id="info">drag = rotate · scroll = zoom · <b id="stats">loading…</b></div>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { attachCutaway } from '/viewer/shared/cutaway.js';
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+scene.add(new THREE.GridHelper(2, 20, 0x30363d, 0x21262d));
+
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.001, 100000);
+camera.position.set(1.5, 1.2, 1.5);
+camera.up.set(0, 0, 1);  // LAS uses Z-up
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+const cutaway = attachCutaway({ THREE, renderer, scene });
+
+function fail(msg) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">' + msg + '</div>');
+}
+
+// Minimal LAS 1.0–1.3 reader. Supports PDR formats 0–3 (covers laspy/PDAL test fixtures).
+function parseLAS(buffer) {
+  const v = new DataView(buffer);
+  const magic = String.fromCharCode(v.getUint8(0), v.getUint8(1), v.getUint8(2), v.getUint8(3));
+  if (magic !== 'LASF') throw new Error('Not a LAS file (missing LASF magic)');
+  const verMajor = v.getUint8(24), verMinor = v.getUint8(25);
+  const headerSize = v.getUint16(94, true);
+  const pdrOffset = v.getUint32(96, true);
+  const pdrFormat = v.getUint8(104);
+  const pdrLength = v.getUint16(105, true);
+  const nPoints = v.getUint32(107, true);  // v1.0–v1.3
+  const sx = v.getFloat64(131, true), sy = v.getFloat64(139, true), sz = v.getFloat64(147, true);
+  const ox = v.getFloat64(155, true), oy = v.getFloat64(163, true), oz = v.getFloat64(171, true);
+  const xMax = v.getFloat64(179, true), xMin = v.getFloat64(187, true);
+  const yMax = v.getFloat64(195, true), yMin = v.getFloat64(203, true);
+  const zMax = v.getFloat64(211, true), zMin = v.getFloat64(219, true);
+
+  const hasRGB = (pdrFormat === 2 || pdrFormat === 3 || pdrFormat === 5);
+  // RGB offset in PDR: format 2 = 20, format 3 = 28 (after 8-byte GPS time), format 5 = 28
+  const rgbOff = pdrFormat === 2 ? 20 : 28;
+
+  // Center around mean to avoid float-precision issues with UTM coordinates.
+  const cx = (xMin + xMax) / 2, cy = (yMin + yMax) / 2, cz = (zMin + zMax) / 2;
+
+  const positions = new Float32Array(nPoints * 3);
+  const intensities = new Float32Array(nPoints);
+  const classification = new Uint8Array(nPoints);
+  // RGB stored as raw uint16 first; normalize after scan so we can detect
+  // writers (laspy/PDAL on 8-bit imagery) that stuff 0–255 values into the
+  // uint16 slot without ×256 expansion — dividing by 65535 would render black.
+  const rgbRaw = hasRGB ? new Uint16Array(nPoints * 3) : null;
+  let rgbMax = 0;
+
+  for (let i = 0; i < nPoints; i++) {
+    const off = pdrOffset + i * pdrLength;
+    const x = v.getInt32(off, true) * sx + ox;
+    const y = v.getInt32(off + 4, true) * sy + oy;
+    const z = v.getInt32(off + 8, true) * sz + oz;
+    positions[i * 3 + 0] = x - cx;
+    positions[i * 3 + 1] = y - cy;
+    positions[i * 3 + 2] = z - cz;
+    intensities[i] = v.getUint16(off + 12, true) / 65535;
+    classification[i] = v.getUint8(off + 15) & 0x1f;  // LAS fmt 0-5: class in low 5 bits
+    if (rgbRaw) {
+      const r = v.getUint16(off + rgbOff, true);
+      const g = v.getUint16(off + rgbOff + 2, true);
+      const b = v.getUint16(off + rgbOff + 4, true);
+      rgbRaw[i * 3] = r;
+      rgbRaw[i * 3 + 1] = g;
+      rgbRaw[i * 3 + 2] = b;
+      if (r > rgbMax) rgbMax = r;
+      if (g > rgbMax) rgbMax = g;
+      if (b > rgbMax) rgbMax = b;
+    }
+  }
+
+  let colors = null;
+  let rgbDepth = 0;
+  // Some writers declare an RGB-bearing PDR format (2/3/5) but leave every
+  // channel zero — common for LiDAR scans where only classification carries
+  // meaning (all the bridge point clouds do this). Building an all-black color
+  // buffer would render the cloud invisible, so only treat RGB as usable when
+  // at least one channel is non-zero.
+  const usableRGB = !!rgbRaw && rgbMax > 0;
+  if (usableRGB) {
+    rgbDepth = rgbMax <= 255 ? 8 : 16;
+    const denom = rgbDepth === 8 ? 255 : 65535;
+    colors = new Float32Array(nPoints * 3);
+    for (let k = 0; k < colors.length; k++) colors[k] = rgbRaw[k] / denom;
+  }
+
+  return {
+    positions, intensities, colors, classification,
+    nPoints, pdrFormat, hasRGB, usableRGB, rgbDepth, rgbMax,
+    versionLabel: `LAS ${verMajor}.${verMinor}`,
+    extentLabel: `${(xMax - xMin).toFixed(1)} × ${(yMax - yMin).toFixed(1)} × ${(zMax - zMin).toFixed(1)} units`,
+    zRange: [zMin - cz, zMax - cz],
+  };
+}
+
+// Build classification-only data from a decoded Draco BufferGeometry. The
+// encoder (tools/las_to_draco.py) packs classification into color.R (0-31) and
+// centers positions by bbox midpoint exactly as parseLAS does, so we only need
+// to recover positions + class id and synthesize the remaining fields.
+function geomToParsed(geom) {
+  const pos = geom.attributes.position.array;          // Float32Array, already centered
+  const nPoints = pos.length / 3;
+  const positions = pos instanceof Float32Array ? pos : new Float32Array(pos);
+
+  const classification = new Uint8Array(nPoints);
+  const colAttr = geom.attributes.color;
+  if (colAttr) {
+    const col = colAttr.array;
+    // DRACOLoader may hand back color as raw 0-255 or normalized 0-1; detect
+    // and recover the integer class id either way.
+    let cmax = 0;
+    for (let i = 0; i < col.length; i++) if (col[i] > cmax) cmax = col[i];
+    const scale = cmax <= 1 ? 255 : 1;
+    for (let i = 0; i < nPoints; i++) {
+      classification[i] = Math.round(col[i * 3] * scale) & 0x1f;
+    }
+  }
+
+  // z-range for the Z-height color mode.
+  let zmin = Infinity, zmax = -Infinity;
+  for (let i = 0; i < nPoints; i++) {
+    const z = positions[i * 3 + 2];
+    if (z < zmin) zmin = z;
+    if (z > zmax) zmax = z;
+  }
+  // full extent label from the position bounds
+  let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+  for (let i = 0; i < nPoints; i++) {
+    const x = positions[i * 3], y = positions[i * 3 + 1];
+    if (x < xmin) xmin = x; if (x > xmax) xmax = x;
+    if (y < ymin) ymin = y; if (y > ymax) ymax = y;
+  }
+
+  return {
+    positions,
+    intensities: new Float32Array(nPoints),   // no intensity in .drc
+    colors: null,                              // no true RGB
+    classification,
+    nPoints,
+    pdrFormat: 'drc',
+    hasRGB: false, usableRGB: false, rgbDepth: 0, rgbMax: 0,
+    versionLabel: 'Draco',
+    extentLabel: `${(xmax - xmin).toFixed(1)} × ${(ymax - ymin).toFixed(1)} × ${(zmax - zmin).toFixed(1)} units`,
+    zRange: [zmin, zmax],
+  };
+}
+
+// Decode a .drc URL → the same `parsed` shape parseLAS produces.
+function loadDRC(url) {
+  const loader = new DRACOLoader();
+  loader.setDecoderPath('/viewer/shared/vendor/three/0.160.0/examples/jsm/libs/draco/gltf/');
+  loader.setDecoderConfig({ type: 'wasm' });
+  return new Promise((resolve, reject) => {
+    loader.load(url, (geom) => resolve(geomToParsed(geom)), undefined, reject);
+  });
+}
+
+function colorByZ(positions, zRange) {
+  const colors = new Float32Array(positions.length);
+  const [zmin, zmax] = zRange;
+  const denom = (zmax - zmin) || 1;
+  const c = new THREE.Color();
+  for (let i = 0; i < positions.length / 3; i++) {
+    const t = (positions[i * 3 + 2] - zmin) / denom;
+    c.setHSL((1 - t) * 0.66, 1.0, 0.5);  // blue (low) → red (high)
+    colors[i * 3] = c.r; colors[i * 3 + 1] = c.g; colors[i * 3 + 2] = c.b;
+  }
+  return colors;
+}
+
+function colorByIntensity(intensities) {
+  const colors = new Float32Array(intensities.length * 3);
+  for (let i = 0; i < intensities.length; i++) {
+    const t = intensities[i];
+    colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = t;
+  }
+  return colors;
+}
+
+// Colorblind-safe categorical palette (Okabe-Ito), indexed by class id.
+const CLASS_COLORS = [
+  [0.60, 0.60, 0.60],  // 0 gray
+  [0.00, 0.45, 0.70],  // 1 blue
+  [0.90, 0.62, 0.00],  // 2 orange
+  [0.00, 0.62, 0.45],  // 3 teal
+  [0.80, 0.47, 0.65],  // 4 pink
+  [0.94, 0.89, 0.26],  // 5 yellow
+  [0.84, 0.37, 0.00],  // 6 vermillion
+  [0.35, 0.35, 0.35],  // 7 dark gray
+];
+const classNames = (new URLSearchParams(location.search).get('classes') || '')
+  .split(',').map(s => s.trim()).filter(Boolean);
+
+function colorByClassification(classification) {
+  const colors = new Float32Array(classification.length * 3);
+  for (let i = 0; i < classification.length; i++) {
+    const c = CLASS_COLORS[classification[i] % CLASS_COLORS.length];
+    colors[i * 3] = c[0]; colors[i * 3 + 1] = c[1]; colors[i * 3 + 2] = c[2];
+  }
+  return colors;
+}
+
+function renderLegend(classification) {
+  const present = [...new Set(classification)].sort((a, b) => a - b);
+  const rows = present.map(id => {
+    const c = CLASS_COLORS[id % CLASS_COLORS.length];
+    const sw = `rgb(${(c[0]*255)|0},${(c[1]*255)|0},${(c[2]*255)|0})`;
+    const label = classNames[id] || `class ${id}`;
+    return `<div><span style="display:inline-block;width:10px;height:10px;background:${sw};margin-right:6px"></span>${label}</div>`;
+  }).join('');
+  const el = document.getElementById('legend');
+  el.innerHTML = rows;
+  el.style.display = 'block';
+}
+
+let points = null;
+let parsed = null;
+
+// Decide which color mode to show first. Priority:
+//   1. explicit ?mode= override (rgb|z|intensity|classification)
+//   2. classification — when ?classes= is supplied and the cloud actually
+//      carries more than one class id (the bridge LiDAR case)
+//   3. rgb — only when the file has usable (non-zero) RGB
+//   4. z height (rainbow) as the universal fallback
+function chooseInitialMode(p) {
+  const valid = ['rgb', 'z', 'intensity', 'classification'];
+  const requested = params.get('mode');
+  if (requested && valid.includes(requested)) {
+    if (requested === 'rgb' && !p.colors) return 'z';  // asked for RGB but none present
+    return requested;
+  }
+  const distinctClasses = new Set(p.classification).size;
+  if (classNames.length && distinctClasses > 1) return 'classification';
+  if (p.colors) return 'rgb';
+  return 'z';
+}
+
+function applyColorMode(mode) {
+  if (!parsed) return;
+  let colors;
+  if (mode === 'rgb' && parsed.colors) colors = parsed.colors;
+  else if (mode === 'intensity') colors = colorByIntensity(parsed.intensities);
+  else if (mode === 'classification') colors = colorByClassification(parsed.classification);
+  else colors = colorByZ(parsed.positions, parsed.zRange);
+  document.getElementById('legend').style.display = mode === 'classification' ? 'block' : 'none';
+  if (mode === 'classification') renderLegend(parsed.classification);
+  points.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  points.geometry.attributes.color.needsUpdate = true;
+}
+
+if (!file) {
+  fail('No ?file= query param.');
+} else {
+  const isDRC = /\.drc(\?|$)/i.test(file);
+  const parsePromise = isDRC
+    ? loadDRC(file)
+    : fetch(file)
+        .then(r => r.ok ? r.arrayBuffer() : Promise.reject('HTTP ' + r.status))
+        .then(buf => { window.__lasBytes = buf.byteLength; return parseLAS(buf); });
+
+  parsePromise
+    .then(p => {
+      parsed = p;
+      const geom = new THREE.BufferGeometry();
+      geom.setAttribute('position', new THREE.BufferAttribute(parsed.positions, 3));
+      geom.setAttribute('color', new THREE.BufferAttribute(new Float32Array(parsed.positions.length), 3));
+
+      const mat = new THREE.PointsMaterial({ size: 2.0, sizeAttenuation: false, vertexColors: true });
+      points = new THREE.Points(geom, mat);
+      points.name = 'pointcloud';
+      scene.add(points);
+      cutaway.setRoot(points);
+
+      const initialMode = chooseInitialMode(parsed);
+      document.getElementById('cmode').value = initialMode;
+      applyColorMode(initialMode);
+
+      geom.computeBoundingSphere();
+      const r = geom.boundingSphere.radius || 1;
+      camera.position.set(r * 1.2, -r * 1.2, r * 1.0);
+      camera.near = r / 1000; camera.far = r * 100; camera.updateProjectionMatrix();
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      const sizeTag = window.__lasBytes ? ` · ${(window.__lasBytes / 1024).toFixed(1)} KB` : '';
+      const rgbTag = parsed.usableRGB ? ` · RGB ${parsed.rgbDepth}-bit (max ${parsed.rgbMax})`
+        : (parsed.hasRGB ? ' · RGB empty (using labels)' : '');
+      document.getElementById('stats').textContent =
+        `${parsed.versionLabel} · ${parsed.nPoints.toLocaleString()} pts · ${parsed.extentLabel}${sizeTag}${rgbTag}`;
+    })
+    .catch(err => fail('Failed to load / parse:\n' + err));
+}
+
+document.getElementById('psize').addEventListener('input', e => {
+  if (points) points.material.size = Number(e.target.value);
+});
+document.getElementById('cmode').addEventListener('change', e => applyColorMode(e.target.value));
+
+window.addEventListener('resize', () => {
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+});
+
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

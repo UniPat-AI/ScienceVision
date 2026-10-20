@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Auto-regenerate docs/_index.json + docs/_search.json whenever a docs/*.md
+# file is staged. Keeps the indexes consistent with the docs tree without
+# requiring contributors to remember the build steps.
+#
+# Install once per clone:  scripts/install-hooks.sh
+# Bypass (discouraged):    git commit --no-verify
+set -e
+
+# Only act when the commit touches docs/**/*.md (added/copied/modified/renamed).
+staged_md=$(git diff --cached --name-only --diff-filter=ACMR -- 'docs/*.md' 'docs/**/*.md' 2>/dev/null || true)
+if [ -z "$staged_md" ]; then
+  exit 0
+fi
+
+REPO_ROOT=$(git rev-parse --show-toplevel)
+cd "$REPO_ROOT"
+
+echo "[pre-commit] docs/*.md staged → regenerating _index.json + _search.json…"
+python scripts/build_docs_index.py  >/dev/null
+python scripts/build_docs_search.py >/dev/null
+
+# If regeneration changed anything, stage the updated indexes so the commit
+# is self-consistent.
+if ! git diff --quiet -- docs/_index.json docs/_search.json; then
+  git add docs/_index.json docs/_search.json
+  echo "[pre-commit] _index.json / _search.json refreshed and staged."
+fi

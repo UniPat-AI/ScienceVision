@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>3D field — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<script src="/viewer/vendor/d3-array.v3.min.js"></script>
+<script src="/viewer/vendor/d3-geo.v3.min.js"></script>
+<style>
+  .info-pane { padding: 24px; max-width: 880px; margin: 0 auto; }
+  .info-pane h2 { font-size: 18px; margin: 0 0 12px; color: var(--domain-topo); }
+  .info-pane code { background: #161b22; padding: 2px 6px; border-radius: 3px; border: 1px solid #30363d; }
+  .info-pane ul { line-height: 1.7; }
+  .info-pane .file-link { display: inline-block; margin-top: 16px; margin-right: 8px; padding: 8px 16px; background: #1f6feb; color: white; border-radius: 4px; }
+  .info-pane .file-link:hover { background: #388bfd; text-decoration: none; }
+  .info-pane .file-link.secondary { background: #21262d; color: var(--fg); border: 1px solid var(--border); }
+  .recipe { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; margin: 16px 0; font-size: 12px; }
+  .recipe pre { margin: 0; white-space: pre-wrap; }
+  .schema-badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; vertical-align: middle; margin-left: 8px; }
+  .schema-mpb       { background: rgba(255,123,114,0.15); color: var(--domain-topo); border: 1px solid var(--domain-topo); }
+  .schema-unstruct  { background: rgba(165,214,255,0.12); color: var(--domain-sim); border: 1px solid var(--domain-sim); }
+  .schema-vtu       { background: rgba(165,214,255,0.12); color: var(--domain-sim); border: 1px solid var(--domain-sim); }
+  .schema-netcdf    { background: rgba(63,185,80,0.15); color: var(--domain-atmos, #3fb950); border: 1px solid var(--domain-atmos, #3fb950); }
+  .schema-unknown   { background: rgba(139,148,158,0.15); color: var(--fg-dim); border: 1px solid var(--fg-dim); }
+  .meta-grid { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; font-size: 12px; margin: 8px 0; }
+  .meta-grid dt { color: var(--fg-dim); }
+  .meta-grid dd { margin: 0; word-break: break-all; }
+  details { margin-top: 12px; }
+  details summary { cursor: pointer; color: var(--fg-dim); font-size: 12px; }
+  details[open] summary { color: var(--fg); }
+
+  /* NetCDF plot pane (Panoply-style 2D-slice-on-globe view). */
+  .nc-plot-pane { margin: 20px 0; padding: 16px; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; }
+  .nc-plot-pane[hidden] { display: none; }
+  .nc-plot-pane__title { margin: 0 0 12px; font-size: 13px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .nc-plot-pane__canvas-wrap { position: relative; display: flex; gap: 16px; align-items: flex-start; justify-content: center; }
+  .nc-plot-pane__canvas { background: #0a0e14; border-radius: 50%; }
+  .nc-plot-pane__colorbar { background: transparent; }
+  .nc-plot-pane__status { margin-top: 8px; font-size: 11px; color: var(--fg-dim); min-height: 14px; }
+
+  .nc-picker { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; margin-bottom: 14px; align-items: end; }
+  .nc-picker__label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.05em; }
+  .nc-picker__label--time { grid-column: 1 / -1; }
+  .nc-picker__label select,
+  .nc-picker__label input[type="range"] { background: #161b22; color: var(--fg); border: 1px solid #30363d; border-radius: 4px; padding: 5px 8px; font-size: 12px; font-family: inherit; }
+  .nc-picker__time { width: 100%; }
+  .nc-picker__time-label { font-size: 11px; color: var(--fg); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+  .nc-picker__var-meta { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 11px; color: var(--fg-dim); }
+  .nc-picker__long { color: var(--fg); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>3D field</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">HDF5 / VTU / NetCDF schema autodetect</div>
+</header>
+<main class="info-pane">
+  <h2 id="title">3D field viewer <span id="schema-badge" class="schema-badge schema-unknown">detecting…</span></h2>
+  <p id="msg" class="empty">loading…</p>
+
+  <div id="meta-block" style="display:none;">
+    <dl class="meta-grid" id="meta-grid"></dl>
+  </div>
+
+  <section id="nc-plot-pane" class="nc-plot-pane" hidden>
+    <div class="nc-plot-pane__title">Interactive slice (drag to rotate)</div>
+    <div id="nc-picker-host"></div>
+    <div class="nc-plot-pane__canvas-wrap">
+      <canvas id="nc-globe-canvas" class="nc-plot-pane__canvas" width="560" height="560" aria-label="Orthographic globe of the selected variable slice"></canvas>
+      <canvas id="nc-colorbar-canvas" class="nc-plot-pane__colorbar" width="80" height="280" aria-label="Colorbar"></canvas>
+    </div>
+    <div id="nc-plot-status" class="nc-plot-pane__status"></div>
+  </section>
+
+  <div id="recipe-block"></div>
+
+  <a id="dl" class="file-link" href="#" download style="display:none;">Download raw file</a>
+  <a id="src" class="file-link secondary" href="#" target="_blank" rel="noopener" style="display:none;">View source record</a>
+</main>
+<script>
+// ── Schema autodetection ─────────────────────────────────────────────────
+// Three known schemas:
+//   1. MPB/MEEP HDF5 — uniform-grid EM field with `data`/`data.r`/`data.i`
+//      datasets. Path lives under topological_photonics/.
+//   2. COMSOL-style unstructured HDF5 — non-uniform mesh + nodal scalars.
+//      Path lives under simulation/comsol/.
+//   3. VTK XML UnstructuredGrid (.vtu) — XML header is parseable in-browser.
+//      Surface PointData/CellData array names + point/cell counts.
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+const els = {
+  filename: document.getElementById('filename'),
+  title: document.getElementById('title'),
+  msg: document.getElementById('msg'),
+  badge: document.getElementById('schema-badge'),
+  metaBlock: document.getElementById('meta-block'),
+  metaGrid: document.getElementById('meta-grid'),
+  recipe: document.getElementById('recipe-block'),
+  dl: document.getElementById('dl'),
+  src: document.getElementById('src'),
+};
+
+if (!file) {
+  els.msg.textContent = '(no ?file= query param — this is the format-route landing page)';
+  els.badge.textContent = 'idle';
+} else {
+  const fname = file.split('/').pop();
+  const ext = fname.toLowerCase().split('.').pop();
+  els.filename.textContent = fname;
+  els.title.firstChild.textContent = fname + ' ';
+  els.dl.href = file;
+  els.dl.download = fname;
+  els.dl.style.display = 'inline-block';
+  detect(file, fname, ext);
+}
+
+function detect(filePath, fname, ext) {
+  // Heuristic 1: path-based (most reliable, no network).
+  let schema = 'unknown';
+  if (ext === 'vtu') schema = 'vtu';
+  else if (ext === 'h5' || ext === 'hdf5') {
+    if (filePath.includes('/topological_photonics/')) schema = 'mpb';
+    else if (filePath.includes('/simulation/comsol/')) schema = 'unstructured';
+    else schema = 'unknown-h5';
+  }
+  else if (ext === 'nc') {
+    schema = 'netcdf';
+  }
+  setBadge(schema);
+
+  // Heuristic 2: same-directory SOURCE.json carries license/origin/note.
+  loadSourceJson(filePath, fname);
+
+  // Heuristic 3 (VTU only): cheap browser-side XML header parse.
+  if (schema === 'vtu') parseVtuHeader(filePath);
+
+  // Heuristic 4 (netCDF): fetch the same-directory <file>.meta.json sidecar
+  // (produced at build time by tools/extract_nc_meta.py). The .nc itself
+  // is never fetched — sidecar carries dims / vars / attrs in <10 KB.
+  if (schema === 'netcdf') loadNcMeta(filePath);
+
+  renderRecipe(schema, fname);
+  els.msg.textContent = `Detected schema: ${schemaLabel(schema)}`;
+  els.msg.className = '';
+}
+
+function setBadge(schema) {
+  const map = {
+    mpb: ['schema-mpb', 'MPB / MEEP'],
+    unstructured: ['schema-unstruct', 'COMSOL Unstructured'],
+    vtu: ['schema-vtu', 'VTK XML (.vtu)'],
+    netcdf: ['schema-netcdf', 'NetCDF (.nc)'],
+    'unknown-h5': ['schema-unknown', 'HDF5 (unknown layout)'],
+    unknown: ['schema-unknown', 'unknown'],
+  };
+  const [cls, label] = map[schema] || map.unknown;
+  els.badge.className = 'schema-badge ' + cls;
+  els.badge.textContent = label;
+}
+function schemaLabel(s) { return els.badge.textContent; }
+
+function setMeta(rows) {
+  els.metaGrid.innerHTML = '';
+  for (const [k, v] of rows) {
+    const dt = document.createElement('dt'); dt.textContent = k;
+    const dd = document.createElement('dd'); dd.textContent = v;
+    els.metaGrid.appendChild(dt); els.metaGrid.appendChild(dd);
+  }
+  els.metaBlock.style.display = '';
+}
+
+async function loadSourceJson(filePath, fname) {
+  const dir = filePath.substring(0, filePath.lastIndexOf('/'));
+  const sourceUrl = `${dir}/SOURCE.json`;
+  try {
+    const r = await fetch(sourceUrl);
+    if (!r.ok) return;
+    const src = await r.json();
+    const fileMeta = (src.files || []).find(f => f.name === fname);
+    const rows = [];
+    if (src.source_url) rows.push(['origin', src.source_url]);
+    if (src.license)    rows.push(['license', `${src.license.id} (${src.license.url})`]);
+    if (src.physics_domain) rows.push(['physics', src.physics_domain]);
+    if (src.retrieved_at)   rows.push(['retrieved', src.retrieved_at]);
+    if (fileMeta?.note)     rows.push(['note', fileMeta.note]);
+    if (fileMeta?.sha1)     rows.push(['sha1', fileMeta.sha1]);
+    if (fileMeta?.bytes)    rows.push(['bytes', fileMeta.bytes.toLocaleString()]);
+    if (rows.length) setMeta(rows);
+    if (src.source_url) {
+      els.src.href = src.source_url;
+      els.src.style.display = 'inline-block';
+    }
+  } catch (e) {
+    /* SOURCE.json absent — fine, this isn't a hard requirement. */
+  }
+}
+
+async function parseVtuHeader(filePath) {
+  // VTU XML header (Piece + DataArray declarations) almost always fits in
+  // the first 64 KB. Try a Range request first; if the server ignores Range
+  // (Python http.server does), fall back to streaming and abort once we have
+  // enough text. Attribute order in DataArray varies (`type=…Name=…` vs
+  // `Name=…type=…`), so parse them order-independently.
+  try {
+    let text = '';
+    const ctrl = new AbortController();
+    const r = await fetch(filePath, { headers: { Range: 'bytes=0-65535' }, signal: ctrl.signal });
+    if (!r.ok && r.status !== 206) return;
+    if (r.body && r.body.getReader) {
+      const reader = r.body.getReader();
+      const decoder = new TextDecoder('utf-8', { fatal: false });
+      while (text.length < 65536) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        text += decoder.decode(value, { stream: true });
+      }
+      try { ctrl.abort(); } catch (_) { /* abort after partial read */ }
+    } else {
+      text = (await r.text()).slice(0, 65536);
+    }
+
+    const piece = text.match(/<Piece\s+[^>]*NumberOfPoints="(\d+)"[^>]*NumberOfCells="(\d+)"/)
+                || text.match(/<Piece\s+[^>]*NumberOfCells="(\d+)"[^>]*NumberOfPoints="(\d+)"/);
+    const points = piece ? piece[1] : null;
+    const cells  = piece ? piece[2] : null;
+
+    // Order-independent: capture each opening DataArray, then extract Name/type.
+    const arrays = [];
+    for (const m of text.matchAll(/<DataArray\b([^>]+)>/g)) {
+      const attrs = m[1];
+      const nameM = attrs.match(/\bName="([^"]+)"/);
+      const typeM = attrs.match(/\btype="([^"]+)"/i);
+      if (nameM) arrays.push(typeM ? `${nameM[1]} (${typeM[1]})` : nameM[1]);
+    }
+
+    const rows = [];
+    if (points) rows.push(['points', Number(points).toLocaleString()]);
+    if (cells)  rows.push(['cells', Number(cells).toLocaleString()]);
+    if (arrays.length) rows.push(['arrays', arrays.slice(0, 8).join(', ') + (arrays.length > 8 ? ` … (+${arrays.length - 8})` : '')]);
+
+    if (rows.length) {
+      const existing = els.metaGrid.innerHTML;
+      const frag = rows.map(([k, v]) => `<dt>${k}</dt><dd>${escapeHtml(v)}</dd>`).join('');
+      els.metaGrid.innerHTML = existing + frag;
+      els.metaBlock.style.display = '';
+    }
+  } catch (e) {
+    /* Non-fatal: header parse is best-effort. */
+  }
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadNcMeta(filePath) {
+  // Sidecar lives at <filePath>.meta.json — i.e. same name + .meta.json
+  // suffix. Produced offline by tools/extract_nc_meta.py and tracked.
+  const sidecarUrl = filePath + '.meta.json';
+  try {
+    const r = await fetch(sidecarUrl);
+    if (!r.ok) {
+      renderNcMetaError(sidecarUrl, r.status);
+      return;
+    }
+    const meta = await r.json();
+    renderNcMeta(meta);
+  } catch (e) {
+    renderNcMetaError(sidecarUrl, e?.message || 'fetch failed');
+  }
+}
+
+function renderNcMeta(meta) {
+  // file-level rows go into the existing meta-grid so they sit alongside
+  // SOURCE.json origin/license/etc. We deliberately skip bytes/sha1 here —
+  // loadSourceJson is authoritative for those — and only surface the
+  // netCDF-specific dimensions row plus the file_format hint.
+  const rows = [];
+  if (meta.file_format) rows.push(['format', meta.file_format]);
+
+  const dimRow = Object.entries(meta.dimensions || {})
+    .map(([k, v]) => `${k}=${v}`).join('  ');
+  if (dimRow) rows.push(['dimensions', dimRow]);
+
+  for (const [k, v] of rows) {
+    const dt = document.createElement('dt'); dt.textContent = k;
+    const dd = document.createElement('dd'); dd.textContent = v;
+    els.metaGrid.appendChild(dt); els.metaGrid.appendChild(dd);
+  }
+  els.metaBlock.style.display = '';
+
+  // Variables and global_attrs are bigger; render as collapsible blocks
+  // appended after the recipe block.
+  const host = document.createElement('div');
+  host.innerHTML = `
+    <details open style="margin-top: 16px;">
+      <summary>variables (${(meta.variables || []).length})</summary>
+      <div class="recipe"><pre><code>${escapeHtml(formatVariables(meta.variables || []))}</code></pre></div>
+    </details>
+    <details style="margin-top: 8px;">
+      <summary>global attributes</summary>
+      <div class="recipe"><pre><code>${escapeHtml(formatAttrs(meta.global_attrs || {}))}</code></pre></div>
+    </details>
+  `;
+  els.recipe.appendChild(host);
+}
+
+function formatVariables(vars) {
+  if (!vars.length) return '(no variables)';
+  return vars.map(v => {
+    const head = `${v.name}  ${v.dtype}  (${(v.dims || []).join(', ')})  shape=${JSON.stringify(v.shape || [])}`;
+    const meta = [
+      v.units ? `units=${v.units}` : null,
+      v.long_name ? `long_name=${v.long_name}` : null,
+    ].filter(Boolean).join('  ');
+    return meta ? `${head}\n    ${meta}` : head;
+  }).join('\n');
+}
+
+function formatAttrs(attrs) {
+  const keys = Object.keys(attrs);
+  if (!keys.length) return '(no global attributes)';
+  return keys.map(k => `${k} = ${attrs[k]}`).join('\n');
+}
+
+function renderNcMetaError(sidecarUrl, status) {
+  const div = document.createElement('div');
+  div.className = 'recipe';
+  div.innerHTML = `<pre><code>metadata sidecar missing or unreadable (status: ${escapeHtml(String(status))}).
+
+To regenerate:
+  python tools/extract_nc_meta.py ${escapeHtml(sidecarUrl.replace('.meta.json', ''))}</code></pre>`;
+  els.recipe.appendChild(div);
+}
+
+function renderRecipe(schema, fname) {
+  const recipes = {
+    mpb: `
+      <p>MPB / MEEP outputs uniform-grid EM fields under <code>data</code> /
+        <code>data.r</code> / <code>data.i</code>. The platform pipeline converts
+        these to <strong>NIfTI</strong> and reuses the
+        <a href="/viewer/niivue.html">niivue</a> volume-rendering pipeline.</p>
+      <div class="recipe"><pre><code>import h5py, numpy as np, nibabel as nib
+
+with h5py.File("${fname}", "r") as f:
+    if "data.i" in f:
+        data = np.asarray(f["data.r"])**2 + np.asarray(f["data.i"])**2  # |E|²
+    else:
+        data = np.asarray(f["data"])
+img = nib.Nifti1Image(data.astype(np.float32), affine=np.eye(4))
+nib.save(img, "field.nii.gz")</code></pre></div>`,
+
+    unstructured: `
+      <p>COMSOL-style unstructured HDF5 (e.g. cardiac PINN scar mesh): node
+        coordinates + connectivity + per-node scalars. Browser HDF5 inspection
+        is heavy (h5wasm ~700 KB); the platform path is desktop preprocessing
+        with <code>meshio</code> or <code>pyvista</code>, then rasterize-to-NIfTI
+        via <a href="/viewer/niivue.html">niivue</a>.</p>
+      <div class="recipe"><pre><code>import h5py, pyvista as pv
+
+# Inspect schema first
+with h5py.File("${fname}", "r") as f:
+    f.visit(print)        # list every dataset path
+    print(dict(f.attrs))  # top-level attributes
+
+# Or load via meshio if the file follows xdmf/hdf5 conventions:
+# import meshio; mesh = meshio.read("${fname}"); print(mesh)</code></pre></div>
+      <details><summary>Want in-browser rendering?</summary>
+        <ul>
+          <li>Option A — desktop ParaView / pyvista, export to <code>.vtu</code>,
+            re-host alongside this file.</li>
+          <li>Option B — <code>h5wasm</code> + custom three.js mesh shader (large
+            engineering scope).</li>
+        </ul>
+      </details>`,
+
+    vtu: `
+      <p>VTK XML UnstructuredGrid. Header parsed in-browser above; full mesh
+        rendering uses <a href="https://kitware.github.io/vtk-js/">vtk.js</a>
+        (~1 MB) or desktop <a href="https://www.paraview.org/">ParaView</a>.</p>
+      <div class="recipe"><pre><code>import pyvista as pv
+mesh = pv.read("${fname}")
+print(mesh)            # arrays, bounds, n_cells, n_points
+mesh.plot(scalars=mesh.point_data.keys()[0] if mesh.point_data else None)</code></pre></div>
+      <details><summary>Why no in-browser 3D yet?</summary>
+        <p>Adding vtk.js makes this viewer ~1 MB heavier and requires WebGL
+          shader work for arbitrary scalar coloring. The current platform
+          stance: surface enough metadata for the LLM agent to reason about
+          the field, and defer 3D rasterization to ParaView/Niivue. See
+          docs/CrawlDataAndViewer.md for the roadmap.</p>
+      </details>`,
+
+    netcdf: `
+      <p>NetCDF (Classic / 4) gridded field. The structure shown above was
+        extracted offline by <code>tools/extract_nc_meta.py</code>; the
+        289 MB+ binary itself is never fetched into the browser. Inspect or
+        slice the file locally with <code>xarray</code>:</p>
+      <div class="recipe"><pre><code>import xarray as xr
+
+ds = xr.open_dataset("${fname}", decode_times=False)
+print(ds)            # dims, vars, coords summary
+
+# Slice example: pick one variable, one time step, one level
+ds["temp"].isel(time=0, pfull=20)</code></pre></div>
+      <details><summary>Why <code>decode_times=False</code>?</summary>
+        <p>Some atmospheric GCMs (e.g. GFDL idealized C48) use
+          <code>days since 0000-00-00</code> with
+          <code>calendar=NO_CALENDAR</code>, which pandas / cftime refuse to
+          decode. <code>decode_times=False</code> leaves the time axis
+          numeric — safe for all NetCDF dialects we register here.</p>
+      </details>`,
+
+    'unknown-h5': `
+      <p>HDF5 file outside the registered schema directories. No automatic
+        dataset hint available. Inspect with <code>h5py</code>:</p>
+      <div class="recipe"><pre><code>import h5py
+with h5py.File("${fname}", "r") as f:
+    f.visit(print)</code></pre></div>`,
+
+    unknown: `<p class="empty">Unknown extension; download and inspect manually.</p>`,
+  };
+  els.recipe.innerHTML = recipes[schema] || recipes.unknown;
+}
+</script>
+
+<script type="module">
+// ── NetCDF plot pane wiring ─────────────────────────────────────────────
+// When the current file is a .nc AND a sibling <file>.slices/manifest.json
+// exists, instantiate the loader + globe + picker triplet. The .nc itself
+// is never fetched — all data flows through the pre-extracted .bin slices.
+import { NcSlicesLoader }   from '/viewer/js/nc/nc_slices_loader.js';
+import { NcGlobeRenderer }  from '/viewer/js/nc/nc_globe_renderer.js';
+import { NcPicker }         from '/viewer/js/nc/nc_picker.js';
+import { resolveColormap, drawColorbar } from '/viewer/js/nc/nc_color_scale.js';
+
+const params = new URLSearchParams(location.search);
+const ncFile = params.get('file');
+
+(async function initNcPlotPane() {
+  if (!ncFile) return;
+  if (!ncFile.toLowerCase().endsWith('.nc')) return;
+
+  const slicesDir = ncFile + '.slices';
+  const manifestUrl = `${slicesDir}/manifest.json`;
+
+  // Probe: only show the pane if the slices directory was actually built.
+  let probe;
+  try {
+    probe = await fetch(manifestUrl, { method: 'HEAD' });
+  } catch (e) {
+    return; // network failure → silently skip; metadata-only viewer still works.
+  }
+  if (!probe.ok) return;
+
+  const pane = document.getElementById('nc-plot-pane');
+  const pickerHost = document.getElementById('nc-picker-host');
+  const globeCanvas = document.getElementById('nc-globe-canvas');
+  const cbarCanvas = document.getElementById('nc-colorbar-canvas');
+  const status = document.getElementById('nc-plot-status');
+
+  pane.hidden = false;
+  status.textContent = 'loading manifest…';
+
+  const loader = new NcSlicesLoader(manifestUrl);
+  let manifest;
+  try {
+    manifest = await loader.loadManifest();
+  } catch (e) {
+    status.textContent = `manifest load failed: ${e.message}`;
+    return;
+  }
+
+  const renderer = new NcGlobeRenderer(globeCanvas, { size: 560 });
+  const cbarCtx = cbarCanvas.getContext('2d');
+
+  let inFlight = false;
+  let pendingRequest = null;
+
+  async function refresh(state) {
+    if (inFlight) { pendingRequest = state; return; }
+    inFlight = true;
+    try {
+      status.textContent = `loading ${state.varName}…`;
+      const v = loader.varSpec(state.varName);
+      const levelIdx = v?.kind === '3d' ? state.levelIndex : 0;
+      const ref = await loader.loadBin(state.varName, levelIdx);
+
+      const tIdx = Math.min(state.timeIndex, ref.shape[0] - 1);
+      const slab = loader.timeSliceView(ref.data, ref.shape, tIdx);
+
+      const lat = manifest.axes.lat.values;
+      const lon = manifest.axes.lon.values;
+      const scale = resolveColormap(ref.colormap);
+
+      renderer.setColormap(scale);
+      renderer.setData({ slab, lat, lon });
+      renderer.render();
+
+      // Colorbar
+      cbarCtx.clearRect(0, 0, cbarCanvas.width, cbarCanvas.height);
+      drawColorbar(cbarCtx, { x: 10, y: 14, w: 16, h: 250 }, scale, v?.units || '');
+
+      const lvlSuffix = (v?.kind === '3d' && ref.levelInfo)
+        ? ` @ ~${Math.round(ref.levelInfo.pfull_mb)} mb`
+        : '';
+      status.textContent = `${state.varName}${lvlSuffix}  t=${tIdx}  range=[${scale.vmin.toExponential(2)}, ${scale.vmax.toExponential(2)}]`;
+    } catch (e) {
+      status.textContent = `error: ${e.message}`;
+    } finally {
+      inFlight = false;
+      if (pendingRequest) {
+        const next = pendingRequest;
+        pendingRequest = null;
+        refresh(next);
+      }
+    }
+  }
+
+  const picker = new NcPicker(pickerHost, manifest, (state) => refresh(state));
+  await refresh(picker.getState());
+})();
+</script>
+</body>
+</html>

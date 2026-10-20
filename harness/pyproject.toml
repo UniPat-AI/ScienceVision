@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "babyvision-v2"
+version = "0.1.0a0"
+description = "BabyVision-v2: 3D-grounded visual reasoning benchmark and partner platform."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "UniPat AI" }]
+keywords = ["benchmark", "vlm", "3d-vision", "mcp", "agent", "scientific-ai"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "numpy>=1.26",
+    "pydantic>=2.5",
+]
+
+[project.optional-dependencies]
+partner = [
+    "requests>=2.31",
+    "tqdm>=4.66",
+]
+mcp = [
+    "mcp>=0.9",
+    "anthropic>=0.34",
+    "gemmi>=0.7,<0.8",
+]
+harbor = [
+    "harbor @ git+https://github.com/harbor-framework/harbor@v0.20.0",
+    "gemmi>=0.7,<0.8",
+]
+viewer = [
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
+]
+eval = [
+    "pillow>=10.0",
+    "scikit-image>=0.22",
+    "lpips>=0.1.4",
+]
+demo = [
+    "nibabel>=5.0",
+    "numpy>=1.26",
+]
+dev = [
+    "pytest>=7.4",
+    "pytest-cov>=4.1",
+    "ruff>=0.4",
+    "jsonschema>=4.20",
+]
+
+[project.urls]
+Homepage = "https://github.com/UniPat-AI/BabyVision-v2"
+Issues = "https://github.com/UniPat-AI/BabyVision-v2/issues"
+Source = "https://github.com/UniPat-AI/BabyVision-v2"
+
+[project.scripts]
+babyvision = "babyvision_v2.cli:main"
+# Both the private HTTP worker and compatibility diagnostics invoke this entry
+# point.  Declare it in the distribution instead of relying on a developer's
+# stale editable-install wrapper.
+sciencevision-mcp = "sci3d_agent.mcp.server:main"
+
+[tool.setuptools]
+packages = ["sci3d_agent", "sci3d_bench", "harbor_adapters"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"

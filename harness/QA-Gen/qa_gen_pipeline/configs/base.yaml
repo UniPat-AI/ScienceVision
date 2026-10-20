@@ -1,0 +1,36 @@
+schema_version: 1
+kind: qagen_base_config
+
+# This is a policy baseline, not a release authorization.
+policy:
+  allowed_truth_modes:
+    - visual_annotation
+    - expert_visual_judgment
+    - viewer_native_measurement
+  solver_forbidden_capabilities:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+  author_compute_exception:
+    enabled: false
+    required_receipt: AuthorTruthReceipt
+
+quality:
+  require_reference_answer: true
+  require_reasoning: true
+  require_field_rubric: true
+  require_independent_viewer_evidence: true
+
+budget:
+  max_candidates_per_leaf: 1
+  max_revisions: 1
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  never_release_fixture_inputs: true
+  require_explicit_profile_opt_in: true
+  local_only: true
+  production_eligible: false

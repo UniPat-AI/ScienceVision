@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.cross_floor_alignment_validation
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [architecture.floor_alignment_check]
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.registered_floor_models, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [cross_floor_registration_comparison]
+seed:
+  query: {domain: architecture, subdomain: cross_floor_alignment_validation, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, registered_floor_models, stated_coordinate_frame]
+viewer:
+  required_operations: [inspect, rotate, overlay_compare, measure_distance]
+answer:
+  allowed_truth_modes: [expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, registration_evidence, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: RKB7d0K0nomU6sxGbfWcvAjBn0f, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: registered floor models and approved knowledge are missing."}

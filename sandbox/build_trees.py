@@ -18,9 +18,9 @@ import sys
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-_REPO_ROOT = Path(__file__).resolve().parents[1]
-if str(_REPO_ROOT) not in sys.path:
-    sys.path.insert(0, str(_REPO_ROOT))
+_HARNESS_ROOT = Path(__file__).resolve().parents[1] / "harness"
+if str(_HARNESS_ROOT) not in sys.path:
+    sys.path.insert(0, str(_HARNESS_ROOT))
 
 from scripts.harbor.build_harbor_tasks import build_one  # noqa: E402
 from scripts.harbor.qa_gen_to_tasks import qa_record_to_task  # noqa: E402

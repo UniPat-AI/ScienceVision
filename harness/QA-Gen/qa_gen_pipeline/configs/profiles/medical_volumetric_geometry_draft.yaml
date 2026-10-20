@@ -1,0 +1,34 @@
+schema_version: 1
+kind: qagen_run_profile
+id: medical_volumetric_geometry_draft
+mode: catalog_only
+
+domains:
+  - medical
+enabled_leaves: []
+blocked_leaves:
+  - medical.volumetric_target_geometry
+
+inputs:
+  registry_mode: catalog_only
+  base: ../base.yaml
+  rubric: ../rubric.yaml
+  domain_configs:
+    - ../domains/medical.yaml
+  leaf_configs:
+    - ../subdomains/medical/volumetric_target_geometry.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: true
+  production_eligible: false
+
+release:
+  enabled: false
+  blocked_reasons:
+    - seed_repair_and_expert_review_missing
+    - expert_knowledge_approval_missing
+    - viewer_capability_evidence_missing
+    - selection_mapping_approval_missing
+    - medical_production_approval_missing

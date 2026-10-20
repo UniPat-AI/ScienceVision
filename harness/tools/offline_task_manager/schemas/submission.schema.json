@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_submission.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "submission_id", "package_id", "package_manifest_sha256", "batch_id", "expert_id", "results", "payload_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.expert_submission.v1"},
+    "contract_version": {"const": "sciencevision.offline_exchange.v1"},
+    "submission_id": {"type": "string", "pattern": "^sub_[0-9a-f]{24}$"},
+    "package_id": {"type": "string", "pattern": "^pkg_[0-9a-f]{24}$"},
+    "package_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "results": {"type": "array", "items": {"$ref": "#/$defs/result"}},
+    "payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "package_id", "batch_id", "expert_id", "assignment_id", "task_id", "task_revision_sha256", "attempt", "task_validation", "answer", "reasoning", "trajectory", "evidence", "saved_at"],
+      "properties": {
+        "schema_version": {"const": "sciencevision.expert_result.v1"},
+        "package_id": {"type": "string", "pattern": "^pkg_[0-9a-f]{24}$"},
+        "batch_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+        "expert_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+        "assignment_id": {"type": "string", "pattern": "^asgn_[0-9a-f]{24}$"},
+        "task_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+        "task_revision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "attempt": {"type": "integer", "minimum": 1},
+        "task_validation": {"type": "object", "additionalProperties": false, "required": ["status", "feedback"], "properties": {"status": {"enum": ["valid", "invalid", "uncertain"]}, "feedback": {"type": "string"}}},
+        "answer": {"type": "string"},
+        "reasoning": {"type": "string"},
+        "trajectory": {"oneOf": [
+          {"const": {"schema_version": "sciencevision.trajectory_ref.v1", "status": "not_collected", "reason": "collector_not_implemented"}},
+          {"type": "object", "additionalProperties": false, "required": ["schema_version", "status", "steps"], "properties": {
+            "schema_version": {"const": "sciencevision.trajectory.v1"},
+            "status": {"enum": ["collected", "empty"]},
+            "steps": {"type": "array", "maxItems": 200, "items": {"type": "object", "additionalProperties": false, "required": ["index", "at", "action", "note"], "properties": {
+              "index": {"type": "integer", "minimum": 1},
+              "at": {"type": "string", "minLength": 1, "maxLength": 128},
+              "action": {"type": "string", "minLength": 1, "maxLength": 64},
+              "note": {"type": "string", "minLength": 1, "maxLength": 500}
+            }}}
+          }}
+        ]},
+        "evidence": {"type": "array"},
+        "saved_at": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    }
+  }
+}

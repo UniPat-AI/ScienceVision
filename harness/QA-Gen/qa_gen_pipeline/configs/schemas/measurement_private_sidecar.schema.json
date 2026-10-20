@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/measurement_private_sidecar.schema.json",
+  "description": "Private 0600 measurement result. It must never be copied into a public receipt or solver artifact.",
+  "type": "object",
+  "required": [
+    "sidecar_version",
+    "measurement_request_digest",
+    "viewer_receipt_digest",
+    "evidence_digest",
+    "operation_args",
+    "measurement_result",
+    "measurement_tolerance",
+    "viewer_session_digest",
+    "executor_identity",
+    "truth"
+  ],
+  "properties": {
+    "sidecar_version": {"const": 2},
+    "measurement_request_digest": {"$ref": "#/definitions/digest"},
+    "viewer_receipt_digest": {"$ref": "#/definitions/digest"},
+    "evidence_digest": {"$ref": "#/definitions/digest"},
+    "operation_args": {"type": "object", "minProperties": 1},
+    "measurement_result": {
+      "type": "object",
+      "required": ["value", "unit"],
+      "properties": {
+        "value": {"type": "number"},
+        "unit": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "measurement_tolerance": {
+      "type": "object",
+      "required": ["absolute", "unit"],
+      "properties": {
+        "absolute": {"type": "number", "exclusiveMinimum": 0},
+        "unit": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "viewer_session_digest": {"$ref": "#/definitions/digest"},
+    "executor_identity": {
+      "type": "object",
+      "required": ["host_id", "implementation", "runtime_identity_digest"],
+      "properties": {
+        "host_id": {"type": "string", "minLength": 1},
+        "implementation": {"type": "string", "minLength": 1},
+        "runtime_identity_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "truth": {"type": "object", "minProperties": 1}
+  },
+  "additionalProperties": false,
+  "definitions": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

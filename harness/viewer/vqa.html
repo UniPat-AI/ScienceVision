@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VQA Datasets · Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+/* ── vqa- prefixed styles, scoped to this page (per spec invariant 5) ── */
+.vqa-controls {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  padding: 12px 16px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 6px;
+  margin-bottom: 20px;
+}
+.vqa-controls label {
+  color: var(--fg-dim); font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.vqa-controls select {
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 10px; font: inherit; min-width: 140px;
+}
+.vqa-controls .vqa-spacer { flex: 1; }
+.vqa-controls .vqa-meta {
+  color: var(--fg-dim); font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.vqa-controls button {
+  background: var(--bg); color: var(--fg); border: 1px solid var(--border);
+  border-radius: 4px; padding: 6px 12px; font: inherit; cursor: pointer;
+}
+.vqa-controls button:hover:not(:disabled) { border-color: var(--accent); }
+.vqa-controls button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.vqa-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+  margin-bottom: 16px; overflow: hidden;
+}
+.vqa-card__head {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  font-size: 12px; color: var(--fg-dim);
+}
+.vqa-card__head .vqa-bench {
+  color: var(--accent); font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.vqa-card__head .vqa-qid {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--fg);
+}
+.vqa-card__head .vqa-split {
+  margin-left: auto; padding: 2px 8px;
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 3px; font-size: 10px;
+}
+
+.vqa-card__body {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+}
+.vqa-card__left, .vqa-card__right {
+  padding: 14px 18px; min-width: 0;
+}
+.vqa-card__left { border-right: 1px solid var(--border); }
+
+.vqa-question {
+  margin: 0 0 14px; font-size: 14px; line-height: 1.5;
+}
+.vqa-question::before {
+  content: "Q "; color: var(--fg-dim); font-weight: 600;
+  margin-right: 4px;
+}
+
+.vqa-images {
+  display: grid; gap: 4px;
+}
+.vqa-images img {
+  width: 100%; height: auto; display: block;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+  cursor: pointer;
+}
+.vqa-images img:hover { border-color: var(--accent); }
+
+.vqa-answer-label {
+  color: var(--fg-dim); font-size: 11px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: 6px;
+}
+.vqa-answer-text {
+  font-size: 14px; line-height: 1.5; word-wrap: break-word;
+  margin: 0 0 14px;
+}
+
+/* MCQ option list */
+.vqa-options { list-style: none; padding: 0; margin: 0; }
+.vqa-options li {
+  padding: 6px 10px; margin-bottom: 4px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 3px;
+  font-size: 13px; line-height: 1.4;
+  display: flex; gap: 8px; align-items: baseline;
+}
+.vqa-options li.vqa-correct {
+  border-color: var(--domain-med); /* green */
+  background: rgba(86, 211, 100, 0.08);
+}
+.vqa-options li .vqa-letter {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--fg-dim); min-width: 1.2em;
+}
+.vqa-options li.vqa-correct .vqa-letter {
+  color: var(--domain-med); font-weight: 600;
+}
+.vqa-options li.vqa-correct .vqa-letter::before {
+  content: "★";
+  margin-right: 2px;
+}
+
+.vqa-source {
+  margin-top: 14px; padding-top: 10px;
+  border-top: 1px dashed var(--border);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; color: var(--fg-dim);
+}
+.vqa-source div { margin-bottom: 2px; }
+
+.vqa-assets {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  margin-top: 8px;
+}
+.vqa-asset-btn {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 4px;
+  background: rgba(86, 211, 100, 0.10);
+  border: 1px solid var(--domain-med);
+  color: var(--domain-med);
+  font-size: 12px; font-weight: 500;
+  text-decoration: none;
+  transition: background 0.1s, transform 0.1s;
+}
+.vqa-asset-btn:hover {
+  background: rgba(86, 211, 100, 0.20);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.vqa-empty {
+  text-align: center; padding: 60px 20px;
+  color: var(--fg-dim); font-style: italic;
+}
+
+@media (max-width: 800px) {
+  .vqa-card__body { grid-template-columns: 1fr; }
+  .vqa-card__left { border-right: none; border-bottom: 1px solid var(--border); }
+}
+</style>
+<script src="shared/manifest.js"></script>
+</head>
+<body>
+<header class="topbar">
+  <h1>
+    <a href="/viewer/index.html" class="back">←</a>
+    VQA Datasets
+  </h1>
+  <span class="meta" id="vqa-counts">loading…</span>
+</header>
+<main>
+  <div class="vqa-controls">
+    <label for="vqa-dataset">Dataset</label>
+    <select id="vqa-dataset"></select>
+
+    <label for="vqa-split">Split</label>
+    <select id="vqa-split"></select>
+
+    <span class="vqa-spacer"></span>
+
+    <button id="vqa-prev" type="button">‹ Prev</button>
+    <span class="vqa-meta" id="vqa-page-info">— / —</span>
+    <button id="vqa-next" type="button">Next ›</button>
+  </div>
+
+  <div id="vqa-list"></div>
+</main>
+
+<script>
+const PAGE_SIZE = 20;
+
+const state = {
+  manifest: null,
+  dataset: null,        // current dataset name
+  split: null,          // current split name
+  rows: [],             // current jsonl rows
+  page: 1,
+};
+
+// ─── URL helpers ───────────────────────────────────────────────────────
+function readURL() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    dataset: p.get('dataset'),
+    split: p.get('split'),
+    page: parseInt(p.get('page') || '1', 10) || 1,
+  };
+}
+function writeURL() {
+  const p = new URLSearchParams();
+  if (state.dataset) p.set('dataset', state.dataset);
+  if (state.split) p.set('split', state.split);
+  p.set('page', String(state.page));
+  const url = `${window.location.pathname}?${p.toString()}`;
+  window.history.replaceState(null, '', url);
+}
+
+// ─── Render helpers ────────────────────────────────────────────────────
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function datasetEntry(name) {
+  return state.manifest.datasets.find((d) => d.name === name) || null;
+}
+
+function renderDatasetSelect() {
+  const sel = document.getElementById('vqa-dataset');
+  sel.innerHTML = '';
+  for (const d of state.manifest.datasets) {
+    const opt = document.createElement('option');
+    opt.value = d.name;
+    opt.textContent = `${d.label} (${d.total_rows} rows)`;
+    sel.appendChild(opt);
+  }
+  sel.value = state.dataset;
+}
+
+function renderSplitSelect() {
+  const sel = document.getElementById('vqa-split');
+  sel.innerHTML = '';
+  const ds = datasetEntry(state.dataset);
+  if (!ds) return;
+  const splits = Object.keys(ds.splits);
+  for (const sp of splits) {
+    const opt = document.createElement('option');
+    opt.value = sp;
+    opt.textContent = `${sp} (${ds.splits[sp].rows})`;
+    sel.appendChild(opt);
+  }
+  sel.value = state.split;
+}
+
+function renderPageInfo() {
+  const total = state.rows.length;
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+  if (state.page < 1) state.page = 1;
+  if (state.page > totalPages) state.page = totalPages;
+  document.getElementById('vqa-page-info').textContent =
+    `${state.page} / ${totalPages} (${total} samples)`;
+  document.getElementById('vqa-prev').disabled = state.page <= 1;
+  document.getElementById('vqa-next').disabled = state.page >= totalPages;
+}
+
+function renderAnswerString(answer) {
+  return `<div class="vqa-answer-text">${esc(answer)}</div>`;
+}
+
+function renderAnswerMCQ(answer) {
+  const correct = answer.correct_answer || '';
+  const options = answer.options || [];
+  // Letter encoding: index 0 = A, 1 = B, ... — confirmed against CAD-VQA real data
+  const letters = options.map((_, i) => String.fromCharCode(65 + i));
+  let html = `<div class="vqa-answer-text"><strong>Correct:</strong> ${esc(correct)}</div>`;
+  html += '<ul class="vqa-options">';
+  for (let i = 0; i < options.length; i++) {
+    const letter = letters[i];
+    const isCorrect = letter === correct;
+    html += `<li class="${isCorrect ? 'vqa-correct' : ''}">`;
+    html += `<span class="vqa-letter">${esc(letter)}.</span>`;
+    html += `<span>${esc(options[i])}</span>`;
+    html += `</li>`;
+  }
+  html += '</ul>';
+  return html;
+}
+
+function renderImageGrid(images, extras) {
+  if (!images || images.length === 0) {
+    return '<div class="vqa-empty" style="padding:20px">(no images)</div>';
+  }
+  let cols = images.length === 1 ? 1 : 3;
+  // CAD-VQA carries tile_grid in extras; honor it for accurate layout
+  if (extras && Array.isArray(extras.tile_grid) && extras.tile_grid.length === 2) {
+    cols = extras.tile_grid[1]; // [rows, cols]
+  }
+  const style = `grid-template-columns: repeat(${cols}, 1fr);`;
+  let html = `<div class="vqa-images" style="${style}">`;
+  for (const p of images) {
+    html += `<img src="/${esc(p)}" loading="lazy" alt="">`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderAssetButtons(extras) {
+  const assets = extras && Array.isArray(extras.assets) ? extras.assets : [];
+  if (!assets.length) return '';
+  const ICONS = {
+    ct_volume: '🧬',
+    video: '🎥',
+    scene_reference: '🏙️',
+  };
+  const buttons = assets.map((a) => {
+    if (!a || !a.viewer_url) return '';
+    const icon = ICONS[a.kind] || '📂';
+    const label = (a.kind || 'asset').replace(/_/g, ' ');
+    return `<a class="vqa-asset-btn" href="${esc(a.viewer_url)}" target="_blank" rel="noopener">${icon} Open ${esc(label)} ↗</a>`;
+  }).filter(Boolean).join('');
+  return buttons ? `<div class="vqa-assets">${buttons}</div>` : '';
+}
+
+function renderRowCard(row, ds) {
+  const benchLabel = ds.label;
+  const qid = row.id || '';
+  const split = row.split || '';
+  const question = row.question || '';
+  const images = row.images || [];
+
+  let answerHTML;
+  if (ds.answer_kind === 'mcq' && typeof row.answer === 'object' && row.answer) {
+    answerHTML = renderAnswerMCQ(row.answer);
+  } else {
+    answerHTML = renderAnswerString(row.answer);
+  }
+
+  const source = row.source || {};
+  const sourceLines = [];
+  if (source.parquet) sourceLines.push(`parquet: ${esc(source.parquet)}`);
+  if (source.row !== undefined) sourceLines.push(`row: ${esc(source.row)}`);
+  if (source.shard !== undefined) sourceLines.push(`shard: ${esc(source.shard)}`);
+  if (source.upstream_path) sourceLines.push(`upstream: ${esc(source.upstream_path)}`);
+  if (source.tile_id) sourceLines.push(`tile_id: ${esc(source.tile_id)}`);
+  const sourceHTML = sourceLines.length
+    ? `<div class="vqa-source">${sourceLines.map((l) => `<div>${l}</div>`).join('')}</div>`
+    : '';
+
+  const card = document.createElement('div');
+  card.className = 'vqa-card';
+  card.innerHTML = `
+    <div class="vqa-card__head">
+      <span class="vqa-bench">${esc(benchLabel)}</span>
+      <span class="vqa-qid">${esc(qid)}</span>
+      <span class="vqa-split">${esc(split)}</span>
+    </div>
+    <div class="vqa-card__body">
+      <div class="vqa-card__left">
+        <p class="vqa-question">${esc(question)}</p>
+        ${renderImageGrid(images, row.extras)}
+        ${renderAssetButtons(row.extras)}
+      </div>
+      <div class="vqa-card__right">
+        <div class="vqa-answer-label">Answer</div>
+        ${answerHTML}
+        ${sourceHTML}
+      </div>
+    </div>
+  `;
+  return card;
+}
+
+function renderPage() {
+  const list = document.getElementById('vqa-list');
+  list.innerHTML = '';
+  const ds = datasetEntry(state.dataset);
+  if (!ds || state.rows.length === 0) {
+    list.innerHTML = '<div class="vqa-empty">No samples loaded.</div>';
+    return;
+  }
+  const start = (state.page - 1) * PAGE_SIZE;
+  const slice = state.rows.slice(start, start + PAGE_SIZE);
+  for (const row of slice) {
+    list.appendChild(renderRowCard(row, ds));
+  }
+  renderPageInfo();
+  writeURL();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ─── jsonl loader ──────────────────────────────────────────────────────
+async function loadSplit(datasetName, splitName) {
+  const ds = datasetEntry(datasetName);
+  if (!ds) throw new Error(`unknown dataset: ${datasetName}`);
+  const sp = ds.splits[splitName];
+  if (!sp) throw new Error(`unknown split: ${splitName} (have: ${Object.keys(ds.splits).join(',')})`);
+  const resp = await fetch(sp.jsonl);
+  if (!resp.ok) throw new Error(`fetch ${sp.jsonl}: HTTP ${resp.status}`);
+  const text = await resp.text();
+  const rows = [];
+  for (const line of text.split('\n')) {
+    if (!line.trim()) continue;
+    rows.push(JSON.parse(line));
+  }
+  return rows;
+}
+
+async function applyState() {
+  const ds = datasetEntry(state.dataset);
+  if (!ds) {
+    document.getElementById('vqa-list').innerHTML =
+      `<div class="vqa-empty">Dataset "${esc(state.dataset)}" not found.</div>`;
+    return;
+  }
+  const splitNames = Object.keys(ds.splits);
+  if (!splitNames.includes(state.split)) {
+    state.split = splitNames[0];
+  }
+  renderDatasetSelect();
+  renderSplitSelect();
+  document.getElementById('vqa-list').innerHTML =
+    '<div class="vqa-empty">Loading…</div>';
+  try {
+    state.rows = await loadSplit(state.dataset, state.split);
+  } catch (e) {
+    document.getElementById('vqa-list').innerHTML =
+      `<div class="error-box">Failed to load split: ${esc(e.message)}</div>`;
+    return;
+  }
+  renderPage();
+}
+
+// ─── Event wiring ──────────────────────────────────────────────────────
+function init(manifest) {
+  state.manifest = manifest;
+  document.getElementById('vqa-counts').textContent =
+    `${manifest.datasets.length} datasets · generated ${manifest.generated_at || '?'}`;
+
+  const url = readURL();
+  // Default to first dataset; default split is the first one in manifest order
+  state.dataset = url.dataset || manifest.datasets[0]?.name || null;
+  if (!state.dataset) {
+    document.getElementById('vqa-list').innerHTML =
+      '<div class="error-box">No datasets in viewer/datasets_assets.json</div>';
+    return;
+  }
+  const ds = datasetEntry(state.dataset);
+  state.split = url.split || (ds ? Object.keys(ds.splits)[0] : null);
+  state.page = url.page || 1;
+
+  document.getElementById('vqa-dataset').addEventListener('change', (e) => {
+    state.dataset = e.target.value;
+    state.page = 1;
+    const newDs = datasetEntry(state.dataset);
+    state.split = newDs ? Object.keys(newDs.splits)[0] : null;
+    applyState();
+  });
+  document.getElementById('vqa-split').addEventListener('change', (e) => {
+    state.split = e.target.value;
+    state.page = 1;
+    applyState();
+  });
+  document.getElementById('vqa-prev').addEventListener('click', () => {
+    state.page = Math.max(1, state.page - 1);
+    renderPage();
+  });
+  document.getElementById('vqa-next').addEventListener('click', () => {
+    state.page = state.page + 1;
+    renderPage();
+  });
+
+  applyState();
+}
+
+window.ManifestReady.then(() => {
+  function siblingDataUrl(filename) {
+    const base = window.Manifest.urls.data.assets_index;
+    return base.replace(/[^/]+$/, filename);
+  }
+
+  fetch(siblingDataUrl('datasets_assets.json'))
+    .then((r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      return r.json();
+    })
+    .then(init)
+    .catch((e) => {
+      document.querySelector('main').insertAdjacentHTML('beforeend',
+        `<div class="error-box">Failed to load datasets_assets.json: ${esc(e.message)}<br>` +
+        `Run <code>python3 tools/build_datasets_manifest.py</code> from project root.</div>`);
+    });
+});
+</script>
+</body>
+</html>

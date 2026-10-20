@@ -1,0 +1,59 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: chemistry.reactive_conformation
+domain: chemistry
+status: blocked
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: blocked
+  release: blocked
+blocked_reasons:
+  - visual_answerability_not_established
+  - catalog_prerequisites_incomplete
+required_inputs:
+  - id: policy.visual_answerability_protocol
+    state: missing
+  - id: seed.verified_positive
+    state: missing
+  - id: asset.anonymous_scene
+    state: missing
+  - id: viewer.leaf_capability_evidence
+    state: unverified
+  - id: knowledge.approved_snapshot
+    state: missing
+
+visual_skills:
+  - reactive_conformation_assessment
+seed:
+  query:
+    domain: chemistry
+    subdomain: reactive_conformation
+    required_status: verified
+asset:
+  required_conditions:
+    - anonymous_scene
+viewer:
+  required_operations:
+    - inspect
+    - rotate
+    - measure_dihedral
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+    - viewer_native_measurement
+evidence:
+  required:
+    - viewer_trace
+    - native_measurement_trace
+    - visual_answerability_evidence
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      section_id: doxcnjal0eX2710gBrtpPLx2DQd
+      coverage: source_only
+  locked_refs: []
+release:
+  eligible: false
+  reason: "A viewer-only protocol for product-relevant conformation is not established."

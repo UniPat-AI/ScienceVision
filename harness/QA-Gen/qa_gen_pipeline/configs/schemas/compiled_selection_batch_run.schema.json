@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/compiled_selection_batch_run.schema.json",
+  "description": "Persistent private state for a compiled selection batch. A dry-run may only record diagnostics; it cannot contain generated candidates.",
+  "type": "object",
+  "required": [
+    "plan",
+    "approval",
+    "budget",
+    "retry_policy",
+    "usage",
+    "jobs",
+    "diagnostics",
+    "resume_count"
+  ],
+  "properties": {
+    "plan": {"$ref": "#/definitions/artifact_ref"},
+    "approval": {"$ref": "#/definitions/artifact_ref"},
+    "executor_build": {
+      "type": "object",
+      "required": ["receipt"],
+      "properties": {
+        "receipt": {"$ref": "#/definitions/artifact_ref"}
+      },
+      "additionalProperties": false
+    },
+    "budget": {"type": "object"},
+    "retry_policy": {"type": "object"},
+    "usage": {
+      "type": "object",
+      "required": ["settled_tokens", "settled_cost_usd"],
+      "properties": {
+        "settled_tokens": {"type": "integer", "minimum": 0},
+        "settled_cost_usd": {"type": "number", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "jobs": {"type": "array", "minItems": 1},
+    "diagnostics": {"type": "array"},
+    "resume_count": {"type": "integer", "minimum": 0}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "artifact_ref": {
+      "type": "object",
+      "required": ["path", "content_digest"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

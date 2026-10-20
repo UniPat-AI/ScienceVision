@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/curated_semantic_gt_source.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "source_status", "annotation_count", "solver_projection", "gt_contract"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_curated_semantic_gt_source"},
+    "id": {"const": "m3d_refseg_doctor_annotation"},
+    "source_status": {"enum": ["missing", "pending_approval", "approved"]},
+    "annotation_count": {"type": "integer", "minimum": 1},
+    "solver_projection": {
+      "type": "object",
+      "required": ["primary_image", "excluded_artifacts"],
+      "properties": {
+        "primary_image": {"const": true},
+        "excluded_artifacts": {"const": ["segmentation", "mask", "overlay"]}
+      },
+      "additionalProperties": false
+    },
+    "gt_contract": {
+      "type": "object",
+      "required": ["source_type", "required_annotation_fields", "verbatim_provenance_required", "expert_approval_required"],
+      "properties": {
+        "source_type": {"const": "curated_source_label"},
+        "required_annotation_fields": {"const": ["finding", "location", "impression"]},
+        "verbatim_provenance_required": {"const": true},
+        "expert_approval_required": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "approved_snapshot": {
+      "description": "Private annotation text remains outside this declaration; this index binds each allowed private record by digest.",
+      "type": "object",
+      "required": ["source_digest", "expert_approval_digest", "annotations"],
+      "properties": {
+        "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "expert_approval_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "annotations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "annotation_id",
+              "annotation_digest",
+              "verbatim_provenance_digest",
+              "semantic_anchor_digest",
+              "anonymous_scene_ref",
+              "primary_asset_digest",
+              "selection_slot_digest",
+              "question_granularity"
+            ],
+            "properties": {
+              "annotation_id": {"type": "string", "minLength": 1},
+              "annotation_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "verbatim_provenance_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "semantic_anchor_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "anonymous_scene_ref": {"type": "string", "minLength": 1},
+              "primary_asset_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "selection_slot_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "question_granularity": {
+                "enum": ["body_region", "organ_system", "anatomy", "pathology", "imaging_feature"]
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {"source_status": {"const": "approved"}},
+        "required": ["source_status"]
+      },
+      "then": {"required": ["approved_snapshot"]},
+      "else": {"not": {"required": ["approved_snapshot"]}}
+    }
+  ]
+}

@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>ScienceVision 任务管理</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <span class="brand-mark" aria-hidden="true">SV</span>
+        <span><strong>ScienceVision</strong><small data-i18n="manager.brandTag">任务运营</small></span>
+      </div>
+
+      <nav class="side-nav" data-i18n-aria-label="manager.navLabel" aria-label="管理视图">
+        <span class="nav-label" data-i18n="manager.nav.workflow">工作流</span>
+        <button type="button" data-tab="setup" data-active="true">
+          <span class="nav-number">01</span>
+          <span class="nav-copy"><strong data-i18n="manager.nav.setup">准备</strong><small data-i18n="manager.nav.setupHint">人员与批次</small></span>
+          <span id="setup-nav-count" class="nav-badge">0</span>
+        </button>
+        <button type="button" data-tab="distribution" data-active="false">
+          <span class="nav-number">02</span>
+          <span class="nav-copy"><strong data-i18n="manager.nav.distribution">分发</strong><small data-i18n="manager.nav.distributionHint">分配与任务包</small></span>
+          <span id="distribution-nav-count" class="nav-badge">0</span>
+        </button>
+        <button type="button" data-tab="results" data-active="false">
+          <span class="nav-number">03</span>
+          <span class="nav-copy"><strong data-i18n="manager.nav.results">结果</strong><small data-i18n="manager.nav.resultsHint">入库与导出</small></span>
+          <span id="results-nav-count" class="nav-badge">0</span>
+        </button>
+      </nav>
+
+      <div class="service-status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span><strong data-i18n="manager.status.online">管理端在线</strong><small data-i18n="manager.status.onlineHint">已认证工作区</small></span>
+      </div>
+      <div class="side-user">
+        <span class="avatar" aria-hidden="true">A</span>
+        <span><strong id="admin-name" data-i18n="manager.adminDefault">管理员</strong><small data-i18n="manager.adminAccess">管理员权限</small></span>
+        <button id="logout" class="sign-out" type="button" data-i18n="manager.signOut" hidden>退出登录</button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <div class="page-heading">
+          <span data-i18n="manager.eyebrow">管理工作区</span>
+          <h1 id="view-title" data-i18n="manager.view.setup.title">准备</h1>
+          <p id="view-description" data-i18n="manager.view.setup.description">专家与来源批次</p>
+        </div>
+        <div class="header-actions">
+          <button id="refresh" type="button" data-i18n-title="manager.refreshTitle" title="刷新管理端状态"><span aria-hidden="true">&#8635;</span> <span data-i18n="manager.refresh">刷新</span></button>
+        </div>
+      </header>
+
+      <main>
+        <section class="summary" data-i18n-aria-label="manager.summaryLabel" aria-label="工作流概览">
+          <button type="button" data-summary-tab="setup" data-tone="teal">
+            <span data-i18n="manager.summary.experts">专家</span><strong id="expert-count">0</strong><small data-i18n="manager.summary.profiles">档案</small>
+          </button>
+          <button type="button" data-summary-tab="setup" data-tone="gold">
+            <span data-i18n="manager.summary.batches">批次</span><strong id="batch-count">0</strong><small data-i18n="manager.summary.sources">来源</small>
+          </button>
+          <button type="button" data-summary-tab="distribution" data-tone="orange">
+            <span data-i18n="manager.summary.tasks">任务</span><strong id="task-count">0</strong><small data-i18n="manager.summary.imported">已导入</small>
+          </button>
+          <button type="button" data-summary-tab="distribution" data-tone="teal">
+            <span data-i18n="manager.summary.assignments">分配</span><strong id="assignment-count">0</strong><small id="assignment-coverage">0% 覆盖</small>
+          </button>
+          <button type="button" data-summary-tab="distribution" data-tone="gold">
+            <span data-i18n="manager.summary.bundles">生效任务包</span><strong id="package-count">0</strong><small data-i18n="manager.summary.published">已发布</small>
+          </button>
+          <button type="button" data-summary-tab="results" data-tone="orange">
+            <span data-i18n="manager.summary.results">结果</span><strong id="result-count">0</strong><small data-i18n="manager.summary.accepted">已接收</small>
+          </button>
+        </section>
+
+        <aside class="activity-bar" data-i18n-aria-label="manager.activityLabel" aria-label="最新管理操作">
+          <span class="activity-label" data-i18n="manager.activity">操作记录</span>
+          <pre id="operation-log" role="status" aria-live="polite" data-i18n="manager.activityReady">就绪。</pre>
+        </aside>
+
+        <section class="view" data-view="setup">
+          <header class="view-header">
+            <div><span data-i18n="manager.setup.eyebrow">基础</span><h2 data-i18n="manager.setup.heading">专家与任务来源</h2></div>
+            <p data-i18n="manager.setup.note">名册与批次清单</p>
+          </header>
+
+          <details class="view-guide" open>
+            <summary data-i18n="manager.guide.summary">操作指南：这一页做什么</summary>
+            <p class="view-guide-flow" data-i18n="manager.guide.flow">整体流程：导入专家名册 → 导入任务批次 → 分配任务 → 发布 → 专家在自己的工作台看到被分配的题目 → 回收并导入结果。</p>
+            <ol class="view-guide-steps">
+              <li><strong data-i18n="manager.guide.setup.s1.title">01 导入专家</strong><span data-i18n="manager.guide.setup.s1.io">输入：专家名册 CSV（expert_id、姓名、领域）→ 产出：可接收任务分配的专家档案</span></li>
+              <li><strong data-i18n="manager.guide.setup.s2.title">02 导入任务批次</strong><span data-i18n="manager.guide.setup.s2.io">输入：批次 ID、标题、任务 JSONL、素材根目录、准入凭证 → 产出：已准入的批次与可分配的任务清单</span></li>
+              <li><strong data-i18n="manager.guide.setup.s3.title">03 邀请专家账号</strong><span data-i18n="manager.guide.setup.s3.io">输入：在下方专家表格点「邀请」→ 产出：一次性临时密码，专家首次登录必须自行更换</span></li>
+            </ol>
+            <p class="view-guide-next" data-i18n="manager.guide.setup.next">下一步：切到「分发」页，把批次里的任务分给专家。</p>
+          </details>
+
+          <section id="review-bundles-section" class="review-sources" hidden>
+            <header>
+              <div><span data-i18n="manager.reviewBundles.eyebrow">管理员审阅</span><h3 data-i18n="manager.reviewBundles.heading">审阅包</h3></div>
+              <p data-i18n="manager.reviewBundles.note">管理端数据库之外、已校验的本地来源</p>
+            </header>
+            <div id="review-bundles-list" class="review-bundle-list"></div>
+          </section>
+
+          <section id="accounts-section" class="data-panel accounts-panel" hidden>
+            <header class="panel-heading">
+              <div><h3 data-i18n="manager.accounts.heading">在线账号</h3><p data-i18n="manager.accounts.note">管理员与专家的登录账号</p></div>
+            </header>
+            <div class="table-scroll"><table><thead><tr><th data-i18n="manager.accounts.col.name">姓名</th><th data-i18n="manager.accounts.col.username">用户名</th><th data-i18n="manager.accounts.col.role">角色</th><th data-i18n="manager.accounts.col.expertId">专家 ID</th><th data-i18n="manager.accounts.col.access">账号操作</th></tr></thead><tbody id="accounts-table"></tbody></table></div>
+          </section>
+
+          <div class="tool-grid tool-grid-two">
+            <form id="experts-form" class="tool-panel">
+              <header class="tool-header"><span>01</span><div><h3 data-i18n="manager.expertImport.heading">导入专家</h3><p data-i18n="manager.expertImport.note">专家名册</p></div></header>
+              <div class="tool-body">
+                <label for="experts-file" data-i18n="manager.expertImport.fileLabel">专家 CSV 文件</label>
+                <input id="experts-file" type="file" accept=".csv,text/csv">
+                <label for="experts-csv" data-i18n="manager.expertImport.csvLabel">CSV 内容</label>
+                <textarea id="experts-csv" rows="8" spellcheck="false" placeholder="schema_version,expert_id,name,domains"></textarea>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.expertImport.submit">导入专家</button></footer>
+            </form>
+
+            <form id="batch-form" class="tool-panel">
+              <header class="tool-header"><span>02</span><div><h3 data-i18n="manager.batchImport.heading">导入任务批次</h3><p data-i18n="manager.batchImport.note">已校验的来源材料</p></div></header>
+              <div class="tool-body field-grid">
+                <label for="batch-id" data-i18n="manager.batchImport.batchId">批次 ID</label><input id="batch-id" required>
+                <label for="batch-title" data-i18n="manager.batchImport.title">标题</label><input id="batch-title">
+                <label for="tasks-jsonl" data-i18n="manager.batchImport.tasksJsonl">任务 JSONL 路径</label><input id="tasks-jsonl" required>
+                <label for="asset-root" data-i18n="manager.batchImport.assetRoot">资产根目录</label><input id="asset-root" required>
+                <label for="admission-receipt" data-i18n="manager.batchImport.receipt">QC 准入回执</label><input id="admission-receipt" required>
+                <label for="admission-purpose" data-i18n="manager.batchImport.purpose">准入用途</label>
+                <select id="admission-purpose" required><option value="expert_review_distribution" data-i18n="manager.batchImport.purposeReview">专家评审分发</option></select>
+                <label for="viewer-root" data-i18n="manager.batchImport.viewerRoot">查看器根目录</label><input id="viewer-root">
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.batchImport.submit">预检并导入</button></footer>
+            </form>
+          </div>
+
+          <section id="credential-result" class="credential-result" aria-live="polite" hidden>
+            <div>
+              <span class="credential-label" data-i18n="manager.credential.label">一次性专家凭据</span>
+              <strong id="credential-username"></strong>
+              <code id="credential-password"></code>
+              <p id="credential-warning" data-i18n="manager.credential.warning">请通过安全渠道转交该临时密码，它不会再次显示。</p>
+            </div>
+            <button id="credential-dismiss" type="button" data-i18n="manager.credential.dismiss">收起</button>
+          </section>
+          <p id="credential-status" class="account-status" role="alert" aria-live="polite"></p>
+
+          <div class="data-grid">
+            <section class="data-panel">
+              <header class="panel-heading"><div><h3 data-i18n="manager.expertsPanel.heading">专家</h3><p><span id="expert-table-count">0</span> <span data-i18n="manager.expertsPanel.countSuffix">份档案</span></p></div><input type="search" data-i18n-placeholder="manager.expertsPanel.filter" data-i18n-aria-label="manager.expertsPanel.filter" placeholder="筛选专家" aria-label="筛选专家" data-filter-target="experts-table"></header>
+              <div class="table-scroll"><table><thead><tr><th data-i18n="manager.expertsPanel.col.expertId">专家 ID</th><th data-i18n="manager.expertsPanel.col.name">姓名</th><th data-i18n="manager.expertsPanel.col.domains">领域</th><th data-i18n="manager.expertsPanel.col.account">账号</th><th data-i18n="manager.expertsPanel.col.action">操作</th><th data-i18n="manager.expertsPanel.col.updated">更新时间</th></tr></thead><tbody id="experts-table"></tbody></table></div>
+            </section>
+            <section class="data-panel">
+              <header class="panel-heading"><div><h3 data-i18n="manager.batchesPanel.heading">批次</h3><p><span id="batch-table-count">0</span> <span data-i18n="manager.batchesPanel.countSuffix">个来源</span></p></div><input type="search" data-i18n-placeholder="manager.batchesPanel.filter" data-i18n-aria-label="manager.batchesPanel.filter" placeholder="筛选批次" aria-label="筛选批次" data-filter-target="batches-table"></header>
+              <div class="table-scroll"><table><thead><tr><th data-i18n="manager.batchesPanel.col.batchId">批次 ID</th><th data-i18n="manager.batchesPanel.col.title">标题</th><th data-i18n="manager.batchesPanel.col.tasks">任务数</th><th data-i18n="manager.batchesPanel.col.assigned">已分配</th><th data-i18n="manager.batchesPanel.col.imported">导入时间</th></tr></thead><tbody id="batches-table"></tbody></table></div>
+            </section>
+          </div>
+        </section>
+
+        <section class="view" data-view="distribution" hidden>
+          <header class="view-header">
+            <div><span data-i18n="manager.distribution.eyebrow">运营</span><h2 data-i18n="manager.distribution.heading">分配与打包</h2></div>
+            <p data-i18n="manager.distribution.note">按领域均衡的任务分发</p>
+          </header>
+
+          <details class="view-guide" open>
+            <summary data-i18n="manager.guide.summary">操作指南：这一页做什么</summary>
+            <ol class="view-guide-steps">
+              <li><strong data-i18n="manager.guide.distribution.s1.title">01 自动均衡</strong><span data-i18n="manager.guide.distribution.s1.io">输入：选择一个批次 → 产出：按专家领域均衡生成的分配记录</span></li>
+              <li><strong data-i18n="manager.guide.distribution.s2.title">02 指定分配</strong><span data-i18n="manager.guide.distribution.s2.io">输入：一个未分配任务加一位专家 → 产出：一条精确指定的分配记录</span></li>
+              <li><strong data-i18n="manager.guide.distribution.s3.title">03 发布给全部专家</strong><span data-i18n="manager.guide.distribution.s3.io">输入：选择一个批次 → 产出：原子切换后的生效专家任务包；只有发布后，专家登录才看得到题目</span></li>
+              <li><strong data-i18n="manager.guide.distribution.s4.title">04 构建离线交付包</strong><span data-i18n="manager.guide.distribution.s4.io">输入：批次、专家、输出路径与打包模式 → 产出：磁盘上的离线任务包</span></li>
+              <li><strong data-i18n="manager.guide.distribution.s5.title">05 构建共享运行时</strong><span data-i18n="manager.guide.distribution.s5.io">输入：viewer 根目录与输出路径 → 产出：可被多个精简包复用的查看器运行时</span></li>
+              <li><strong data-i18n="manager.guide.distribution.s6.title">06 导入历史任务包</strong><span data-i18n="manager.guide.distribution.s6.io">输入：历史任务包根目录，以及是否激活、是否允许缺失校验和 → 产出：登记进管理端的历史任务包</span></li>
+            </ol>
+            <p class="view-guide-note" data-i18n="manager.guide.distribution.review">质检：下方「分配」表格中状态为 pending_review 的行会出现「通过 / 打回」按钮；打回必须填写原因，任务会退回该专家重做。用搜索框可按专家、状态、批次或领域筛选后抽检。</p>
+            <p class="view-guide-next" data-i18n="manager.guide.distribution.next">下一步：专家提交后，切到「结果」页导入并导出。</p>
+          </details>
+
+          <div class="tool-grid tool-grid-three">
+            <form id="auto-form" class="tool-panel compact">
+              <header class="tool-header"><span>01</span><div><h3 data-i18n="manager.auto.heading">自动均衡</h3><p data-i18n="manager.auto.note">按专家领域</p></div></header>
+              <div class="tool-body"><label for="auto-batch" data-i18n="manager.auto.batch">批次</label><select id="auto-batch" required></select></div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.auto.submit">分配未分配任务</button></footer>
+            </form>
+
+            <form id="explicit-form" class="tool-panel compact">
+              <header class="tool-header"><span>02</span><div><h3 data-i18n="manager.explicit.heading">指定分配</h3><p data-i18n="manager.explicit.note">单任务指派单专家</p></div></header>
+              <div class="tool-body">
+                <label for="explicit-task" data-i18n="manager.explicit.task">未分配任务</label><select id="explicit-task" required></select>
+                <label for="explicit-expert" data-i18n="manager.explicit.expert">专家</label><select id="explicit-expert" required></select>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.explicit.submit">分配任务</button></footer>
+            </form>
+
+            <form id="publish-form" class="tool-panel compact">
+              <header class="tool-header"><span>03</span><div><h3 data-i18n="manager.publish.heading">发布给全部专家</h3><p data-i18n="manager.publish.note">原子切换生效任务包</p></div></header>
+              <div class="tool-body">
+                <label for="publish-batch" data-i18n="manager.publish.batch">已完全分配的批次</label><select id="publish-batch" required></select>
+                <p id="publish-status" class="action-status" role="status" aria-live="polite" data-i18n="manager.publish.idle">尚未执行发布。</p>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.publish.submit">发布全部专家任务包</button></footer>
+            </form>
+
+            <form id="package-form" class="tool-panel compact">
+              <header class="tool-header"><span>04</span><div><h3 data-i18n="manager.package.heading">构建离线交付包</h3><p data-i18n="manager.package.note">精简包或独立包</p></div></header>
+              <div class="tool-body">
+                <label for="package-batch" data-i18n="manager.package.batch">批次</label><select id="package-batch" required></select>
+                <label for="package-expert" data-i18n="manager.package.expert">专家</label><select id="package-expert" required></select>
+                <label for="package-mode" data-i18n="manager.package.mode">交付模式</label>
+                <select id="package-mode"><option value="thin" data-i18n="manager.package.modeThin">精简包</option><option value="standalone" data-i18n="manager.package.modeStandalone">独立包</option></select>
+                <label for="package-output" data-i18n="manager.package.output">新建输出目录</label><input id="package-output" required>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.package.submit">构建离线交付包</button></footer>
+            </form>
+
+            <form id="runtime-form" class="tool-panel compact">
+              <header class="tool-header"><span>05</span><div><h3 data-i18n="manager.runtime.heading">构建共享运行时</h3><p data-i18n="manager.runtime.note">安装一次，供精简包复用</p></div></header>
+              <div class="tool-body">
+                <label for="runtime-viewer-root" data-i18n="manager.runtime.viewerRoot">查看器源目录</label><input id="runtime-viewer-root" required>
+                <label for="runtime-output" data-i18n="manager.runtime.output">新建运行时目录</label><input id="runtime-output" required>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.runtime.submit">构建共享运行时</button></footer>
+            </form>
+
+            <form id="legacy-form" class="tool-panel compact">
+              <header class="tool-header"><span>06</span><div><h3 data-i18n="manager.legacy.heading">导入历史任务包</h3><p data-i18n="manager.legacy.note">显式声明的预准入适配</p></div></header>
+              <div class="tool-body">
+                <label for="legacy-package-root" data-i18n="manager.legacy.root">已有 v1 任务包目录</label><input id="legacy-package-root" required>
+                <label class="check-row" for="legacy-activate"><input id="legacy-activate" type="checkbox" checked> <span data-i18n="manager.legacy.activate">设为该专家的生效任务包</span></label>
+                <label class="check-row" for="legacy-missing-checksums"><input id="legacy-missing-checksums" type="checkbox"> <span data-i18n="manager.legacy.missingChecksums">已审计但缺少 SHA256SUMS 的历史任务包</span></label>
+              </div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.legacy.submit">导入历史任务包</button></footer>
+            </form>
+          </div>
+
+          <section class="data-panel full-width">
+            <header class="panel-heading"><div><h3 data-i18n="manager.assignmentsPanel.heading">分配</h3><p><span id="assignment-table-count">0</span> <span data-i18n="manager.assignmentsPanel.countSuffix">条任务归属</span></p></div><input type="search" data-i18n-placeholder="manager.assignmentsPanel.filter" data-i18n-aria-label="manager.assignmentsPanel.filter" placeholder="筛选分配" aria-label="筛选分配" data-filter-target="assignments-table"></header>
+            <div class="panel-filters">
+              <span class="filter-field"><label for="assignment-filter-batch" data-i18n="manager.assignmentsPanel.filterBatch">批次</label><select id="assignment-filter-batch"></select></span><span class="filter-field"><label for="assignment-filter-expert" data-i18n="manager.assignmentsPanel.filterExpert">专家</label><select id="assignment-filter-expert"></select></span><span class="filter-field"><label for="assignment-filter-status" data-i18n="manager.assignmentsPanel.filterStatus">状态</label><select id="assignment-filter-status"></select></span><span class="filter-field"><label for="assignment-filter-domain" data-i18n="manager.assignmentsPanel.filterDomain">领域</label><select id="assignment-filter-domain"></select></span>
+              <span class="filter-sample"><span class="filter-field"><label for="assignment-sample-size" data-i18n="manager.assignmentsPanel.sampleSize">抽检数量</label><input id="assignment-sample-size" type="number" min="1" step="1" value="5"></span><button type="button" id="assignment-sample" data-i18n="manager.assignmentsPanel.sample">抽检</button><button type="button" id="assignment-sample-clear" data-i18n="manager.assignmentsPanel.sampleClear">取消抽检</button></span>
+            </div>
+            <p class="panel-hint" id="assignment-sample-status" hidden></p>
+            <div class="table-scroll"><table><thead><tr><th data-i18n="manager.assignmentsPanel.col.batch">批次</th><th data-i18n="manager.assignmentsPanel.col.task">任务</th><th data-i18n="manager.assignmentsPanel.col.domain">领域</th><th data-i18n="manager.assignmentsPanel.col.expert">专家</th><th data-i18n="manager.assignmentsPanel.col.status">状态</th><th data-i18n="manager.assignmentsPanel.col.assignmentId">分配 ID</th><th data-i18n="manager.assignmentsPanel.col.review">质检</th></tr></thead><tbody id="assignments-table"></tbody></table></div>
+          </section>
+          <section class="data-panel full-width">
+            <header class="panel-heading"><div><h3 data-i18n="manager.activeBundlesPanel.heading">生效专家任务包</h3><p><span id="active-bundle-table-count">0</span> <span data-i18n="manager.activeBundlesPanel.countSuffix">位专家可开始评审</span></p></div><input type="search" data-i18n-placeholder="manager.activeBundlesPanel.filter" data-i18n-aria-label="manager.activeBundlesPanel.filter" placeholder="筛选生效任务包" aria-label="筛选生效任务包" data-filter-target="active-bundles-table"></header>
+            <div class="table-scroll"><table><thead><tr><th data-i18n="manager.activeBundlesPanel.col.expert">专家</th><th data-i18n="manager.activeBundlesPanel.col.batch">批次</th><th data-i18n="manager.activeBundlesPanel.col.bundle">任务包</th><th data-i18n="manager.activeBundlesPanel.col.tasks">任务数</th><th data-i18n="manager.activeBundlesPanel.col.admission">准入</th><th data-i18n="manager.activeBundlesPanel.col.activated">生效时间</th></tr></thead><tbody id="active-bundles-table"></tbody></table></div>
+          </section>
+          <section class="data-panel full-width">
+            <header class="panel-heading"><div><h3 data-i18n="manager.packagesPanel.heading">独立包历史</h3><p><span id="package-table-count">0</span> <span data-i18n="manager.packagesPanel.countSuffix">个已登记的 v1 任务包</span></p></div><input type="search" data-i18n-placeholder="manager.packagesPanel.filter" data-i18n-aria-label="manager.packagesPanel.filter" placeholder="筛选任务包" aria-label="筛选任务包" data-filter-target="packages-table"></header>
+            <div class="table-scroll"><table><thead><tr><th data-i18n="manager.packagesPanel.col.batch">批次</th><th data-i18n="manager.packagesPanel.col.expert">专家</th><th data-i18n="manager.packagesPanel.col.assignments">分配数</th><th data-i18n="manager.packagesPanel.col.packageId">任务包 ID</th><th data-i18n="manager.packagesPanel.col.created">创建时间</th></tr></thead><tbody id="packages-table"></tbody></table></div>
+          </section>
+        </section>
+
+        <section class="view" data-view="results" hidden>
+          <header class="view-header">
+            <div><span data-i18n="manager.results.eyebrow">收尾</span><h2 data-i18n="manager.results.heading">结果入库与导出</h2></div>
+            <p data-i18n="manager.results.note">已校验的专家提交</p>
+          </header>
+
+          <details class="view-guide" open>
+            <summary data-i18n="manager.guide.summary">操作指南：这一页做什么</summary>
+            <ol class="view-guide-steps">
+              <li><strong data-i18n="manager.guide.results.s1.title">01 导入结果</strong><span data-i18n="manager.guide.results.s1.io">输入：专家导出的提交 JSON 文件 → 产出：经校验后入库的结果记录</span></li>
+              <li><strong data-i18n="manager.guide.results.s2.title">02 导出结果</strong><span data-i18n="manager.guide.results.s2.io">输入：选择 JSON 或 CSV → 产出：包含全部已接收结果的汇总文件</span></li>
+            </ol>
+            <p class="view-guide-next" data-i18n="manager.guide.results.next">下一步：在下方「已导入结果」表格里核对；需要返工的任务回到「分发」页打回。</p>
+          </details>
+
+          <div class="tool-grid tool-grid-two">
+            <form id="results-form" class="tool-panel compact">
+              <header class="tool-header"><span>01</span><div><h3 data-i18n="manager.resultsImport.heading">导入结果</h3><p data-i18n="manager.resultsImport.note">专家提交的 JSON</p></div></header>
+              <div class="tool-body"><label for="results-file" data-i18n="manager.resultsImport.fileLabel">提交 JSON</label><input id="results-file" type="file" accept=".json,application/json" required></div>
+              <footer class="tool-actions"><button type="submit" data-i18n="manager.resultsImport.submit">校验并导入</button></footer>
+            </form>
+            <section class="tool-panel compact export-panel">
+              <header class="tool-header"><span>02</span><div><h3 data-i18n="manager.resultsExport.heading">导出结果</h3><p data-i18n="manager.resultsExport.note">汇总输出</p></div></header>
+              <div class="export-actions">
+                <a href="/api/results/export?format=json" download><span aria-hidden="true">&#8595;</span> JSON</a>
+                <a href="/api/results/export?format=csv" download><span aria-hidden="true">&#8595;</span> CSV</a>
+              </div>
+            </section>
+          </div>
+
+          <section class="data-panel full-width">
+            <header class="panel-heading"><div><h3 data-i18n="manager.resultsPanel.heading">已导入结果</h3><p><span id="result-table-count">0</span> <span data-i18n="manager.resultsPanel.countSuffix">条已接收记录</span></p></div><input type="search" data-i18n-placeholder="manager.resultsPanel.filter" data-i18n-aria-label="manager.resultsPanel.filter" placeholder="筛选结果" aria-label="筛选结果" data-filter-target="results-table"></header>
+            <div class="table-scroll"><table><thead><tr><th data-i18n="manager.resultsPanel.col.task">任务</th><th data-i18n="manager.resultsPanel.col.expert">专家</th><th data-i18n="manager.resultsPanel.col.validation">校验</th><th data-i18n="manager.resultsPanel.col.feedback">反馈</th><th data-i18n="manager.resultsPanel.col.answer">答案</th><th data-i18n="manager.resultsPanel.col.reasoning">推理</th><th data-i18n="manager.resultsPanel.col.trajectory">操作轨迹</th></tr></thead><tbody id="results-table"></tbody></table></div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="password-reset-confirm-dialog" class="password-dialog" aria-labelledby="password-reset-confirm-title">
+    <form id="password-reset-confirm-form" method="dialog">
+      <header class="password-dialog-header">
+        <span data-i18n="manager.reset.eyebrow">账号访问</span>
+        <h2 id="password-reset-confirm-title" data-i18n="manager.reset.confirmHeading">重新签发临时密码</h2>
+      </header>
+      <div class="password-dialog-body">
+        <p class="password-dialog-target" id="password-reset-target"></p>
+        <p id="password-reset-mode-help" class="password-dialog-note" data-i18n="manager.reset.note">密码由服务端生成、只显示一次，专家首次登录时必须自行更换；该专家现有会话会被吊销。</p>
+        <p id="password-reset-error" class="password-dialog-error" role="alert" hidden></p>
+      </div>
+      <footer class="password-dialog-actions">
+        <button id="password-reset-cancel" type="button" data-i18n="manager.reset.cancel">取消</button>
+        <button id="password-reset-confirm" type="submit" data-i18n="manager.reset.confirm">重新签发密码</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="password-reset-secret-dialog" class="password-dialog" aria-labelledby="password-reset-secret-title">
+    <form method="dialog">
+      <header class="password-dialog-header">
+        <span data-i18n="manager.reset.eyebrow">账号访问</span>
+        <h2 id="password-reset-secret-title" data-i18n="manager.reset.secretHeading">新密码</h2>
+      </header>
+      <div class="password-dialog-body">
+        <p class="password-dialog-target" id="password-reset-account"></p>
+        <label for="password-reset-value" data-i18n="manager.reset.passwordLabel">密码</label>
+        <div class="password-output">
+          <input id="password-reset-value" type="password" readonly autocomplete="off" spellcheck="false">
+          <button id="password-reset-reveal" type="button" aria-pressed="false" data-i18n="manager.reset.reveal">显示</button>
+        </div>
+        <p id="password-reset-durability-warning" class="password-durability-warning" role="status" aria-live="polite" hidden></p>
+        <p class="password-dialog-note" data-i18n="manager.reset.clearOnClose">关闭该弹窗会从本工作区清除该密码。</p>
+        <p id="password-reset-copy-status" class="password-copy-status" role="status" aria-live="polite"></p>
+      </div>
+      <footer class="password-dialog-actions">
+        <button id="password-reset-copy" type="button" data-i18n="manager.reset.copy">复制</button>
+        <button type="submit" data-i18n="manager.reset.close">关闭</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script src="/i18n.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mol* viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<link rel="stylesheet" href="/viewer/shared/molstar-measurements.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<script src="/viewer/shared/screenshot-api.js"></script>
+<script src="/viewer/shared/viewer-mcp-api.js"></script>
+<script src="/viewer/shared/molstar-mcp-adapter.js"></script>
+<script src="/viewer/shared/molstar-measurements.js"></script>
+<link rel="stylesheet" href="/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.css">
+<link rel="preload" as="script" href="/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.js">
+<style>
+  #viewer { width: 100vw; height: calc(100vh - 49px); position: fixed; top: 49px; left: 0; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Mol*</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">PDB / mmCIF / SDF / MOL2</div>
+</header>
+<div id="viewer"></div>
+<script src="/viewer/shared/vendor/molstar/4.5.0/build/viewer/molstar.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  const format = params.get('type') || 'mmcif';   // mmcif | pdb | sdf | mol2
+  const root = document.getElementById('viewer');
+  const screenshotProvider = window.__ScienceVisionScreenshotProvider;
+  const mcpProvider = window.__ScienceVisionViewerMCPProvider;
+  let measurementController = null;
+
+  // A screenshot alone does not say what the expert was looking at, so the
+  // camera travels with it. Every field of Mol*'s snapshot is optional, and a
+  // missing camera degrades to null rather than failing the capture.
+  function describeMolstarView(viewer) {
+    const state = viewer?.plugin?.canvas3d?.camera?.state;
+    if (!state) return null;
+    const round = (value, digits) =>
+      Number.isFinite(Number(value)) ? Number(Number(value).toFixed(digits)) : null;
+    const point = value => {
+      if (!value || value.length < 3) return null;
+      const x = round(value[0], 3);
+      const y = round(value[1], 3);
+      const z = round(value[2], 3);
+      return x === null || y === null || z === null ? null : { x, y, z };
+    };
+    const view = {
+      viewer: 'molstar',
+      mode: typeof state.mode === 'string' ? state.mode : null,
+      fov_degrees: Number.isFinite(Number(state.fov))
+        ? round(Number(state.fov) * 180 / Math.PI, 2)
+        : null,
+      position: point(state.position),
+      target: point(state.target),
+      up: point(state.up),
+      radius: round(state.radius, 3),
+    };
+    const measurementState = measurementController?.getState?.();
+    if (measurementState) {
+      view.measurement_mode = measurementState.mode;
+      view.pending_measurement_points = measurementState.pending_points;
+      view.measurements = measurementState.measurements;
+      view.coordinate_reference = {
+        frame: measurementState.coordinate_reference,
+        unit: measurementState.coordinate_unit,
+        axes: ['X', 'Y', 'Z'],
+      };
+    }
+    return view;
+  }
+
+  async function captureFullMolstarViewport(helper) {
+    const previousCropParams = { ...helper.cropParams };
+    const previousRelativeCrop = { ...helper.relativeCrop };
+    try {
+      helper.behaviors.cropParams.next({ ...previousCropParams, auto: false });
+      helper.behaviors.relativeCrop.next({ x: 0, y: 0, width: 1, height: 1 });
+      return await helper.getImageDataUri();
+    } finally {
+      helper.behaviors.relativeCrop.next(previousRelativeCrop);
+      helper.behaviors.cropParams.next(previousCropParams);
+    }
+  }
+
+  function captureCanvas(canvas) {
+    if (!canvas || !canvas.width || !canvas.height) {
+      throw new Error('Mol* render canvas is unavailable.');
+    }
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error('Mol* could not encode its render canvas.'));
+      }, 'image/png');
+    });
+  }
+
+  document.getElementById('filename').textContent = file ? file.split('/').pop() + '  ·  fmt=' + format : '(no file)';
+  if (!file) {
+    root.innerHTML = '<div class="error-box">No ?file= query param.</div>';
+    const error = new Error('No structure file was provided.');
+    screenshotProvider.fail(error);
+    mcpProvider.fail(error);
+  } else {
+    // Map our format aliases to Mol*'s loader format identifiers.
+    const FORMAT_ALIAS = {
+      mmcif: 'mmcif',
+      cif:   'mmcif',
+      pdb:   'pdb',
+      bcif:  'mmbcif',
+      sdf:   'sdf',
+      mol:   'mol',
+      mol2:  'mol2',
+      xyz:   'xyz',
+    };
+    const molFormat = FORMAT_ALIAS[format] || format;
+
+    const viewerPromise = window.molstar?.Viewer
+      ? molstar.Viewer.create('viewer', {
+      layoutIsExpanded: false,
+      layoutShowControls: true,
+      layoutShowSequence: params.get('embed') !== 'expert',
+      collapseLeftPanel: params.get('embed') === 'expert',
+      collapseRightPanel: params.get('embed') === 'expert',
+      layoutShowLog: false,
+      viewportShowExpand: true,
+      viewportShowSelectionMode: true,
+      pdbProvider: 'rcsb',
+    }) : Promise.reject(new Error('Mol* failed to load.'));
+    viewerPromise.then(async viewer => {
+      // A `.cif` may be macromolecular mmCIF (RCSB — Cartesian coords, dotted
+      // `_atom_site.` categories) or small-molecule / crystallographic core CIF
+      // (COD — fractional coords, underscore `_atom_site_fract_*`). Both reach
+      // us as type=cif → mmcif, but Mol*'s mmcif parser renders an empty scene
+      // for core CIF. Sniff the file so COD-style structures use `cifCore`.
+      if (molFormat === 'mmcif') {
+        const text = await fetch(file).then(r => r.text());
+        const isCore = !/_atom_site\.(Cartn_x|group_PDB|label_atom_id)/.test(text)
+                       && /_atom_site_fract_[xyz]/.test(text);
+        if (isCore) {
+          await viewer.loadStructureFromData(text, 'cifCore');
+        } else {
+          await viewer.loadStructureFromUrl(file, molFormat);
+        }
+      } else {
+        await viewer.loadStructureFromUrl(file, molFormat);
+      }
+
+      try {
+        measurementController = window.ScienceVisionInstallMolstarMeasurements(viewer);
+        window.__svMolstarMeasurements = measurementController;
+      } catch (error) {
+        console.error('[molstar-measurements]', error);
+        viewer.plugin?.log?.error?.(`Measurement tools unavailable: ${error?.message || error}`);
+      }
+
+      // The solver-facing MCP bridge receives no source URL, filename, asset
+      // ID, or format. Those remain trusted-host loader metadata.
+      mcpProvider.ready(window.__ScienceVisionCreateMolstarMCPProvider(viewer));
+
+      window.addEventListener('pagehide', () => {
+        measurementController?.destroy?.();
+        measurementController = null;
+      }, { once: true });
+
+      screenshotProvider.ready(async () => {
+        const helper = viewer.plugin.helpers?.viewportScreenshot;
+        if (helper?.getImageDataUri && helper.behaviors?.cropParams?.next
+            && helper.behaviors?.relativeCrop?.next) {
+          return captureFullMolstarViewport(helper);
+        }
+        return captureCanvas(root.querySelector('canvas'));
+      }, { describeView: () => describeMolstarView(viewer) });
+    })
+      .catch(err => {
+        screenshotProvider.fail(err);
+        mcpProvider.fail(err);
+        root.innerHTML =
+          '<div class="error-box">Failed to load (format=' + molFormat + '):\n' + err + '</div>';
+      });
+  }
+</script>
+</body>
+</html>

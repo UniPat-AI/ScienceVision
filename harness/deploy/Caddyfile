@@ -1,0 +1,80 @@
+# BabyVision-v2 viewer Caddy site config.
+# Source of truth: /home/matianyi/BabyVision-v2/deploy/Caddyfile
+# Installed copy:  /etc/caddy/Caddyfile (via deploy/install.sh)
+#
+# Document root is the *repo root*, not viewer/, because viewer pages fetch
+# sibling trees: /docs/*.md, /data/*.json, /crawl_data/<domain>/*.{glb,vtu,...}.
+#
+# URL model: viewer/ is served at the URL root (/), not at /viewer/. A bare
+# / serves viewer/index.html; any non-existent root path falls back to its
+# counterpart under viewer/ (so /assets.html resolves to viewer/assets.html,
+# /shared/style.css resolves to viewer/shared/style.css). Sibling trees like
+# /docs/ and /data/ continue to serve from the repo root because they exist
+# there directly and try_files probes the root path first. The legacy
+# /viewer/* URLs still work (those files exist at that path on disk), so
+# absolute href="/viewer/foo.html" links scattered across viewer pages are
+# not broken — they just don't show clean URLs in the address bar.
+#
+# To switch to HTTPS later, drop in Caddyfile.https.example, replace HOSTNAME,
+# and `./scripts/viewer reload`. Caddy auto-provisions a Let's Encrypt cert
+# and starts redirecting 80 -> 443.
+
+{
+	# Bind the admin API on loopback only (Caddy's default). The systemd
+	# unit's ExecReload talks to this endpoint to perform zero-downtime
+	# config swaps. Do NOT set `admin off` — that disables reload entirely
+	# and forces a full restart on every config change.
+	admin localhost:2019
+}
+
+:80 {
+	root * /home/matianyi/BabyVision-v2
+
+	# Hide secrets, VCS internals, and the deploy bundle (which includes
+	# the sudoers fragment). Respond 404 — not 403 — so we don't leak the
+	# existence of these paths. Covers any dotfile/dotdir at the root
+	# (.env, .env.production, .git/, .github/, .gitignore, IDE caches,
+	# .pytest_cache/, .venv/, .DS_Store, ...) and the deploy/ tree.
+	@hidden path_regexp ^/(\.|deploy($|/))
+
+	encode gzip zstd
+
+	# These handles are ordered and mutually exclusive. Keep the authenticated
+	# proxy branch ahead of the static fallback so try_files and public-cache
+	# policy never reach /sv-annotate.
+	@sv_annotate path /sv-annotate /sv-annotate/*
+	handle @hidden {
+		respond 404
+	}
+	handle @sv_annotate {
+		header Cache-Control "private, no-store"
+		reverse_proxy 127.0.0.1:4174
+	}
+	handle {
+		# Naked / -> viewer/index.html, served IN PLACE (URL bar stays /).
+		@bare path /
+		rewrite @bare /viewer/
+
+		# For any other path, try the root first (sibling trees like /docs/,
+		# /data/, /crawl_data/ live there), then fall back to /viewer/<path>
+		# so viewer pages' relative refs (shared/, assets.html, etc.) resolve.
+		try_files {path} /viewer{path}
+
+		# Serve precompressed sidecars (<file>.zst / <file>.gz) when present and the
+		# client accepts them. Large binary assets (e.g. the 102 MB bridge LiDAR
+		# .las clouds) compress ~5x but are skipped by `encode` (octet-stream isn't
+		# in its default type set); shipping precompressed variants avoids both the
+		# per-request CPU cost and the full-size transfer.
+		file_server {
+			precompressed zstd gzip
+		}
+	}
+
+	log {
+		output file /var/log/caddy/babyvision-viewer.log {
+			roll_size 50MiB
+			roll_keep 5
+		}
+		format console
+	}
+}

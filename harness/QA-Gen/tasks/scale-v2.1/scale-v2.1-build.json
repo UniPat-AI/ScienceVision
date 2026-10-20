@@ -1,0 +1,112 @@
+{
+  "build_id": "272ea6d0457e3b78b772edfa043a78f5f75eadbe15defb5e830faef745476d5f",
+  "counts": {
+    "asset_bytes": 5581980948,
+    "candidate": 823,
+    "candidate_by_domain": {
+      "biology": 113,
+      "chemistry": 105,
+      "medical": 605
+    },
+    "candidate_by_family": {
+      "bio_collision_geometry": 97,
+      "bio_multi_structure_compare": 16,
+      "chem_binding_atom_distance": 23,
+      "chem_conformation_explicit_dihedral": 82,
+      "med_ct_geometry": 345,
+      "med_mri_anatomy": 260
+    },
+    "ledger": 1567,
+    "oracle_receipts": 1333,
+    "output_tasks": 1333,
+    "quarantine": 510,
+    "quarantine_by_domain": {
+      "biology": 214,
+      "chemistry": 296,
+      "medical": 0
+    },
+    "quarantine_by_reason": {
+      "binding_entity_or_answer_selection_unconfirmed": 108,
+      "bond_order_uncomputable": 9,
+      "class_boundary_margin_below_10deg": 15,
+      "comparison_margin_below_0.5A": 49,
+      "missing_nonpolymer": 19,
+      "no_strict_rotatable_bond": 14,
+      "replacement_periodic_geometry_family_pending_render_receipt": 150,
+      "subjective_docking_ground_truth_unverified": 131,
+      "vdw_overlap_within_0.1A_of_threshold": 15
+    },
+    "source_tasks": 1567,
+    "unique_assets": 1307
+  },
+  "dataset": "scale-v2.1",
+  "generated_at": "2026-08-10T00:00:00Z",
+  "generation_command": "uv run --no-project --isolated --python 3.12 --with gemmi==0.7.5 --with nibabel==5.3.2 --with numpy==2.5.1 --with rdkit==2026.3.5 --with jsonschema python -m scripts.qa_gen_scale_v2_1 --asset-root $ASSET_ROOT",
+  "outputs": [
+    {
+      "byte_size": 1649,
+      "path": "README.md",
+      "sha256": "74fc56501c8d0e16f089af1f03e782e3c007509a057c1e8bd5708e98d173c02b"
+    },
+    {
+      "byte_size": 664408,
+      "path": "ScienceVision_scale-v2.1-biology_candidate_tasks.jsonl",
+      "sha256": "06452a73c78d57f20d9f998dd753df1571b3c03412bb8e7b7ed4a220256e5ce8"
+    },
+    {
+      "byte_size": 583092,
+      "path": "ScienceVision_scale-v2.1-chemistry_candidate_tasks.jsonl",
+      "sha256": "a73166e70631c24219b82cf3e2e65207efaffeef398d130f13bf4199b20f1e29"
+    },
+    {
+      "byte_size": 4564870,
+      "path": "ScienceVision_scale-v2.1-medical_candidate_tasks.jsonl",
+      "sha256": "7c12368e22e18297e63bad5e48737923f80653ce31dcba72beea4df8faf8c5bf"
+    },
+    {
+      "byte_size": 1153,
+      "path": "generic_deterministic_rubric.schema.json",
+      "sha256": "1c544fe5049c4fda43e343f538e0af79d06c6d107e224f693b89a73d7588c04e"
+    },
+    {
+      "byte_size": 1554089,
+      "path": "oracle_receipts.jsonl",
+      "sha256": "1941d42ee58d90099ede9a4760cc94d6634e6023241238463f61b7019c92f508"
+    },
+    {
+      "byte_size": 980843,
+      "path": "quarantine/ScienceVision_scale-v2.1-biology_quarantine_tasks.jsonl",
+      "sha256": "2718253018b71cf15792d8f15bc6cc59ed9df1ae106718ec791b964eeb71d3a1"
+    },
+    {
+      "byte_size": 1317414,
+      "path": "quarantine/ScienceVision_scale-v2.1-chemistry_quarantine_tasks.jsonl",
+      "sha256": "2f9b3eb69d2e746642b7730d6befbfa357894d8dbcbcf0a88b2890b05fbec9b6"
+    },
+    {
+      "byte_size": 0,
+      "path": "quarantine/ScienceVision_scale-v2.1-medical_quarantine_tasks.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "byte_size": 6898,
+      "path": "source-lock.json",
+      "sha256": "15b55a73284ca70f115745c18c40712294691362537c401772ea2679fdf66f44"
+    },
+    {
+      "byte_size": 1278171,
+      "path": "task_ledger.jsonl",
+      "sha256": "6c604d5d71eeaae83b2188db56509f640e6c3c7fddf27ab463effcb3fadf55c6"
+    }
+  ],
+  "promotion_gate": {
+    "asset_hash_closure": "passed",
+    "baseline_evaluation": "required",
+    "ledger_partition": "passed",
+    "post_build_static_qc": "required",
+    "task_schema": "passed"
+  },
+  "publication_status": "candidate_pending_post_build_qc_and_baselines",
+  "schema_version": "sciencevision.qa_gen.scale_v2_1.build.v1",
+  "source_lock_sha256": "15b55a73284ca70f115745c18c40712294691362537c401772ea2679fdf66f44"
+}

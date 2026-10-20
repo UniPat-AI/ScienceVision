@@ -1,0 +1,26 @@
+[
+  {
+    "name": "omnimedvqa",
+    "label": "OmniMedVQA",
+    "modality": "12 medical imaging modalities",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/foreverbeliever/OmniMedVQA",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "open": {
+        "rows": 88996,
+        "jsonl": "/out_samples/omnimedvqa/open.jsonl",
+        "first_qid": "omnimedvqa-open-000000"
+      },
+      "restricted": {
+        "rows": 38999,
+        "jsonl": "/out_samples/omnimedvqa/restricted.jsonl",
+        "first_qid": "omnimedvqa-restricted-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 81456,
+    "total_rows": 127995
+  }
+]

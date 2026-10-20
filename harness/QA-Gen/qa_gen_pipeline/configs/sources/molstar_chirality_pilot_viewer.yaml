@@ -1,0 +1,12 @@
+schema_version: 1
+kind: qagen_viewer_definition_source
+id: molstar-chirality-pilot-viewer
+
+fixture_path: ../fixtures/molstar-chirality-pilot-viewer-definition.fixture.json
+fixture_payload_digest: sha256:b487b742c6b7eb6444240c663e06ed9cb2a5ec6edb498343382f718139e91cb0
+local_only: true
+production_eligible: false
+
+reference_owners:
+  - repo_path: QA-Gen/qa_gen_pipeline/src/qagen/viewer/chirality_host.py
+    purpose: concrete_local_chirality_host_contract

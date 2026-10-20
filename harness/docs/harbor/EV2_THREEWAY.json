@@ -1,0 +1,361 @@
+{
+  "baselines": {
+    "cc": {
+      "label": "Claude Code (plain, raw 3D file, no MCP)",
+      "n": 15,
+      "reward": 0.5637,
+      "content": 0.62,
+      "process": 0.66
+    },
+    "cc2d": {
+      "label": "Claude Code + 2D multiview (pre-rendered PNGs only)",
+      "n": 15,
+      "reward": 0.2951,
+      "content": 0.25,
+      "process": 0.4027
+    },
+    "ccmcp": {
+      "label": "Claude Code + MCP (raw 3D file + sci3d 3D tools)",
+      "n": 15,
+      "reward": 0.5867,
+      "content": 0.7,
+      "process": 0.7347
+    }
+  },
+  "per_domain": {
+    "cc": {
+      "biology": 0.5907,
+      "chemistry": 0.6637,
+      "medical": 0.2608
+    },
+    "cc2d": {
+      "biology": 0.1444,
+      "chemistry": 0.2728,
+      "medical": 0.5557
+    },
+    "ccmcp": {
+      "biology": 0.4445,
+      "chemistry": 0.6904,
+      "medical": 0.5
+    }
+  },
+  "per_task": {
+    "sv-biol-docking-pose-plausibility-01": {
+      "cc": {
+        "reward": 0.847,
+        "content": 1.0,
+        "process": 0.94,
+        "rationale": "Agent correctly judges the pose plausible and cites the key spatially-grounded interactions—covalent Cys145 bond, His163/Glu166/Phe140 H-bonds to the catalytic S1 region, and proper pocket burial—matching the ground truth evidence."
+      },
+      "cc2d": {
+        "reward": 0.13,
+        "content": 0.0,
+        "process": 0.6,
+        "rationale": "The agent declined to evaluate, providing no verdict on plausibility nor the key interactions (H-bond to catalytic region, hydrophobic aryl burial), so it fails to match the ground truth."
+      },
+      "ccmcp": {
+        "reward": 0.71,
+        "content": 0.95,
+        "process": 0.9,
+        "rationale": "The agent correctly concludes the pose is plausible and cites the key spatially-grounded interactions (Cys145 covalent bond, oxyanion hole H-bond to Gly143, S1 pocket His163/Glu166 contacts, hydrophobic anchoring), matching the ground truth's H-bond-to-catalytic-region and hydrophobic burial evidence, with only minor speculative caveats."
+      }
+    },
+    "sv-biol-docking-pose-plausibility-02": {
+      "cc": {
+        "reward": 0.421,
+        "content": 0.4,
+        "process": 0.82,
+        "rationale": "The agent correctly reasoned that the native pose is most plausible and its geometric criteria are sound, but it failed to access the decoy files and never identified decoy_08 as the least plausible competing pose, missing half the required answer."
+      },
+      "cc2d": {
+        "reward": 0.13,
+        "content": 0.0,
+        "process": 0.6,
+        "rationale": "The agent claimed the data was inaccessible and provided no actual analysis, failing to identify native as most plausible or decoy_08 as least plausible."
+      },
+      "ccmcp": {
+        "reward": 0.036,
+        "content": 0.0,
+        "process": 0.72,
+        "rationale": "The agent failed to identify the native pose as most plausible or decoy_08 as least plausible, instead refusing to answer by claiming the pose data was inaccessible."
+      }
+    },
+    "sv-biol-molecular-collision-check-03": {
+      "cc": {
+        "reward": 0.847,
+        "content": 1.0,
+        "process": 0.94,
+        "rationale": "The agent correctly concludes no severe clash is present, matching the ground truth, with chemically plausible ligand (donepezil E20) and contact analysis."
+      },
+      "cc2d": {
+        "reward": 0.2,
+        "content": 0.1,
+        "process": 0.6,
+        "rationale": "The agent failed to inspect any structure and did not provide the answer, though it did not assert a false positive clash; ground truth is no clash present, so the agent's non-answer is largely incorrect but avoids fabricating a clash."
+      },
+      "ccmcp": {
+        "reward": 0.746,
+        "content": 1.0,
+        "process": 0.92,
+        "rationale": "Agent correctly concludes no severe clash is present, matching the ground truth (clash_present=false)."
+      }
+    },
+    "sv-biol-molecular-collision-check-04": {
+      "cc": {
+        "reward": 0.248,
+        "content": 0.15,
+        "process": 0.86,
+        "rationale": "Ground truth says no unsatisfied buried polar group exists (all satisfied by Asp113/Asn312/Ser203, false), but the agent concludes yes and names the ether oxygen O14 as unsatisfied—contradicting the ground truth, with only minor credit for correctly identifying the satisfied polar network."
+      },
+      "cc2d": {
+        "reward": 0.117,
+        "content": 0.0,
+        "process": 0.35,
+        "rationale": "The agent failed to analyze the structure and provided no answer, whereas the ground truth states no unsatisfied buried polar group is present."
+      },
+      "ccmcp": {
+        "reward": 0.286,
+        "content": 0.2,
+        "process": 0.92,
+        "rationale": "Ground truth says no unsatisfied buried polar group exists (all satisfied by Asp113/Asn312/Ser203), but the agent concludes O14 aryl-ether oxygen is uncompensated—directly contradicting the true answer, though it correctly identifies the key H-bond partners and hedges that the ether is only a weak acceptor."
+      }
+    },
+    "sv-chem-binding-pose-05": {
+      "cc": {
+        "reward": 0.848,
+        "content": 1.0,
+        "process": 0.97,
+        "rationale": "The agent correctly identifies the covalent bond between CYS145 SG and PJE C20, the covalent (thioether) interaction type, and the 1.79 Å bond length, all grounded in the struct_conn record."
+      },
+      "cc2d": {
+        "reward": 0.847,
+        "content": 1.0,
+        "process": 0.95,
+        "rationale": "The agent correctly identifies CYS145 SG bonded to PJE C20, covalent bond, 1.79 Å, matching all ground truth values from the LINK record."
+      },
+      "ccmcp": {
+        "reward": 0.848,
+        "content": 1.0,
+        "process": 0.97,
+        "rationale": "The agent correctly identified the covalent bond (CYS145_SG / PJE_C20, covalent thioether, 1.793 Å ≈ 1.79 Å) grounded in the struct_conn record, matching the ground truth precisely."
+      }
+    },
+    "sv-chem-chirality-07": {
+      "cc": {
+        "reward": 0.827,
+        "content": 1.0,
+        "process": 0.55,
+        "rationale": "The agent correctly identified the single chiral center at the propanoic-acid α-carbon (C2 equivalent) and derived R configuration directly from the 3D coordinates, matching ground truth."
+      },
+      "cc2d": {
+        "reward": 0.12,
+        "content": 0.0,
+        "process": 0.4,
+        "rationale": "The agent failed to analyze any structure and provided no chiral center or configuration, missing the correct answer (C2, R) entirely."
+      },
+      "ccmcp": {
+        "reward": 0.739,
+        "content": 1.0,
+        "process": 0.78,
+        "rationale": "The agent correctly identified a single stereocenter (the α-carbon, GT's C2) and assigned R configuration using a proper 3D triple-product analysis, matching the ground truth."
+      }
+    },
+    "sv-chem-chirality-08": {
+      "cc": {
+        "reward": 0.836,
+        "content": 1.0,
+        "process": 0.72,
+        "rationale": "The agent correctly identifies 3 stereocenters mapped to the penam C3/C5/C6 positions (matching ground truth), grounding the analysis in the .mol atom connectivity and correctly excluding the gem-dimethyl and carbonyl carbons."
+      },
+      "cc2d": {
+        "reward": 0.627,
+        "content": 0.75,
+        "process": 0.05,
+        "rationale": "The agent correctly identified 3 stereocenters at C3, C5, and C6 matching the ground truth, though it explicitly disclaimed not seeing the actual image and reasoned from the penam template rather than engaging the 3D structure."
+      },
+      "ccmcp": {
+        "reward": 0.626,
+        "content": 0.7,
+        "process": 0.72,
+        "rationale": "The agent correctly identifies 3 stereocenters at the ring-fusion C5 and β-lactam C6, and grounds its analysis in the 3D structure, but it mislabels the thiazolidine stereocenter as C2 (the gem-dimethyl-adjacent carbon bearing COOH) whereas the ground truth specifies C3, and it explicitly and incorrectly dismisses C3 as non-stereogenic."
+      }
+    },
+    "sv-chem-conformation-01": {
+      "cc": {
+        "reward": 0.844,
+        "content": 1.0,
+        "process": 0.88,
+        "rationale": "The agent correctly identifies the arrangement as gauche with a governing dihedral of ~60.4°, matching the ground truth exactly, and grounds the answer in bond-length analysis of the 3D structure."
+      },
+      "cc2d": {
+        "reward": 0.1,
+        "content": 0.0,
+        "process": 0.0,
+        "rationale": "The agent declined to answer, providing no dihedral value or gauche/anti/eclipsed classification and thus failing to engage the 3D structure."
+      },
+      "ccmcp": {
+        "reward": 0.836,
+        "content": 1.0,
+        "process": 0.72,
+        "rationale": "The agent correctly identified the gauche arrangement and matched the governing dihedral (~60.4°), grounded in actual 3D coordinates."
+      }
+    },
+    "sv-chem-conformation-02": {
+      "cc": {
+        "reward": 0.827,
+        "content": 1.0,
+        "process": 0.55,
+        "rationale": "The agent correctly identified an intramolecular H-bond (present=true) grounded in specific 3D distances/angles and correctly concluded it would not survive a 180° flip (survives_flip=false), matching ground truth."
+      },
+      "cc2d": {
+        "reward": 0.102,
+        "content": 0.0,
+        "process": 0.05,
+        "rationale": "The agent declined to answer and provided no definite yes/no grounded in the 3D structure, failing to match the ground truth (H-bond present: true, survives flip: false)."
+      },
+      "ccmcp": {
+        "reward": 0.717,
+        "content": 1.0,
+        "process": 0.35,
+        "rationale": "The agent correctly identified the intramolecular O–H···O=C hydrogen bond (present=true) using 3D distance/angle metrics and correctly reasoned it would not survive a 180° flip (survives_flip=false), matching ground truth."
+      }
+    },
+    "sv-chem-crystal-packing-03": {
+      "cc": {
+        "reward": 0.215,
+        "content": 0.1,
+        "process": 0.9,
+        "rationale": "The agent concluded the opposite of the ground truth—claiming van der Waals/hydrophobic packing with no intermolecular H-bonds and a non-H-bonded DMSO, whereas the correct answer is a solvent-bridged hydrogen-bonded 1D chain where two hydroxyl donors engage the DMSO sulfoxide S=O acceptor, so the dominant motif and participating groups are largely wrong."
+      },
+      "cc2d": {
+        "reward": 0.177,
+        "content": 0.1,
+        "process": 0.15,
+        "rationale": "The agent failed to access the structure and gave only generic speculation; while it correctly guessed DMSO's S=O acts as an H-bond acceptor, it never engaged the actual 3D asset or committed to the hydrogen-bonded chain motif with two hydroxyl donors."
+      },
+      "ccmcp": {
+        "reward": 0.81,
+        "content": 0.95,
+        "process": 0.9,
+        "rationale": "The agent correctly identifies the dominant motif as DMSO-bridged (solvent-bridged) one-dimensional hydrogen-bonded chains with two hydroxyl donors and the DMSO S=O sulfoxide acceptor, matching the ground truth precisely and grounded in O···O geometry from the 3D structure."
+      }
+    },
+    "sv-chem-crystal-packing-04": {
+      "cc": {
+        "reward": 0.811,
+        "content": 0.95,
+        "process": 0.92,
+        "rationale": "The agent correctly identifies a three-dimensional O–H···O hydrogen-bonded network propagating along all three axes, grounded in specific bond distances and symmetry operations, matching the ground truth precisely."
+      },
+      "cc2d": {
+        "reward": 0.107,
+        "content": 0.0,
+        "process": 0.15,
+        "rationale": "The agent declined to answer, providing no packing classification, interaction, or direction, and thus failed to engage the 3D structure or match the ground truth 3D network with O-H...O bonds."
+      },
+      "ccmcp": {
+        "reward": 0.846,
+        "content": 1.0,
+        "process": 0.92,
+        "rationale": "The agent correctly identifies a three-dimensional O-H...O hydrogen-bonded network propagating along all three axes, matching the ground truth with detailed, structurally-grounded analysis."
+      }
+    },
+    "sv-chem-optimization-vector-06": {
+      "cc": {
+        "reward": 0.1,
+        "content": 0.0,
+        "process": 0.0,
+        "rationale": "The agent returned only an API error and provided no answer engaging the 3D structure."
+      },
+      "cc2d": {
+        "reward": 0.1,
+        "content": 0.0,
+        "process": 0.0,
+        "rationale": ""
+      },
+      "ccmcp": {
+        "reward": 0.1,
+        "content": 0.0,
+        "process": 0.0,
+        "rationale": "The agent produced no answer (API error) and thus failed to identify the correct substitution vector or justify the rejections."
+      }
+    },
+    "sv-medi-anatomical-region-01": {
+      "cc": {
+        "reward": 0.596,
+        "content": 0.65,
+        "process": 0.83,
+        "rationale": "Correct structure (hippocampus) and correct best plane (oblique-coronal), but the boundary slice estimate (y≈26) misses the ground-truth range of 29–32."
+      },
+      "cc2d": {
+        "reward": 0.62,
+        "content": 0.7,
+        "process": 0.6,
+        "rationale": "Correctly identifies the oblique-coronal plane and accurately describes the anterior/posterior (head/body) boundary at the uncal apex, but provides no slice index and disclaims inability to ground it to the actual volume's boundary range (29–32)."
+      },
+      "ccmcp": {
+        "reward": 0.539,
+        "content": 0.65,
+        "process": 0.68,
+        "rationale": "The agent correctly identifies the oblique-coronal plane as clearest and describes the anatomically correct head/body boundary at the uncal apex, but it did not provide the specific boundary slice range (29–32) actually present in the inspected volume, relying instead on generic anatomical priors."
+      }
+    },
+    "sv-medi-lesion-3d-extent-03": {
+      "cc": {
+        "reward": 0.085,
+        "content": 0.05,
+        "process": 0.0,
+        "rationale": "The agent reported the full cropped-volume dimensions (34×52×35mm, 35 slices) instead of the actual hippocampus label bounding box (22×41×26mm, 26 slices), so both extent and slice count are wrong."
+      },
+      "cc2d": {
+        "reward": 0.211,
+        "content": 0.1,
+        "process": 0.82,
+        "rationale": "The agent's bounding extent (34×52×35 mm) and slice count (35) diverge substantially from ground truth (22×41×26 mm, 26 slices), with each axis and the slice span off by ~30-60%."
+      },
+      "ccmcp": {
+        "reward": 0.2,
+        "content": 0.1,
+        "process": 0.6,
+        "rationale": "The agent reported extent ~34×52×35 mm spanning 35 axial slices, whereas ground truth is 22×41×26 mm spanning 26 slices; both the bounding box dimensions and slice count are substantially off (used full crop rather than actual mask extent)."
+      }
+    },
+    "sv-medi-mri-arbitrary-plane-02": {
+      "cc": {
+        "reward": 0.101,
+        "content": 0.0,
+        "process": 0.02,
+        "rationale": "The agent never provided a plane normal or any answer, only an incomplete setup message."
+      },
+      "cc2d": {
+        "reward": 0.836,
+        "content": 1.0,
+        "process": 0.72,
+        "rationale": "The agent's plane normal (1,0,0) exactly matches the ground truth with correct rationale that the mid-sagittal plane captures the full AP arc of the corpus callosum."
+      },
+      "ccmcp": {
+        "reward": 0.761,
+        "content": 0.95,
+        "process": 0.92,
+        "rationale": "The agent correctly identifies the mid-sagittal plane with a normal essentially along RAS x (1,0,0), matching ground truth within ~2° (n and -n equivalent), with sound anatomical rationale."
+      }
+    }
+  },
+  "tiers": {
+    "cc": {
+      "rerun": 0,
+      "rescored": 15,
+      "degraded": 0
+    },
+    "cc2d": {
+      "rerun": 0,
+      "rescored": 15,
+      "degraded": 0
+    },
+    "ccmcp": {
+      "rerun": 0,
+      "rescored": 15,
+      "degraded": 0
+    }
+  }
+}

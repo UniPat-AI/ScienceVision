@@ -1,0 +1,65 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: chemistry.conformation_analysis
+domain: chemistry
+status: conditional
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: blocked
+  release: blocked
+blocked_reasons:
+  - catalog_prerequisites_incomplete
+required_inputs:
+  - id: seed.verified_positive
+    state: missing
+  - id: asset.anonymous_scene
+    state: missing
+  - id: viewer.leaf_capability_evidence
+    state: unverified
+  - id: knowledge.approved_snapshot
+    state: missing
+
+visual_skills:
+  - conformational_comparison
+seed:
+  query:
+    domain: chemistry
+    subdomain: conformation_analysis
+    required_status: verified
+asset:
+  required_conditions:
+    - anonymous_scene
+viewer:
+  required_operations:
+    - inspect
+    - rotate
+  capability_modes:
+    - id: native_dihedral
+      generation_strategies:
+        - preserve_intent
+      required_operations:
+        - measure_dihedral
+    - id: reauthor_visual_measurement
+      generation_strategies:
+        - reauthor_on_asset
+      required_operations:
+        - measure_distance
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+    - viewer_native_measurement
+evidence:
+  required:
+    - viewer_trace
+    - native_measurement_trace
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      section_id: doxcngAYfO2FedAzlCvkASCyxDV
+      coverage: source_only
+  locked_refs: []
+release:
+  eligible: false
+  reason: "Cataloged from the target taxonomy; prerequisites are not yet locked."

@@ -1,0 +1,31 @@
+[
+  {
+    "name": "scienceqa",
+    "label": "ScienceQA",
+    "modality": "K-12 science (mixed)",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/derek-thomas/ScienceQA",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 4241,
+        "jsonl": "/out_samples/scienceqa/test.jsonl",
+        "first_qid": "scienceqa-test-00-000000"
+      },
+      "train": {
+        "rows": 12726,
+        "jsonl": "/out_samples/scienceqa/train.jsonl",
+        "first_qid": "scienceqa-train-00-000000"
+      },
+      "val": {
+        "rows": 4241,
+        "jsonl": "/out_samples/scienceqa/val.jsonl",
+        "first_qid": "scienceqa-val-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 7803,
+    "total_rows": 21208
+  }
+]

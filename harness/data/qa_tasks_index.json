@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-29T00:00:00Z",
+  "sets": [
+    {
+      "name": "ArchitectureAngles",
+      "task_count": 28,
+      "domains": [
+        "architecture"
+      ]
+    },
+    {
+      "name": "BiologyKAxis-expert-v2",
+      "task_count": 4,
+      "domains": [
+        "biology"
+      ]
+    },
+    {
+      "name": "ChemistryKAxis-expert-v2",
+      "task_count": 8,
+      "domains": [
+        "chemistry"
+      ]
+    },
+    {
+      "name": "Genesis_VP_Hard",
+      "task_count": 2,
+      "domains": [
+        "embodied"
+      ]
+    },
+    {
+      "name": "MedicalKAxis-expert-v2",
+      "task_count": 3,
+      "domains": [
+        "medical"
+      ]
+    },
+    {
+      "name": "MedicalKAxisPilot",
+      "task_count": 4,
+      "domains": [
+        "medical"
+      ]
+    }
+  ]
+}

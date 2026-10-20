@@ -1,0 +1,26 @@
+schema_version: 1
+kind: qagen_question_text_policy
+id: solver_facing_question_text_v1
+
+enforcement:
+  reject_solver_ui_meta_language: true
+  require_question_contract: true
+  forbidden_categories:
+    - viewer_tool_instruction_en
+    - viewer_scene_operation_en
+    - ui_control_reference_en
+    - solver_shortcut_reference_en
+    - viewer_axis_reference_en
+    - viewer_tool_instruction_zh
+    - viewer_scene_operation_zh
+    - ui_control_reference_zh
+    - viewer_axis_reference_zh
+
+coverage:
+  measurement_max_fraction: 0.25
+  reasoning_min_fraction: 0.75
+  # A 25/75 split is only meaningful once a domain has at least four planned
+  # slots.  Live/review/release paths bind this to the approved plan rather
+  # than silently rounding a partial domain portfolio.
+  domain_minimum_expected_count: 4
+  approved_override_required: true

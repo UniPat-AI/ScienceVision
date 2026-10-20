@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.qa_export_admission_receipt.v1",
+  "type": "object",
+  "required": ["schema_version", "status", "purpose", "tasks", "task_revision_set", "source_admission", "policy", "qc", "admission_lock", "receipt_digest"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.qa_export_admission_receipt.v1"},
+    "status": {"const": "passed"},
+    "purpose": {"const": "expert_review_distribution"},
+    "tasks": {
+      "type": "object",
+      "required": ["path", "count", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "count": {"type": "integer", "minimum": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "task_revision_set": {
+      "type": "object",
+      "required": ["scope", "algorithm", "count", "digest"],
+      "properties": {
+        "scope": {"const": "active_source_task_revisions"},
+        "algorithm": {"const": "sha256-canonical-json-lines-v1"},
+        "count": {"type": "integer", "minimum": 1},
+        "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "source_admission": {"type": "object"},
+    "policy": {
+      "type": "object",
+      "required": ["name", "path", "sha256"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "qc": {"type": "object"},
+    "admission_lock": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

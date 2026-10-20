@@ -1,0 +1,217 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/question_contract.schema.json",
+  "type": "object",
+  "required": ["question_family_kind", "question_kernel", "question_text_policy_digest", "gt_answer_contract", "asset_facets"],
+  "properties": {
+    "question_family_id": {
+      "description": "Exact, human-approved sub-domain family identifier. It is required whenever the locked knowledge snapshot carries an accepted feedback policy.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "question_family_kind": {
+      "enum": ["property_identification", "attribute_classification", "paired_comparison", "measurement"]
+    },
+    "question_kernel": {
+      "description": "A concise, stable semantic predicate used for coverage deduplication; it is not solver-facing text.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "question_text_policy_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "gt_answer_contract": {
+      "type": "object",
+      "required": ["source_type", "answer_fields", "provenance"],
+      "properties": {
+        "source_type": {
+          "enum": [
+            "expert_annotation",
+            "curated_source_label",
+            "rule_evaluated_structure",
+            "paired_comparison",
+            "measurement_receipt"
+          ]
+        },
+        "gt_shape": {"type": "string", "minLength": 1},
+        "answer_fields": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "provenance": {
+          "type": "object",
+          "minProperties": 1,
+          "required": ["source_id", "source_digest", "record_id", "record_digest", "answer_digest", "ground_truth_registry_digest"],
+          "properties": {
+            "source_id": {"type": "string", "minLength": 1},
+            "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "record_id": {"type": "string", "minLength": 1},
+            "record_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "answer_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "ground_truth_registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "measurement_receipt_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "anonymous_scene_ref": {"type": "string", "minLength": 1},
+            "primary_asset_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "selection_slot_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
+    },
+    "asset_facets": {
+      "type": "object",
+      "required": ["body_region", "organ_system", "anatomy", "pathology", "modality", "dataset"],
+      "properties": {
+        "body_region": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "organ_system": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "anatomy": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "pathology": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "modality": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "dataset": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "medical_question_contract": {
+      "type": "object",
+      "required": [
+        "clinical_task_kind",
+        "approved_mode",
+        "semantic_scenario_binding",
+        "semantic_gt_binding",
+        "semantic_scoring",
+        "solver_projection",
+        "label_identity_policy",
+        "primary_image_necessary",
+        "shortcut_resistance",
+        "human_viewer_answerability"
+      ],
+      "properties": {
+        "clinical_task_kind": {
+          "enum": [
+            "anatomical_localization",
+            "lesion_localization",
+            "morphology",
+            "imaging_feature_characterization",
+            "spatial_relation"
+          ]
+        },
+        "approved_mode": {
+          "enum": ["semantic_interpretation_no_overlay", "localize_then_measure_no_overlay"]
+        },
+        "semantic_scenario_binding": {
+          "type": "object",
+          "required": ["approval_status", "scenario_digest", "semantic_anchor_id", "semantic_anchor_digest", "clinical_semantic_anchor"],
+          "properties": {
+            "approval_status": {"const": "approved"},
+            "scenario_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "semantic_anchor_id": {"type": "string", "minLength": 1},
+            "semantic_anchor_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "clinical_semantic_anchor": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "semantic_gt_binding": {
+          "type": "object",
+            "required": ["source_id", "source_digest", "source_registry_digest", "semantic_anchor_id", "semantic_anchor_digest", "anonymous_scene_ref", "primary_asset_digest", "selection_slot_digest", "annotation_granularity", "question_granularity", "annotation", "verbatim_provenance_digest"],
+          "properties": {
+            "source_id": {"const": "m3d_refseg_doctor_annotation"},
+            "source_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "source_registry_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "semantic_anchor_id": {"type": "string", "minLength": 1},
+            "semantic_anchor_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "anonymous_scene_ref": {"type": "string", "minLength": 1},
+            "primary_asset_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "selection_slot_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "annotation_granularity": {"enum": ["body_region", "organ_system", "anatomy", "pathology", "imaging_feature"]},
+            "question_granularity": {"enum": ["body_region", "organ_system", "anatomy", "pathology", "imaging_feature"]},
+            "annotation": {
+              "type": "object",
+              "required": ["annotation_id", "finding", "location", "impression"],
+              "properties": {
+                "annotation_id": {"type": "string", "minLength": 1},
+                "finding": {"type": "string", "minLength": 1},
+                "location": {"type": "string", "minLength": 1},
+                "impression": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": false
+            },
+            "verbatim_provenance_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": false
+        },
+        "semantic_scoring": {
+          "type": "object",
+          "required": ["semantic_anchor_digest", "required_dimensions", "expert_approval_digest"],
+          "properties": {
+            "semantic_anchor_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "required_dimensions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "expert_approval_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": false
+        },
+        "solver_projection": {
+          "type": "object",
+          "required": ["primary_image", "excluded_artifacts"],
+          "properties": {
+            "primary_image": {"const": true},
+            "excluded_artifacts": {
+              "type": "array",
+              "minItems": 3,
+              "uniqueItems": true,
+              "items": {"enum": ["segmentation", "mask", "overlay"]}
+            }
+          },
+          "additionalProperties": false
+        },
+        "label_identity_policy": {"const": "preserve"},
+        "localize_then_measure": {
+          "type": "object",
+          "required": ["localization_before_measurement", "hidden_segmentation_author_reference_only", "measurement_subordinate", "manual_calibration_digest"],
+          "properties": {
+            "localization_before_measurement": {"const": true},
+            "hidden_segmentation_author_reference_only": {"const": true},
+            "measurement_subordinate": {"const": true},
+            "manual_calibration_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+          },
+          "additionalProperties": false
+        },
+        "primary_image_necessary": {"const": true},
+        "shortcut_resistance": {
+          "type": "object",
+          "required": ["mask_only", "overlay_only", "metadata_only", "raw_compute"],
+          "properties": {
+            "mask_only": {"const": false},
+            "overlay_only": {"const": false},
+            "metadata_only": {"const": false},
+            "raw_compute": {"const": false}
+          },
+          "additionalProperties": false
+        },
+        "human_viewer_answerability": {
+          "type": "object",
+          "required": ["intended_solver", "viewer_precision_bound", "tolerance"],
+          "properties": {
+            "intended_solver": {"const": "clinical_expert"},
+            "viewer_precision_bound": {"type": "string", "minLength": 1},
+            "tolerance": {
+              "type": "object",
+              "required": ["kind", "justification"],
+              "properties": {
+                "kind": {"enum": ["categorical", "ordinal", "numeric"]},
+                "justification": {"type": "string", "minLength": 1},
+                "absolute": {"type": ["number", "null"]},
+                "unit": {"type": "string", "minLength": 1}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

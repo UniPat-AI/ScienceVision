@@ -1,0 +1,32 @@
+[
+  {
+    "name": "pathvqa",
+    "label": "PathVQA",
+    "modality": "pathology",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/flaviagiammarino/path-vqa",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 6719,
+        "jsonl": "/out_samples/pathvqa/test.jsonl",
+        "first_qid": "pathvqa-test-00-000000",
+        "zh_jsonl": "/out_samples/pathvqa/test.zh.jsonl"
+      },
+      "train": {
+        "rows": 19654,
+        "jsonl": "/out_samples/pathvqa/train.jsonl",
+        "first_qid": "pathvqa-train-00-000000"
+      },
+      "val": {
+        "rows": 6259,
+        "jsonl": "/out_samples/pathvqa/val.jsonl",
+        "first_qid": "pathvqa-val-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 4288,
+    "total_rows": 32632
+  }
+]

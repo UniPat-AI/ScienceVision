@@ -1,0 +1,99 @@
+{
+  "schema_version": "sciencevision.docker_image_release.v1",
+  "release_date": "2026-09-23",
+  "release_tag": "server-20260923-h20",
+  "registry": {
+    "provider": "Docker Hub",
+    "namespace": "suermars",
+    "tag_policy": "immutable versioned release tags; never create, move, or overwrite latest"
+  },
+  "source": {
+    "release_worktree": "/Users/sue/Research/ScienceVision/eval-baseline-release",
+    "upstream_base_revision": "e99f428b39135a1ca293c7cc486dd8cfe8596961",
+    "staging_commit": "3a76528993a0ba04ff4593631c92d36527bb93a5",
+    "staging_commit_note": "Synthetic commit created on H20 because the transferred build inputs intentionally excluded .git; it is not the upstream source revision.",
+    "h20_audit_directory": "/home/matianyi/sv-eval-baseline-release-20260923-tmwnSV",
+    "input_archive": {
+      "path": "/home/matianyi/sv-eval-baseline-release-20260923-tmwnSV/release-build-input.tar.gz",
+      "bytes": 866476,
+      "sha256": "b13ddef32095084119aeaf1a0af577bca4beed9de8b918cd8486ff50569cc950",
+      "excluded": [
+        ".git",
+        ".cache",
+        "__pycache__",
+        "generated build outputs",
+        "unrelated raw dataset trees"
+      ]
+    }
+  },
+  "images": [
+    {
+      "role": "private_mcp_worker",
+      "repository": "suermars/sci3d-mcp-worker",
+      "tag": "server-20260923-h20",
+      "repository_digest": "sha256:4a8e593f4f89b2a89be104902ca7c656dca321a3acc434b7bc07ed47b8c7c60c",
+      "local_image_id": "sha256:7c3295fe91f30cb1ffad9cd16f32a49c02a1c85a905baeff1909203402eee5ab",
+      "published": true
+    },
+    {
+      "role": "codex_agent_only_wrapper",
+      "repository": "suermars/sci3d-codex-mcp",
+      "tag": "server-20260923-h20",
+      "repository_digest": "sha256:8b8dafb4c7bea19b30325f53cd641241b9d56f535092d394f3d10a6ae7dc9d96",
+      "local_image_id": "sha256:292b5fcab2078e21cb0be3d62c077492051ab79f067a5498ac09e11df844c64e",
+      "published": true
+    },
+    {
+      "role": "claude_code_agent_only_wrapper",
+      "repository": "suermars/sci3d-claude-code-mcp",
+      "tag": "server-20260923-h20",
+      "repository_digest": "sha256:d11ddea7b06e08e020832de5a9a7cfcafffaa6fb0f47edb3ff46fb4dc7c347e8",
+      "local_image_id": "sha256:ae1e00c73c00bc4f77cf2707b87245efdf7ed9ecaf10f7b8d3178b6799aa3301",
+      "published": true
+    },
+    {
+      "role": "formal_deterministic_scorer",
+      "repository": "suermars/sci3d-scorer",
+      "tag": "server-20260923-h20",
+      "repository_digest": "sha256:3730ff689fb58afd8e5576d9f59e0429c6b8e341fc3652212659b9c76accee02",
+      "local_image_id": "sha256:5b055ff9d995746a945534786c211dbe4a39a9260e4244cfc660d3f8ac421c1a",
+      "scorer_manifest_sha256": "8f15d35d13b683d39d5dc3bada99d3f808d9103a48c96917f56eaed31790113d",
+      "published": true
+    }
+  ],
+  "packaging_contract": {
+    "mcp_worker_private_compatibility_inputs": [
+      "viewer/assets.json",
+      "datasets/_matched/"
+    ],
+    "agent_wrapper_forbidden_content": [
+      "sci3d_agent",
+      "sci3d_bench",
+      "harbor_adapters",
+      "viewer",
+      "datasets",
+      "sciencevision-mcp"
+    ],
+    "worker_runtime_user": {
+      "name": "sciencevision",
+      "uid": 10001,
+      "must_own": [
+        "/opt/sciencevision-src",
+        "/opt/sciencevision/bin"
+      ]
+    },
+    "scorer_network": "disabled during Docker build and runtime"
+  },
+  "verification": {
+    "targeted_pytest": {
+      "passed": 57,
+      "environment": "Python 3.12 locally and on H20"
+    },
+    "worker_nonroot_catalog_tools": "passed",
+    "agent_wrapper_source_isolation": "passed for Codex and Claude Code",
+    "mcp_initialize_canary": "passed for Codex and Claude Code with HTTP 200",
+    "scorer_nonroot_no_network_isolation": "passed"
+  },
+  "credential_handling": "No Docker credentials, tokens, auth files, or credential-helper output are stored in this manifest."
+}
+

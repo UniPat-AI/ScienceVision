@@ -1,0 +1,308 @@
+{
+  "generated_at": "2026-07-29T15:08:28",
+  "models": [
+    {
+      "id": "00_bearing",
+      "category": "00_bearings",
+      "title": "deep-groove-ball-bearing-3d-model-1",
+      "description": "GrabCAD model: deep-groove-ball-bearing-3d-model-1.",
+      "source_url": "https://grabcad.com/library/deep-groove-ball-bearing-3d-model-1",
+      "complexity": 2,
+      "glb": "models/00_bearing/model.glb",
+      "source_step": "models/00_bearing/source.step",
+      "views": [
+        "models/00_bearing/views/ball bearing_v1_front.png",
+        "models/00_bearing/views/ball bearing_v1_left.png",
+        "models/00_bearing/views/ball bearing_v1_top.png",
+        "models/00_bearing/views/ball bearing_v2_front.png",
+        "models/00_bearing/views/ball bearing_v2_left.png",
+        "models/00_bearing/views/ball bearing_v2_top.png",
+        "models/00_bearing/views/ball bearing_v3_front.png",
+        "models/00_bearing/views/ball bearing_v3_left.png",
+        "models/00_bearing/views/ball bearing_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "How many balls are there in this bearing?",
+          "answer_type": "numeric",
+          "answer": "8",
+          "difficulty": 2
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "01_bracket",
+      "category": "01_brackets",
+      "title": "l-shaped-bracket",
+      "description": "GrabCAD model: l-shaped-bracket.",
+      "source_url": "https://grabcad.com/library/l-shaped-braket",
+      "complexity": 2,
+      "glb": "models/01_bracket/model.glb",
+      "source_step": "models/01_bracket/source.step",
+      "views": [
+        "models/01_bracket/views/L-shaped_Bracket_v1_front.png",
+        "models/01_bracket/views/L-shaped_Bracket_v1_left.png",
+        "models/01_bracket/views/L-shaped_Bracket_v1_top.png",
+        "models/01_bracket/views/L-shaped_Bracket_v2_front.png",
+        "models/01_bracket/views/L-shaped_Bracket_v2_left.png",
+        "models/01_bracket/views/L-shaped_Bracket_v2_top.png",
+        "models/01_bracket/views/L-shaped_Bracket_v3_front.png",
+        "models/01_bracket/views/L-shaped_Bracket_v3_left.png",
+        "models/01_bracket/views/L-shaped_Bracket_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "How many circular holes are there in this bracket?",
+          "answer_type": "numeric",
+          "answer": "8",
+          "difficulty": 2
+        },
+        {
+          "text": "What the shape of the bracket? \nA: L shape\nB: U shape\nC: Neither shape\nD: Cannot decide the shape\nE: this is not a bracket",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 2
+        },
+        {
+          "text": "What is the type of the holes?\nA: simple through hole\nB: blind hole\nC: Sink (Countersink) hole\nD: others\nE: mixed (there are more than one different types)",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 3
+        },
+        {
+          "text": "What is the shape of the holes?\nA: circular\nB: square\nC: hexgon\nD: others\nE: mixed (there are more than one shapes)",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 2
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "F",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "02_gear",
+      "category": "02_gears",
+      "title": "helical-gear",
+      "description": "GrabCAD model: helical-gear.",
+      "source_url": "https://grabcad.com/library/helical-gear",
+      "complexity": 2,
+      "glb": "models/02_gear/model.glb",
+      "source_step": "models/02_gear/source.step",
+      "views": [
+        "models/02_gear/views/Helical Gear v4 side view.png",
+        "models/02_gear/views/Helical Gear v4.png",
+        "models/02_gear/views/Helical Gear_v1_front.png",
+        "models/02_gear/views/Helical Gear_v1_left.png",
+        "models/02_gear/views/Helical Gear_v1_top.png",
+        "models/02_gear/views/Helical Gear_v2_front.png",
+        "models/02_gear/views/Helical Gear_v2_left.png",
+        "models/02_gear/views/Helical Gear_v2_top.png",
+        "models/02_gear/views/Helical Gear_v3_front.png",
+        "models/02_gear/views/Helical Gear_v3_left.png",
+        "models/02_gear/views/Helical Gear_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "What is the type of this gear?\nA: circular spur gear\nB: circular bevel gear\nC: circular worm gear\nD: linear gear rack\nE: helical gear",
+          "answer_type": "binary",
+          "answer": "e",
+          "difficulty": 2
+        },
+        {
+          "text": "How many teeth are there in this gear?",
+          "answer_type": "numeric",
+          "answer": "20",
+          "difficulty": 2
+        },
+        {
+          "text": "Is there a key way for mounting this gear to the shaft? \nA: Yes\nB: No\nC: cannot decide",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 3
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "b",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "03_nut",
+      "category": "03_nuts",
+      "title": "m12-dome-nut-1",
+      "description": "GrabCAD model: m12-dome-nut-1.",
+      "source_url": "https://grabcad.com/library/m12-dome-nut-1",
+      "complexity": 1,
+      "glb": "models/03_nut/model.glb",
+      "source_step": "models/03_nut/source.step",
+      "views": [
+        "models/03_nut/views/M12 DOME NUT_v1_front.png",
+        "models/03_nut/views/M12 DOME NUT_v1_left.png",
+        "models/03_nut/views/M12 DOME NUT_v1_top.png",
+        "models/03_nut/views/M12 DOME NUT_v2_front.png",
+        "models/03_nut/views/M12 DOME NUT_v2_left.png",
+        "models/03_nut/views/M12 DOME NUT_v2_top.png",
+        "models/03_nut/views/M12 DOME NUT_v3_front.png",
+        "models/03_nut/views/M12 DOME NUT_v3_left.png",
+        "models/03_nut/views/M12 DOME NUT_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "What kind of nut is this nut?\nA: Hexagon nut\nB: Wing nut\nC: Cap Nut\nD: Square nut\nE: others nut\nF: not a nut",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 2
+        },
+        {
+          "text": "Is there any threads in this part?\nA: Yes\nB: No\nC: Cannot decide",
+          "answer_type": "binary",
+          "answer": "b",
+          "difficulty": 1
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "04_screw",
+      "category": "04_screws",
+      "title": "parametric-socket-head-cap-screw-generator-step-customizable-cnc-amp-3d-printing-1",
+      "description": "GrabCAD model: parametric-socket-head-cap-screw-generator-step-customizable-cnc-amp-3d-printing-1.",
+      "source_url": "https://grabcad.com/library/parametric-socket-head-cap-screw-generator-step-customizable-cnc-amp-3d-printing-1",
+      "complexity": 2,
+      "glb": "models/04_screw/model.glb",
+      "source_step": "models/04_screw/source.step",
+      "views": [
+        "models/04_screw/views/socket-head-cap-screw.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v1_front.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v1_left.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v1_top.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v2_front.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v2_left.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v2_top.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v3_front.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v3_left.png",
+        "models/04_screw/views/socket_head_cap_screw_M5_l5mm_thread_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "Is there any threads in this part?\nA: Yes\nB: No\nC: Cannot decide",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 1
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "05_shaft",
+      "category": "05_shafts",
+      "title": "gear-shaft",
+      "description": "GrabCAD model: gear-shaft.",
+      "source_url": "https://grabcad.com/library/gear-shaft",
+      "complexity": 2,
+      "glb": "models/05_shaft/model.glb",
+      "source_step": "models/05_shaft/source.step",
+      "views": [
+        "models/05_shaft/views/2023-02-18_18h54_03.png",
+        "models/05_shaft/views/Shaft_v1_front.png",
+        "models/05_shaft/views/Shaft_v1_left.png",
+        "models/05_shaft/views/Shaft_v1_top.png",
+        "models/05_shaft/views/Shaft_v2_front.png",
+        "models/05_shaft/views/Shaft_v2_left.png",
+        "models/05_shaft/views/Shaft_v2_top.png",
+        "models/05_shaft/views/Shaft_v3_front.png",
+        "models/05_shaft/views/Shaft_v3_left.png",
+        "models/05_shaft/views/Shaft_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "how many steps are there in this stepped shaft?",
+          "answer_type": "numeric",
+          "answer": "7",
+          "difficulty": 2
+        },
+        {
+          "text": "is there a key slot on this shaft? \nA: Yes\nB: No\nC: cannot decide",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 2
+        },
+        {
+          "text": "how many key slots are there on this shaft?",
+          "answer_type": "numeric",
+          "answer": "1",
+          "difficulty": 2
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "a",
+          "difficulty": 2
+        }
+      ]
+    },
+    {
+      "id": "06_sprocket",
+      "category": "06_sprockets",
+      "title": "motorcycle-sprocket-428-42t-1",
+      "description": "GrabCAD model: motorcycle-sprocket-428-42t-1.",
+      "source_url": "https://grabcad.com/library/motorcycle-sprocket-428-42t-1",
+      "complexity": 2,
+      "glb": "models/06_sprocket/model.glb",
+      "source_step": "models/06_sprocket/source.step",
+      "views": [
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v1_front.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v1_left.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v1_top.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v2_front.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v2_left.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v2_top.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v3_front.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v3_left.png",
+        "models/06_sprocket/views/MOTORCYCLE SPROCKET 428 - 42T_v3_top.png"
+      ],
+      "questions": [
+        {
+          "text": "How many teeth are there in this sprocket?",
+          "answer_type": "numeric",
+          "answer": "42",
+          "difficulty": 2
+        },
+        {
+          "text": "Is there a key way for mounting this gear to the shaft? \nA: Yes\nB: No\nC: cannot decide",
+          "answer_type": "binary",
+          "answer": "b",
+          "difficulty": 1
+        },
+        {
+          "text": "Which coordinate axis is the major axis of the part parallel with?\nA: X\nB: Y\nC: Z\nD: The part axis does not align with any of the standard axes\nE: there are more than one axes in this part\nF: There is no symmetric axes in this part",
+          "answer_type": "binary",
+          "answer": "c",
+          "difficulty": 2
+        }
+      ]
+    }
+  ]
+}

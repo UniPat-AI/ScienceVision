@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<title>STEP / IGES — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #info { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; max-width: 360px; }
+  #info b { color: var(--domain-ind); }
+  #progress {
+    position: fixed; top: 60px; left: 12px;
+    background: rgba(13,17,23,0.92); padding: 10px 14px;
+    border-radius: 4px; border: 1px solid #30363d;
+    font: 11px ui-monospace, monospace; color: #c9d1d9;
+    min-width: 280px; max-width: 60vw;
+  }
+  #progress .phase { color: var(--fg-dim); margin: 2px 0; }
+  #progress .phase.active { color: var(--accent); }
+  #progress .phase.done   { color: var(--domain-med); }
+  #progress .phase.fail   { color: var(--domain-neg); }
+  #progress .err {
+    color: var(--domain-neg); white-space: pre-wrap;
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px dashed var(--domain-neg);
+    font-size: 10.5px; max-height: 40vh; overflow: auto;
+  }
+  #progress .hint { color: var(--fg-dim); font-size: 10.5px; margin-top: 6px; }
+  .fallback { padding: 24px; max-width: 720px; margin: 0 auto; }
+  .fallback h2 { font-size: 18px; margin: 0 0 12px; }
+  .fallback code { background: #161b22; padding: 2px 6px; border-radius: 3px; border: 1px solid #30363d; }
+  .fallback .file-link { display: inline-block; margin-top: 16px; padding: 8px 16px; background: #1f6feb; color: white; border-radius: 4px; }
+</style>
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/environments/RoomEnvironment.js">
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>STEP / IGES</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">occt-import-js (WASM) · OrbitControls</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="progress">
+  <div class="phase" id="ph-load">▢ Loading occt-import-js (95 KB)</div>
+  <div class="phase" id="ph-fetch">▢ Fetching file</div>
+  <div class="phase" id="ph-init">▢ Initializing OCCT runtime (~7 MB WASM)</div>
+  <div class="phase" id="ph-parse">▢ Parsing B-rep / tessellating</div>
+  <div class="phase" id="ph-build">▢ Building Three.js meshes</div>
+</div>
+<div id="info" style="display:none;">drag = rotate · scroll = zoom · <b id="stats"></b></div>
+
+<script type="module">
+// Loud-errors approach: any uncaught error in classic-script load, module
+// import, fetch, runtime init, parse, or three.js setup is captured and
+// surfaced into the on-page progress panel — never a silent blank page.
+
+const phaseEl = (id) => document.getElementById(id);
+function phase(id, state, extra) {
+  const el = phaseEl(id); if (!el) return;
+  el.className = 'phase ' + state;
+  const sym = { active: '▶', done: '✓', fail: '✗' }[state] || '▢';
+  el.textContent = el.textContent.replace(/^[▢▶✓✗]/, sym);
+  if (extra) el.textContent += '  ' + extra;
+}
+function showError(where, err) {
+  const panel = document.getElementById('progress');
+  panel.querySelector('.err')?.remove();
+  panel.querySelector('.hint')?.remove();
+  const div = document.createElement('div');
+  div.className = 'err';
+  const msg = err?.stack || err?.message || String(err);
+  div.textContent = `[${where}] ${msg}`;
+  panel.appendChild(div);
+  const hint = document.createElement('div');
+  hint.className = 'hint';
+  hint.innerHTML = 'If local viewer assets fail to load, verify the server is rooted at the repo root. ' +
+    'Console (Cmd-Opt-J) has more detail.';
+  panel.appendChild(hint);
+}
+window.addEventListener('error', (e) => showError('window.error', e.error || e.message));
+window.addEventListener('unhandledrejection', (e) => showError('unhandledrejection', e.reason));
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+const fname = file ? file.split('/').pop() : '';
+const ext = fname.toLowerCase().split('.').pop();
+document.getElementById('filename').textContent = fname || '(no file)';
+
+if (!file) {
+  phase('ph-load', 'fail');
+  showError('init', new Error('No ?file= query param. Append ?file=/crawl_data/...step to the URL.'));
+  throw new Error('halted: no file');
+}
+
+// ── 0. Load occt-import-js as a classic script via dynamic injection so load
+//    errors are catchable and surfaced in the progress panel. ────────────────
+phase('ph-load', 'active');
+async function loadOcctScript() {
+  const url = '/viewer/shared/vendor/occt-import-js/0.0.23/dist/occt-import-js.js';
+  await new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = res;
+    s.onerror = () => rej(new Error('local script load failed: ' + url));
+    document.head.appendChild(s);
+  });
+  if (typeof occtimportjs === 'function') {
+    return url.replace(/\/occt-import-js\.js$/, '/');
+  }
+  throw new Error('local occt-import-js loaded without defining occtimportjs');
+}
+
+let OCCT_BASE_PATH;
+try {
+  OCCT_BASE_PATH = await loadOcctScript();
+  phase('ph-load', 'done');
+} catch (e) {
+  phase('ph-load', 'fail');
+  showError('script load', e);
+  throw e;
+}
+
+// ── 1+ Three.js + cutaway. Keep imports inside try so we report module
+//    resolution failures rather than dying silently. ─────────────────────────
+let THREE, OrbitControls, RoomEnvironment, attachCutaway;
+try {
+  THREE = await import('three');
+  ({ OrbitControls } = await import('three/addons/controls/OrbitControls.js'));
+  ({ RoomEnvironment } = await import('three/addons/environments/RoomEnvironment.js'));
+  ({ attachCutaway } = await import('/viewer/shared/cutaway.js'));
+} catch (e) {
+  phase('ph-load', 'fail');
+  showError('module import', e);
+  throw e;
+}
+
+// ── Three.js scaffolding ─────────────────────────────────────────────────────
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.001, 1e6);
+camera.position.set(1, 0.8, 1.5);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+const key = new THREE.DirectionalLight(0xffffff, 0.9);
+key.position.set(2, 3, 2);
+scene.add(key);
+
+const cutaway = attachCutaway({ THREE, renderer, scene });
+
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+window.addEventListener('resize', () => {
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+});
+
+// ── Pipeline ────────────────────────────────────────────────────────────────
+try { await run(); } catch (e) {
+  console.error(e);
+  // If we're still in a phase, mark it failed.
+  for (const id of ['ph-fetch','ph-init','ph-parse','ph-build']) {
+    const el = phaseEl(id);
+    if (el && el.className.includes('active')) { phase(id, 'fail'); break; }
+  }
+  showError('pipeline', e);
+}
+
+async function run() {
+  // 1. Fetch file
+  phase('ph-fetch', 'active');
+  const resp = await fetch(file);
+  if (!resp.ok) throw new Error(`HTTP ${resp.status} fetching ${file}`);
+  const buf = new Uint8Array(await resp.arrayBuffer());
+  phase('ph-fetch', 'done', `${(buf.byteLength / 1024).toFixed(0)} KB`);
+
+  // 2. Init OCCT runtime — 7.3 MB WASM, slow on first load.
+  phase('ph-init', 'active');
+  if (typeof occtimportjs !== 'function') {
+    throw new Error('occt-import-js global not present after script load');
+  }
+  const occt = await occtimportjs({
+    locateFile: (p) => p.endsWith('.wasm') ? OCCT_BASE_PATH + 'occt-import-js.wasm' : p,
+  });
+  phase('ph-init', 'done');
+
+  // 3. Parse
+  phase('ph-parse', 'active');
+  let result;
+  if (ext === 'step' || ext === 'stp') {
+    result = occt.ReadStepFile(buf, null);
+  } else if (ext === 'iges' || ext === 'igs') {
+    result = occt.ReadIgesFile(buf, null);
+  } else {
+    throw new Error(`Unsupported extension '.${ext}' (expected step/stp/iges/igs)`);
+  }
+  if (!result || !result.success) {
+    throw new Error('OCCT reported parse failure (success=false)');
+  }
+  phase('ph-parse', 'done', `${result.meshes.length} mesh${result.meshes.length === 1 ? '' : 'es'}`);
+
+  // 4. Build Three.js meshes
+  phase('ph-build', 'active');
+  const root = new THREE.Group();
+  root.name = fname.replace(/\.[^.]+$/, '');
+  const nameByMeshIdx = mapMeshNames(result.root);
+
+  let totalTris = 0;
+  for (let i = 0; i < result.meshes.length; i++) {
+    const m = result.meshes[i];
+    const geom = new THREE.BufferGeometry();
+    geom.setAttribute('position', new THREE.Float32BufferAttribute(m.attributes.position.array, 3));
+    if (m.attributes.normal?.array) {
+      geom.setAttribute('normal', new THREE.Float32BufferAttribute(m.attributes.normal.array, 3));
+    } else {
+      geom.computeVertexNormals();
+    }
+    if (m.index?.array) {
+      const vertCount = m.attributes.position.array.length / 3;
+      const idx = m.index.array;
+      const indexAttr = vertCount > 65535
+        ? new THREE.Uint32BufferAttribute(idx, 1)
+        : new THREE.Uint16BufferAttribute(idx, 1);
+      geom.setIndex(indexAttr);
+      totalTris += idx.length / 3;
+    } else {
+      totalTris += m.attributes.position.array.length / 9;
+    }
+    const color = m.color
+      ? new THREE.Color(m.color[0], m.color[1], m.color[2])
+      : new THREE.Color(0x9aa7d0);
+    const mat = new THREE.MeshStandardMaterial({ color, metalness: 0.15, roughness: 0.55 });
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.name = nameByMeshIdx.get(i) || m.name || `mesh_${i}`;
+    root.add(mesh);
+  }
+  scene.add(root);
+  fitToObject(root);
+  cutaway.setRoot(root);
+  phase('ph-build', 'done', `${Math.round(totalTris).toLocaleString()} tris`);
+
+  document.getElementById('info').style.display = '';
+  document.getElementById('stats').textContent =
+    `${ext.toUpperCase()} · ${result.meshes.length} parts · ${Math.round(totalTris).toLocaleString()} tris`;
+
+  setTimeout(() => { document.getElementById('progress').style.display = 'none'; }, 2000);
+}
+
+function fitToObject(obj) {
+  const box = new THREE.Box3().setFromObject(obj);
+  const size = box.getSize(new THREE.Vector3());
+  const len = size.length() || 1;
+  const center = box.getCenter(new THREE.Vector3());
+  controls.target.copy(center);
+  camera.position.copy(center.clone().add(new THREE.Vector3(len * 0.7, len * 0.5, len * 0.9)));
+  camera.near = len / 1000;
+  camera.far = len * 100;
+  camera.updateProjectionMatrix();
+  controls.update();
+}
+
+function mapMeshNames(rootNode) {
+  const out = new Map();
+  function visit(node, prefix) {
+    const here = node.name ? (prefix ? prefix + '/' + node.name : node.name) : prefix;
+    for (const idx of (node.meshes || [])) {
+      if (!out.has(idx)) out.set(idx, here || `mesh_${idx}`);
+    }
+    for (const c of (node.children || [])) visit(c, here);
+  }
+  if (rootNode) visit(rootNode, '');
+  return out;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+schema_version: 1
+kind: qagen_run_profile
+id: chirality_workspace_knowledge_pilot
+mode: local_provider_pilot
+
+domains:
+  - chemistry
+enabled_leaves:
+  - chemistry.stereochemistry_chirality
+blocked_leaves: []
+
+inputs:
+  registry_mode: workspace_registry
+  workspace_registry:
+    seed_index:
+      path: .qagen/private/catalog/70585e0db639a034.seed-index.json
+      content_digest: sha256:70585e0db639a0342df01444abf4cfdf74c975571946efc1c9a8eab7ff815a70
+    # Frozen local-only artifacts produced and smoke-verified from the resolved
+    # v1.0.3 workspace. Paths are relative to the explicit runtime workspace.
+    scene_registry:
+      path: .qagen/private/viewer/scene-registries/registry_3e4fd505bd2583ca77976d67.json
+      content_digest: sha256:5751d9b50b03547ea5e84f56ba88e5ec55c6f3cd7cb85441d17eeab2927cf098
+    viewer_profile:
+      path: .qagen/private/viewer-profiles/viewer-profile-b487b742c6b7-5574f13f2977-9107d8c88c9a56ad.json
+      content_digest: sha256:9107d8c88c9a56adfefdd1976cb6819b4540b07e7d331ea0ba409f4c89b08255
+    knowledge_approval:
+      state: pending_human_approval
+      leaf_id: chemistry.stereochemistry_chirality
+  base: ../base.yaml
+  rubric: ../rubric.yaml
+  model_routing: ../agents/model_routing.pilot.yaml
+  provider_runtime: ../agents/provider_runtime.pilot.yaml
+  domain_configs:
+    - ../domains/chemistry.yaml
+  leaf_configs:
+    - ../pilots/chirality/stereochemistry_chirality.workspace.yaml
+
+viewer_profile_requirement:
+  adapter_id: molstar-chirality-host-v1
+  definition_digest: sha256:b487b742c6b7eb6444240c663e06ed9cb2a5ec6edb498343382f718139e91cb0
+  required_operations: [rotate, render]
+  require_non_fixture: true
+  require_scene_registry: true
+
+planning:
+  default_count: 1
+  quota: 10
+  batch:
+    min_count: 5
+    max_count: 10
+    seed_selection:
+      policy: locked_seed_digest
+      dedupe_policy: seed_variation_pair
+    variation:
+      policy: deterministic_unique_slot
+  per_work_item_budget:
+    max_candidates: 1
+    max_revisions: 1
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  blocked_reasons:
+    - knowledge_human_approval_pending
+    - local_provider_pilot_never_release_eligible

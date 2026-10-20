@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>QA — BabyVision-v2</title>
+<link rel="stylesheet" href="shared/style.css">
+<style>
+  main.qa-detail { padding: 24px; max-width: 1200px; margin: 0 auto; }
+  .qa-crumb { color: var(--fg-dim); font-size: 12px; margin-bottom: 16px; }
+  .qa-crumb a { color: var(--fg-dim); }
+  .qa-crumb a:hover { color: var(--accent); }
+  .qa-header { display: flex; gap: 16px; align-items: baseline; flex-wrap: wrap; margin-bottom: 12px; }
+  .qa-id { font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--fg-dim); }
+  .qa-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 11px;
+    background: var(--bg2); border: 1px solid var(--border); color: var(--fg-dim);
+    text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .qa-badge.domain-embodied { border-color: var(--domain-rob); color: var(--domain-rob); }
+  .qa-badge.domain-medical  { border-color: var(--domain-med); color: var(--domain-med); }
+  .qa-question {
+    font-size: 20px; line-height: 1.45; margin: 8px 0 20px;
+    padding: 16px 20px; background: var(--bg2);
+    border-left: 3px solid var(--accent); border-radius: 4px;
+  }
+  .qa-meta {
+    display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px;
+    font-size: 13px; margin-bottom: 20px;
+  }
+  .qa-meta dt { color: var(--fg-dim); }
+  .qa-meta dd { margin: 0; }
+  .qa-meta code { font: 12px ui-monospace, monospace; color: var(--fg); }
+  .qa-viewer-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; margin-bottom: 12px;
+    background: var(--accent); color: #0d1117; font-weight: 600; border-radius: 6px;
+    text-decoration: none; font-size: 14px;
+  }
+  .qa-viewer-primary:hover { background: #79b8ff; text-decoration: none; }
+  .qa-viewer-hint { color: var(--fg-dim); font-size: 12px; margin-bottom: 12px; }
+  .qa-viewer-wrap {
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden;
+    background: var(--bg); margin-bottom: 20px; position: relative;
+  }
+  .qa-viewer-wrap iframe { width: 100%; height: 800px; border: 0; display: block; background: #000; }
+  .qa-viewer-loading {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: var(--fg-dim); font-size: 13px; pointer-events: none;
+    background: linear-gradient(180deg, rgba(13,17,23,0.9), rgba(13,17,23,0.4));
+    transition: opacity 0.3s;
+  }
+  .qa-viewer-loading.hidden { opacity: 0; }
+  .qa-viewer-actions { padding: 8px 12px; background: var(--bg2); font-size: 12px; display: flex; gap: 12px; align-items: center; }
+  .qa-gt {
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 0; background: var(--bg2); margin-bottom: 20px;
+  }
+  .qa-gt summary {
+    cursor: pointer; padding: 10px 16px; font-size: 13px;
+    user-select: none;
+  }
+  .qa-gt summary:hover { color: var(--accent); }
+  .qa-gt pre {
+    margin: 0; padding: 12px 16px; border-top: 1px solid var(--border);
+    background: var(--bg); overflow-x: auto;
+    font: 12px ui-monospace, monospace; color: var(--fg);
+  }
+  .qa-gt-warn { color: #ffa657; font-size: 11px; margin-left: 8px; }
+  .qa-nav-actions { display: flex; gap: 12px; margin-top: 12px; font-size: 13px; }
+  .qa-nav-actions a { padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; color: var(--fg-dim); }
+  .qa-nav-actions a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  .qa-err { color: #f85149; padding: 24px; text-align: center; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <a href="index.html" class="home-link" style="color:inherit;text-decoration:none">
+      <strong id="brand">BabyVision-v2</strong>
+    </a>
+    <span style="color:var(--fg-dim);margin-left:8px;font-size:12px">
+      / <a href="qagen.html" style="color:inherit">QA Tasks</a> / <span id="qid-crumb">…</span>
+    </span>
+  </div>
+  <div class="topbar-right">
+    <nav class="bv2-globalnav" aria-label="Global">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Doc</a>
+      <a href="assets.html">Domain 3D Assets</a>
+      <a href="qagen.html" class="is-active">QA Tasks</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="/sv-annotate/">Expert</a>
+    </nav>
+    <div class="meta" id="counts">loading…</div>
+  </div>
+</header>
+<main class="qa-detail">
+  <div id="qa-body">Loading…</div>
+</main>
+
+<script src="shared/manifest.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  function viewerRelativePath(repoPath) {
+    if (!repoPath) return '';
+    if (repoPath.startsWith('viewer/')) return repoPath.slice('viewer/'.length);
+    return '../' + repoPath;
+  }
+
+  function assetViewerURL(asset, maskAsset) {
+    if (!asset) return null;
+    const fmt = (asset.format || '').toLowerCase();
+    const file = viewerRelativePath(asset.path);
+    // Chemistry / molecular structures -> Mol* (molstar.html).
+    if (fmt === 'mol' || fmt === 'mol2' || fmt === 'sdf' || fmt === 'pdb' || fmt === 'cif' || fmt === 'mmcif' || asset.viewer === 'molstar') {
+      let mu = 'molstar.html?file=' + encodeURIComponent(file);
+      if (fmt) mu += '&type=' + encodeURIComponent(fmt);
+      return mu;
+    }
+    // Architecture BIM (split ortho drawings + interactive 3D). Must precede glb/gltf: BIM assets are glb-format.
+    if (asset.viewer === 'arch-model') {
+      return 'arch-model.html?file=' + encodeURIComponent(file) +
+             '&name=' + encodeURIComponent(asset.name || asset.label || '');
+    }
+    if (fmt === 'glb' || fmt === 'gltf') {
+      return 'gltf.html?file=' + encodeURIComponent(file);
+    }
+    // Mechanical CAD B-rep (STEP / IGES) -> OCCT.
+    if (fmt === 'step' || fmt === 'stp' || fmt === 'iges' || fmt === 'igs' || asset.viewer === 'occt') {
+      return 'occt.html?file=' + encodeURIComponent(file);
+    }
+    // Infrastructure LiDAR point clouds (LAS) -> point cloud viewer.
+    if (fmt === 'las' || fmt === 'laz' || fmt === 'drc' || asset.viewer === 'pointcloud') {
+      let pu = 'pointcloud.html?file=' + encodeURIComponent(file);
+      if (asset.classes) pu += '&classes=' + encodeURIComponent(asset.classes);
+      return pu;
+    }
+    // Geography: OSM pmtiles city model -> citymap.html (self-contained maplibre+pmtiles).
+    // citymap.html hardcodes its own data paths and keys off ?city=, not ?file=.
+    if (fmt === 'pmtiles' || asset.viewer === 'citymap') {
+      return 'citymap.html?city=' + encodeURIComponent(asset.city || 'manhattan');
+    }
+    if (fmt === 'nifti' || fmt === 'nii.gz' || /\.nii(\.gz)?$/.test(asset.path || '')) {
+      let url = 'niivue.html?file=' + encodeURIComponent(file);
+      if (maskAsset && maskAsset.path) {
+        url += '&overlay=' + encodeURIComponent(viewerRelativePath(maskAsset.path));
+      }
+      return url;
+    }
+    // Astronomy: ephemeris JSON driving the Saturn body+ring viewer. Textures
+    // are passed explicitly so they load from viewer/datasets/astronomy/.
+    if (asset.viewer === 'saturn' || (fmt === 'json' && /saturn/.test(asset.path || ''))) {
+      let url = 'saturn.html?file=' + encodeURIComponent(file);
+      if (asset.body_texture) url += '&body=' + encodeURIComponent(viewerRelativePath(asset.body_texture));
+      if (asset.ring_texture) url += '&ring=' + encodeURIComponent(viewerRelativePath(asset.ring_texture));
+      return url;
+    }
+    // Molecular structures (mmCIF / PDB / SDF / MOL2) → Mol* viewer. molstar.html
+    // takes ?file= plus a &type= loader hint (mmcif|pdb|sdf|mol2).
+    if (asset.viewer === 'molstar' ||
+        ['mmcif', 'cif', 'pdb', 'sdf', 'mol', 'mol2'].includes(fmt) ||
+        /\.(cif|pdb|sdf|mol2?)$/i.test(asset.path || '')) {
+      const TYPE = { cif: 'mmcif', mmcif: 'mmcif', pdb: 'pdb', sdf: 'sdf', mol: 'mol', mol2: 'mol2' };
+      return 'molstar.html?file=' + encodeURIComponent(file) + '&type=' + (TYPE[fmt] || 'mmcif');
+    }
+    return null;
+  }
+
+  function findMaskAsset(asset, allAssets) {
+    if (!asset || !Array.isArray(allAssets)) return null;
+    if (asset.id.endsWith('_mask')) return null;
+    return allAssets.find(x => x.id === asset.id + '_mask') || null;
+  }
+
+  const FAMILY_LABEL = {
+    'genesis_vp':          'Interactive Physics',
+    'medical_spatial':     'Spatial Vision',
+    'saturn_ring_geometry':'Orbital Vision',
+  };
+
+  function domainClass(domain) {
+    if (!domain) return '';
+    if (domain === 'embodied')  return 'domain-embodied';
+    if (domain === 'medical')   return 'domain-medical';
+    if (domain === 'astronomy') return 'domain-astronomy';
+    return '';
+  }
+
+  function fail(msg) {
+    document.getElementById('qa-body').innerHTML =
+      '<div class="qa-err">' + esc(msg) + '</div>';
+  }
+
+  function render(q, asset, mask) {
+    const viewerHref = assetViewerURL(asset, mask);
+    const familyLabel = FAMILY_LABEL[q.family] || q.family || '';
+    const parts = [];
+    parts.push('<div class="qa-crumb">',
+      '<a href="qagen.html">QA Tasks</a> · ',
+      '<a href="qagen.html">' + esc(familyLabel) + '</a> · ',
+      '<span>' + esc(q.id) + '</span>',
+      '</div>');
+
+    parts.push('<div class="qa-header">',
+      '<span class="qa-badge ' + domainClass(q.domain) + '">' + esc(q.domain || '—') + '</span>',
+      '<span class="qa-badge">' + esc(familyLabel) + '</span>',
+      '<span class="qa-id"><code>' + esc(q.id) + '</code></span>',
+      '</div>');
+
+    parts.push('<div class="qa-question">' + esc(q.question) + '</div>');
+
+    parts.push('<dl class="qa-meta">',
+      '<dt>Answer kind</dt>', '<dd><code>' + esc(q.answer_kind || '?') + '</code></dd>',
+      '<dt>Ground truth</dt>', '<dd><code>' + esc(q.ground_truth_kind || '?') + '</code>',
+      (q.ground_truth && q.ground_truth.status ? ' · status: <code>' + esc(q.ground_truth.status) + '</code>' : ''),
+      '</dd>',
+      '<dt>Asset</dt>',
+      '<dd>' + (asset
+        ? '<code>' + esc(asset.id) + '</code> · <span style="color:var(--fg-dim)">' + esc(asset.format) + '</span> · <code style="color:var(--fg-dim)">' + esc(asset.path) + '</code>'
+        : '<em style="color:#c33">missing</em>') + '</dd>',
+      (mask ? '<dt>Overlay</dt><dd><code>' + esc(mask.id) + '</code></dd>' : ''),
+      '</dl>');
+
+    if (viewerHref) {
+      parts.push(
+        '<a class="qa-viewer-primary" href="' + esc(viewerHref) + '" target="_blank" rel="noopener">',
+        '🎯 Open interactive 3D viewer ↗',
+        '</a>',
+        '<div class="qa-viewer-hint">',
+        'Preview below — if the model looks tiny or off-center, use the full-screen viewer above (drag = rotate · scroll = zoom).',
+        '</div>',
+        '<div class="qa-viewer-wrap">',
+        '<iframe id="qa-viewer-frame" src="' + esc(viewerHref) + '" title="asset viewer" loading="eager"></iframe>',
+        '<div class="qa-viewer-loading" id="qa-viewer-loading">Loading 3D model… (this can take a few seconds on larger assets)</div>',
+        '<div class="qa-viewer-actions">',
+        '<a href="' + esc(viewerHref) + '" target="_blank" rel="noopener">Open viewer in new tab ↗</a>',
+        '<span style="color:var(--fg-dim)">·</span>',
+        '<a href="' + esc(asset.path) + '" target="_blank" rel="noopener">Download raw asset ↗</a>',
+        '</div>',
+        '</div>');
+    } else if (asset) {
+      parts.push('<div class="qa-viewer-wrap" style="padding:24px;text-align:center;color:var(--fg-dim)">',
+        'No in-browser renderer wired for <code>' + esc(asset.format) + '</code>. ',
+        '<a href="' + esc(asset.path) + '" target="_blank" rel="noopener">Download raw asset ↗</a>',
+        '</div>');
+    }
+
+    if (q.ground_truth) {
+      const gtText = JSON.stringify(q.ground_truth, null, 2);
+      parts.push('<details class="qa-gt">',
+        '<summary>Show ground truth' +
+        '<span class="qa-gt-warn">⚠ contains answer — leaks the benchmark if you look</span>' +
+        '</summary>',
+        '<pre>' + esc(gtText) + '</pre>',
+        '</details>');
+    }
+
+    parts.push('<div class="qa-nav-actions">',
+      '<a href="qagen.html">← Back to QA list</a>',
+      '</div>');
+
+    document.getElementById('qa-body').innerHTML = parts.join('');
+    document.getElementById('qid-crumb').textContent = q.id;
+    document.title = 'QA ' + q.id + ' — BabyVision-v2';
+
+    // Hide the "Loading 3D…" overlay once the iframe reports it finished
+    // fetching. GLB loading inside the iframe may continue past this,
+    // but we've at least handed off — user sees the viewer UI kick in.
+    const frame = document.getElementById('qa-viewer-frame');
+    const loading = document.getElementById('qa-viewer-loading');
+    if (frame && loading) {
+      frame.addEventListener('load', () => { loading.classList.add('hidden'); });
+      setTimeout(() => loading.classList.add('hidden'), 20000);  // hard fallback
+    }
+  }
+
+  window.ManifestReady.then((m) => {
+    document.getElementById('counts').textContent = m.brand + ' v' + m.version;
+    const params = new URLSearchParams(location.search);
+    const qid = params.get('id');
+    if (!qid) { fail('Missing ?id=<task_id> query param.'); return; }
+
+    const qagenUrl  = m.urls && m.urls.data && m.urls.data.qagen_index;
+    const assetsUrl = m.urls && m.urls.data && m.urls.data.assets_index;
+    Promise.all([
+      fetch(qagenUrl,  { cache: 'no-cache' }).then(r => r.ok ? r.json() : Promise.reject('qagen_index HTTP ' + r.status)),
+      fetch(assetsUrl, { cache: 'no-cache' }).then(r => r.ok ? r.json() : Promise.reject('assets_index HTTP ' + r.status)),
+    ]).then(([qaIdx, assetsIdx]) => {
+      const questions = Array.isArray(qaIdx) ? qaIdx : (qaIdx.questions || []);
+      const assets = (assetsIdx && Array.isArray(assetsIdx.assets)) ? assetsIdx.assets
+                   : (Array.isArray(assetsIdx) ? assetsIdx : []);
+      const q = questions.find(x => x.id === qid);
+      if (!q) { fail('Question not found: ' + qid); return; }
+      const asset = assets.find(a => a.id === q.asset_id) || null;
+      const mask = findMaskAsset(asset, assets);
+      render(q, asset, mask);
+    }).catch((e) => fail('Load failed: ' + e));
+  });
+})();
+</script>
+</body>
+</html>

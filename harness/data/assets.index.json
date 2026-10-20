@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "generated_at": "2026-06-24T00:00:00Z",
+  "assets": [
+    {
+      "id": "embodied/genesis_vp/cut_dragon",
+      "domain": "embodied",
+      "family": "genesis_vp",
+      "label": "Cut Dragon — MPM fracture demo",
+      "format": "glb",
+      "path": "viewer/datasets/genesis/cut_dragon.glb"
+    },
+    {
+      "id": "embodied/genesis_vp/franka_grasp",
+      "domain": "embodied",
+      "family": "genesis_vp",
+      "label": "Franka Grasp — force control demo",
+      "format": "glb",
+      "path": "viewer/datasets/genesis/franka_grasp.glb"
+    },
+    {
+      "id": "embodied/genesis_vp/ipc_cloth",
+      "domain": "embodied",
+      "family": "genesis_vp",
+      "label": "IPC Cloth — FEM cloth demo",
+      "format": "glb",
+      "path": "viewer/datasets/genesis/ipc_cloth.glb"
+    },
+    {
+      "id": "embodied/genesis_vp/sand_wheel",
+      "domain": "embodied",
+      "family": "genesis_vp",
+      "label": "Sand Wheel — MPM granular cascade",
+      "format": "glb",
+      "path": "viewer/datasets/genesis/sand_wheel.glb"
+    },
+    {
+      "id": "medical/medical_spatial/ixi_brain_demo",
+      "domain": "medical",
+      "family": "medical_spatial",
+      "label": "Abdominal CT — M3D-RefSeg s0132 (mild fatty liver)",
+      "format": "nifti",
+      "path": "examples/02_medical_spatial_gt/data/image.nii.gz"
+    },
+    {
+      "id": "medical/medical_spatial/ixi_brain_demo_mask",
+      "domain": "medical",
+      "family": "medical_spatial",
+      "label": "Abdominal CT — segmentation mask (mild fatty liver, 1.5 mm iso)",
+      "format": "nifti",
+      "path": "examples/02_medical_spatial_gt/data/mask.nii.gz"
+    },
+    {
+      "id": "astronomy/saturn_conjunction/earth_ephemeris",
+      "path": "viewer/datasets/astronomy/saturn_from_earth_2026_conjunction.json",
+      "format": "json",
+      "viewer": "saturn",
+      "domain": "astronomy",
+      "name": "Saturn @ 2026 conjunction — Earth observer ephemeris",
+      "note": "JPL HORIZONS observer table; sub-observer latitude B drives ring tilt",
+      "body_texture": "viewer/datasets/astronomy/2k_saturn.jpg",
+      "ring_texture": "viewer/datasets/astronomy/2k_saturn_ring_alpha.png"
+    },
+    {
+      "id": "astronomy/saturn_conjunction/mars_ephemeris",
+      "path": "viewer/datasets/astronomy/saturn_from_mars_2026_conjunction.json",
+      "format": "json",
+      "viewer": "saturn",
+      "domain": "astronomy",
+      "name": "Saturn @ 2026 conjunction — Mars observer ephemeris",
+      "note": "JPL HORIZONS observer table (from Mars); used for multi-view B-angle consistency",
+      "body_texture": "viewer/datasets/astronomy/2k_saturn.jpg",
+      "ring_texture": "viewer/datasets/astronomy/2k_saturn_ring_alpha.png"
+    },
+    {
+      "id": "biology/rhodopsin/1F88",
+      "domain": "biology",
+      "family": "rhodopsin",
+      "label": "Bovine rhodopsin — PDB 1F88 (7-TM GPCR)",
+      "format": "mmcif",
+      "viewer": "molstar",
+      "path": "viewer/datasets/biology/1F88.cif"
+    },
+    {
+      "id": "chemistry/caffeine/2519_caffeine",
+      "domain": "chemistry",
+      "family": "caffeine",
+      "label": "Caffeine (C8H10N4O2) — 1,3,7-trimethylxanthine",
+      "format": "mol",
+      "viewer": "molstar",
+      "path": "viewer/datasets/chemistry/2519_caffeine.mol"
+    },
+    {
+      "id": "industrial/helmet_caliber/damaged_helmet",
+      "domain": "industrial",
+      "family": "helmet_caliber",
+      "label": "Damaged Helmet — CAD fastener caliber perception (perspective trap)",
+      "format": "glb",
+      "path": "viewer/datasets/industrial/DamagedHelmet.glb"
+    },
+    {
+      "id": "geography/osm_pilot/manhattan",
+      "domain": "geography",
+      "family": "osm_pilot",
+      "label": "Manhattan — OSM building skyline (21,993 buildings, z12–z16)",
+      "format": "pmtiles",
+      "viewer": "citymap",
+      "city": "manhattan",
+      "path": "crawl_data/geography/osm_pilot/manhattan.pmtiles"
+    },
+    {
+      "id": "industrial/cad/occt_bearing",
+      "domain": "industrial",
+      "family": "cad",
+      "label": "OCCT bearing — IGES B-rep (best-effort tessellation)",
+      "format": "iges",
+      "viewer": "occt",
+      "path": "crawl_data/industrial/step_iges_samples/occt_bearing.iges"
+    },
+    {
+      "id": "architecture/bim/building_structural",
+      "domain": "architecture",
+      "family": "bim",
+      "label": "Building-Structural — BIM structural model (drawings ↔ interactive 3D)",
+      "name": "Building-Structural",
+      "format": "glb",
+      "viewer": "arch-model",
+      "path": "crawl_data/architecture/bim_ifc/Building-Structural.glb"
+    },
+    {
+      "id": "architecture/infra/banwol_bridge",
+      "domain": "architecture",
+      "family": "infra",
+      "label": "Banwol Bridge — LiDAR point cloud (per-point structural labels)",
+      "format": "drc",
+      "viewer": "pointcloud",
+      "classes": "Background,Superstructure,Column,Pier Cap,Guardrail",
+      "path": "crawl_data/architecture/bridge_pcl/Banwol-Bridge.drc"
+    }
+  ]
+}

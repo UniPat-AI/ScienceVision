@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Manhattan",
+    "path": "/crawl_data/geography/osm_pilot/manhattan.pmtiles",
+    "size": 5352685,
+    "viewer": "citymap",
+    "format": "pmtiles",
+    "city": "manhattan",
+    "annotations": "/crawl_data/geography/osm_pilot/manhattan_neighborhoods.geojson",
+    "bbox": [
+      -74.02,
+      40.7,
+      -73.96,
+      40.76
+    ],
+    "stats": "21,993 buildings · 47 district annotations · 5.1 MB pmtiles · z12-z16"
+  },
+  {
+    "name": "Manhattan (Photorealistic)",
+    "path": "/crawl_data/geography/osm_pilot/manhattan.pmtiles",
+    "size": 7437153,
+    "viewer": "citymap_photo",
+    "format": "google_3d_tiles",
+    "city": "manhattan",
+    "stats": "Google Photorealistic 3D Tiles · LoD3 textured · global coverage · 50k/mo free",
+    "requires_key": "GOOGLE_MAPS_API (Map Tiles API)"
+  }
+]

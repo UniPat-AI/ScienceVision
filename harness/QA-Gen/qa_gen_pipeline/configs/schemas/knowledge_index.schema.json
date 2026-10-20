@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/knowledge_index.schema.json",
+  "description": "Closed static knowledge-index contract. Fixture-only and production-approved records cannot be mixed.",
+  "type": "object",
+  "required": ["schema_version", "kind", "mode", "production_approval", "entries"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_knowledge_index"},
+    "mode": {"enum": ["local_fixture_only", "production"]},
+    "production_approval": {"type": "boolean"},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/definitions/fixture_entry"},
+          {"$ref": "#/definitions/approved_entry"}
+        ]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "local_fixture_only"}}, "required": ["mode"]},
+      "then": {
+        "properties": {
+          "production_approval": {"const": false},
+          "entries": {"items": {"$ref": "#/definitions/fixture_entry"}}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"mode": {"const": "production"}}, "required": ["mode"]},
+      "then": {
+        "properties": {
+          "production_approval": {"const": true},
+          "entries": {"items": {"$ref": "#/definitions/approved_entry"}}
+        }
+      }
+    }
+  ],
+  "definitions": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "leaf_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"
+    },
+    "knowledge_relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "entry_fields": {
+      "type": "object",
+      "required": ["leaf_id", "reference", "path", "digest", "state", "local_fixture", "production_eligible", "approval_receipt"],
+      "properties": {
+        "leaf_id": {"$ref": "#/definitions/leaf_id"},
+        "reference": {"type": "string", "minLength": 1},
+        "path": {"$ref": "#/definitions/knowledge_relative_path"},
+        "digest": {"$ref": "#/definitions/digest"},
+        "state": {"type": "string"},
+        "local_fixture": {"type": "boolean"},
+        "production_eligible": {"type": "boolean"},
+        "approval_receipt": {"type": ["string", "null"]}
+      },
+      "additionalProperties": false
+    },
+    "fixture_entry": {
+      "allOf": [
+        {"$ref": "#/definitions/entry_fields"},
+        {
+          "properties": {
+            "reference": {
+              "type": "string",
+              "pattern": "^fixture-subdomain-knowledge:[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+@sha256:[0-9a-f]{64}$"
+            },
+            "state": {"enum": ["fixture_compile_eligible", "fixture_blocked"]},
+            "local_fixture": {"const": true},
+            "production_eligible": {"const": false},
+            "approval_receipt": {"const": null}
+          }
+        }
+      ]
+    },
+    "approved_entry": {
+      "allOf": [
+        {"$ref": "#/definitions/entry_fields"},
+        {
+          "properties": {
+            "reference": {
+              "type": "string",
+              "pattern": "^knowledge-snapshot:[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+@sha256:[0-9a-f]{64}$"
+            },
+            "state": {"const": "approved"},
+            "local_fixture": {"const": false},
+            "production_eligible": {"const": true},
+            "approval_receipt": {"$ref": "#/definitions/digest"}
+          }
+        }
+      ]
+    }
+  }
+}

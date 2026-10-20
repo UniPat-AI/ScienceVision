@@ -108,14 +108,14 @@ Seven access settings, of which the paper reports three:
 | **3D + Vision MCP** | Vision MCP tools only; source artifacts withheld | No |
 | **2D + Scaffold ×1 / ×3 / ×6 / ×12** | That many fixed rendered views; no source artifacts | ×6 only |
 
-The harness is vendored in this repository (`scripts/harbor/`, `harbor_adapters/`,
-`sci3d_bench/`, `sci3d_agent/`, `scorer_bundle/`). It installs as an extra of this
-distribution. It needs Python 3.12 or later, because Harbor requires it, and a
-Docker-capable host. The `harbor` extra pins Harbor `v0.20.0`. A deterministic replay
-sandbox, including the dataset-to-tree builder and the archived-answer scorer, lives in
-[`sandbox/`](sandbox/README.md).
+The entire evaluation harness is vendored under [`harness/`](harness/), a copy of the
+`eval-baseline` branch of `UniPat-AI/BabyVision-v2`. It installs from that directory. It
+needs Python 3.12 or later and a Docker-capable host. The `harbor` extra pins Harbor
+`v0.20.0`. A deterministic replay sandbox, including the dataset-to-tree builder and the
+archived-answer scorer, lives in [`sandbox/`](sandbox/README.md).
 
 ```bash
+cd harness
 python3.12 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e ".[harbor]"

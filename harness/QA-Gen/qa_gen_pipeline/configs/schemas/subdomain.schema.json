@@ -1,0 +1,337 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/subdomain.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "domain", "status", "production_status", "readiness", "visual_skills", "seed", "asset", "viewer", "answer", "evidence", "knowledge", "release"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_subdomain_config"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z0-9_]+$"},
+    "domain": {"enum": ["biology", "chemistry", "medical", "architecture", "mechanical_cad"]},
+    "status": {"enum": ["sample_compile_eligible", "conditional", "blocked"]},
+    "production_status": {"enum": ["not_approved", "approved"]},
+    "readiness": {
+      "type": "object",
+      "required": ["config", "generation", "release"],
+      "properties": {
+        "config": {"const": "config_ready"},
+        "generation": {"enum": ["blocked", "fixture_only", "eligible"]},
+        "release": {"enum": ["blocked", "eligible"]}
+      },
+      "additionalProperties": false
+    },
+    "legacy_aliases": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.-]*$"}
+    },
+    "blocked_reasons": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}
+    },
+    "required_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["id", "state"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*(?:\\.[a-z][a-z0-9_]*)+$"},
+          "state": {"enum": ["missing", "unverified", "blocked"]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "workspace_binding": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {"const": "chirality_scene_registry_and_viewer_profile"}
+      },
+      "additionalProperties": false
+    },
+    "visual_skills": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "question_type_policy": {
+      "type": "object",
+      "required": ["allowed_question_family_kinds", "medical_modes", "measurement_default_allowed"],
+      "properties": {
+        "allowed_question_family_kinds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["property_identification", "attribute_classification", "paired_comparison", "measurement"]}
+        },
+        "medical_modes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["semantic_interpretation_no_overlay", "localize_then_measure_no_overlay"]}
+        },
+        "measurement_default_allowed": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "asset_facets": {
+      "type": "object",
+      "required": ["tracked_dimensions", "coverage_dedupe_key", "family_diversity_required"],
+      "properties": {
+        "tracked_dimensions": {
+          "const": ["body_region", "organ_system", "anatomy", "pathology", "modality", "dataset"]
+        },
+        "coverage_dedupe_key": {
+          "const": ["dataset", "normalized_asset_facets", "question_kernel"]
+        },
+        "family_diversity_required": {"const": true},
+        "label_identity_policy": {"enum": ["preserve"]}
+      },
+      "additionalProperties": false
+    },
+    "semantic_gt": {
+      "type": "object",
+      "required": ["source_id", "source_status", "solver_projection"],
+      "properties": {
+        "source_id": {"const": "m3d_refseg_doctor_annotation"},
+        "source_status": {"enum": ["missing", "pending_approval", "approved"]},
+        "solver_projection": {
+          "type": "object",
+          "required": ["primary_image", "excluded_artifacts"],
+          "properties": {
+            "primary_image": {"const": true},
+            "excluded_artifacts": {"const": ["segmentation", "mask", "overlay"]}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "seed": {
+      "type": "object",
+      "required": ["query"],
+      "properties": {
+        "query": {
+          "type": "object",
+          "required": ["domain", "subdomain", "required_status"],
+          "properties": {
+            "domain": {"enum": ["biology", "chemistry", "medical", "architecture", "mechanical_cad"]},
+            "subdomain": {"type": "string", "minLength": 1},
+            "required_status": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "locked_ref": {"type": "string", "pattern": "^(?:fixture-seed-inventory|seed-catalog)@sha256:[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "asset": {
+      "type": "object",
+      "required": ["required_conditions"],
+      "properties": {
+        "locked_ref": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*@sha256:[0-9a-f]{64}$"},
+        "required_conditions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "viewer": {
+      "type": "object",
+      "required": ["required_operations"],
+      "properties": {
+        "locked_ref": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*@sha256:[0-9a-f]{64}$"},
+        "required_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "capability_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "generation_strategies", "required_operations"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "generation_strategies": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"enum": ["preserve_intent", "reauthor_on_asset"]}
+              },
+              "required_operations": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {"type": "string", "minLength": 1}
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "answer": {
+      "type": "object",
+      "required": ["allowed_truth_modes"],
+      "properties": {
+        "allowed_truth_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"enum": ["visual_annotation", "expert_visual_judgment", "viewer_native_measurement"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["required"],
+      "properties": {
+        "required": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "knowledge": {
+      "type": "object",
+      "required": ["source_refs", "locked_refs"],
+      "properties": {
+        "source_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "required": ["source_id", "source_revision", "coverage"],
+            "properties": {
+              "source_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+              "source_revision": {"type": "integer", "minimum": 1},
+              "section_id": {"type": "string", "minLength": 1},
+              "coverage": {"const": "source_only"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "locked_refs": {
+          "type": "array",
+          "minItems": 0,
+          "items": {"type": "string", "pattern": "^(?:fixture-subdomain-knowledge|knowledge-snapshot):[a-z][a-z0-9_]*\\.[a-z0-9_]+@sha256:[0-9a-f]{64}$"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "release": {
+      "type": "object",
+      "required": ["eligible", "reason"],
+      "properties": {
+        "eligible": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {"status": {"enum": ["conditional", "blocked"]}},
+        "required": ["status"]
+      },
+      "then": {"required": ["blocked_reasons", "required_inputs"]}
+    },
+    {
+      "if": {
+        "properties": {"status": {"const": "sample_compile_eligible"}},
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "seed": {"required": ["locked_ref"]},
+          "asset": {"required": ["locked_ref"]},
+          "viewer": {"required": ["locked_ref"]},
+          "knowledge": {"properties": {"locked_refs": {"minItems": 1}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"readiness": {"properties": {"generation": {"const": "fixture_only"}}}},
+        "required": ["readiness"]
+      },
+      "then": {"properties": {"status": {"const": "sample_compile_eligible"}}}
+    },
+    {
+      "if": {
+        "properties": {"readiness": {"properties": {"generation": {"const": "blocked"}}}},
+        "required": ["readiness"]
+      },
+      "then": {"properties": {"status": {"enum": ["conditional", "blocked"]}}}
+    },
+    {
+      "if": {
+        "properties": {"status": {"enum": ["conditional", "blocked"]}},
+        "required": ["status"]
+      },
+      "then": {"properties": {"readiness": {"properties": {"generation": {"const": "blocked"}}}}}
+    },
+    {
+      "if": {"properties": {"domain": {"const": "medical"}}, "required": ["domain"]},
+      "then": {
+        "required": ["question_type_policy", "asset_facets", "semantic_gt"],
+        "properties": {
+          "question_type_policy": {
+            "properties": {
+              "measurement_default_allowed": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"readiness": {"properties": {"generation": {"const": "eligible"}}}},
+        "required": ["readiness"]
+      },
+      "then": {
+        "properties": {
+          "seed": {"required": ["locked_ref"]},
+          "asset": {"required": ["locked_ref"]},
+          "viewer": {"required": ["locked_ref"]},
+          "knowledge": {
+            "properties": {
+              "locked_refs": {
+                "minItems": 1,
+                "contains": {"type": "string", "pattern": "^knowledge-snapshot:"}
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"readiness": {"properties": {"release": {"const": "eligible"}}}},
+        "required": ["readiness"]
+      },
+      "then": {
+        "properties": {
+          "readiness": {"properties": {"generation": {"const": "eligible"}}},
+          "production_status": {"const": "approved"},
+          "release": {"properties": {"eligible": {"const": true}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"readiness": {"properties": {"release": {"const": "blocked"}}}},
+        "required": ["readiness"]
+      },
+      "then": {"properties": {"release": {"properties": {"eligible": {"const": false}}}}}
+    },
+    {
+      "if": {"properties": {"production_status": {"const": "approved"}}, "required": ["production_status"]},
+      "then": {
+        "properties": {
+          "readiness": {"properties": {"release": {"const": "eligible"}}},
+          "release": {"properties": {"eligible": {"const": true}}}
+        }
+      }
+    }
+  ]
+}

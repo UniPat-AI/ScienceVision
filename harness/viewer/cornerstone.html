@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cornerstone DICOM viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="preload" as="script" href="/viewer/shared/vendor/cornerstone-core/2.6.1/dist/cornerstone.min.js">
+<link rel="preload" as="script" href="/viewer/shared/vendor/cornerstone-wado-image-loader/4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js">
+<style>
+  #stage { position: fixed; top: 49px; left: 0; width: 100vw; height: calc(100vh - 49px); display: flex; align-items: center; justify-content: center; background: #000; }
+  #element { width: min(95vw, 95vh); height: min(95vw, 95vh); position: relative; }
+  #info { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.9); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; max-width: 60vw; }
+  #info b { color: #c9d1d9; }
+  .ww-controls { position: fixed; top: 60px; right: 12px; background: rgba(13,17,23,0.9); padding: 10px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; }
+  .ww-controls label { display: block; margin: 4px 0; }
+  .ww-controls input[type="number"] { width: 80px; }
+  .ww-controls button { background: #161b22; color: #c9d1d9; border: 1px solid #30363d; padding: 3px 10px; border-radius: 3px; font: inherit; cursor: pointer; margin-top: 4px; }
+  #slice-controls {
+    position: fixed; top: 60px; left: 12px;
+    background: rgba(13,17,23,0.92); padding: 10px 14px;
+    border-radius: 4px; border: 1px solid #30363d;
+    font: 11px ui-monospace, monospace; color: #c9d1d9;
+    min-width: 240px; display: none;
+  }
+  #slice-controls.visible { display: block; }
+  #slice-controls input[type=range] { width: 100%; margin: 6px 0; }
+  #slice-controls .row { display: flex; justify-content: space-between; align-items: center; }
+  #slice-controls .hint { color: var(--fg-dim); font-size: 10.5px; margin-top: 4px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Cornerstone</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">DICOM · WW/WL drag · slice nav (wheel / ← → / slider) · 3D volume → niivue</div>
+</header>
+<div id="stage"><div id="element"></div></div>
+<div id="slice-controls">
+  <div class="row"><b>Slice</b> <span id="slice-pos">— / —</span></div>
+  <input type="range" id="slice-slider" min="0" max="0" value="0" step="1">
+  <div class="hint" id="slice-hint">wheel · ← → · drag slider</div>
+</div>
+<div class="ww-controls">
+  <label>WW <input type="number" id="ww" value="400"></label>
+  <label>WL <input type="number" id="wl" value="40"></label>
+  <button id="reset">reset</button>
+</div>
+<div id="info">loading…</div>
+<!-- Cornerstone Core 2.x + dcmjs (legacy stack, simpler than 3.x for single-frame demo) -->
+<script src="/viewer/shared/vendor/cornerstone-core/2.6.1/dist/cornerstone.min.js"></script>
+<script src="/viewer/shared/vendor/cornerstone-math/0.1.10/dist/cornerstoneMath.min.js"></script>
+<script src="/viewer/shared/vendor/dicom-parser/1.8.21/dist/dicomParser.min.js"></script>
+<script src="/viewer/shared/vendor/cornerstone-wado-image-loader/4.13.2/dist/cornerstoneWADOImageLoader.bundle.min.js"></script>
+<script>
+(async function () {
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+  const info = document.getElementById('info');
+
+  if (!file) {
+    info.innerHTML = '<div class="error-box">No ?file= query param.</div>';
+    return;
+  }
+
+  cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+  cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+  cornerstoneWADOImageLoader.configure({ useWebWorkers: false });
+
+  const elem = document.getElementById('element');
+  cornerstone.enable(elem);
+
+  const fileUrl = new URL(file, location.origin).href;
+
+  // ── Slice-source resolution ─────────────────────────────────────────────
+  // Two paths a "slice stack" can land in this viewer:
+  //   (A) Multi-frame DICOM file (NumberOfFrames > 1) — append `?frame=N` to
+  //       the wadouri to switch frames. cornerstone-wado-image-loader caches
+  //       each frame independently after first decode.
+  //   (B) Image series in the same directory — multiple .dcm files that
+  //       share an InstanceNumber sequence. The ?series= query param can
+  //       point to a JSON manifest listing sibling URLs in slice order.
+  // We probe (A) first by loading frame 0 and checking metadata; if (B) is
+  // the actual scenario, the user passes ?series=…json explicitly.
+  let imageIds = [];           // ordered list of cornerstone imageIds
+  let initialDefaultVoi = null; // for the reset button
+
+  const seriesParam = params.get('series');
+  if (seriesParam) {
+    // (B) explicit series manifest: JSON array of relative or absolute paths.
+    try {
+      const r = await fetch(seriesParam);
+      if (!r.ok) throw new Error(`series manifest HTTP ${r.status}`);
+      const list = await r.json();
+      imageIds = list.map(p => 'wadouri:' + new URL(p, location.origin).href);
+    } catch (e) {
+      info.innerHTML = `<span style="color:#ff7b72">Series manifest failed: ${e.message}</span>`;
+      return;
+    }
+  } else {
+    imageIds = ['wadouri:' + fileUrl];
+  }
+
+  let curIdx = 0;
+  let nFrames = 1;     // total slices: imageIds.length × frames-per-file
+  let perFileFrames = 1;
+
+  function frameImageId(idx) {
+    if (seriesParam) return imageIds[idx];
+    return perFileFrames > 1
+      ? imageIds[0] + (imageIds[0].includes('?') ? '&' : '?') + 'frame=' + idx
+      : imageIds[0];
+  }
+
+  // ── Initial load + metadata read ────────────────────────────────────────
+  let image;
+  try {
+    image = await cornerstone.loadAndCacheImage(frameImageId(0));
+  } catch (err) {
+    info.innerHTML = '<span style="color:#ff7b72">Failed to load DICOM: ' + (err?.message || err) + '</span>';
+    return;
+  }
+  const viewport = cornerstone.getDefaultViewportForImage(elem, image);
+  cornerstone.displayImage(elem, image, viewport);
+  initialDefaultVoi = { ww: viewport.voi.windowWidth, wl: viewport.voi.windowCenter };
+  document.getElementById('ww').value = Math.round(initialDefaultVoi.ww);
+  document.getElementById('wl').value = Math.round(initialDefaultVoi.wl);
+
+  // Now we know the file's NumberOfFrames; if >1, total slices = that count.
+  perFileFrames = Number(image.data?.string('x00280008') || '1');
+  if (!seriesParam) nFrames = perFileFrames;
+  else nFrames = imageIds.length;
+
+  const modality = image.data?.string('x00080060') || '?';
+  const rows = image.rows, cols = image.columns;
+  const series = image.data?.string('x0008103e') || '';
+  const dim = nFrames > 1
+    ? `${cols}×${rows}×${nFrames}`
+    : `${cols}×${rows} (single slice)`;
+  info.innerHTML =
+    `<b>${modality}</b> · ${dim}` +
+    (series ? ` · <i>${series}</i>` : '') +
+    ` · WW/WL editable on the right`;
+
+  // ── Slice navigation UI ─────────────────────────────────────────────────
+  const sliceCtrl = document.getElementById('slice-controls');
+  const slider = document.getElementById('slice-slider');
+  const slicePos = document.getElementById('slice-pos');
+  const sliceHint = document.getElementById('slice-hint');
+
+  if (nFrames > 1) {
+    sliceCtrl.classList.add('visible');
+    slider.max = String(nFrames - 1);
+    slider.value = '0';
+    slicePos.textContent = `1 / ${nFrames}`;
+    sliceHint.textContent = seriesParam
+      ? `series of ${nFrames} files · wheel · ← → · slider`
+      : `multi-frame DICOM (${nFrames} frames) · wheel · ← → · slider`;
+  } else {
+    sliceCtrl.classList.remove('visible');
+  }
+
+  async function showSlice(idx) {
+    if (idx < 0) idx = 0;
+    if (idx >= nFrames) idx = nFrames - 1;
+    if (idx === curIdx) return;
+    curIdx = idx;
+    try {
+      const img = await cornerstone.loadAndCacheImage(frameImageId(idx));
+      // Preserve user's current VOI (W/L) across slices.
+      const v = cornerstone.getViewport(elem);
+      cornerstone.displayImage(elem, img, v);
+      slicePos.textContent = `${idx + 1} / ${nFrames}`;
+      slider.value = String(idx);
+    } catch (e) {
+      console.warn('slice load failed:', idx, e);
+    }
+  }
+
+  slider.addEventListener('input', (e) => showSlice(Number(e.target.value)));
+
+  // Wheel scrolling — single-step per notch; preventDefault so we don't
+  // also pan/zoom (cornerstone has no internal wheel handler at this layer).
+  document.getElementById('stage').addEventListener('wheel', (e) => {
+    if (nFrames <= 1) return;
+    e.preventDefault();
+    showSlice(curIdx + (e.deltaY > 0 ? 1 : -1));
+  }, { passive: false });
+
+  // Arrow-key navigation; ignore when typing in the W/L inputs.
+  window.addEventListener('keydown', (e) => {
+    const tag = (document.activeElement?.tagName || '').toLowerCase();
+    if (tag === 'input') return;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); showSlice(curIdx - 1);
+    } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault(); showSlice(curIdx + 1);
+    } else if (e.key === 'Home') {
+      e.preventDefault(); showSlice(0);
+    } else if (e.key === 'End') {
+      e.preventDefault(); showSlice(nFrames - 1);
+    }
+  });
+
+  // ── W/L wiring (preserved across slice changes via getViewport) ─────────
+  const updateVoi = () => {
+    const v = cornerstone.getViewport(elem);
+    v.voi.windowWidth = Number(document.getElementById('ww').value) || initialDefaultVoi.ww;
+    v.voi.windowCenter = Number(document.getElementById('wl').value) || initialDefaultVoi.wl;
+    cornerstone.setViewport(elem, v);
+  };
+  document.getElementById('ww').addEventListener('input', updateVoi);
+  document.getElementById('wl').addEventListener('input', updateVoi);
+  document.getElementById('reset').addEventListener('click', () => {
+    document.getElementById('ww').value = Math.round(initialDefaultVoi.ww);
+    document.getElementById('wl').value = Math.round(initialDefaultVoi.wl);
+    updateVoi();
+  });
+
+  window.addEventListener('resize', () => cornerstone.resize(elem, true));
+})();
+</script>
+</body>
+</html>

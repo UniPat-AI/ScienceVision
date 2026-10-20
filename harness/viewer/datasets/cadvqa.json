@@ -1,0 +1,22 @@
+[
+  {
+    "name": "cadvqa",
+    "label": "CAD-VQA",
+    "modality": "CAD (mechanical parts)",
+    "task_type": "MCQ",
+    "source": "github.com/asgsaeid/cad_vqa",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 85,
+        "jsonl": "/out_samples/cadvqa/test.jsonl",
+        "first_qid": "cadvqa-test-000000",
+        "zh_jsonl": "/out_samples/cadvqa/test.zh.jsonl"
+      }
+    },
+    "skipped": {},
+    "pool_size": 102,
+    "total_rows": 85
+  }
+]

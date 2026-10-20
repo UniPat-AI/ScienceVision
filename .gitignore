@@ -7,8 +7,8 @@ __pycache__/
 .env
 .env.*
 !.env.example
-data/
-work/
+/data/
+/work/
 eval-baseline/
 *.log
 *.tar

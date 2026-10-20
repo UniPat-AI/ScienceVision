@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_task_bundle.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "bundle_id", "batch_id", "expert_id", "expert", "admission", "task_file", "assignments", "asset_count", "asset_bytes", "asset_closure_sha256", "assets", "runtime_requirement", "redaction", "submission", "bundle_manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.expert_task_bundle.v2"},
+    "contract_version": {"const": "sciencevision.expert_exchange.v2"},
+    "bundle_id": {"type": "string", "pattern": "^bndl_[0-9a-f]{24}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "expert": {"type": "object"},
+    "admission": {"type": "object"},
+    "task_file": {"type": "object", "required": ["path", "media_type", "count", "sha256"]},
+    "assignments": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "asset_count": {"type": "integer", "minimum": 0},
+    "asset_bytes": {"type": "integer", "minimum": 0},
+    "asset_closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assets": {"type": "array", "items": {"type": "object"}},
+    "runtime_requirement": {"type": "object", "required": ["loader_api", "renderers", "capabilities"]},
+    "redaction": {"type": "object"},
+    "submission": {"type": "object"},
+    "bundle_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

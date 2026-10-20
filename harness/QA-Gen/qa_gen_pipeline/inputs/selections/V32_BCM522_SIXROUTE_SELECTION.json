@@ -1,0 +1,2683 @@
+{
+  "bundle": {
+    "package_id": "scale-v3.2-bcm522-question-assets-bundle-20260826-v1.1.0",
+    "path": "/Users/sue/Research/ScienceVision-local-packages/scale-v3.2-bcm522-question-assets-bundle-20260826-v1.1.0"
+  },
+  "domains": {
+    "biology": {
+      "by_sub_domain": {
+        "bio_collision_overlap_magnitude": [
+          "sv-biol-bio_collision_check-0057",
+          "sv-biol-bio_collision_check-0108"
+        ],
+        "bio_collision_pair_distance": [
+          "sv-biol-bio_collision_check-0103",
+          "sv-biol-bio_collision_check-0107"
+        ],
+        "bio_component_nonpolymer_inventory": [
+          "sv-biol-bio_collision_check-0122",
+          "sv-biol-bio_collision_check-0130"
+        ],
+        "bio_component_polymer_context": [
+          "sv-biol-bio_collision_check-0052",
+          "sv-biol-bio_collision_check-0068"
+        ],
+        "bio_docking_component_absence": [
+          "sv-biol-bio_docking_plausibility-0053",
+          "sv-biol-bio_docking_plausibility-0055"
+        ],
+        "bio_docking_component_clash": [
+          "sv-biol-bio_docking_plausibility-0045",
+          "sv-biol-bio_docking_plausibility-0093"
+        ],
+        "bio_docking_component_contacts": [
+          "sv-biol-bio_docking_plausibility-0066",
+          "sv-biol-bio_docking_plausibility-0067"
+        ],
+        "bio_docking_component_coverage": [
+          "sv-biol-bio_docking_plausibility-0027",
+          "sv-biol-bio_docking_plausibility-0060"
+        ],
+        "bio_docking_component_nearest_pair": [
+          "sv-biol-bio_docking_plausibility-0069",
+          "sv-biol-bio_docking_plausibility-0097"
+        ],
+        "molecular_contact_geometry": [
+          "sv-biol-bio_collision_check-0072",
+          "sv-biol-bio_collision_check-0127"
+        ]
+      },
+      "count": 20,
+      "exposure": {
+        "access_track": {
+          "drawn": {
+            "raw_compute": 20
+          },
+          "population": {
+            "raw_compute": 129
+          }
+        },
+        "difficulty": {
+          "drawn": {
+            "hard": 10,
+            "medium": 10
+          },
+          "population": {
+            "hard": 40,
+            "medium": 89
+          }
+        },
+        "has_compute_contract": {
+          "drawn": {
+            "yes": 20
+          },
+          "population": {
+            "yes": 129
+          }
+        },
+        "mask_present": {
+          "drawn": {
+            "no": 20
+          },
+          "population": {
+            "no": 129
+          }
+        },
+        "viewer": {
+          "drawn": {
+            "molstar_deployed": 20
+          },
+          "population": {
+            "molstar_deployed": 129
+          }
+        },
+        "vision_class_code": {
+          "drawn": {
+            "V2": 10,
+            "V3": 10
+          },
+          "population": {
+            "V2": 89,
+            "V3": 40
+          }
+        }
+      },
+      "id_sha256": "b940d5cdbf12f0574222b60fa18a4d751d12ca2da83f4827acd34faff19b5e71",
+      "question_ids": [
+        "sv-biol-bio_collision_check-0052",
+        "sv-biol-bio_collision_check-0057",
+        "sv-biol-bio_collision_check-0068",
+        "sv-biol-bio_collision_check-0072",
+        "sv-biol-bio_collision_check-0103",
+        "sv-biol-bio_collision_check-0107",
+        "sv-biol-bio_collision_check-0108",
+        "sv-biol-bio_collision_check-0122",
+        "sv-biol-bio_collision_check-0127",
+        "sv-biol-bio_collision_check-0130",
+        "sv-biol-bio_docking_plausibility-0027",
+        "sv-biol-bio_docking_plausibility-0045",
+        "sv-biol-bio_docking_plausibility-0053",
+        "sv-biol-bio_docking_plausibility-0055",
+        "sv-biol-bio_docking_plausibility-0060",
+        "sv-biol-bio_docking_plausibility-0066",
+        "sv-biol-bio_docking_plausibility-0067",
+        "sv-biol-bio_docking_plausibility-0069",
+        "sv-biol-bio_docking_plausibility-0093",
+        "sv-biol-bio_docking_plausibility-0097"
+      ],
+      "quota": {
+        "bio_collision_overlap_magnitude": 2,
+        "bio_collision_pair_distance": 2,
+        "bio_component_nonpolymer_inventory": 2,
+        "bio_component_polymer_context": 2,
+        "bio_docking_component_absence": 2,
+        "bio_docking_component_clash": 2,
+        "bio_docking_component_contacts": 2,
+        "bio_docking_component_coverage": 2,
+        "bio_docking_component_nearest_pair": 2,
+        "molecular_contact_geometry": 2
+      },
+      "rows": [
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "lobe_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 314204,
+            "format": "cif",
+            "path": "assets/biology/bio_component_polymer_context/crawl_data/biology/rcsb_pdb_mmcif/1A1A.cif",
+            "sha256": "06d698350696284fddb4c8376c7cfb4ccdf989c154c4da037340dab14cf73402"
+          },
+          "question_id": "sv-biol-bio_collision_check-0052",
+          "sub_domain": "bio_component_polymer_context",
+          "task_id": "sv-biol-bio_collision_check-0052",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "distance_A",
+            "vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 179515,
+            "format": "cif",
+            "path": "assets/biology/bio_collision_overlap_magnitude/crawl_data/biology/rcsb_pdb_mmcif/1A1G.cif",
+            "sha256": "76c440138b9b02d045afcfb50b07b6ec1c641e4d52d4afc7b4234819b6d3621b"
+          },
+          "question_id": "sv-biol-bio_collision_check-0057",
+          "sub_domain": "bio_collision_overlap_magnitude",
+          "task_id": "sv-biol-bio_collision_check-0057",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "lobe_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 615270,
+            "format": "cif",
+            "path": "assets/biology/bio_component_polymer_context/crawl_data/biology/rcsb_pdb_mmcif/1A31.cif",
+            "sha256": "66139f53a302457d64fc604584e330677e6344f415b8b9b72c26a2b3edb4d192"
+          },
+          "question_id": "sv-biol-bio_collision_check-0068",
+          "sub_domain": "bio_component_polymer_context",
+          "task_id": "sv-biol-bio_collision_check-0068",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "element_pair",
+            "vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 49660,
+            "format": "cif",
+            "path": "assets/biology/molecular_contact_geometry/crawl_data/biology/rcsb_pdb_mmcif/1A3I.cif",
+            "sha256": "5ff199341248260b1d916264948356ab1eedfb30b4147973e02ff06a08de399e"
+          },
+          "question_id": "sv-biol-bio_collision_check-0072",
+          "sub_domain": "molecular_contact_geometry",
+          "task_id": "sv-biol-bio_collision_check-0072",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "distance_A",
+            "threshold_gap_A",
+            "threshold_relation"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 163346,
+            "format": "cif",
+            "path": "assets/biology/bio_collision_pair_distance/crawl_data/biology/rcsb_pdb_mmcif/1ABO.cif",
+            "sha256": "f0d75d69c233140cc56caaa5fc6e78781623b445e21ff8b44f2d276cb9329ca3"
+          },
+          "question_id": "sv-biol-bio_collision_check-0103",
+          "sub_domain": "bio_collision_pair_distance",
+          "task_id": "sv-biol-bio_collision_check-0103",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "distance_A",
+            "element_pair"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 331558,
+            "format": "cif",
+            "path": "assets/biology/bio_collision_pair_distance/crawl_data/biology/rcsb_pdb_mmcif/1AE8.cif",
+            "sha256": "fe4bbc6fd0f4ad9bb85983f9b6a08e4fa473a255d0b9a6492f36687e88d5c45e"
+          },
+          "question_id": "sv-biol-bio_collision_check-0107",
+          "sub_domain": "bio_collision_pair_distance",
+          "task_id": "sv-biol-bio_collision_check-0107",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 330350,
+            "format": "cif",
+            "path": "assets/biology/bio_collision_overlap_magnitude/crawl_data/biology/rcsb_pdb_mmcif/1AFE.cif",
+            "sha256": "e52f90fe4688a2e37db43021edbc1085f09c62f36eb90b6ce1625e90eb7d8523"
+          },
+          "question_id": "sv-biol-bio_collision_check-0108",
+          "sub_domain": "bio_collision_overlap_magnitude",
+          "task_id": "sv-biol-bio_collision_check-0108",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "lobe_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1352044,
+            "format": "cif",
+            "path": "assets/biology/bio_component_nonpolymer_inventory/crawl_data/biology/rcsb_pdb_mmcif/1IGT.cif",
+            "sha256": "d7b1a560ed993c7be669a15530b64f37e2af8e978c321a5779d20ab75746b63f"
+          },
+          "question_id": "sv-biol-bio_collision_check-0122",
+          "sub_domain": "bio_component_nonpolymer_inventory",
+          "task_id": "sv-biol-bio_collision_check-0122",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "has_severe_clash",
+            "threshold_gap_A",
+            "threshold_relation"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 959527,
+            "format": "cif",
+            "path": "assets/biology/molecular_contact_geometry/crawl_data/biology/rcsb_pdb_mmcif/4EY7.cif",
+            "sha256": "f77d9a9dca20c4e6824ea0d943c4d068d83e6383469bf7a5c335155e377d67a1"
+          },
+          "question_id": "sv-biol-bio_collision_check-0127",
+          "sub_domain": "molecular_contact_geometry",
+          "task_id": "sv-biol-bio_collision_check-0127",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "lobe_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "biology",
+          "forbidden_strategies": [
+            "clash_score_api",
+            "pdb_contact_table"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 326399,
+            "format": "cif",
+            "path": "assets/biology/bio_component_nonpolymer_inventory/crawl_data/biology/rcsb_pdb_mmcif/6LU7.cif",
+            "sha256": "1496edb125c5460e6b9530e65e7007d74631dbfb43950aa46109db2ca3d67d2a"
+          },
+          "question_id": "sv-biol-bio_collision_check-0130",
+          "sub_domain": "bio_component_nonpolymer_inventory",
+          "task_id": "sv-asset-5722fe26a3230067",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V2",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1141384,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_coverage/crawl_data/biology/rcsb_pdb_mmcif/11RN.cif",
+            "sha256": "791c87cfec3968653b0c06a9c66e3196fde16a07c6dbef5015c62e51ebb5b71e"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0027",
+          "sub_domain": "bio_docking_component_coverage",
+          "task_id": "sv-biol-bio_docking_plausibility-0027",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A",
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 522995,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_clash/crawl_data/biology/rcsb_pdb_mmcif/1A01.cif",
+            "sha256": "698b1bf9c3038ff28ef79773f6d5e108363606d8ebc61a0416dd1677b0b513f7"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0045",
+          "sub_domain": "bio_docking_component_clash",
+          "task_id": "sv-biol-bio_docking_plausibility-0045",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "terminus_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 252039,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_absence/crawl_data/biology/rcsb_pdb_mmcif/1A1B.cif",
+            "sha256": "9111eecf691accf5d9aad2d2d7d1bd643cf548638ebe6be384e0d28a5117e774"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0053",
+          "sub_domain": "bio_docking_component_absence",
+          "task_id": "sv-asset-7422d7ef69eb9142",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "terminus_nearer_assembly_centre"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 287493,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_absence/crawl_data/biology/rcsb_pdb_mmcif/1A1E.cif",
+            "sha256": "771ea82f3527ed3567b25909a9d04b1e9d99954b6851bb7860905e7b1bf5d7ef"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0055",
+          "sub_domain": "bio_docking_component_absence",
+          "task_id": "sv-asset-41effdc92e39e5a0",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 208612,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_coverage/crawl_data/biology/rcsb_pdb_mmcif/1A1J.cif",
+            "sha256": "7444122d41bf19ebca8d4cae5900981d351b096d811d130df3041b196f1ef05c"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0060",
+          "sub_domain": "bio_docking_component_coverage",
+          "task_id": "sv-biol-bio_docking_plausibility-0060",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A",
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 218849,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_contacts/crawl_data/biology/rcsb_pdb_mmcif/1A2X.cif",
+            "sha256": "b34f673f8fb0ea786de5a173e9bcb96e51d58f552d030828055405ae7b33c360"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0066",
+          "sub_domain": "bio_docking_component_contacts",
+          "task_id": "sv-biol-bio_docking_plausibility-0066",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A",
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 377824,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_contacts/crawl_data/biology/rcsb_pdb_mmcif/1A2Y.cif",
+            "sha256": "9ac419b724b7fab5f44a5de7c6a593f60077d5faed4b254eb1b90fe5712e1854"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0067",
+          "sub_domain": "bio_docking_component_contacts",
+          "task_id": "sv-asset-f5aae3469b372f39",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 438031,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_nearest_pair/crawl_data/biology/rcsb_pdb_mmcif/1A34.cif",
+            "sha256": "981e7605461c59eb95870c72a20ea896c0c148e0f5861fc674b100f5c5c5e6be"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0069",
+          "sub_domain": "bio_docking_component_nearest_pair",
+          "task_id": "sv-biol-bio_docking_plausibility-0069",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 252006,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_clash/crawl_data/biology/rcsb_pdb_mmcif/1A75.cif",
+            "sha256": "91501be017abb7711aabce976c57a39ae91551c1ab2d6aa7dc1be5bf09e656bc"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0093",
+          "sub_domain": "bio_docking_component_clash",
+          "task_id": "sv-asset-f475515bfb420c2d",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "biology",
+          "forbidden_strategies": [],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 5701791,
+            "format": "cif",
+            "path": "assets/biology/bio_docking_component_nearest_pair/crawl_data/biology/rcsb_pdb_mmcif/1A9X.cif",
+            "sha256": "6c90956a7c9289efe6da1e58c9917980126ba455d212ca556f8f328195321772"
+          },
+          "question_id": "sv-biol-bio_docking_plausibility-0097",
+          "sub_domain": "bio_docking_component_nearest_pair",
+          "task_id": "sv-biol-bio_docking_plausibility-0097",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        }
+      ],
+      "sub_domain_population": {
+        "bio_collision_overlap_magnitude": 4,
+        "bio_collision_pair_distance": 8,
+        "bio_component_nonpolymer_inventory": 8,
+        "bio_component_polymer_context": 8,
+        "bio_docking_component_absence": 17,
+        "bio_docking_component_clash": 3,
+        "bio_docking_component_contacts": 5,
+        "bio_docking_component_coverage": 5,
+        "bio_docking_component_nearest_pair": 10,
+        "molecular_contact_geometry": 61
+      }
+    },
+    "chemistry": {
+      "by_sub_domain": {
+        "chem_binding_component_atom_context": [
+          "sv-chem-chem_binding_geometry-0091"
+        ],
+        "chem_binding_component_chain_context": [
+          "sv-chem-chem_binding_geometry-0122"
+        ],
+        "chem_binding_component_nearest_pair": [
+          "sv-chem-chem_binding_geometry-0118"
+        ],
+        "chem_binding_component_residue": [
+          "sv-chem-chem_binding_geometry-0007"
+        ],
+        "chem_binding_component_summary": [
+          "sv-chem-chem_binding_geometry-0013"
+        ],
+        "chem_binding_het_contact": [
+          "sv-chem-chem_binding_geometry-0084",
+          "sv-chem-chem_binding_geometry-0120"
+        ],
+        "chem_binding_het_polymer_atom_inventory": [
+          "sv-chem-chem_binding_geometry-0115"
+        ],
+        "chem_binding_nonpolymer_inventory": [
+          "sv-chem-chem_binding_geometry-0129"
+        ],
+        "chem_binding_polymer_population_context": [
+          "sv-chem-chem_binding_geometry-0005"
+        ],
+        "chem_conformation_continuous_signed_dihedral": [
+          "sv-chem-chem_conformation-0080"
+        ],
+        "chem_conformation_explicit_dihedral": [
+          "sv-chem-chem_conformation-0031",
+          "sv-chem-chem_conformation-0076"
+        ],
+        "chem_conformation_signed_absolute_dihedral": [
+          "sv-chem-chem_conformation-0097"
+        ],
+        "chem_xyz_centroid_radius": [
+          "sv-chem-chem_conformation-0053"
+        ],
+        "chem_xyz_farthest_heavy_pair": [
+          "sv-chem-chem_conformation-0049",
+          "sv-chem-chem_conformation-0051"
+        ],
+        "chem_xyz_heavy_extent": [
+          "sv-chem-chem_conformation-0057"
+        ],
+        "molecular_contact_geometry": [
+          "sv-chem-chem_binding_geometry-0015",
+          "sv-chem-chem_binding_geometry-0030"
+        ]
+      },
+      "count": 20,
+      "exposure": {
+        "access_track": {
+          "drawn": {
+            "raw_compute": 18,
+            "viewer_measurement": 2
+          },
+          "population": {
+            "raw_compute": 145,
+            "viewer_measurement": 48
+          }
+        },
+        "difficulty": {
+          "drawn": {
+            "hard": 12,
+            "medium": 8
+          },
+          "population": {
+            "hard": 75,
+            "medium": 118
+          }
+        },
+        "has_compute_contract": {
+          "drawn": {
+            "no": 2,
+            "yes": 18
+          },
+          "population": {
+            "no": 48,
+            "yes": 145
+          }
+        },
+        "mask_present": {
+          "drawn": {
+            "no": 20
+          },
+          "population": {
+            "no": 193
+          }
+        },
+        "viewer": {
+          "drawn": {
+            "molstar_deployed": 20
+          },
+          "population": {
+            "molstar_deployed": 193
+          }
+        },
+        "vision_class_code": {
+          "drawn": {
+            "V3": 12,
+            "V6": 8
+          },
+          "population": {
+            "V3": 75,
+            "V6": 118
+          }
+        }
+      },
+      "id_sha256": "6b0a54f17b62394567f71523747c920d92cd3b023d55cbd509289e40fdf8e35e",
+      "question_ids": [
+        "sv-chem-chem_binding_geometry-0005",
+        "sv-chem-chem_binding_geometry-0007",
+        "sv-chem-chem_binding_geometry-0013",
+        "sv-chem-chem_binding_geometry-0015",
+        "sv-chem-chem_binding_geometry-0030",
+        "sv-chem-chem_binding_geometry-0084",
+        "sv-chem-chem_binding_geometry-0091",
+        "sv-chem-chem_binding_geometry-0115",
+        "sv-chem-chem_binding_geometry-0118",
+        "sv-chem-chem_binding_geometry-0120",
+        "sv-chem-chem_binding_geometry-0122",
+        "sv-chem-chem_binding_geometry-0129",
+        "sv-chem-chem_conformation-0031",
+        "sv-chem-chem_conformation-0049",
+        "sv-chem-chem_conformation-0051",
+        "sv-chem-chem_conformation-0053",
+        "sv-chem-chem_conformation-0057",
+        "sv-chem-chem_conformation-0076",
+        "sv-chem-chem_conformation-0080",
+        "sv-chem-chem_conformation-0097"
+      ],
+      "quota": {
+        "chem_binding_component_atom_context": 1,
+        "chem_binding_component_chain_context": 1,
+        "chem_binding_component_nearest_pair": 1,
+        "chem_binding_component_residue": 1,
+        "chem_binding_component_summary": 1,
+        "chem_binding_het_contact": 2,
+        "chem_binding_het_polymer_atom_inventory": 1,
+        "chem_binding_nonpolymer_inventory": 1,
+        "chem_binding_polymer_population_context": 1,
+        "chem_conformation_continuous_signed_dihedral": 1,
+        "chem_conformation_explicit_dihedral": 2,
+        "chem_conformation_signed_absolute_dihedral": 1,
+        "chem_xyz_centroid_radius": 1,
+        "chem_xyz_farthest_heavy_pair": 2,
+        "chem_xyz_heavy_extent": 1,
+        "molecular_contact_geometry": 2
+      },
+      "rows": [
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "chain_principal_extent_A",
+            "midpoint_nearer_terminus"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 2399852,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_polymer_population_context/crawl_data/biology/rcsb_pdb_mmcif/10OR.cif",
+            "sha256": "18c4372e38f6aa45f3544bf4986e9c973b6161b38ed3b986ebbbd5ad0f1c22fa"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0005",
+          "sub_domain": "chem_binding_polymer_population_context",
+          "task_id": "sv-asset-588097661d5f949a",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A",
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 13621629,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_component_residue/crawl_data/biology/rcsb_pdb_mmcif/10QM.cif",
+            "sha256": "fb9cc1cdb6a95cb941a06e0daa25086fe69bc0e48d7474416031f12c83699335"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0007",
+          "sub_domain": "chem_binding_component_residue",
+          "task_id": "sv-chem-chem_binding_geometry-0007",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 459075,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_component_summary/crawl_data/biology/rcsb_pdb_mmcif/11AO.cif",
+            "sha256": "97f44a5cbd10f362dbbb1a16c841c8800b47c3e983f9efc03d29ac48ef4b3065"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0013",
+          "sub_domain": "chem_binding_component_summary",
+          "task_id": "sv-chem-chem_binding_geometry-0013",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "contact_distance_A",
+            "element_pair"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1146403,
+            "format": "cif",
+            "path": "assets/chemistry/molecular_contact_geometry/crawl_data/biology/rcsb_pdb_mmcif/11GX.cif",
+            "sha256": "8ebce7dbad27b349aa267553058ac00975439b89312df403d35770280cc35620"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0015",
+          "sub_domain": "molecular_contact_geometry",
+          "task_id": "sv-chem-chem_binding_geometry-0015",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "within_3A"
+          ],
+          "compute_packages": [],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 604299,
+            "format": "cif",
+            "path": "assets/chemistry/molecular_contact_geometry/crawl_data/biology/rcsb_pdb_mmcif/12AJ.cif",
+            "sha256": "758c0aa30088762190a3debc997e09802c4be481dc7120ab617f02fafee3650d"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0030",
+          "sub_domain": "molecular_contact_geometry",
+          "task_id": "sv-chem-chem_binding_geometry-0030",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "contact_distance_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 323136,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_het_contact/crawl_data/biology/rcsb_pdb_mmcif/1A5G.cif",
+            "sha256": "bd27e5b0c3aa8780f4eac79cc35d8f7f100b81dd254adb4c37c4a212308afb5e"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0084",
+          "sub_domain": "chem_binding_het_contact",
+          "task_id": "sv-chem-chem_binding_geometry-0084",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "maximum_vdw_overlap_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 471818,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_component_atom_context/crawl_data/biology/rcsb_pdb_mmcif/1A73.cif",
+            "sha256": "30e42f7426a55ea3eaffe0d849123baa6965ee45ee7a51be109324f0401127ea"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0091",
+          "sub_domain": "chem_binding_component_atom_context",
+          "task_id": "sv-chem-chem_binding_geometry-0091",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "chain_principal_extent_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 128514,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_het_polymer_atom_inventory/crawl_data/biology/rcsb_pdb_mmcif/1AIK.cif",
+            "sha256": "5ff88f80ba834ebb57b613f889059c48c3dc2d5043512900b9b59770ddffbba7"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0115",
+          "sub_domain": "chem_binding_het_polymer_atom_inventory",
+          "task_id": "sv-asset-adbd1cc7829948fb",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "minimum_contact_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 330009,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_component_nearest_pair/crawl_data/biology/rcsb_pdb_mmcif/1BL8.cif",
+            "sha256": "62b90c8963047135fd4c4225ac41dde24d8eda9cfd8cbb7b7c68fca6c7a78658"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0118",
+          "sub_domain": "chem_binding_component_nearest_pair",
+          "task_id": "sv-chem-chem_binding_geometry-0118",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "contact_distance_A"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 586683,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_het_contact/crawl_data/biology/rcsb_pdb_mmcif/1F88.cif",
+            "sha256": "6bc49951984686f3ac98a0d98873b08dd545379ae305ddc973c86667f123a410"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0120",
+          "sub_domain": "chem_binding_het_contact",
+          "task_id": "sv-chem-chem_binding_geometry-0120",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "chain_principal_extent_A",
+            "midpoint_nearer_terminus"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1352044,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_component_chain_context/crawl_data/biology/rcsb_pdb_mmcif/1IGT.cif",
+            "sha256": "d7b1a560ed993c7be669a15530b64f37e2af8e978c321a5779d20ab75746b63f"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0122",
+          "sub_domain": "chem_binding_component_chain_context",
+          "task_id": "sv-chem-chem_binding_geometry-0122",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "chain_principal_extent_A",
+            "midpoint_nearer_terminus"
+          ],
+          "compute_packages": [
+            "gemmi==0.7.5",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "pdb_contact_table",
+            "plip_analyze"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_measure_distance",
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1302925,
+            "format": "cif",
+            "path": "assets/chemistry/chem_binding_nonpolymer_inventory/crawl_data/biology/rcsb_pdb_mmcif/5IRE.cif",
+            "sha256": "a94da6674cc72bd0eebbaf0cdb529f484998ca3a2feeb2e79b35d8c54b51b152"
+          },
+          "question_id": "sv-chem-chem_binding_geometry-0129",
+          "sub_domain": "chem_binding_nonpolymer_inventory",
+          "task_id": "sv-asset-73acdfc72c7a7457",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V3",
+          "vision_class_group": "hard_moat"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "absolute_dihedral_deg",
+            "planarity_deviation_deg"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 484,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_conformation_explicit_dihedral/crawl_data/biology/qm_conformers/qm9_21468.xyz",
+            "sha256": "a0133c36297b3fd739448324f4b2ec45979f34b2de1f841f4ab4683af5f242a0"
+          },
+          "question_id": "sv-chem-chem_conformation-0031",
+          "sub_domain": "chem_conformation_explicit_dihedral",
+          "task_id": "sv-asset-c878be691ddbd6ec",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "farthest_heavy_atom_ids"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 723,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_xyz_farthest_heavy_pair/crawl_data/biology/qm_conformers/qm9_34562.xyz",
+            "sha256": "efa9cf17aca60d5de6d3fb0b7926fe2cc89ea5a0ac1fa991d81c13d92a63c165"
+          },
+          "question_id": "sv-chem-chem_conformation-0049",
+          "sub_domain": "chem_xyz_farthest_heavy_pair",
+          "task_id": "sv-asset-800017a0a9c35d47",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "farthest_heavy_atom_ids"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 812,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_xyz_farthest_heavy_pair/crawl_data/biology/qm_conformers/qm9_35337.xyz",
+            "sha256": "04004868c7b39ed8bf74d1b3db7d2fc45eaff4e29ca1e787da20781edccc1672"
+          },
+          "question_id": "sv-chem-chem_conformation-0051",
+          "sub_domain": "chem_xyz_farthest_heavy_pair",
+          "task_id": "sv-asset-b37915652caf7cd9",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "farthest_heavy_atom_ids"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 814,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_xyz_centroid_radius/crawl_data/biology/qm_conformers/qm9_37777.xyz",
+            "sha256": "df4ad8a6cb9c3ad490c853ad8f5474019597e031bb1f5aaf37013bf6b018c454"
+          },
+          "question_id": "sv-chem-chem_conformation-0053",
+          "sub_domain": "chem_xyz_centroid_radius",
+          "task_id": "sv-asset-b4d3d5643d5a3eab",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "farthest_heavy_atom_distance_A",
+            "farthest_heavy_atom_ids",
+            "longest_bbox_axes"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 857,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_xyz_heavy_extent/crawl_data/biology/qm_conformers/qm9_41657.xyz",
+            "sha256": "be5c5beff621c66525ad51ed73f7b1093a53a936445f8e1130db36f3e30f8323"
+          },
+          "question_id": "sv-chem-chem_conformation-0057",
+          "sub_domain": "chem_xyz_heavy_extent",
+          "task_id": "sv-asset-3dcc0dfd81972685",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "absolute_dihedral_deg",
+            "nearest_planar_reference_deg",
+            "planarity_deviation_deg"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1",
+            "rdkit==2026.3.5"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 1006,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_conformation_explicit_dihedral/crawl_data/biology/qm_conformers/qm9_59363.xyz",
+            "sha256": "3fd91c49ab04f9ea460facc4cb8f0a7d2e758d4c9ebca2cf269d9e6558e06ca1"
+          },
+          "question_id": "sv-chem-chem_conformation-0076",
+          "sub_domain": "chem_conformation_explicit_dihedral",
+          "task_id": "sv-asset-a7709c4b270ab3de",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "dihedral_deg",
+            "planarity_deviation_deg"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 899,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_conformation_continuous_signed_dihedral/crawl_data/biology/qm_conformers/qm9_62800.xyz",
+            "sha256": "d00832413051f4e7cb129f8de2bd7391b86c3ea889bbb114ea16283bdec81a7e"
+          },
+          "question_id": "sv-chem-chem_conformation-0080",
+          "sub_domain": "chem_conformation_continuous_signed_dihedral",
+          "task_id": "sv-asset-5b744708bbc1b092",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "dihedral_deg",
+            "planarity_deviation_deg"
+          ],
+          "compute_packages": [
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "chemistry",
+          "forbidden_strategies": [
+            "rdkit_assign_stereo",
+            "rdkit_calc_dihedral",
+            "smiles_to_conformer"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": null,
+          "mcp_allow_list": [
+            "viewer_rotate",
+            "viewer_zoom"
+          ],
+          "primary_asset": {
+            "bytes": 781,
+            "format": "xyz",
+            "path": "assets/chemistry/chem_conformation_signed_absolute_dihedral/crawl_data/biology/qm_conformers/qm9_79928.xyz",
+            "sha256": "53668d8293b94f29dea315f12baa6c1fdfcdc9cec0cc36057d70d641a5012a6d"
+          },
+          "question_id": "sv-chem-chem_conformation-0097",
+          "sub_domain": "chem_conformation_signed_absolute_dihedral",
+          "task_id": "sv-asset-7d621db923109d43",
+          "viewer": "molstar_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        }
+      ],
+      "sub_domain_population": {
+        "chem_binding_component_atom_context": 7,
+        "chem_binding_component_chain_context": 5,
+        "chem_binding_component_nearest_pair": 4,
+        "chem_binding_component_residue": 5,
+        "chem_binding_component_summary": 3,
+        "chem_binding_het_contact": 17,
+        "chem_binding_het_polymer_atom_inventory": 5,
+        "chem_binding_nonpolymer_inventory": 5,
+        "chem_binding_polymer_population_context": 4,
+        "chem_conformation_continuous_signed_dihedral": 7,
+        "chem_conformation_explicit_dihedral": 81,
+        "chem_conformation_signed_absolute_dihedral": 8,
+        "chem_xyz_centroid_radius": 4,
+        "chem_xyz_farthest_heavy_pair": 10,
+        "chem_xyz_heavy_extent": 8,
+        "molecular_contact_geometry": 20
+      }
+    },
+    "medical": {
+      "by_sub_domain": {
+        "med_ct_geometry": [
+          "sv-medi-med_ct_geometry-0005",
+          "sv-medi-med_ct_geometry-0014",
+          "sv-medi-med_ct_geometry-0019",
+          "sv-medi-med_ct_geometry-0067",
+          "sv-medi-med_ct_geometry-0148",
+          "sv-medi-med_ct_geometry-0156",
+          "sv-medi-med_ct_geometry-0171",
+          "sv-medi-med_ct_geometry-0174",
+          "sv-medi-med_ct_geometry-0217",
+          "sv-medi-med_ct_geometry-0222",
+          "sv-medi-med_ct_geometry-0292",
+          "sv-medi-med_ct_geometry-0296",
+          "sv-medi-med_ct_geometry-0323",
+          "sv-medi-med_ct_geometry-0343"
+        ],
+        "med_mri_anatomy": [
+          "sv-medi-med_mri_anatomy-0006",
+          "sv-medi-med_mri_anatomy-0032",
+          "sv-medi-med_mri_anatomy-0071",
+          "sv-medi-med_mri_anatomy-0148",
+          "sv-medi-med_mri_anatomy-0190",
+          "sv-medi-med_mri_anatomy-0215"
+        ]
+      },
+      "count": 20,
+      "exposure": {
+        "access_track": {
+          "drawn": {
+            "raw_compute": 13,
+            "viewer_measurement": 7
+          },
+          "population": {
+            "raw_compute": 130,
+            "viewer_measurement": 70
+          }
+        },
+        "difficulty": {
+          "drawn": {
+            "hard": 6,
+            "medium": 14
+          },
+          "population": {
+            "hard": 10,
+            "medium": 190
+          }
+        },
+        "has_compute_contract": {
+          "drawn": {
+            "no": 7,
+            "yes": 13
+          },
+          "population": {
+            "no": 70,
+            "yes": 130
+          }
+        },
+        "mask_present": {
+          "drawn": {
+            "yes": 20
+          },
+          "population": {
+            "yes": 200
+          }
+        },
+        "viewer": {
+          "drawn": {
+            "niivue_deployed": 20
+          },
+          "population": {
+            "niivue_deployed": 200
+          }
+        },
+        "vision_class_code": {
+          "drawn": {
+            "V1": 14,
+            "V6": 6
+          },
+          "population": {
+            "V1": 190,
+            "V6": 10
+          }
+        }
+      },
+      "id_sha256": "effbe6e1de6e7e14a69fc99457e31e84630627c6e0641ff37967c44a4e28fbdf",
+      "question_ids": [
+        "sv-medi-med_ct_geometry-0005",
+        "sv-medi-med_ct_geometry-0014",
+        "sv-medi-med_ct_geometry-0019",
+        "sv-medi-med_ct_geometry-0067",
+        "sv-medi-med_ct_geometry-0148",
+        "sv-medi-med_ct_geometry-0156",
+        "sv-medi-med_ct_geometry-0171",
+        "sv-medi-med_ct_geometry-0174",
+        "sv-medi-med_ct_geometry-0217",
+        "sv-medi-med_ct_geometry-0222",
+        "sv-medi-med_ct_geometry-0292",
+        "sv-medi-med_ct_geometry-0296",
+        "sv-medi-med_ct_geometry-0323",
+        "sv-medi-med_ct_geometry-0343",
+        "sv-medi-med_mri_anatomy-0006",
+        "sv-medi-med_mri_anatomy-0032",
+        "sv-medi-med_mri_anatomy-0071",
+        "sv-medi-med_mri_anatomy-0148",
+        "sv-medi-med_mri_anatomy-0190",
+        "sv-medi-med_mri_anatomy-0215"
+      ],
+      "quota": {
+        "med_ct_geometry": 14,
+        "med_mri_anatomy": 6
+      },
+      "rows": [
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_min_vox",
+            "laterality",
+            "longest_to_shortest_extent_ratio",
+            "representative_axial_index"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 460022,
+            "mask_id": 3,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0004/mask.nii.gz",
+            "sha256": "2531084eb228ac63d549c98393b060ea5e6df34c6c48cc3314783edc3340a8b6"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 29168502,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0004/ct.nii.gz",
+            "sha256": "e3b79850e0a7d425bce31b51608c934c07bb81db51894dbf1308890a116b258b"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0005",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-6f47b600d810fe26",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_max_vox_inclusive",
+            "extent_vox",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 400239,
+            "mask_id": 3,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0024/mask.nii.gz",
+            "sha256": "ff6bdbae6123bfd3ba6e1dcb90fa6691d41bb5e517452cc71586ffd8ab61ff82"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 60738949,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0024/ct.nii.gz",
+            "sha256": "a082fee18d7971a5356cab0faab5b5129372b6d7d438b895c3dbfafcbbf20920"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0014",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-0883fc0ba7f49785",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "laterality"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 121560,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0037/mask.nii.gz",
+            "sha256": "723c9586fd883dbe7ad51d73b4bf379556b02e4d0a42a25e8f6ec93b333151ca"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 23496778,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0037/ct.nii.gz",
+            "sha256": "fd19cbdedd19097f4b3deb23b0dcfd6006af648e83b0de0ced5ff8a6a297d747"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0019",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-b122ac701938d354",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "longest_axes",
+            "representative_axial_index",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 197394,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0139/mask.nii.gz",
+            "sha256": "31ba544152567e127d44d4dbe741b587f23c7350dfe3931d45eda7cd3e543d45"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 34162653,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0139/ct.nii.gz",
+            "sha256": "ad8faedc566a20e0def18234e41c236e024f4174b5771c42f7d713fe4641ecbd"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0067",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-69e74031e986f625",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_max_vox_inclusive",
+            "laterality",
+            "representative_axial_index"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 169872,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0376/mask.nii.gz",
+            "sha256": "db3a4867e17390b69bc141bb7f0243db04c5da7833e6c81c4dce7a748d500c00"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 4499402,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0376/ct.nii.gz",
+            "sha256": "9ec1d0862da5e829f017ce9f0f9a71265df5840740ef58af7f2ee5da1a20e97b"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0148",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-164d6a403d4b28d2",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "crosses_fov_midline",
+            "extent_vox",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 33616,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0388/mask.nii.gz",
+            "sha256": "db60685df2649909e144558e1c146a8deb763fcfd8af5a30fb5e49bfd8b379ec"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 3603978,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0388/ct.nii.gz",
+            "sha256": "00d2d4650b7d76f235b69d10b8249ae7f0c7eb05b3418cc297668a779f9c9206"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0156",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-caa735f673401dad",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_max_vox_inclusive",
+            "bbox_min_vox",
+            "crosses_fov_midline",
+            "representative_axial_index"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 245914,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0429/mask.nii.gz",
+            "sha256": "683e954b6766d793b58b87c2a263e6721948711b709d3f27818bb15729240ba3"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 29079685,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0429/ct.nii.gz",
+            "sha256": "0a0cf1926d3e68afbd60874aadca32ea8bbbd22e48e45b0c2570887cb0eb7dd9"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0171",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-ec0ea8bbe56d52b9",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "bbox_max_vox_inclusive",
+            "crosses_fov_midline",
+            "longest_to_shortest_extent_ratio",
+            "representative_axial_index"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 147225,
+            "mask_id": 2,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0436/mask.nii.gz",
+            "sha256": "3347869ddb253d2684967a1c0bc0f6e5fdcd4e8e4803f8fa3f1ff597c6babcab"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 24369274,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0436/ct.nii.gz",
+            "sha256": "56f6886479b1ae50a010fa3d39a8b07cf4e0a46d68309edfec64174449b66aef"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0174",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-4d413d008b37387f",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "bbox_min_vox",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 273576,
+            "mask_id": 8,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0502/mask.nii.gz",
+            "sha256": "0c26a44de0f4679ca4ac9cd74de3d25a6376257ab54c2cf299de1a4508c10b41"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 29023000,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0502/ct.nii.gz",
+            "sha256": "73faa6a15dc3b3549570251bafc0201b10d5ed39835510edf8866a08c41057e0"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0217",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-7484207d132efb35",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_min_vox",
+            "extent_vox",
+            "representative_axial_index",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 321419,
+            "mask_id": 5,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0507/mask.nii.gz",
+            "sha256": "a0cf94f37920a0dd6f48cdb86782d98536865b021d9b771e5c7f4866b265e563"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 43862674,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0507/ct.nii.gz",
+            "sha256": "4a6ea312c1bc5d477c05ca99dcf1138a05aee59fa8e9276443fd58cb363b4142"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0222",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-ef1d83df3fcc9d9f",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "crosses_fov_midline",
+            "representative_axial_index",
+            "signed_lr_distance_mm"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 154033,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0783/mask.nii.gz",
+            "sha256": "1e16cf8b931c7dfa497ce4cb78618d70345c242248255d8ed3adc8ca97599f8e"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 26734769,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0783/ct.nii.gz",
+            "sha256": "2bdd30382b89f8cf66b81cf230d4859e0252ddeb1ddf535e53aee2bc77ef3985"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0292",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-307c87de3cbf687c",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "viewer_measurement",
+          "answer_fields": [
+            "bbox_min_vox",
+            "longest_axes",
+            "longest_to_shortest_extent_ratio",
+            "representative_axial_index"
+          ],
+          "compute_packages": [],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": false,
+          "mask_asset": {
+            "bytes": 12752,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0837/mask.nii.gz",
+            "sha256": "4502e72a65cd71809672c2bc07dfa0cb7e527cc72966aa43e6821f19576f288c"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 2277906,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s0837/ct.nii.gz",
+            "sha256": "57bdb7d7b0d4d4ac6642f661426607c7ce9051659ce358a4f7361c1581a5b83d"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0296",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-89e3c5dba843f028",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "laterality",
+            "longest_axes"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 248423,
+            "mask_id": 4,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s1142/mask.nii.gz",
+            "sha256": "bb6803fde0f3ada44112dde1aae76b6e794f0eb8d4fa071e95b9a18f445374e7"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 19356659,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s1142/ct.nii.gz",
+            "sha256": "41b26a11ea0f2471f6f2f153158a0d5c953dcb72ceef2e2597dc85b6cdc89097"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0323",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-4c0d2b4978b32403",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "bbox_max_vox_inclusive",
+            "longest_to_shortest_extent_ratio"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "medium",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nifti_centroid_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 632013,
+            "mask_id": 1,
+            "mask_selection": "label_index",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s1397/mask.nii.gz",
+            "sha256": "18017ad5c395702a274aa61011d37789faab27ecdf19e7f86b2503805f90fd4b"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice",
+            "viewer_window_level"
+          ],
+          "primary_asset": {
+            "bytes": 76331978,
+            "format": "nii.gz",
+            "path": "assets/medical/med_ct_geometry/datasets/M3D-RefSeg/M3D_RefSeg/s1397/ct.nii.gz",
+            "sha256": "d53f67c6a6320405fc23fa8b993002bd4dfeee87ccce1395c95f733dac8467e0"
+          },
+          "question_id": "sv-medi-med_ct_geometry-0343",
+          "sub_domain": "med_ct_geometry",
+          "task_id": "sv-asset-235e917c60899bd8",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V1",
+          "vision_class_group": "soft_dimension"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "longest_axes"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 851,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_011.nii.gz",
+            "sha256": "d3c0cc7629f95ea58af538d25f0c35efcffaab21db22f3ab4f810d181b78fe0f"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 70886,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_011.nii.gz",
+            "sha256": "d1b0ec8ff9ad7a88605a913f5527802aa5c0a93e576836495b8bade25d017d5d"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0006",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-73641486c7f45078",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "extent_vox",
+            "longest_axes"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 925,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_051.nii.gz",
+            "sha256": "49dc5abf4e2e8371bc411577d4b6fe635243d404ff2b5176112a491b4901b5aa"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 84435,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_051.nii.gz",
+            "sha256": "836523213b319eacb7fdd7a9aa324d9291f20892846dff62acf3cfe9874d36ce"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0032",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-404ef294735b3dba",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "best_axial_slice",
+            "extent_vox",
+            "longest_to_shortest_extent_ratio"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 866,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_123.nii.gz",
+            "sha256": "bb3da30509efa4d7165edf527fb151449ace19deb09718f055653ac998daf97d"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 54403,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_123.nii.gz",
+            "sha256": "2ed648043b780cec73d8cb9c5146f3b7fdcd17c1f314f5ac96ce5fdf469e493b"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0071",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-21b4faaea416f92c",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "longest_to_shortest_extent_ratio"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 908,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_232.nii.gz",
+            "sha256": "16e56311dd7b6ff383453d41093ff6f211cd6bb74a6b8aa6c72d88a2b24a4c2f"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 82746,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_232.nii.gz",
+            "sha256": "d8b78a7cd0bffdc71c94519cdbf165aaa55b629abe0232abac8cc5ddf9d6a599"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0148",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-0a6210cd84f76eb0",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "best_axial_slice",
+            "longest_to_shortest_extent_ratio"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 1011,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_299.nii.gz",
+            "sha256": "26c80bc59e76d6a736f48d3772dfa7989d964bd75f01c30e8888eb724c3bbddd"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 73671,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_299.nii.gz",
+            "sha256": "c1fa25c9b3b27134f3189575464b519405f97a4a484986b3b240702d206f3695"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0190",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-010c10d33de9125e",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        },
+        {
+          "access_track": "raw_compute",
+          "answer_fields": [
+            "extent_vox"
+          ],
+          "compute_packages": [
+            "nibabel==5.3.2",
+            "numpy==2.5.1"
+          ],
+          "difficulty": "hard",
+          "domain": "medical",
+          "forbidden_strategies": [
+            "nibabel_header_lookup",
+            "slice_index_api"
+          ],
+          "has_compute_contract": true,
+          "mask_asset": {
+            "bytes": 951,
+            "mask_id": null,
+            "mask_selection": "complete_nonzero_overlay",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/labelsTr/hippocampus_331.nii.gz",
+            "sha256": "dba3f4bdaa1b4e0d635f410f13d255c54bc379ab302f7f4bf3931a766e74ab80"
+          },
+          "mcp_allow_list": [
+            "viewer_bbox",
+            "viewer_rotate",
+            "viewer_slice"
+          ],
+          "primary_asset": {
+            "bytes": 72845,
+            "format": "nii.gz",
+            "path": "assets/medical/med_mri_anatomy/crawl_data/medical/decathlon/extracted/Task04_Hippocampus/imagesTr/hippocampus_331.nii.gz",
+            "sha256": "d70f11e3af8bf1fae4abdbb33d2f3f3f99c72fa0d1c12f2bc26603013947f38f"
+          },
+          "question_id": "sv-medi-med_mri_anatomy-0215",
+          "sub_domain": "med_mri_anatomy",
+          "task_id": "sv-asset-00e4ce13edb4298b",
+          "viewer": "niivue_deployed",
+          "vision_class_code": "V6",
+          "vision_class_group": "contrast_axis"
+        }
+      ],
+      "sub_domain_population": {
+        "med_ct_geometry": 190,
+        "med_mri_anatomy": 10
+      }
+    }
+  },
+  "generated_by": "scripts/eval_v32/sample_bcm522.py",
+  "id_sha256": "149b29605da6cd2862e427dacb4d1098b106d23eb95b248ffdf6dc0bdf1846d4",
+  "overrides": {
+    "medical": {
+      "med_ct_geometry": 14,
+      "med_mri_anatomy": 6
+    }
+  },
+  "per_domain": 20,
+  "schema_version": "sciencevision.eval_v32_selection.v1",
+  "seed": "eval-v32-bcm522-sixroute-20260826",
+  "total": 60,
+  "warnings": [
+    {
+      "axis": "access_track",
+      "cell": "viewer_measurement",
+      "domain": "chemistry",
+      "drawn": 2,
+      "kind": "thin_cell",
+      "note": "chemistry/viewer_measurement drew 2 of 48 rows; below n=3 this cell is not a score. Coverage-first quotas cap it -- the track is confined to few sub-domains.",
+      "population": 48
+    }
+  ]
+}

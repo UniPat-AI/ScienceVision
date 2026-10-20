@@ -1,0 +1,26 @@
+schema_version: 1
+kind: qagen_subdomain_knowledge_fixture
+id: biology.docking_pose_plausibility
+fixture:
+  local_only: true
+  purpose: sample_compile
+  production_approval: false
+  approval_receipt: null
+fixture_payload:
+  id: biology.docking_pose_plausibility
+  domain: biology
+  subdomain: docking_pose_plausibility
+  state: sample_compile_eligible
+  local_fixture_seed_refs:
+    - fixture-seed-biology-001
+  allowed_truth_modes:
+    - expert_visual_judgment
+  required_viewer_operations:
+    - inspect
+    - isolate
+    - rotate
+  forbidden_shortcuts:
+    - raw_asset_metadata
+    - asset_file_read
+  production_approval: false
+fixture_digest: sha256:337f51b1f8960a8bdb077e47d5b4169e100465320a828abb6770facc6c7ecdac

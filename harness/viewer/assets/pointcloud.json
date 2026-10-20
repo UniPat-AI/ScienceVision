@@ -1,0 +1,18 @@
+[
+  {
+    "name": "laspy_simple",
+    "path": "/crawl_data/pointcloud/las_samples/laspy_simple.las",
+    "size": 36437,
+    "viewer": "pointcloud",
+    "format": "las",
+    "note": "LAS LiDAR — in-browser binary parser + three.js Points"
+  },
+  {
+    "name": "pdal_autzen_trim",
+    "path": "/crawl_data/pointcloud/las_samples/pdal_autzen_trim.las",
+    "size": 3742038,
+    "viewer": "pointcloud",
+    "format": "las",
+    "note": "LAS LiDAR — in-browser binary parser + three.js Points"
+  }
+]

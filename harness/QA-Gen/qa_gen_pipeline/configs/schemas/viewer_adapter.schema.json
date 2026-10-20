@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/viewer_adapter.schema.json",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "adapter_id",
+    "enabled",
+    "implementation",
+    "backend_contract",
+    "scene_registry",
+    "security",
+    "operations"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_viewer_adapter_config"},
+    "adapter_id": {"type": "string", "minLength": 1},
+    "enabled": {"type": "boolean"},
+    "implementation": {
+      "type": "object",
+      "required": ["module", "factory"],
+      "properties": {
+        "module": {"type": ["string", "null"], "minLength": 1},
+        "factory": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "backend_contract": {
+      "type": "object",
+      "required": ["kind", "session_source_path", "open_schema_path"],
+      "properties": {
+        "kind": {
+          "enum": [
+            "sciencevision_mcp_v1",
+            "sciencevision_molstar_browser_v1"
+          ]
+        },
+        "session_source_path": {"type": ["string", "null"], "minLength": 1},
+        "open_schema_path": {"type": ["string", "null"], "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "scene_registry": {
+      "type": "object",
+      "required": ["path", "anonymous_lookup", "solver_visible"],
+      "properties": {
+        "path": {"type": ["string", "null"], "minLength": 1},
+        "anonymous_lookup": {"type": "boolean"},
+        "solver_visible": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "required": [
+        "network_access",
+        "accepts_solver_asset_identifiers",
+        "exposes_raw_asset_metadata",
+        "exposes_raw_asset_bytes",
+        "arbitrary_compute",
+        "attested_evidence"
+      ],
+      "properties": {
+        "network_access": {"type": "boolean"},
+        "accepts_solver_asset_identifiers": {"type": "boolean"},
+        "exposes_raw_asset_metadata": {"type": "boolean"},
+        "exposes_raw_asset_bytes": {"type": "boolean"},
+        "arbitrary_compute": {"type": "boolean"},
+        "attested_evidence": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "operations": {
+      "type": "object",
+      "required": ["allowed", "native_measurements"],
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "native_measurements": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

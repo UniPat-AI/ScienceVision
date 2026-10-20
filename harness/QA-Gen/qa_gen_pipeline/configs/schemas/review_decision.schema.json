@@ -1,0 +1,145 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/review_decision.schema.json",
+  "description": "Decision envelopes emitted by qagen.contracts.make_decision().",
+  "oneOf": [
+    {"$ref": "#/definitions/knowledge_review_decision"},
+    {"$ref": "#/definitions/plan_approval_decision"},
+    {"$ref": "#/definitions/domain_review_decision"}
+  ],
+  "definitions": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "envelope": {
+      "type": "object",
+      "required": ["schema_version", "kind", "id", "status", "content_digest", "created_at", "producer", "body"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"type": "string", "minLength": 1},
+        "id": {"type": "string", "minLength": 1},
+        "status": {"enum": ["approved", "revise", "rejected", "quarantined"]},
+        "content_digest": {"$ref": "#/definitions/digest"},
+        "created_at": {"type": "string", "minLength": 1},
+        "producer": {"type": "string", "minLength": 1},
+        "body": {"type": "object"}
+      },
+      "additionalProperties": false
+    },
+    "decision_body": {
+      "type": "object",
+      "required": ["decision", "actor_id", "actor_role", "decided_at", "bound_digests", "rationale"],
+      "properties": {
+        "decision": {"enum": ["approved", "revise", "rejected", "quarantined"]},
+        "actor_id": {"type": "string", "minLength": 1},
+        "actor_role": {"type": "string", "minLength": 1},
+        "decided_at": {"type": "string", "minLength": 1},
+        "bound_digests": {"type": "object"},
+        "rationale": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "knowledge_review_decision": {
+      "allOf": [
+        {"$ref": "#/definitions/envelope"},
+        {
+          "properties": {
+            "kind": {"const": "knowledge_review_decision"},
+            "body": {
+              "allOf": [
+                {"$ref": "#/definitions/decision_body"},
+                {
+                  "required": ["snapshot_digest", "input_digest", "compile_authorization_ref"],
+                  "properties": {
+                    "snapshot_digest": {"$ref": "#/definitions/digest"},
+                    "input_digest": {"$ref": "#/definitions/digest"},
+                    "compile_authorization_ref": {"$ref": "#/definitions/digest"},
+                    "bound_digests": {
+                      "type": "object",
+                      "required": ["draft_digest", "input_digest", "compile_authorization_ref"],
+                      "properties": {
+                        "draft_digest": {"$ref": "#/definitions/digest"},
+                        "input_digest": {"$ref": "#/definitions/digest"},
+                        "compile_authorization_ref": {"$ref": "#/definitions/digest"}
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "plan_approval_decision": {
+      "allOf": [
+        {"$ref": "#/definitions/envelope"},
+        {
+          "properties": {
+            "kind": {"const": "plan_approval_decision"},
+            "body": {
+              "allOf": [
+                {"$ref": "#/definitions/decision_body"},
+                {
+                  "required": ["plan_digest", "config_digest", "viewer_profile_digest"],
+                  "properties": {
+                    "plan_digest": {"$ref": "#/definitions/digest"},
+                    "config_digest": {"$ref": "#/definitions/digest"},
+                    "viewer_profile_digest": {"$ref": "#/definitions/digest"},
+                    "bound_digests": {
+                      "type": "object",
+                      "required": ["plan_digest", "config_digest", "viewer_profile_digest"],
+                      "properties": {
+                        "plan_digest": {"$ref": "#/definitions/digest"},
+                        "config_digest": {"$ref": "#/definitions/digest"},
+                        "viewer_profile_digest": {"$ref": "#/definitions/digest"}
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "domain_review_decision": {
+      "allOf": [
+        {"$ref": "#/definitions/envelope"},
+        {
+          "properties": {
+            "kind": {"const": "domain_review_decision"},
+            "body": {
+              "allOf": [
+                {"$ref": "#/definitions/decision_body"},
+                {
+                  "required": ["candidate_digest", "config_digest", "viewer_profile_digest", "evidence_digest"],
+                  "properties": {
+                    "candidate_digest": {"$ref": "#/definitions/digest"},
+                    "config_digest": {"$ref": "#/definitions/digest"},
+                    "viewer_profile_digest": {"$ref": "#/definitions/digest"},
+                    "evidence_digest": {"$ref": "#/definitions/digest"},
+                    "bound_digests": {
+                      "type": "object",
+                      "required": ["candidate_digest", "config_digest", "viewer_profile_digest", "evidence_digest"],
+                      "properties": {
+                        "candidate_digest": {"$ref": "#/definitions/digest"},
+                        "config_digest": {"$ref": "#/definitions/digest"},
+                        "viewer_profile_digest": {"$ref": "#/definitions/digest"},
+                        "evidence_digest": {"$ref": "#/definitions/digest"}
+                      },
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  }
+}

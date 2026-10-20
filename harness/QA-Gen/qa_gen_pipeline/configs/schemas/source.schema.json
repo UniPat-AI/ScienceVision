@@ -1,0 +1,490 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/source.schema.json",
+  "description": "Closed source configuration contracts. A version conflict must remain explicit until a receipt resolves it.",
+  "oneOf": [
+    {"$ref": "#/definitions/asset_manifest_source"},
+    {"$ref": "#/definitions/source_registry"},
+    {"$ref": "#/definitions/seed_source_spec"},
+    {"$ref": "#/definitions/selection_source_spec"},
+    {"$ref": "#/definitions/knowledge_source_registry"},
+    {"$ref": "#/definitions/revision_intake"},
+    {"$ref": "#/definitions/viewer_definition_source"}
+  ],
+  "definitions": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "raw_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repo_reference": {
+      "type": "object",
+      "required": ["repo_path", "purpose"],
+      "properties": {
+        "repo_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        },
+        "purpose": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "fixture_source": {
+      "type": "object",
+      "required": ["schema_version", "kind", "id", "fixture_path", "fixture_payload_digest", "local_only", "production_eligible", "reference_owners"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"type": "string"},
+        "id": {"type": "string", "minLength": 1},
+        "fixture_path": {"type": "string", "minLength": 1},
+        "fixture_payload_digest": {"$ref": "#/definitions/digest"},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "reference_owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/repo_reference"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "asset_manifest_source": {
+      "oneOf": [
+        {
+          "allOf": [
+            {"$ref": "#/definitions/fixture_source"},
+            {"properties": {"kind": {"const": "qagen_asset_manifest_source"}}, "required": ["kind"]}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/definitions/locked_document_source"},
+            {"properties": {"kind": {"const": "qagen_asset_manifest_source"}}, "required": ["kind"]}
+          ]
+        }
+      ]
+    },
+    "viewer_definition_source": {
+      "oneOf": [
+        {
+          "allOf": [
+            {"$ref": "#/definitions/fixture_source"},
+            {"properties": {"kind": {"const": "qagen_viewer_definition_source"}}, "required": ["kind"]}
+          ]
+        },
+        {
+          "allOf": [
+            {"$ref": "#/definitions/locked_document_source"},
+            {"properties": {"kind": {"const": "qagen_viewer_definition_source"}}, "required": ["kind"]}
+          ]
+        }
+      ]
+    },
+    "locked_document_source": {
+      "type": "object",
+      "required": ["schema_version", "kind", "id", "source_mode", "document_path", "document_digest", "local_only", "production_eligible", "reference_owners"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"type": "string"},
+        "id": {"type": "string", "minLength": 1},
+        "source_mode": {"const": "locked_document"},
+        "document_path": {"type": "string", "minLength": 1},
+        "document_digest": {"$ref": "#/definitions/digest"},
+        "local_only": {"type": "boolean"},
+        "production_eligible": {"type": "boolean"},
+        "reference_owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/repo_reference"}
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"local_only": {"const": true}}, "required": ["local_only"]},
+          "then": {"properties": {"production_eligible": {"const": false}}}
+        }
+      ]
+    },
+    "fixture_source_entry": {
+      "type": "object",
+      "required": ["id", "mode", "fixture_path", "fixture_payload_digest", "local_only", "production_eligible", "status", "reference_owners"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "mode": {"const": "local_fixture"},
+        "fixture_path": {"type": "string", "minLength": 1},
+        "fixture_payload_digest": {"$ref": "#/definitions/digest"},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "status": {"const": "fixture_only"},
+        "reference_owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/repo_reference"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "not_applicable_version": {
+      "type": "object",
+      "required": ["status", "observed_versions", "resolution_receipt_digest"],
+      "properties": {
+        "status": {"const": "not_applicable"},
+        "observed_versions": {"type": "array", "maxItems": 0},
+        "resolution_receipt_digest": {"const": null}
+      },
+      "additionalProperties": false
+    },
+    "version_conflict": {
+      "type": "object",
+      "required": ["status", "observed_versions", "resolution_receipt_digest"],
+      "properties": {
+        "status": {"const": "conflict"},
+        "observed_versions": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "resolution_receipt_digest": {"const": null}
+      },
+      "additionalProperties": false
+    },
+    "resolved_version": {
+      "type": "object",
+      "required": ["status", "observed_versions", "resolved_version", "resolution_receipt_digest"],
+      "properties": {
+        "status": {"const": "resolved"},
+        "observed_versions": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "resolved_version": {"type": "string", "minLength": 1},
+        "resolution_receipt_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "version_resolution": {
+      "oneOf": [
+        {"$ref": "#/definitions/not_applicable_version"},
+        {"$ref": "#/definitions/version_conflict"},
+        {"$ref": "#/definitions/resolved_version"}
+      ]
+    },
+    "source_registry": {
+      "type": "object",
+      "required": ["schema_version", "kind", "id", "sources", "version_resolution"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_source_registry"},
+        "id": {"type": "string", "minLength": 1},
+        "sources": {"type": "array", "minItems": 1, "items": {"$ref": "#/definitions/fixture_source_entry"}},
+        "version_resolution": {"$ref": "#/definitions/version_resolution"}
+      },
+      "additionalProperties": false
+    },
+    "local_role_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9][A-Za-z0-9._/-]*$"
+    },
+    "seed_file_role": {
+      "type": "object",
+      "required": ["path", "format", "parser_contract"],
+      "properties": {
+        "path": {"$ref": "#/definitions/local_role_path"},
+        "format": {"enum": ["json", "jsonl", "markdown"]},
+        "parser_contract": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-z][a-z0-9_.-]*_v[1-9][0-9]*$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "seed_source_spec": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "kind",
+        "id",
+        "importer",
+        "mode",
+        "root_env",
+        "expected_basename",
+        "file_roles",
+        "taxonomy_aliases",
+        "version_policy",
+        "local_only",
+        "production_eligible",
+        "expected_inventory_digest",
+        "expected_package"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_seed_source_spec"},
+        "id": {"type": "string", "minLength": 1},
+        "importer": {"const": "ev2_local_package_v1"},
+        "mode": {"const": "controlled"},
+        "root_env": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "expected_basename": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+        },
+        "file_roles": {
+          "type": "object",
+          "required": ["manifest", "version_note", "tasks", "expert_review", "asset_manifest"],
+          "properties": {
+            "manifest": {"$ref": "#/definitions/seed_file_role"},
+            "version_note": {"$ref": "#/definitions/seed_file_role"},
+            "tasks": {"$ref": "#/definitions/seed_file_role"},
+            "expert_review": {"$ref": "#/definitions/seed_file_role"},
+            "asset_manifest": {"$ref": "#/definitions/seed_file_role"}
+          },
+          "additionalProperties": false
+        },
+        "taxonomy_aliases": {
+          "type": "object",
+          "required": ["path", "version", "content_digest"],
+          "properties": {
+            "path": {"$ref": "#/definitions/local_role_path"},
+            "version": {"type": "integer", "minimum": 1},
+            "content_digest": {"$ref": "#/definitions/digest"}
+          },
+          "additionalProperties": false
+        },
+        "version_policy": {"const": "require_human_resolution_on_conflict"},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "expected_inventory_digest": {"$ref": "#/definitions/digest"},
+        "expected_package": {
+          "type": "object",
+          "required": ["package_id", "version_labels", "case_count", "review_distribution", "provenance"],
+          "properties": {
+            "package_id": {"type": "string", "minLength": 1},
+            "version_labels": {
+              "type": "object",
+              "required": ["directory", "manifest", "package_id", "version_note"],
+              "properties": {
+                "directory": {"type": "string", "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"},
+                "manifest": {"type": "string", "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"},
+                "package_id": {"type": "string", "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"},
+                "version_note": {"type": "string", "pattern": "^v?[0-9]+\\.[0-9]+\\.[0-9]+$"}
+              },
+              "additionalProperties": false
+            },
+            "case_count": {"type": "integer", "minimum": 1},
+            "review_distribution": {
+              "type": "object",
+              "required": ["verified", "minor_fix", "factual_error", "unscorable"],
+              "properties": {
+                "verified": {"type": "integer", "minimum": 0},
+                "minor_fix": {"type": "integer", "minimum": 0},
+                "factual_error": {"type": "integer", "minimum": 0},
+                "unscorable": {"type": "integer", "minimum": 0}
+              },
+              "additionalProperties": false
+            },
+            "provenance": {
+              "type": "object",
+              "required": ["required_fields", "require_asset_sha256", "require_asset_package_path", "require_asset_byte_size", "require_source_suite"],
+              "properties": {
+                "required_fields": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*$"
+                  }
+                },
+                "require_asset_sha256": {"const": true},
+                "require_asset_package_path": {"const": true},
+                "require_asset_byte_size": {"const": true},
+                "require_source_suite": {"const": true}
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "reference_only_knowledge_source": {
+      "type": "object",
+      "required": ["id", "repo_path", "mode", "live_fetch"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "repo_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        },
+        "mode": {"const": "reference_only"},
+        "live_fetch": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "digest_locked_knowledge_source": {
+      "type": "object",
+      "required": ["id", "repo_path", "mode", "live_fetch", "content_digest"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "repo_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+        },
+        "mode": {"const": "digest_locked_reference"},
+        "live_fetch": {"const": false},
+        "content_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "versioned_source_only_knowledge_source": {
+      "type": "object",
+      "required": ["id", "mode", "provider", "document_id", "source_revision", "source_locator", "live_fetch", "approval_state"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+        "mode": {"const": "source_only"},
+        "provider": {"const": "lark_doc"},
+        "document_id": {"type": "string", "pattern": "^[A-Za-z0-9]+$"},
+        "wiki_token": {"type": "string", "pattern": "^[A-Za-z0-9]+$"},
+        "source_revision": {"type": "integer", "minimum": 1},
+        "source_locator": {"type": "string", "minLength": 1},
+        "live_fetch": {"const": false},
+        "approval_state": {"const": "unapproved"}
+      },
+      "additionalProperties": false
+    },
+    "knowledge_source_registry": {
+      "type": "object",
+      "required": ["schema_version", "kind", "id", "sources"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_knowledge_source_registry"},
+        "id": {"type": "string", "minLength": 1},
+        "sources": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "oneOf": [
+              {"$ref": "#/definitions/reference_only_knowledge_source"},
+              {"$ref": "#/definitions/digest_locked_knowledge_source"},
+              {"$ref": "#/definitions/versioned_source_only_knowledge_source"}
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "revision_intake": {
+      "type": "object",
+      "required": ["schema_version", "kind", "enabled", "reason", "reference_owners"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_revision_intake"},
+        "enabled": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1},
+        "manifest_path": {"type": "string", "minLength": 1},
+        "manifest_digest": {"$ref": "#/definitions/digest"},
+        "reference_owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/repo_reference"}
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"enabled": {"const": true}}, "required": ["enabled"]},
+          "then": {"required": ["manifest_path", "manifest_digest"]}
+        }
+      ]
+    },
+    "selection_source_spec": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "kind",
+        "id",
+        "source_mode",
+        "selection",
+        "historical_origin",
+        "asset_package",
+        "local_only",
+        "production_eligible",
+        "reference_owners"
+      ],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_selection_source_spec"},
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+        "source_mode": {"const": "committed_local_selection"},
+        "selection": {
+          "type": "object",
+          "required": [
+            "schema_version",
+            "input_filename",
+            "file_sha256",
+            "id_sha256",
+            "total",
+            "domain_counts"
+          ],
+          "properties": {
+            "schema_version": {"const": "sciencevision.eval_v32_selection.v1"},
+            "input_filename": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+            "file_sha256": {"$ref": "#/definitions/digest"},
+            "id_sha256": {"$ref": "#/definitions/raw_sha256"},
+            "total": {"type": "integer", "minimum": 1},
+            "domain_counts": {
+              "type": "object",
+              "minProperties": 1,
+              "additionalProperties": {"type": "integer", "minimum": 1}
+            }
+          },
+          "additionalProperties": false
+        },
+        "historical_origin": {
+          "type": "object",
+          "required": ["repository", "commit", "path"],
+          "properties": {
+            "repository": {"type": "string", "minLength": 1},
+            "commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+            "path": {
+              "type": "string",
+              "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9][A-Za-z0-9._/-]*$"
+            }
+          },
+          "additionalProperties": false
+        },
+        "asset_package": {
+          "type": "object",
+          "required": ["expected_basename", "package_id"],
+          "properties": {
+            "expected_basename": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+            "package_id": {"type": "string", "minLength": 1}
+          },
+          "additionalProperties": false
+        },
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "reference_owners": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/definitions/repo_reference"}
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

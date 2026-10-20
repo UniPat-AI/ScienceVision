@@ -1,0 +1,968 @@
+{
+  "caveats": [
+    "Biology and chemistry scale-v2.1 candidates are QC 'review', with open leakage findings (asset_identifier_shortcut, package_compute_shortcut, shortcut_control_unenforced). A raw-asset route may reach those answers by computing over coordinates or recognizing an identifier rather than by perceiving the structure. All 20 medical tasks are QC 'pass'.",
+    "The cc2d family passed technical render gates only; no blind reviewer has confirmed answer visibility. Report as cc2d-all, never cc2d-visible.",
+    "xhigh effort means model_reasoning_effort=xhigh for Codex and --effort xhigh for Claude Code: comparable intent, not identical semantics.",
+    "A trial whose agent raised is counted as errored, not as a 0.0 score: the verifier still scores such trials degraded, and averaging them in would report infrastructure failure as model capability."
+  ],
+  "diagnostic": {
+    "denominator": 15,
+    "reason": "expert-v2 ground truth is needs_expert_annotation; no reward exists",
+    "rows": [
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "cc",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "ccmcp",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "cc2d-1",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "cc2d-3",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "cc2d-6",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "codex",
+        "route": "cc2d-12",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "cc",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "ccmcp",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "cc2d-1",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "cc2d-3",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "cc2d-6",
+        "scored": false,
+        "statuses": {}
+      },
+      {
+        "artifacts": 0,
+        "denominator": 15,
+        "family": "claude-code",
+        "route": "cc2d-12",
+        "scored": false,
+        "statuses": {}
+      }
+    ],
+    "scored": false
+  },
+  "schema_version": "sciencevision.v21_ev2_leaderboard.v1",
+  "scored": {
+    "denominator": 60,
+    "rows": [
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "cc",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "ccmcp",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "cc2d-1",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "cc2d-3",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "cc2d-6",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": null,
+        "complete": false,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "codex",
+        "missing": 60,
+        "missing_ids": [
+          "sv-biol-bio_collision_check-0013",
+          "sv-biol-bio_collision_check-0015",
+          "sv-biol-bio_collision_check-0016",
+          "sv-biol-bio_collision_check-0023",
+          "sv-biol-bio_collision_check-0027",
+          "sv-biol-bio_collision_check-0030",
+          "sv-biol-bio_collision_check-0031",
+          "sv-biol-bio_collision_check-0062",
+          "sv-biol-bio_collision_check-0065",
+          "sv-biol-bio_collision_check-0079",
+          "sv-biol-bio_collision_check-0082",
+          "sv-biol-bio_collision_check-0087",
+          "sv-biol-bio_collision_check-0090",
+          "sv-biol-bio_collision_check-0099",
+          "sv-biol-bio_collision_check-0119",
+          "sv-biol-bio_collision_check-0123",
+          "sv-biol-bio_collision_check-0124",
+          "sv-biol-bio_multi_structure_compare-0036",
+          "sv-biol-bio_multi_structure_compare-0047",
+          "sv-biol-bio_multi_structure_compare-0050",
+          "sv-chem-chem_binding_geometry-0002",
+          "sv-chem-chem_binding_geometry-0050",
+          "sv-chem-chem_binding_geometry-0067",
+          "sv-chem-chem_binding_geometry-0088",
+          "sv-chem-chem_conformation-0000",
+          "sv-chem-chem_conformation-0002",
+          "sv-chem-chem_conformation-0005",
+          "sv-chem-chem_conformation-0013",
+          "sv-chem-chem_conformation-0022",
+          "sv-chem-chem_conformation-0032",
+          "sv-chem-chem_conformation-0035",
+          "sv-chem-chem_conformation-0044",
+          "sv-chem-chem_conformation-0052",
+          "sv-chem-chem_conformation-0066",
+          "sv-chem-chem_conformation-0072",
+          "sv-chem-chem_conformation-0079",
+          "sv-chem-chem_conformation-0085",
+          "sv-chem-chem_conformation-0087",
+          "sv-chem-chem_conformation-0096",
+          "sv-chem-chem_conformation-0119",
+          "sv-medi-med_ct_geometry-0009",
+          "sv-medi-med_ct_geometry-0016",
+          "sv-medi-med_ct_geometry-0037",
+          "sv-medi-med_ct_geometry-0051",
+          "sv-medi-med_ct_geometry-0107",
+          "sv-medi-med_ct_geometry-0136",
+          "sv-medi-med_ct_geometry-0162",
+          "sv-medi-med_ct_geometry-0220",
+          "sv-medi-med_ct_geometry-0299",
+          "sv-medi-med_ct_geometry-0322",
+          "sv-medi-med_ct_geometry-0334",
+          "sv-medi-med_mri_anatomy-0015",
+          "sv-medi-med_mri_anatomy-0038",
+          "sv-medi-med_mri_anatomy-0054",
+          "sv-medi-med_mri_anatomy-0089",
+          "sv-medi-med_mri_anatomy-0116",
+          "sv-medi-med_mri_anatomy-0129",
+          "sv-medi-med_mri_anatomy-0174",
+          "sv-medi-med_mri_anatomy-0240",
+          "sv-medi-med_mri_anatomy-0255"
+        ],
+        "per_domain": {
+          "biology": {
+            "answer_score": null,
+            "n": 0
+          },
+          "chemistry": {
+            "answer_score": null,
+            "n": 0
+          },
+          "medical": {
+            "answer_score": null,
+            "n": 0
+          }
+        },
+        "process": {
+          "process_compliance": null,
+          "process_finished": null,
+          "process_metadata_only": null,
+          "process_opened_scene": null,
+          "process_rendered": null,
+          "process_tool_policy": null
+        },
+        "route": "cc2d-12",
+        "scored_clean": 0
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": 0.5564,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.34,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.8167,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.5125,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 1.0,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.0,
+          "process_rendered": 0.0,
+          "process_tool_policy": 1.0
+        },
+        "route": "cc",
+        "scored_clean": 60
+      },
+      {
+        "abstained": 0,
+        "abstained_by_domain": {
+          "biology": 0,
+          "chemistry": 0,
+          "medical": 0
+        },
+        "answer_score": 0.5578,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.34,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.7833,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.55,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 0.35,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.3667,
+          "process_rendered": 0.1667,
+          "process_tool_policy": 0.35
+        },
+        "route": "ccmcp",
+        "scored_clean": 60
+      },
+      {
+        "abstained": 20,
+        "abstained_by_domain": {
+          "biology": 5,
+          "chemistry": 6,
+          "medical": 9
+        },
+        "answer_score": 0.1832,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.26,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.2833,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.0063,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 1.0,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.0,
+          "process_rendered": 0.0,
+          "process_tool_policy": 1.0
+        },
+        "route": "cc2d-1",
+        "scored_clean": 60
+      },
+      {
+        "abstained": 20,
+        "abstained_by_domain": {
+          "biology": 1,
+          "chemistry": 10,
+          "medical": 9
+        },
+        "answer_score": 0.1567,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.32,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.15,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.0,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 1.0,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.0,
+          "process_rendered": 0.0,
+          "process_tool_policy": 1.0
+        },
+        "route": "cc2d-3",
+        "scored_clean": 60
+      },
+      {
+        "abstained": 13,
+        "abstained_by_domain": {
+          "biology": 1,
+          "chemistry": 6,
+          "medical": 6
+        },
+        "answer_score": 0.2133,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.39,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.25,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.0,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 1.0,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.0,
+          "process_rendered": 0.0,
+          "process_tool_policy": 1.0
+        },
+        "route": "cc2d-6",
+        "scored_clean": 60
+      },
+      {
+        "abstained": 13,
+        "abstained_by_domain": {
+          "biology": 1,
+          "chemistry": 6,
+          "medical": 6
+        },
+        "answer_score": 0.2493,
+        "complete": true,
+        "denominator": 60,
+        "errored": 0,
+        "errored_ids": [],
+        "family": "claude-code",
+        "missing": 0,
+        "missing_ids": [],
+        "per_domain": {
+          "biology": {
+            "answer_score": 0.3,
+            "n": 20
+          },
+          "chemistry": {
+            "answer_score": 0.4042,
+            "n": 20
+          },
+          "medical": {
+            "answer_score": 0.0437,
+            "n": 20
+          }
+        },
+        "process": {
+          "process_compliance": 1.0,
+          "process_finished": 0.0,
+          "process_metadata_only": 0.0,
+          "process_opened_scene": 0.0,
+          "process_rendered": 0.0,
+          "process_tool_policy": 1.0
+        },
+        "route": "cc2d-12",
+        "scored_clean": 60
+      }
+    ]
+  },
+  "selection_id_sha256": {
+    "all": "6572ea8dc70470c8f498acd2ab78e8d47c6c8364e7ae34453905ef4824d664e6",
+    "expert_v2": "a83d7439de963eda658427ea1433072bda8c31c5848689c0889e0f670057bfca",
+    "scale_v2.1": "65dc939dff9df7ac3a4b27df3cb5ca20edc3621c64cc972c414db82f45327cd4"
+  }
+}

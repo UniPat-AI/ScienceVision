@@ -1,0 +1,21 @@
+[
+  {
+    "name": "vsibench",
+    "label": "VSI-Bench",
+    "modality": "egocentric video + spatial",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/nyu-visionx/VSI-Bench",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 2362,
+        "jsonl": "/out_samples/vsibench/test.jsonl",
+        "first_qid": "vsibench-test-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 274,
+    "total_rows": 2362
+  }
+]

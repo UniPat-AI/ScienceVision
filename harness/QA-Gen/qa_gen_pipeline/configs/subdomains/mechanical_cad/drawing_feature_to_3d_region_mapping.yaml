@@ -1,0 +1,29 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.drawing_feature_to_3d_region_mapping
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.paired_drawing_feature_and_model_region, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [drawing_feature_to_model_localization]
+seed:
+  query: {domain: mechanical_cad, subdomain: drawing_feature_to_3d_region_mapping, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, paired_drawing_and_model, feature_region_correspondence]
+viewer:
+  required_operations: [inspect, isolate, rotate, overlay_compare]
+answer:
+  allowed_truth_modes: [visual_annotation, expert_visual_judgment]
+evidence:
+  required: [viewer_trace, cross_representation_evidence, visual_annotation]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: drawing_feature_to_3d_region_mapping, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

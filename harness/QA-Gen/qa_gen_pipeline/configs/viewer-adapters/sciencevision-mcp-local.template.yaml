@@ -1,0 +1,35 @@
+schema_version: 1
+kind: qagen_viewer_adapter_config
+adapter_id: sciencevision-controlled-viewer-v1
+
+# Disabled until a solver-safe adapter implements qagen.viewer.ControlledViewerAdapter.
+enabled: false
+implementation:
+  module: null
+  factory: null
+
+# Read-only audit inputs for the existing host-side MCP session contract.
+backend_contract:
+  kind: sciencevision_mcp_v1
+  session_source_path: ../../../../sci3d_agent/mcp/tools/vision3d/session.py
+  open_schema_path: ../../../../sci3d_agent/mcp/schemas/sv3d_open_scene.json
+
+# Must be a private mapping from anonymous_scene_ref to a backend-only handle.
+scene_registry:
+  path: null
+  anonymous_lookup: false
+  solver_visible: false
+
+# These values describe the current MCP surface, not desired future claims.
+security:
+  network_access: false
+  accepts_solver_asset_identifiers: true
+  exposes_raw_asset_metadata: true
+  exposes_raw_asset_bytes: false
+  arbitrary_compute: false
+  attested_evidence: false
+
+# Empty by design. Do not advertise an operation until the adapter enforces it.
+operations:
+  allowed: []
+  native_measurements: []

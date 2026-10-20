@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/target_spec.schema.json",
+  "description": "A typed viewer-native target selected by BriefBuilder. Empty, default, and unbound selectors are invalid.",
+  "type": "object",
+  "required": [
+    "target_spec_version",
+    "source_record_digest",
+    "scene_inventory_digest",
+    "anonymous_scene_ref",
+    "candidate_plan_digest",
+    "target_leaf",
+    "allowed_native_operations",
+    "native_operation",
+    "selector",
+    "answer_fields"
+  ],
+  "properties": {
+    "target_spec_version": {"const": 1},
+    "source_record_digest": {"$ref": "#/definitions/digest"},
+    "scene_inventory_digest": {"$ref": "#/definitions/digest"},
+    "anonymous_scene_ref": {"type": "string", "pattern": "^scene://[A-Za-z0-9._:-]+$"},
+    "candidate_plan_digest": {"$ref": "#/definitions/digest"},
+    "target_leaf": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"},
+    "allowed_native_operations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["inspect", "isolate", "measure_distance", "measure_dihedral", "bbox", "slice"]}
+    },
+    "native_operation": {"enum": ["inspect", "isolate", "measure_distance", "measure_dihedral", "bbox", "slice"]},
+    "selector": {"$ref": "#/definitions/selector"},
+    "answer_fields": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1, "not": {"const": "default"}}
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "selector": {
+      "oneOf": [
+        {"$ref": "#/definitions/atom"},
+        {"$ref": "#/definitions/atom_pair"},
+        {"$ref": "#/definitions/atom_quadruplet"},
+        {"$ref": "#/definitions/residue"},
+        {"$ref": "#/definitions/residue_pair"},
+        {"$ref": "#/definitions/component_pair"},
+        {"$ref": "#/definitions/mask_label_axis"}
+      ]
+    },
+    "atom": {
+      "type": "object",
+      "required": ["type", "atom_id"],
+      "properties": {"type": {"const": "atom"}, "atom_id": {"type": "string", "pattern": "^atom-[0-9]{8,}$"}},
+      "additionalProperties": false
+    },
+    "atom_pair": {
+      "type": "object",
+      "required": ["type", "atom_ids"],
+      "properties": {"type": {"const": "atom_pair"}, "atom_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^atom-[0-9]{8,}$"}}},
+      "additionalProperties": false
+    },
+    "atom_quadruplet": {
+      "type": "object",
+      "required": ["type", "atom_ids"],
+      "properties": {"type": {"const": "atom_quadruplet"}, "atom_ids": {"type": "array", "minItems": 4, "maxItems": 4, "uniqueItems": true, "items": {"type": "string", "pattern": "^atom-[0-9]{8,}$"}}},
+      "additionalProperties": false
+    },
+    "residue": {
+      "type": "object",
+      "required": ["type", "residue_id"],
+      "properties": {"type": {"const": "residue"}, "residue_id": {"type": "string", "pattern": "^residue-[0-9]{6,}$"}},
+      "additionalProperties": false
+    },
+    "residue_pair": {
+      "type": "object",
+      "required": ["type", "residue_ids"],
+      "properties": {"type": {"const": "residue_pair"}, "residue_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^residue-[0-9]{6,}$"}}},
+      "additionalProperties": false
+    },
+    "component_pair": {
+      "type": "object",
+      "required": ["type", "component_ids"],
+      "properties": {"type": {"const": "component_pair"}, "component_ids": {"type": "array", "minItems": 2, "maxItems": 2, "uniqueItems": true, "items": {"type": "string", "pattern": "^component-[0-9]{4,}$"}}},
+      "additionalProperties": false
+    },
+    "mask_label_axis": {
+      "type": "object",
+      "required": ["type", "mask_label", "axis"],
+      "properties": {"type": {"const": "mask_label_axis"}, "mask_label": {"type": "integer", "minimum": 1}, "axis": {"enum": ["x", "y", "z"]}},
+      "additionalProperties": false
+    }
+  }
+}

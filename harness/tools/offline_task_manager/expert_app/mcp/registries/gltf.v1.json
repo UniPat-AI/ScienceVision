@@ -1,0 +1,186 @@
+{
+  "version": "gltf.v1",
+  "viewer": "gltf",
+  "tools": [
+    {
+      "name": "viewer_get_state",
+      "description": "Return the current glTF view, named layers, cutaway, camera, and measurement count.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_reset",
+      "description": "Restore default layer visibility, clear measurements, and return to the isometric view.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_pick_point",
+      "description": "Return the world point under a normalized viewport position, or wait for the expert to click visible geometry when no position is given.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {"screen_x": {"type": "number", "minimum": 0, "maximum": 1}, "screen_y": {"type": "number", "minimum": 0, "maximum": 1}}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_pick_vertex",
+      "description": "Return the existing area-measurement vertex nearest a normalized viewport position, or wait for the expert to click near one when no position is given. Used only to re-place a vertex of a recorded area measurement.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {"screen_x": {"type": "number", "minimum": 0, "maximum": 1}, "screen_y": {"type": "number", "minimum": 0, "maximum": 1}}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_orbit",
+      "description": "Point the glTF camera at an absolute azimuth/elevation around its current target.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {"type": "number", "minimum": -180, "maximum": 180},
+          "elevation_deg": {"type": "number", "minimum": -89, "maximum": 89}
+        },
+        "required": ["azimuth_deg", "elevation_deg"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_view",
+      "description": "Switch the isometric, front, side, or top camera used for glTF inspection.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "view": {"type": "string", "enum": ["iso", "front", "side", "top"]}
+        },
+        "required": ["view"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_orthographic_view",
+      "description": "Switch to a true orthographic front, side, or top elevation with parallel projection, so measurements read without perspective distortion.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "view": {"type": "string", "enum": ["front", "side", "top"]}
+        },
+        "required": ["view"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_zoom",
+      "description": "Set the glTF zoom to an absolute multiple of the fitted view; 1 is fitted, 2 is twice as close.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"zoom": {"type": "number", "exclusiveMinimum": 0, "maximum": 8}},
+        "required": ["zoom"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_pan",
+      "description": "Pan the glTF camera to an absolute, radius-normalised look-at offset from the scene centre along camera right/up.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pan_right": {"type": "number", "minimum": -2, "maximum": 2},
+          "pan_up": {"type": "number", "minimum": -2, "maximum": 2}
+        },
+        "required": ["pan_right", "pan_up"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_toggle_layer",
+      "description": "Show or hide a named glTF scene-graph layer.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "layer": {"type": "string"},
+          "visible": {"type": "boolean"}
+        },
+        "required": ["layer", "visible"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_cutaway",
+      "description": "Set the cutaway plane along the model up-axis used to expose internal geometry.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "axis": {"type": "string", "enum": ["x", "y", "z"]},
+          "value_m": {"type": "number"}
+        },
+        "required": ["value_m"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure_distance",
+      "description": "Measure the 3D distance between two world points on the glTF mesh. Reports glTF metres and Rhino millimetres.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "start": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+          "end": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}
+        },
+        "required": ["start", "end"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_fit_plane",
+      "description": "Fit a least-squares plane through three or more picked world points on the glTF mesh and report the departure of each point from it. Reports glTF metres and Rhino millimetres.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "array",
+            "minItems": 3,
+            "items": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}
+          }
+        },
+        "required": ["points"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure_area",
+      "description": "Measure the area enclosed by three or more picked world points on the glTF mesh. Reports the true fit-plane area, the areas projected onto the XY, XZ and YZ planes, the perimeter and the largest departure from the fit plane. Reports square metres.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {"points": {"type": "array", "minItems": 3, "items": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}}, "plane": {"type": "string", "enum": ["fit", "xy", "xz", "yz"]}, "replaces": {"type": "object", "properties": {"measurement_index": {"type": "integer", "minimum": 0}, "point_index": {"type": "integer", "minimum": 0}}, "required": ["measurement_index", "point_index"], "additionalProperties": false}}, "required": ["points"], "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_measure_angle",
+      "description": "Measure the angle at the vertex between the rays to the first and second points, in 3D and projected onto the horizontal plane.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {"first": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}, "vertex": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}, "second": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3}}, "required": ["first", "vertex", "second"], "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_clear_measurements",
+      "description": "Clear glTF measurement overlays and results.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_annotate",
+      "description": "Place a point annotation on visible glTF geometry.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "point": {"type": "array", "items": {"type": "number"}, "minItems": 3, "maxItems": 3},
+          "layer": {"type": "string"}
+        },
+        "required": ["point"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

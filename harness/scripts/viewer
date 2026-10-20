@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# scripts/viewer — one-click control for the BabyVision-v2 viewer service.
+#
+#   ./scripts/viewer start     # bring the site up on http://<host>/
+#   ./scripts/viewer stop      # take it down (releases port 80)
+#   ./scripts/viewer restart   # full restart
+#   ./scripts/viewer reload    # graceful reload of Caddyfile changes
+#   ./scripts/viewer status    # is it running?
+#   ./scripts/viewer logs      # tail systemd journal (follow)
+#
+# Daily start/stop/restart/reload run without prompting for a password
+# (granted by /etc/sudoers.d/babyvision-viewer, installed by deploy/install.sh).
+
+set -euo pipefail
+
+UNIT=babyvision-viewer
+
+cmd="${1:-}"
+case "$cmd" in
+	start)   sudo systemctl start "$UNIT" ;;
+	stop)    sudo systemctl stop "$UNIT" ;;
+	restart) sudo systemctl restart "$UNIT" ;;
+	reload)  sudo systemctl reload "$UNIT" ;;
+	status)  systemctl --no-pager status "$UNIT" ;;
+	logs)    journalctl -u "$UNIT" -f --no-pager ;;
+	"")
+		echo "usage: $0 {start|stop|restart|reload|status|logs}" >&2
+		exit 2
+		;;
+	*)
+		echo "$0: unknown command: $cmd" >&2
+		echo "usage: $0 {start|stop|restart|reload|status|logs}" >&2
+		exit 2
+		;;
+esac

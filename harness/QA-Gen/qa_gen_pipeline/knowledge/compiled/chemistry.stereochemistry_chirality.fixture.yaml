@@ -1,0 +1,25 @@
+schema_version: 1
+kind: qagen_subdomain_knowledge_fixture
+id: chemistry.stereochemistry_chirality
+fixture:
+  local_only: true
+  purpose: sample_compile
+  production_approval: false
+  approval_receipt: null
+fixture_payload:
+  id: chemistry.stereochemistry_chirality
+  domain: chemistry
+  subdomain: stereochemistry_chirality
+  state: sample_compile_eligible
+  local_fixture_seed_refs:
+    - fixture-seed-chemistry-001
+  allowed_truth_modes:
+    - expert_visual_judgment
+  required_viewer_operations:
+    - inspect
+    - rotate
+  forbidden_shortcuts:
+    - raw_asset_metadata
+    - asset_file_read
+  production_approval: false
+fixture_digest: sha256:280fb03b4a33ff5b07c3e208461122fc990a4044e6e4f9fb1b0ef84b2f0eb809

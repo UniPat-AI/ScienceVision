@@ -1,0 +1,10 @@
+{
+  "qid": "demo-m3d-seg-0005-0-largest-class",
+  "task_family": "Medical_Spatial",
+  "asset": "data/image.nii.gz",
+  "asset_mask": "data/mask.nii.gz",
+  "question": "This kidney CT volume comes with a 4-class segmentation mask: 1=Renal vein, 2=Kidney, 3=Renal artery, 4=Tumor. Which class occupies the LARGEST number of voxels? Answer in the form \\boxed{<class name>}.",
+  "ground_truth_recipe": "argmax over per-label voxel counts of data/mask.nii.gz, restricted to labels {1: 'Renal vein', 2: 'Kidney', 3: 'Renal artery', 4: 'Tumor'}.",
+  "metric": "exact_match",
+  "expected_answer": null
+}

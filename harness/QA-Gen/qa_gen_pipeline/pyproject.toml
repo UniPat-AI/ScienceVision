@@ -1,0 +1,95 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sciencevision-qa-gen"
+version = "0.1.0"
+description = "Fail-closed local registries for the ScienceVision QA generation pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx>=0.27,<1",
+    "jsonschema>=4.0",
+    "Pillow>=10.4,<13",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+measurement = [
+    "ase>=3.24,<4",
+    "gemmi>=0.7.0,<0.8",
+    "nibabel>=5.3,<6",
+    "numpy>=1.26,<3",
+]
+dev = [
+    "pytest>=8,<10",
+    "pytest-mock>=3.12",
+    "pytest-timeout>=2.2",
+]
+viewer = [
+    "playwright>=1.50,<2",
+]
+
+[project.scripts]
+qa-gen = "qagen.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qagen"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"configs/base.yaml" = "qagen/_resources/configs/base.yaml"
+"configs/rubric.yaml" = "qagen/_resources/configs/rubric.yaml"
+"configs/agents" = "qagen/_resources/configs/agents"
+"configs/domains" = "qagen/_resources/configs/domains"
+"configs/fixtures" = "qagen/_resources/configs/fixtures"
+"configs/policies" = "qagen/_resources/configs/policies"
+"configs/pilots/chirality/stereochemistry_chirality.yaml" = "qagen/_resources/configs/pilots/chirality/stereochemistry_chirality.yaml"
+"configs/profiles/architecture_catalog.yaml" = "qagen/_resources/configs/profiles/architecture_catalog.yaml"
+"configs/profiles/bio_chem_fixture_compile.yaml" = "qagen/_resources/configs/profiles/bio_chem_fixture_compile.yaml"
+"configs/profiles/chirality_provider_pilot.yaml" = "qagen/_resources/configs/profiles/chirality_provider_pilot.yaml"
+"configs/profiles/mechanical_cad_catalog.yaml" = "qagen/_resources/configs/profiles/mechanical_cad_catalog.yaml"
+"configs/profiles/medical_compile.yaml" = "qagen/_resources/configs/profiles/medical_compile.yaml"
+"configs/profiles/medical_volumetric_geometry_draft.yaml" = "qagen/_resources/configs/profiles/medical_volumetric_geometry_draft.yaml"
+"configs/schemas" = "qagen/_resources/configs/schemas"
+"configs/sources/asset_manifest.yaml" = "qagen/_resources/configs/sources/asset_manifest.yaml"
+"configs/sources/ev2_pilot.yaml" = "qagen/_resources/configs/sources/ev2_pilot.yaml"
+"configs/sources/molstar_chirality_pilot_viewer.yaml" = "qagen/_resources/configs/sources/molstar_chirality_pilot_viewer.yaml"
+"configs/sources/medical_m3d_refseg_annotations.yaml" = "qagen/_resources/configs/sources/medical_m3d_refseg_annotations.yaml"
+"configs/sources/v32_bcm522_sixroute_selection.yaml" = "qagen/_resources/configs/sources/v32_bcm522_sixroute_selection.yaml"
+"configs/sources/v32_bcm522_private_source_adapter.yaml" = "qagen/_resources/configs/sources/v32_bcm522_private_source_adapter.yaml"
+"configs/sources/viewer_definitions.yaml" = "qagen/_resources/configs/sources/viewer_definitions.yaml"
+"configs/subdomains" = "qagen/_resources/configs/subdomains"
+"configs/viewer-capabilities" = "qagen/_resources/configs/viewer-capabilities"
+"knowledge" = "qagen/_resources/knowledge"
+"references" = "qagen/_resources/references"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/src/qagen",
+    "/configs",
+    "/knowledge",
+    "/references",
+    "/pyproject.toml",
+    "/README.md",
+]
+exclude = [
+    "/.qagen/**",
+    "/.pytest_cache/**",
+    "/.ruff_cache/**",
+    "/docs/**",
+    "/tests/**",
+    "/configs/profiles/bio_chem_release.yaml",
+    "/configs/profiles/biology_workspace_registry_compile.yaml",
+    "/configs/profiles/chirality_workspace_knowledge_pilot.yaml",
+    "/configs/profiles/ev2_v103_seed_ready.yaml",
+    "/configs/pilots/chirality/stereochemistry_chirality.workspace.yaml",
+    "/configs/sources/aliases/**",
+    "/configs/sources/ev2_seed_source_spec.yaml",
+    "/configs/sources/knowledge/**",
+    "/configs/sources/knowledge_sources.yaml",
+    "/configs/sources/revision_intake.yaml",
+    "/configs/viewer-adapters/**",
+    "**/__pycache__/**",
+    "**/*.pyc",
+]

@@ -1,0 +1,31 @@
+[
+  {
+    "name": "mmmu",
+    "label": "MMMU",
+    "modality": "college science",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/MMMU/MMMU",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "dev": {
+        "rows": 150,
+        "jsonl": "/out_samples/mmmu/dev.jsonl",
+        "first_qid": "mmmu-dev-Accounting-000000"
+      },
+      "test": {
+        "rows": 10500,
+        "jsonl": "/out_samples/mmmu/test.jsonl",
+        "first_qid": "mmmu-test-Accounting-000000"
+      },
+      "val": {
+        "rows": 900,
+        "jsonl": "/out_samples/mmmu/val.jsonl",
+        "first_qid": "mmmu-val-Accounting-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 10414,
+    "total_rows": 11550
+  }
+]

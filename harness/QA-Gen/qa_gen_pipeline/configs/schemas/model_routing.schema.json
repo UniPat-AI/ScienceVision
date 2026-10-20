@@ -1,0 +1,300 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/model_routing.schema.json",
+  "description": "Closed worker-policy contracts for disabled defaults, explicit local provider pilots, and local fixture execution.",
+  "oneOf": [
+    {"$ref": "#/definitions/production_policy"},
+    {"$ref": "#/definitions/local_pilot_policy"},
+    {"$ref": "#/definitions/local_fixture_policy"}
+  ],
+  "definitions": {
+    "schema_ref": {
+      "type": "string",
+      "pattern": "^qagen://schemas/[a-z][a-z0-9_-]*(?:/[a-z][a-z0-9_-]*)*/v1$"
+    },
+    "role_limits": {
+      "type": "object",
+      "required": ["enabled", "provider", "allowed_models", "max_tokens", "max_cost_usd", "max_latency_seconds", "input_schema", "output_schema"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "provider": {"type": "string", "minLength": 1},
+        "allowed_models": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "max_tokens": {"type": "integer", "minimum": 1},
+        "max_cost_usd": {"type": "number", "minimum": 0},
+        "max_latency_seconds": {"type": "integer", "minimum": 1},
+        "input_schema": {"$ref": "#/definitions/schema_ref"},
+        "output_schema": {"$ref": "#/definitions/schema_ref"}
+      },
+      "additionalProperties": false
+    },
+    "production_provider": {
+      "type": "object",
+      "required": ["configured", "credential_ref", "endpoint", "availability_status", "approval_status"],
+      "properties": {
+        "configured": {"const": false},
+        "credential_ref": {"const": null},
+        "endpoint": {"const": null},
+        "availability_status": {"const": "unverified"},
+        "approval_status": {"const": "not_approved"}
+      },
+      "additionalProperties": false
+    },
+    "disabled_fixture_provider": {
+      "type": "object",
+      "required": ["configured", "credential_ref", "endpoint", "availability_status", "approval_status", "local_only", "production_eligible"],
+      "properties": {
+        "configured": {"const": false},
+        "credential_ref": {"const": null},
+        "endpoint": {"const": null},
+        "availability_status": {"const": "local_fixture_only"},
+        "approval_status": {"const": "not_approved"},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false}
+      },
+      "additionalProperties": false
+    },
+    "production_role": {
+      "allOf": [
+        {"$ref": "#/definitions/role_limits"},
+        {
+          "properties": {
+            "enabled": {"const": false},
+            "provider": {"enum": ["anthropic", "deepseek", "openai"]},
+            "allowed_models": {
+              "type": "array",
+              "items": {"enum": ["opus-5", "dpsk-v4-pro", "gpt-5.6-sol"]}
+            }
+          }
+        }
+      ]
+    },
+    "disabled_fixture_adapter": {
+      "type": "object",
+      "required": ["kind", "enabled", "local_only", "production_eligible", "provider", "model", "credential_ref", "endpoint", "availability_status", "approval_status"],
+      "properties": {
+        "kind": {"const": "qagen_local_fixture_adapter"},
+        "enabled": {"const": false},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "provider": {"const": "fixture"},
+        "model": {"const": "deterministic-fixture"},
+        "credential_ref": {"const": null},
+        "endpoint": {"const": null},
+        "availability_status": {"const": "local_fixture_only"},
+        "approval_status": {"const": "not_approved"}
+      },
+      "additionalProperties": false
+    },
+    "production_policy": {
+      "type": "object",
+      "required": ["schema_version", "kind", "enabled", "routing_status", "schema_reference_state", "run_eligibility", "blocked_reasons", "providers", "roles", "fixture_adapter"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_model_routing"},
+        "enabled": {"const": false},
+        "routing_status": {"const": "unverified_logical_defaults"},
+        "schema_reference_state": {"const": "planned"},
+        "run_eligibility": {"const": "blocked"},
+        "blocked_reasons": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "providers": {
+          "type": "object",
+          "required": ["anthropic", "deepseek", "openai", "fixture"],
+          "properties": {
+            "anthropic": {"$ref": "#/definitions/production_provider"},
+            "deepseek": {"$ref": "#/definitions/production_provider"},
+            "openai": {"$ref": "#/definitions/production_provider"},
+            "fixture": {"$ref": "#/definitions/disabled_fixture_provider"}
+          },
+          "additionalProperties": false
+        },
+        "roles": {
+          "type": "object",
+          "required": ["brief_builder", "author", "truth_builder", "evidence_worker", "verifier", "rewriter"],
+          "properties": {
+            "brief_builder": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "anthropic"}, "allowed_models": {"const": ["opus-5"]}}}]},
+            "author": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["dpsk-v4-pro"]}}}]},
+            "truth_builder": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["dpsk-v4-pro"]}}}]},
+            "evidence_worker": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["dpsk-v4-pro"]}}}]},
+            "verifier": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "openai"}, "allowed_models": {"const": ["gpt-5.6-sol"]}}}]},
+            "rewriter": {"allOf": [{"$ref": "#/definitions/production_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["dpsk-v4-pro"]}}}]}
+          },
+          "additionalProperties": false
+        },
+        "fixture_adapter": {"$ref": "#/definitions/disabled_fixture_adapter"}
+      },
+      "additionalProperties": false
+    },
+    "local_pilot_provider": {
+      "type": "object",
+      "required": ["configured", "credential_ref", "endpoint", "availability_status", "approval_status", "local_only", "production_eligible", "allowed_models"],
+      "properties": {
+        "configured": {"const": true},
+        "credential_ref": {"const": "env:QAGEN_UNIV_API_KEY"},
+        "endpoint": {"const": "runtime:provider_runtime"},
+        "availability_status": {"const": "contract_implemented"},
+        "approval_status": {"const": "approved_for_local_pilot"},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "allowed_models": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["claude-opus-5", "deepseek-v4-pro", "gpt-5.6-sol"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "local_pilot_role": {
+      "allOf": [
+        {"$ref": "#/definitions/role_limits"},
+        {
+          "properties": {
+            "enabled": {"const": true},
+            "provider": {"enum": ["anthropic", "deepseek", "openai"]},
+            "allowed_models": {
+              "type": "array",
+              "items": {"enum": ["claude-opus-5", "deepseek-v4-pro", "gpt-5.6-sol"]}
+            }
+          }
+        }
+      ]
+    },
+    "local_pilot_policy": {
+      "type": "object",
+      "required": ["schema_version", "kind", "enabled", "routing_status", "run_eligibility", "production_eligible", "providers", "roles", "fixture_adapter"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_model_routing"},
+        "enabled": {"const": true},
+        "routing_status": {"const": "approved_local_pilot"},
+        "run_eligibility": {"const": "approved_local_pilot"},
+        "production_eligible": {"const": false},
+        "providers": {
+          "type": "object",
+          "required": ["anthropic", "deepseek", "openai"],
+          "properties": {
+            "anthropic": {
+              "allOf": [{"$ref": "#/definitions/local_pilot_provider"}, {"properties": {"allowed_models": {"const": ["claude-opus-5"]}}}]
+            },
+            "deepseek": {
+              "allOf": [{"$ref": "#/definitions/local_pilot_provider"}, {"properties": {"allowed_models": {"const": ["deepseek-v4-pro"]}}}]
+            },
+            "openai": {
+              "allOf": [{"$ref": "#/definitions/local_pilot_provider"}, {"properties": {"allowed_models": {"const": ["gpt-5.6-sol"]}}}]
+            }
+          },
+          "additionalProperties": false
+        },
+        "roles": {
+          "type": "object",
+          "required": ["brief_builder", "author", "truth_builder", "evidence_worker", "verifier", "rewriter"],
+          "properties": {
+            "brief_builder": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "anthropic"}, "allowed_models": {"const": ["claude-opus-5"]}}}]},
+            "author": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["deepseek-v4-pro"]}}}]},
+            "truth_builder": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["deepseek-v4-pro"]}}}]},
+            "evidence_worker": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["deepseek-v4-pro"]}}}]},
+            "verifier": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "openai"}, "allowed_models": {"const": ["gpt-5.6-sol"]}}}]},
+            "rewriter": {"allOf": [{"$ref": "#/definitions/local_pilot_role"}, {"properties": {"provider": {"const": "deepseek"}, "allowed_models": {"const": ["deepseek-v4-pro"]}}}]}
+          },
+          "additionalProperties": false
+        },
+        "fixture_adapter": {"$ref": "#/definitions/disabled_fixture_adapter"}
+      },
+      "additionalProperties": false
+    },
+    "local_fixture_provider": {
+      "type": "object",
+      "required": ["configured", "local_only", "allowed_models"],
+      "properties": {
+        "configured": {"const": true},
+        "local_only": {"const": true},
+        "allowed_models": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": {"enum": ["deterministic-fixture", "deterministic-verifier"]}
+        }
+      },
+      "additionalProperties": false
+    },
+    "fixture_role": {
+      "allOf": [
+        {"$ref": "#/definitions/role_limits"},
+        {
+          "properties": {
+            "enabled": {"const": true},
+            "provider": {"enum": ["fixture-author", "fixture-verifier"]},
+            "allowed_models": {
+              "type": "array",
+              "items": {"enum": ["deterministic-fixture", "deterministic-verifier"]}
+            },
+            "max_cost_usd": {"const": 0.0}
+          }
+        }
+      ]
+    },
+    "enabled_fixture_adapter": {
+      "type": "object",
+      "required": ["enabled", "local_only", "production_eligible", "provider", "model"],
+      "properties": {
+        "enabled": {"const": true},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false},
+        "provider": {"const": "fixture-author"},
+        "model": {"const": "deterministic-fixture"}
+      },
+      "additionalProperties": false
+    },
+    "local_fixture_policy": {
+      "type": "object",
+      "required": ["schema_version", "kind", "enabled", "routing_status", "run_eligibility", "providers", "roles", "fixture_adapter"],
+      "properties": {
+        "schema_version": {"const": 1},
+        "kind": {"const": "qagen_model_routing"},
+        "enabled": {"const": true},
+        "routing_status": {"const": "local_test_verified"},
+        "run_eligibility": {"const": "local_test"},
+        "providers": {
+          "type": "object",
+          "required": ["fixture-author", "fixture-verifier"],
+          "properties": {
+            "fixture-author": {
+              "allOf": [{"$ref": "#/definitions/local_fixture_provider"}, {"properties": {"allowed_models": {"const": ["deterministic-fixture"]}}}]
+            },
+            "fixture-verifier": {
+              "allOf": [{"$ref": "#/definitions/local_fixture_provider"}, {"properties": {"allowed_models": {"const": ["deterministic-verifier"]}}}]
+            }
+          },
+          "additionalProperties": false
+        },
+        "roles": {
+          "type": "object",
+          "required": ["brief_builder", "author", "truth_builder", "evidence_worker", "verifier", "rewriter"],
+          "properties": {
+            "brief_builder": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-author"}, "allowed_models": {"const": ["deterministic-fixture"]}}}]},
+            "author": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-author"}, "allowed_models": {"const": ["deterministic-fixture"]}}}]},
+            "truth_builder": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-author"}, "allowed_models": {"const": ["deterministic-fixture"]}}}]},
+            "evidence_worker": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-author"}, "allowed_models": {"const": ["deterministic-fixture"]}}}]},
+            "verifier": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-verifier"}, "allowed_models": {"const": ["deterministic-verifier"]}}}]},
+            "rewriter": {"allOf": [{"$ref": "#/definitions/fixture_role"}, {"properties": {"provider": {"const": "fixture-author"}, "allowed_models": {"const": ["deterministic-fixture"]}}}]}
+          },
+          "additionalProperties": false
+        },
+        "fixture_adapter": {"$ref": "#/definitions/enabled_fixture_adapter"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

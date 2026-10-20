@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.manufacturability_draft_undercut
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [mechanical_cad.draft_undercut_manufacturability]
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.part_with_pull_direction, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [draft_undercut_reasoning]
+seed:
+  query: {domain: mechanical_cad, subdomain: manufacturability_draft_undercut, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, stated_pull_direction, stated_draft_threshold]
+viewer:
+  required_operations: [inspect, isolate, rotate, section_cut, measure_angle]
+answer:
+  allowed_truth_modes: [expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, visual_annotation, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: manufacturability_draft_undercut, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

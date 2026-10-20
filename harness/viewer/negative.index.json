@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-05-28T18:45:28",
+  "domains": {
+    "biology": {
+      "count": 12,
+      "sha": "8f598e15",
+      "url": "/viewer/negative/biology.json?v=8f598e15"
+    },
+    "medical": {
+      "count": 3,
+      "sha": "c4f34ba5",
+      "url": "/viewer/negative/medical.json?v=c4f34ba5"
+    },
+    "industrial": {
+      "count": 5,
+      "sha": "52955980",
+      "url": "/viewer/negative/industrial.json?v=52955980"
+    }
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "schema_version": "1.0",
+  "domains": {
+    "embodied": {
+      "assets": [
+        {
+          "name": "Cut Dragon — MPM fracture demo",
+          "note": "MPM elastic dragon cut by a cross-shaped cutter, CPIC (animated)",
+          "path": "embodied/assets/cut_dragon.glb",
+          "viewer": "genesis",
+          "format": "glb",
+          "size": 7864168,
+          "record": "genesis_sim"
+        },
+        {
+          "name": "Franka Grasp — force control demo",
+          "note": "Franka arm force-controlled SAP grasp of a rigid cube (animated)",
+          "path": "embodied/assets/franka_grasp.glb",
+          "viewer": "genesis",
+          "format": "glb",
+          "size": 1213536,
+          "record": "genesis_sim"
+        },
+        {
+          "name": "IPC Cloth — FEM cloth demo",
+          "note": "IPC: Franka + 2 FEM cloth sheets draping onto a grid of fixed cubes (animated)",
+          "path": "embodied/assets/ipc_cloth.glb",
+          "viewer": "genesis",
+          "format": "glb",
+          "size": 1483168,
+          "record": "genesis_sim"
+        },
+        {
+          "name": "Sand Wheel — MPM granular cascade",
+          "note": "MPM Sand emitted downward cascading onto 4 interleaved wheels (animated)",
+          "path": "embodied/assets/sand_wheel.glb",
+          "viewer": "genesis",
+          "format": "glb",
+          "size": 7675092,
+          "record": "genesis_sim"
+        }
+      ],
+      "qa": [
+        {
+          "task_id": "genesis_vp/q001",
+          "question": "Under a 5 N transverse force applied at the marked vertebra, will the dragon fracture into two disconnected pieces within 200 simulation steps?",
+          "answer_type": "boolean",
+          "gt_method": "deterministic_simulation",
+          "qa_file": "embodied/qa/genesis_vp.jsonl",
+          "asset": "embodied/assets/cut_dragon.glb"
+        },
+        {
+          "task_id": "genesis_vp/q002",
+          "question": "After rotating the wheel by 90 degrees clockwise, what fraction of the granular sand pile (initially resting at the wheel base) remains within a 0.1 m radius of the rotation axis?",
+          "answer_type": "numeric_range",
+          "gt_method": "deterministic_simulation",
+          "qa_file": "embodied/qa/genesis_vp.jsonl",
+          "asset": "embodied/assets/sand_wheel.glb"
+        }
+      ]
+    },
+    "medical": {
+      "assets": [
+        {
+          "name": "Abdominal CT — sample volume nifti",
+          "note": "M3D-RefSeg case s0132 abdominal CT volume (labelled region = mild fatty liver)",
+          "path": "medical/assets/image.nii.gz",
+          "viewer": "niivue",
+          "format": "nifti",
+          "size": 7578831,
+          "source": "m3d_refseg"
+        },
+        {
+          "name": "Segmentation mask nifti",
+          "note": "M3D-RefSeg s0132 segmentation mask (label 1 = mild fatty liver); 1.5 mm isotropic",
+          "path": "medical/assets/mask.nii.gz",
+          "viewer": "niivue",
+          "format": "nifti",
+          "size": 90062,
+          "source": "m3d_refseg",
+          "overlay_of": "medical/assets/image.nii.gz"
+        }
+      ],
+      "qa": [
+        {
+          "task_id": "medical_spatial/q001",
+          "question": "What is the total volume in mm^3 of the labelled region in the segmentation mask?",
+          "answer_type": "numeric",
+          "gt_method": "mcp_compute_volume",
+          "qa_file": "medical/qa/medical_spatial.jsonl",
+          "asset": "medical/assets/mask.nii.gz"
+        },
+        {
+          "task_id": "medical_spatial/q002",
+          "question": "Counting connected components in the segmentation mask (6-connectivity), how many distinct regions are present?",
+          "answer_type": "integer",
+          "gt_method": "deterministic_topology",
+          "qa_file": "medical/qa/medical_spatial.jsonl",
+          "asset": "medical/assets/mask.nii.gz"
+        }
+      ]
+    },
+    "chemistry": {
+      "assets": [
+        {
+          "name": "Caffeine — molecular structure (2519)",
+          "note": "Caffeine V2000 molfile (24 atoms / 25 bonds), derived from SDF; Mol* renderable",
+          "path": "chemistry/assets/2519_caffeine.mol",
+          "viewer": "molstar",
+          "format": "mol",
+          "size": 2326,
+          "record": "sciencevision_taskgen.chem"
+        }
+      ],
+      "qa": [
+        {
+          "task_id": "caffeine/q2_2",
+          "question": "Are the three ring nitrogens N1, N3 and N7 all sp2-hybridized?",
+          "answer_type": "boolean",
+          "gt_method": "deterministic_topology",
+          "qa_file": "chemistry/qa/caffeine.jsonl",
+          "asset": "chemistry/assets/2519_caffeine.mol"
+        },
+        {
+          "task_id": "caffeine/qs_1",
+          "question": "What is the ratio of the carbonyl O...O distance to the shortest (aromatic) C-C bond length in caffeine?",
+          "answer_type": "numeric",
+          "gt_method": "deterministic_geometry",
+          "qa_file": "chemistry/qa/caffeine.jsonl",
+          "asset": "chemistry/assets/2519_caffeine.mol"
+        }
+      ]
+    }
+  }
+}

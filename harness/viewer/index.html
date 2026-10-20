@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>BabyVision-v2 — Agentic 3D Vision Benchmark in Professional Domains</title>
+<link rel="stylesheet" href="shared/style.css">
+</head>
+<body class="bv2-home">
+<header class="topbar">
+  <div>
+    <a href="index.html" class="home-link" style="color:inherit;text-decoration:none">
+      <strong id="brand">BabyVision-v2</strong>
+    </a>
+  </div>
+  <div class="topbar-right">
+    <nav class="bv2-globalnav" aria-label="Global">
+      <a href="index.html" aria-current="page" class="is-active">Home</a>
+      <a href="docs.html">Doc</a>
+      <a href="assets.html">Domain 3D Assets</a>
+      <a href="qagen.html">QA Tasks</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="/sv-annotate/">Expert</a>
+    </nav>
+    <div class="meta" id="counts">loading…</div>
+  </div>
+</header>
+
+<main>
+  <section class="bv2-hero">
+    <div class="bv2-hero-eyebrow">
+      BabyVision-v2 · Benchmark + Platform
+      <span class="version">v0.1.1</span>
+    </div>
+    <h1 class="bv2-hero-title">
+      Measuring the impact of<br>
+      3D vision on reasoning.
+    </h1>
+    <p class="bv2-hero-tagline">
+      Executable ground truth — no LLM-as-judge. Tasks span scientific imagery
+      (medical, geographic, biological) and interactive physics, where models
+      discover the world by acting on it, not just viewing it.
+    </p>
+    <div class="bv2-hero-pillars" aria-label="Pillars">
+      <span>executable GT</span>
+      <span>3D-grounded</span>
+      <span>scientific + interactive</span>
+    </div>
+  </section>
+
+  <section class="bv2-section" id="bv2-motivation-section">
+    <div class="bv2-section-label">Motivation</div>
+    <h2>Why this benchmark exists</h2>
+    <p class="bv2-section-intro">
+      Three commitments separate BabyVision-v2 from caption-similarity VQA leaderboards.
+    </p>
+    <div class="bv2-motivation-grid">
+      <article class="bv2-motivation-card">
+        <h3>Executable GT</h3>
+        <p>
+          Every answer is produced by a deterministic program — geometry, mask argmax,
+          physics solver. We compare model output to that program's output, not to a
+          natural-language gold caption.
+        </p>
+        <a href="docs.html?doc=benchmark/evaluation-protocol">Protocol →</a>
+      </article>
+      <article class="bv2-motivation-card">
+        <h3>No LLM-as-judge</h3>
+        <p>
+          Pixel-level and numeric metrics defend the score. An LLM may evaluate trace
+          fidelity (step ordering) but never the terminal answer.
+        </p>
+        <a href="docs.html?doc=benchmark/evaluation-protocol">Protocol →</a>
+      </article>
+      <article class="bv2-motivation-card">
+        <h3>3D-grounded</h3>
+        <p>
+          True 3D geometry — meshes, point clouds, volumes — is the source of truth.
+          Caption matching against a single 2D view is rejected.
+        </p>
+        <a href="docs.html?doc=benchmark/evaluation-protocol">Protocol →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="bv2-launcher" aria-label="Modules">
+    <a class="bv2-launcher-tile" href="docs.html">
+      <div class="bv2-launcher-tile-head">
+        <span class="bv2-launcher-tile-title">Doc</span>
+        <span class="bv2-launcher-tile-count" id="bv2-launcher-doc-count">—</span>
+      </div>
+      <div class="bv2-launcher-tile-meta">
+        Platform docs · benchmark protocol · MCP tool reference
+      </div>
+    </a>
+    <a class="bv2-launcher-tile" href="assets.html">
+      <div class="bv2-launcher-tile-head">
+        <span class="bv2-launcher-tile-title">Domain 3D Assets</span>
+        <span class="bv2-launcher-tile-count" id="bv2-launcher-assets-count">—</span>
+      </div>
+      <div class="bv2-launcher-tile-meta">
+        <span id="bv2-launcher-domain-state">loading…</span>
+      </div>
+    </a>
+    <a class="bv2-launcher-tile" href="qagen.html">
+      <div class="bv2-launcher-tile-head">
+        <span class="bv2-launcher-tile-title">QA Tasks</span>
+        <span class="bv2-launcher-tile-count" id="bv2-launcher-qagen-count">—</span>
+      </div>
+      <div class="bv2-launcher-tile-meta">
+        V2 / V3 / V4 / V6 · Interactive Physics · Spatial Vision
+      </div>
+    </a>
+    <a class="bv2-launcher-tile" href="/sv-annotate/">
+      <div class="bv2-launcher-tile-head">
+        <span class="bv2-launcher-tile-title">Expert Platform</span>
+        <span class="bv2-launcher-tile-count">Phase-0</span>
+      </div>
+      <div class="bv2-launcher-tile-meta">
+        Expert annotation workbench · interactive Mol* capture · trajectory replay
+      </div>
+    </a>
+  </section>
+
+  <section class="bv2-section" id="bv2-tasks-section">
+    <div class="bv2-section-label">Tasks</div>
+    <h2>Six task families across two demos</h2>
+    <p class="bv2-section-intro">
+      Each family stresses a distinct reasoning skill. Every task ships with a
+      deterministic ground-truth recipe; metrics are computed by code, not by an LLM judge.
+    </p>
+    <div class="bv2-task-grid">
+      <article class="bv2-task-card">
+        <h2>V2 — Cross-section / topology</h2>
+        <p class="bv2-task-keywords">2D-view → 3D inference · cannot be shortcut by code · geometric</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#v2-cross-section--topology">Family details →</a></p>
+      </article>
+      <article class="bv2-task-card">
+        <h2>V3 — Segmentation / referring</h2>
+        <p class="bv2-task-keywords">pixel-level GT · SSIM / LPIPS · defends against LLM-as-judge</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#v3-segmentation--referring">Family details →</a></p>
+      </article>
+      <article class="bv2-task-card">
+        <h2>V4 — Manipulation / counterfactual</h2>
+        <p class="bv2-task-keywords">rotate · slice · deform · geometry-grounded GT</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#v4-manipulation--counterfactual">Family details →</a></p>
+      </article>
+      <article class="bv2-task-card">
+        <h2>V6 — Multi-step reasoning</h2>
+        <p class="bv2-task-keywords">multi-tool trace · scored on answer + trace fidelity</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#v6-multi-step-reasoning">Family details →</a></p>
+      </article>
+      <article class="bv2-task-card">
+        <h2>Interactive Physics</h2>
+        <p class="bv2-task-keywords">force control · MPM fracture · MPM granular · FEM cloth · P1/P2 — discover by acting on objects</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#interactive-physics">Family details →</a></p>
+      </article>
+      <article class="bv2-task-card">
+        <h2>Spatial Vision</h2>
+        <p class="bv2-task-keywords">M3D · IXI brain · distance / angle / topology / volume</p>
+        <p class="bv2-task-cta"><a href="docs.html?doc=benchmark/task-families#spatial-vision">Family details →</a></p>
+      </article>
+    </div>
+  </section>
+
+  <section class="bv2-section" id="bv2-getstarted-section">
+    <div class="bv2-section-label">Get started</div>
+    <h2>Two entry points</h2>
+    <p class="bv2-section-intro">
+      Pick the path that matches what you're doing.
+    </p>
+    <div class="bv2-getstarted-grid">
+      <article class="bv2-getstarted-card">
+        <h3>Co-build a new domain</h3>
+        <p class="bv2-getstarted-sub">For partners onboarding a new professional domain.</p>
+        <ul>
+          <li><a href="docs.html?doc=platform/quickstart">Quickstart</a></li>
+          <li><a href="docs.html?doc=platform/new-domain-template">New-domain template</a></li>
+          <li><a href="docs.html?doc=mcp/tools/load_nifti">MCP tool reference</a></li>
+          <li><a href="docs.html?doc=platform/api-reference">Partner SDK API</a></li>
+        </ul>
+        <a class="bv2-getstarted-cta" href="docs.html?doc=platform/quickstart">Start in docs →</a>
+      </article>
+      <article class="bv2-getstarted-card">
+        <h3>Verify on the leaderboard</h3>
+        <p class="bv2-getstarted-sub">For model teams submitting baseline runs.</p>
+        <ul>
+          <li><a href="docs.html?doc=benchmark/submission-guide">Submission guide</a></li>
+          <li><a href="docs.html?doc=benchmark/leaderboard">Baseline profiles</a></li>
+          <li><a href="docs.html?doc=benchmark/evaluation-protocol">Reproduce an entry</a></li>
+        </ul>
+        <a class="bv2-getstarted-cta" href="leaderboard.html">Open leaderboard →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="bv2-section" id="bv2-domain-section">
+    <div class="bv2-section-label">Domain coverage</div>
+    <h2>Eleven domains · two shipped today</h2>
+    <p class="bv2-section-intro">
+      The platform supports eleven professional domains. v0.1.1 ships data for two
+      (medical + embodied via the Genesis_VP demo); the other nine arrive as partner
+      teams onboard with the partner SDK.
+    </p>
+    <div class="bv2-domain-mosaic" id="bv2-domain-mosaic" aria-label="Domains"></div>
+  </section>
+
+  <section class="bv2-section" id="bv2-compare-section">
+    <div class="bv2-section-label">Compare</div>
+    <h2>How BabyVision-v2 differs</h2>
+    <p class="bv2-section-intro">
+      The same eight benchmarks, scored on the capabilities that matter for
+      measuring vision's contribution to reasoning. Rows&nbsp;1–4 are strengths
+      BV2 inherits from prior work; rows&nbsp;5–8 are gaps no single predecessor
+      closes that BV2 closes together.
+      <span class="bv2-compare-legend">
+        <span><span class="cell cell-yes">✓</span> supported</span>
+        <span><span class="cell cell-part">◐</span> partial</span>
+        <span><span class="cell cell-no">—</span> not supported</span>
+      </span>
+    </p>
+    <div class="bv2-compare-table-wrap">
+      <table class="bv2-lb-table bv2-compare-matrix">
+        <thead>
+          <tr>
+            <th scope="col" class="bv2-matrix-row-head">Capability</th>
+            <th scope="col"><a href="https://arxiv.org/abs/2409.02813" target="_blank" rel="noopener">MMMU-Pro</a></th>
+            <th scope="col"><a href="https://arxiv.org/abs/2404.12390" target="_blank" rel="noopener">BLINK</a></th>
+            <th scope="col"><a href="https://arxiv.org/abs/2403.14624" target="_blank" rel="noopener">MathVerse</a></th>
+            <th scope="col"><a href="https://arxiv.org/abs/2503.10627" target="_blank" rel="noopener">SciVerse</a></th>
+            <th scope="col"><a href="https://arxiv.org/abs/2502.09560" target="_blank" rel="noopener">EmbodiedBench</a></th>
+            <th scope="col">Embodied3DBench</th>
+            <th scope="col">EPIC-Bench</th>
+            <th scope="col">BV1</th>
+            <th scope="col" class="bv2-matrix-self-head">BV2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Filters text-only shortcuts</th>
+            <td class="cell cell-yes">✓</td><td class="cell cell-yes">✓</td><td class="cell cell-yes">✓</td><td class="cell cell-yes">✓</td>
+            <td class="cell cell-no">—</td><td class="cell cell-part">◐</td><td class="cell cell-yes">✓</td>
+            <td class="cell cell-yes">✓</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Fine visual-perception primitives</th>
+            <td class="cell cell-no">—</td><td class="cell cell-yes">✓</td><td class="cell cell-part">◐</td><td class="cell cell-part">◐</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes">✓</td><td class="cell cell-part">◐</td>
+            <td class="cell cell-yes">✓</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Real 3D geometry as input</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-yes">✓</td><td class="cell cell-yes">✓</td><td class="cell cell-part">◐</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Multi-step agent / tool-use trace evaluated</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-part">◐</td><td class="cell cell-no">—</td><td class="cell cell-part">◐</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Geometric GT from scene (distance / angle / volume)</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-part">◐</td><td class="cell cell-part">◐</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Pixel-level GT (SSIM / LPIPS)</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Tool-trace replayed against server</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+          <tr>
+            <th scope="row" class="bv2-matrix-row-head">Profile separation isolates vision (coding / vision / fusion)</th>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-no">—</td><td class="cell cell-no">—</td>
+            <td class="cell cell-no">—</td><td class="cell cell-yes bv2-matrix-self-cell">✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="bv2-compare-foot">
+      Per-benchmark description, source links, and the broader comparison
+      table live in
+      <a href="docs.html?doc=benchmark/positioning">the full positioning doc →</a>
+    </p>
+  </section>
+
+  <footer style="padding:32px 24px;color:var(--fg-dim);font-size:11px;border-top:1px solid var(--border);text-align:center">
+    <span id="footer-brand">BabyVision-v2</span> ·
+    <a href="https://github.com/UniPat-AI/BabyVision-v2" target="_blank" rel="noopener">github</a>
+  </footer>
+</main>
+
+<script src="shared/manifest.js"></script>
+<script src="shared/bv2-home.js"></script>
+</body>
+</html>

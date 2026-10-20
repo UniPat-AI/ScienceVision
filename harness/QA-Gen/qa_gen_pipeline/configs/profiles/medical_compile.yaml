@@ -1,0 +1,36 @@
+schema_version: 1
+kind: qagen_run_profile
+id: medical_compile
+mode: local_fixture_compile
+
+domains:
+  - medical
+enabled_leaves: []
+blocked_leaves:
+  - medical.lesion_localization
+  - medical.anatomical_region
+  - medical.imaging_feature_assessment
+
+inputs:
+  registry_mode: static_fixture
+  base: ../base.yaml
+  source_registry: ../sources/ev2_pilot.yaml
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/viewer_definitions.yaml
+  rubric: ../rubric.yaml
+  knowledge_index: ../../knowledge/index.yaml
+  fixture_routing: ../agents/model_routing.fixture.yaml
+  domain_configs:
+    - ../domains/medical.yaml
+  leaf_configs:
+    - ../subdomains/medical/anatomical_region.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: true
+  require_local_fixture_digest_match: true
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  reason: "Medical coverage is intentionally compiled as blocked in the MVP skeleton."

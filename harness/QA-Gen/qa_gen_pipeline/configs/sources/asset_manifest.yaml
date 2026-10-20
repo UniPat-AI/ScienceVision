@@ -1,0 +1,12 @@
+schema_version: 1
+kind: qagen_asset_manifest_source
+id: local-fixture-assets
+
+fixture_path: ../fixtures/asset-manifest.fixture.json
+fixture_payload_digest: sha256:bc75ca471e483b6a09b8f69df1b76d7f7f004bac0f2a89fe734482015857e020
+local_only: true
+production_eligible: false
+
+reference_owners:
+  - repo_path: datasets/ASSET_MANIFEST.json
+    purpose: existing_asset_manifest_owner

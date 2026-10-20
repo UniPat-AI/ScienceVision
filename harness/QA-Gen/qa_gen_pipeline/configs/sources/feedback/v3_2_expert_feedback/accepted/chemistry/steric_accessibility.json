@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_expert_feedback_source",
+  "id": "v3-2-feedback-chemistry-steric-accessibility",
+  "leaf_id": "chemistry.steric_accessibility",
+  "source_status": "accepted",
+  "production_approval": false,
+  "reference_sources": [
+    {
+      "repo_path": "qa_gen_pipeline/configs/sources/feedback/v3_2_expert_feedback/derived/triage_claims.json",
+      "content_digest": "sha256:31fdff0930bbc0cbe852610d9d5326fc1e3e601b16afa6460e623e1b853c6d71",
+      "use": "cross-domain question family and ground-truth policy derivation"
+    }
+  ],
+  "content": {
+    "claims": [
+      {"claim_id": "forbid-ui-or-operation-instruction", "rule_id": "forbid_ui_or_operation_instruction"},
+      {"claim_id": "forbid-ungrounded-ground-truth", "rule_id": "forbid_ungrounded_ground_truth"},
+      {"claim_id": "forbid-viewer-shortcuts", "rule_id": "forbid_viewer_shortcuts"},
+      {"claim_id": "limit-measurement-saturation", "rule_id": "limit_measurement_saturation"},
+      {"claim_id": "require-expert-ground-truth-approval", "rule_id": "require_expert_ground_truth_approval"},
+      {"claim_id": "require-viewer-grounded-evidence", "rule_id": "require_viewer_grounded_evidence"}
+    ],
+    "question_family_policy": {
+      "allowed_families": [
+        {"family_id": "competing-reaction-face-comparison", "family_kind": "comparison"},
+        {"family_id": "steric-accessibility-property", "family_kind": "property"}
+      ],
+      "quota": {
+        "scope": "portfolio",
+        "unit": "percentage_points",
+        "measurement_max": 0,
+        "non_measurement_min": 100
+      }
+    },
+    "gt_policy": {
+      "gt_source_types": ["expert_annotation", "paired_comparison"],
+      "expert_approval_required": true
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "set_name": "MedicalKAxisPilot",
+  "set_version": "v3",
+  "task_counts": {
+    "generated_total": 4,
+    "kept_total": 4,
+    "filtered_total": 0,
+    "kept_ratio": 1.0
+  },
+  "token_usage": {
+    "total_tokens_total": 0
+  },
+  "cost": {
+    "cost_usd_total": 0.0
+  },
+  "by_k_class": {
+    "K2": 1,
+    "K3": 1,
+    "K5": 2
+  },
+  "ground_truth_status_distribution": {
+    "auto_seed": 4
+  },
+  "v3_filter_note": "K1 (\u00d73) and K4 (\u00d71) from v2 were removed because the answer is derivable from candidate labels + medical knowledge alone, without 3D viewer interaction."
+}

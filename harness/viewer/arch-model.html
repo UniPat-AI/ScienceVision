@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>图纸 ↔ 3D · ScienceVision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; background: var(--bg, #0d1117); color: var(--fg, #c9d1d9); }
+  .am-top {
+    display: flex; align-items: center; gap: 12px; padding: 8px 14px;
+    border-bottom: 1px solid var(--border, #30363d); background: var(--bg2, #161b22);
+    font: 13px ui-monospace, SFMono-Regular, Menlo, monospace; flex: 0 0 auto;
+  }
+  .am-top .back { color: inherit; text-decoration: none; opacity: .8; }
+  .am-top .back:hover { opacity: 1; }
+  .am-top .title { font-weight: 600; color: var(--domain-arch, #e3b341); }
+  .am-top .sub { opacity: .6; margin-left: auto; }
+  .am-split { flex: 1 1 auto; display: flex; min-height: 0; }
+  /* ── left: drawings ── */
+  .am-left {
+    flex: 0 0 42%; min-width: 260px; display: flex; flex-direction: column;
+    border-right: 1px solid var(--border, #30363d); background: var(--bg, #0d1117);
+  }
+  .am-tabs { display: flex; gap: 4px; padding: 8px; border-bottom: 1px solid var(--border, #30363d); flex-wrap: wrap; }
+  .am-tabs button {
+    background: transparent; color: var(--fg, #c9d1d9); border: 1px solid var(--border, #30363d);
+    border-radius: 4px; padding: 4px 10px; cursor: pointer; font: 12px ui-monospace, monospace;
+  }
+  .am-tabs button.active { background: #1f6feb; border-color: #1f6feb; }
+  .am-fig {
+    flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center;
+    padding: 14px; overflow: auto; background:
+      repeating-linear-gradient(45deg, #10151c, #10151c 10px, #0d1117 10px, #0d1117 20px);
+  }
+  .am-fig object, .am-fig img {
+    max-width: 100%; max-height: 100%; background: #fff; border-radius: 4px;
+    box-shadow: 0 2px 14px rgba(0,0,0,.5);
+  }
+  .am-fig .empty { opacity: .5; font: 13px ui-monospace, monospace; }
+  .am-dl { padding: 8px 12px; border-top: 1px solid var(--border, #30363d);
+    font: 11px ui-monospace, monospace; display: flex; gap: 14px; flex-wrap: wrap; }
+  .am-dl a { color: #58a6ff; text-decoration: none; }
+  .am-dl a:hover { text-decoration: underline; }
+  .am-note { padding: 6px 12px; font: 11px ui-monospace, monospace; opacity: .55;
+    border-top: 1px solid var(--border, #30363d); }
+  /* ── divider ── */
+  .am-divider { flex: 0 0 5px; cursor: col-resize; background: var(--border, #30363d); }
+  .am-divider:hover { background: #1f6feb; }
+  /* ── right: 3D ── */
+  .am-right { flex: 1 1 58%; min-width: 260px; position: relative; background: #0d1117; }
+  .am-right iframe { width: 100%; height: 100%; border: 0; display: block; }
+</style>
+</head>
+<body>
+<div class="am-top">
+  <a class="back" href="/viewer/">← Shell</a>
+  <span class="title" id="amName">Model</span>
+  <span class="sub">左 = 正交矢量图纸 · 右 = 交互式 3D (drag/scroll)</span>
+</div>
+<div class="am-split">
+  <div class="am-left">
+    <div class="am-tabs" id="amTabs"></div>
+    <div class="am-fig" id="amFig"><span class="empty">无图纸</span></div>
+    <div class="am-dl" id="amDl"></div>
+    <div class="am-note">图纸为 IFC 网格程序化剖切/投影生成的正交体量与轮廓(平面剖切 · 正/侧立面 silhouette),非带门窗表的施工图。</div>
+  </div>
+  <div class="am-divider" id="amDivider"></div>
+  <div class="am-right">
+    <iframe id="amFrame" title="3D model" allow="fullscreen"></iframe>
+  </div>
+</div>
+<script>
+  const p = new URLSearchParams(location.search);
+  const file = p.get('file');                       // 3D model (may already be .opt.glb)
+  const name = p.get('name') || (file ? file.split('/').pop() : 'Model');
+  document.getElementById('amName').textContent = name;
+  document.title = name + ' · 图纸 ↔ 3D';
+
+  // Right panel: reuse the full gltf.html engine via iframe (it detects the
+  // embed and reclaims the topbar space itself).
+  if (file) {
+    document.getElementById('amFrame').src = '/viewer/gltf.html?file=' + encodeURI(file);
+  }
+
+  // Left panel: drawings (plan / front / side), whichever were passed.
+  const views = [
+    { key: 'plan',  label: '平面 Plan',   url: p.get('plan') },
+    { key: 'front', label: '正立面 Front', url: p.get('elev_front') },
+    { key: 'side',  label: '侧立面 Side',  url: p.get('elev_side') },
+  ].filter(v => v.url);
+
+  const tabs = document.getElementById('amTabs');
+  const fig = document.getElementById('amFig');
+  const dl = document.getElementById('amDl');
+
+  function show(v) {
+    tabs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b.dataset.k === v.key));
+    // <object> renders SVG with its own coordinate system + is zoom/scroll friendly.
+    fig.innerHTML = '';
+    const obj = document.createElement('object');
+    obj.type = 'image/svg+xml';
+    obj.data = encodeURI(v.url);
+    fig.appendChild(obj);
+  }
+
+  if (views.length === 0) {
+    fig.innerHTML = '<span class="empty">此模型无图纸侧车数据</span>';
+  } else {
+    views.forEach((v, i) => {
+      const b = document.createElement('button');
+      b.textContent = v.label; b.dataset.k = v.key;
+      b.addEventListener('click', () => show(v));
+      tabs.appendChild(b);
+      const a = document.createElement('a');
+      a.href = encodeURI(v.url); a.download = ''; a.textContent = '⬇ ' + v.label + ' SVG';
+      dl.appendChild(a);
+    });
+    show(views[0]);
+  }
+
+  // Draggable divider — adjust the left panel's flex-basis.
+  (function () {
+    const divider = document.getElementById('amDivider');
+    const left = document.querySelector('.am-left');
+    const split = document.querySelector('.am-split');
+    let dragging = false;
+    divider.addEventListener('mousedown', () => { dragging = true; document.body.style.userSelect = 'none'; });
+    window.addEventListener('mouseup', () => { dragging = false; document.body.style.userSelect = ''; });
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const rect = split.getBoundingClientRect();
+      const pct = Math.min(75, Math.max(20, ((e.clientX - rect.left) / rect.width) * 100));
+      left.style.flexBasis = pct + '%';
+    });
+  })();
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+{
+  "counts": {
+    "candidate": 986,
+    "candidate_by_domain": {
+      "biology": 147,
+      "chemistry": 0,
+      "medical": 839
+    },
+    "quarantine": 581,
+    "quarantine_by_domain": {
+      "biology": 180,
+      "chemistry": 401,
+      "medical": 0
+    },
+    "quarantine_reasons": {
+      "binding_entity_selection_ambiguous": 108,
+      "comparison_margin_below_tolerance": 49,
+      "confirmed_shortcut": 173,
+      "conformation_atom_binding_missing": 120,
+      "ground_truth_qc_blocker": 131,
+      "ground_truth_unverified_or_null": 131,
+      "qc_grade_unacceptable": 173,
+      "unrepaired_qc_finding:asked_output_not_scored": 120
+    },
+    "repairs": {
+      "biology_collision_binary_only_v1": 131,
+      "biology_comparison_remove_unscored_rationale_v1": 33,
+      "medical_ct_allow_midline_v1": 579,
+      "medical_mri_extent_only_v1": 260
+    },
+    "total": 1567
+  },
+  "generated_at": "2026-08-08T00:00:00Z",
+  "generation_command": "python -m scripts.qa_qc_repair --source-dir QA-Gen/tasks/scale-v1-taxonomy-input-20260805 --qc-dir outputs/qa-qc/scale-v1-reviewed-20260808 --out-dir QA-Gen/tasks/scale-v2 --source-lock docs/qa-gen/SCALE_V1_REVIEWED_20260808_LOCK.json --generated-at 2026-08-08T00:00:00Z",
+  "inputs": {
+    "qc_count": 1567,
+    "qc_files": [
+      {
+        "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/task_classifications.jsonl",
+        "classification_sha256": "bcbb100af0333b6aa79065fcb9630450b6a9a3963e61954284b5541a85b1b70f",
+        "domain": "biology",
+        "qc_schema_version": "1.4",
+        "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/biology/report.json",
+        "report_sha256": "1d9fc70621f3a8a3f8112a83d630abb04fea46ba2686e8ff8f1149acabfb0f72",
+        "task_count": 327
+      },
+      {
+        "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/task_classifications.jsonl",
+        "classification_sha256": "47be6585657668c5c29c159dcd26431c5295e54b81e2b228f83117e20239f71d",
+        "domain": "chemistry",
+        "qc_schema_version": "1.4",
+        "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/chemistry/report.json",
+        "report_sha256": "e61963aeb61ae7443ab9a843df89805abf43570574ffab7f42a022908eb5eb55",
+        "task_count": 401
+      },
+      {
+        "classification_path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/task_classifications.jsonl",
+        "classification_sha256": "e339bbba9785cf7ccae1fd6cd6a07f8da05839d71b12e83767c07f573d485e29",
+        "domain": "medical",
+        "qc_schema_version": "1.4",
+        "report_path": "outputs/qa-qc/scale-v1-reviewed-20260808/medical/report.json",
+        "report_sha256": "4e0bb4971ee0defffa64b74535e7767ff5e34ec605207fab73b0a757db934a77",
+        "task_count": 839
+      }
+    ],
+    "source_lock": {
+      "path": "docs/qa-gen/SCALE_V1_REVIEWED_20260808_LOCK.json",
+      "reviewed_at": "2026-08-08",
+      "reviewed_batch": "scale-v1-reviewed-20260808",
+      "schema_version": "sciencevision.qa_qc.source_lock.v1",
+      "sha256": "b70fd2e249d7ceafc51c83a66aa4bdf0f33ec94b2f83c011795416381121e27e"
+    },
+    "task_count": 1567,
+    "task_files": [
+      {
+        "domain": "biology",
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-biology_final_tasks.jsonl",
+        "sha256": "6fa1e5096485faf2460dd245bfd85a4967b93bbe8b1f7fad9364e8128aa59117",
+        "task_count": 327
+      },
+      {
+        "domain": "chemistry",
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-chemistry_final_tasks.jsonl",
+        "sha256": "b4b40c5f74159d88fef1a9cb7e861c9c1d46438720a427040e262e39420fd670",
+        "task_count": 401
+      },
+      {
+        "domain": "medical",
+        "path": "QA-Gen/tasks/scale-v1-taxonomy-input-20260805/ScienceVision_scale-v1-medical_final_tasks.jsonl",
+        "sha256": "9c105c7dcfb059a1edae0fb9e9bcf81c5a07bbe3d334d667403605643427e86d",
+        "task_count": 839
+      }
+    ],
+    "task_id_join": "strict_1_to_1",
+    "task_schema_path": "QA-Gen/ScienceVisionTaskGenerator/schemas/sciencevision_task.schema.json",
+    "task_schema_sha256": "6e7bfddb9d8133dfe0fd296f366c4589c5558962818a1b45f711398d58ae0b9a"
+  },
+  "output_dataset": "scale-v2",
+  "outputs": [
+    {
+      "disposition": "candidate",
+      "domain": "biology",
+      "path": "ScienceVision_scale-v2-biology_candidate_tasks.jsonl",
+      "sha256": "1a5f2274290bf83860ebac2e83e4b68ddbeff5c84bea4a2551b8136d2b848b77",
+      "task_count": 147
+    },
+    {
+      "disposition": "quarantine",
+      "domain": "biology",
+      "path": "quarantine/ScienceVision_scale-v2-biology_quarantine_tasks.jsonl",
+      "sha256": "780e4a6a2d040e1adfaebd1ac35dbc0c6a6431c9bce57ca83d0111a1c936a12a",
+      "task_count": 180
+    },
+    {
+      "disposition": "candidate",
+      "domain": "chemistry",
+      "path": "ScienceVision_scale-v2-chemistry_candidate_tasks.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "task_count": 0
+    },
+    {
+      "disposition": "quarantine",
+      "domain": "chemistry",
+      "path": "quarantine/ScienceVision_scale-v2-chemistry_quarantine_tasks.jsonl",
+      "sha256": "111e95adabc8806ce2e5a65fb70c547af563b259d503bc84484650bac64eba65",
+      "task_count": 401
+    },
+    {
+      "disposition": "candidate",
+      "domain": "medical",
+      "path": "ScienceVision_scale-v2-medical_candidate_tasks.jsonl",
+      "sha256": "d5c817de907326e7e35b6b19f471ddba77ccc80649c2b4e05fecdd89679bd53a",
+      "task_count": 839
+    },
+    {
+      "disposition": "quarantine",
+      "domain": "medical",
+      "path": "quarantine/ScienceVision_scale-v2-medical_quarantine_tasks.jsonl",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "task_count": 0
+    },
+    {
+      "disposition": "all",
+      "path": "scale-v2-decisions.jsonl",
+      "sha256": "b24a769bfae0a9bc8df66cea30925f922bad5cebf553fc1821487d78747ed2d1",
+      "task_count": 1567
+    }
+  ],
+  "promotion_gate": {
+    "baseline_evaluation": "required",
+    "formal_release": "not_granted",
+    "post_repair_static_qc": "required"
+  },
+  "publication_status": "repaired_candidate",
+  "repair_policy_version": "sciencevision.qa_qc.repair.v2",
+  "schema_version": "sciencevision.qa_qc.repair_build.v2",
+  "source_dataset": "scale-v1"
+}

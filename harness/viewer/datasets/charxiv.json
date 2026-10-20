@@ -1,0 +1,28 @@
+[
+  {
+    "name": "charxiv",
+    "label": "CharXiv",
+    "modality": "arXiv chart QA",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/princeton-nlp/CharXiv",
+    "answer_kind": "string",
+    "availability": "out_of_scope",
+    "unavailable_reason": "arXiv chart QA — outside Sci3D 3D/medical/CAD scope",
+    "status": "disabled",
+    "splits": {
+      "test": {
+        "rows": 6615,
+        "jsonl": "/out_samples/charxiv/test.jsonl",
+        "first_qid": "charxiv-test-00-000000-d1"
+      },
+      "val": {
+        "rows": 5000,
+        "jsonl": "/out_samples/charxiv/val.jsonl",
+        "first_qid": "charxiv-val-00-000000-d1"
+      }
+    },
+    "skipped": {},
+    "pool_size": 2323,
+    "total_rows": 11615
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "schema_version": "sciencevision.qa_qc.build_manifest_lock.v1",
+  "candidate_dataset": "scale-v2",
+  "build_manifest_path": "QA-Gen/tasks/scale-v2/scale-v2-build.json",
+  "build_manifest_sha256": "9e8b171065f8ef862dc7302191ec7e665c513f7838cad2376b3bb134c7c5b943",
+  "locked_at": "2026-08-08",
+  "trust_anchor": "This lock becomes an independent trust anchor only after it is committed to version control."
+}

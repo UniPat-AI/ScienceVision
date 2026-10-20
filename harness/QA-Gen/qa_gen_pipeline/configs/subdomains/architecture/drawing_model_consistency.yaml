@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.drawing_model_consistency
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [architecture.drawing_bim_consistency, A1_drawing_model_consistency]
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.paired_drawing_and_model, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [drawing_to_model_correspondence]
+seed:
+  query: {domain: architecture, subdomain: drawing_model_consistency, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, paired_drawing_and_model, stable_component_identifiers]
+viewer:
+  required_operations: [inspect, rotate, overlay_compare]
+answer:
+  allowed_truth_modes: [visual_annotation, expert_visual_judgment]
+evidence:
+  required: [viewer_trace, cross_representation_evidence]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: doxcn3E4DooU0rfUnTvqyHIVdzf, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: paired drawing/model inputs and approved knowledge are missing."}

@@ -1,0 +1,61 @@
+# Byte-compiled / cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Environments
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
+
+# Mirrored data (partners pull separately)
+crawl_data/
+_dl_pool/
+out_samples/
+datasets/*/raw/
+datasets/*/derived/
+viewer/datasets/*/assets/
+examples/*/data/
+
+# Example demo data (partners fetch via examples/*/data/fetch.sh)
+examples/*/data/**/*.nii.gz
+examples/*/data/**/*.npy
+
+# Local notes / scratch
+.local/
+TODO.local.md
+*.local.md
+scratch/
+docs/TODO.md
+docs/viewer-feedback.md
+
+# Demo-only placeholder symlinks (see datasets/M3D-RefSeg/.demo-placeholder.md)
+datasets/M3D-RefSeg/
+
+# Harbor generated artifacts (staged task dirs + run job outputs from
+# scripts/harbor/qa_gen_to_tasks.py + harbor run; regenerated, not tracked).
+scripts/harbor/tasks-qagen*/
+scripts/harbor/tasks-ev2-*/
+jobs/
+jobs-cc/
+jobs-ccmcp/
+jobs-ev2-*/
+
+# Internal spec-driven-dev scratch (not deployed)
+.superpowers/

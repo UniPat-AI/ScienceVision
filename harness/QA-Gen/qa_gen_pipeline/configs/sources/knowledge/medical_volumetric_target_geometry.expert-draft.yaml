@@ -1,0 +1,88 @@
+schema_version: 1
+kind: qagen_expert_knowledge_source
+id: medical-volumetric-target-geometry-expert-draft
+leaf_id: medical.volumetric_target_geometry
+source_status: draft_reference
+production_approval: false
+
+reference_sources:
+  - repo_path: QA-Gen/qa_gen_pipeline/inputs/proposals/V32_BCM522_VNEXT_KNOWLEDGE_PROPOSAL.draft.json
+    content_digest: sha256:557d5c47503ce83659e00cf17029dd16be089a8ca47d3429b17a06eaf159d71e
+    use: deidentified_route_and_knowledge_proposal
+  - repo_path: QA-Gen/qa_gen_pipeline/inputs/selections/V32_BCM522_SIXROUTE_SELECTION.json
+    content_digest: sha256:75ae4cbb771d42ff68811b2e06a82ca34cb00749f888673518dac937336463d6
+    use: source_slot_identity_and_asset_digest_lock_only
+
+content:
+  scientific_scope:
+    included:
+      - Localize a declared segmentation target in a CT or MRI volume through a controlled viewer.
+      - Measure a declared target's inclusive bounding box or axis extent when the viewer exposes a native measurement.
+      - Identify a representative slice from an attested overlay-area view or operation.
+      - Classify target laterality or compare axis extents when the coordinate frame is explicitly stated.
+    excluded:
+      - Diagnose disease, malignancy, prognosis, or clinical urgency from geometry alone.
+      - Treat every segmentation as a lesion or infer anatomy not declared in the scenario.
+      - Read NIfTI files, headers, affine matrices, filenames, paths, or dataset metadata on the solver side.
+      - Execute code or derive exhaustive voxel statistics outside the controlled viewer.
+
+  scenario_cards:
+    - id: declared-target-localization
+      observable_targets:
+        - de-identified image volume
+        - one explicitly selected segmentation overlay
+        - stated coordinate frame and spatial unit
+      valid_question_patterns:
+        - Ask for target laterality or position relative to a viewer-displayed reference plane.
+        - Ask for one declared bounding-box corner or axis extent exposed by the viewer.
+      invalid_question_patterns:
+        - Infer a diagnosis or organ identity from an anonymous overlay.
+        - Ask for information available only from a file header or upstream case identifier.
+    - id: declared-target-extent
+      observable_targets:
+        - selected overlay boundary
+        - viewer-native bounding box
+        - viewer-native distance or extent measurement
+      valid_question_patterns:
+        - Compare two declared axis extents using viewer-native measurements.
+        - Report a viewer-displayed extent with its stated unit and coordinate convention.
+      invalid_question_patterns:
+        - Require the solver to enumerate voxels or calculate a covariance axis.
+        - Ask for volume unless an attested native viewer measurement provides it.
+    - id: representative-slice
+      observable_targets:
+        - selected overlay across slices
+        - slice index in a stated axis convention
+        - viewer-attested overlay area or comparison
+      valid_question_patterns:
+        - Select the representative slice using a declared, viewer-supported rule.
+      invalid_question_patterns:
+        - Search every slice with external code or rely on a hidden precomputed index.
+
+  allowed_inference:
+    - Compare viewer-displayed positions, lengths, areas, and axis extents within the declared coordinate frame.
+    - Classify laterality only when orientation labels and the reference plane are visible.
+    - Use a native overlay-area comparison to identify a representative slice.
+    - Report only measurements emitted by the controlled viewer and bound into the evidence trace.
+
+  common_failure_modes:
+    - Array-axis labels are mistaken for anatomical left-right or superior-inferior directions.
+    - The wrong mask label or the full nonzero mask is selected.
+    - Inclusive voxel extents are confused with distances between voxel centers.
+    - A maximum-area slice is guessed from a thumbnail rather than supported by a viewer trace.
+    - Raw file access, metadata lookup, or local computation silently replaces visual measurement.
+    - A generic target is described as a lesion without source evidence.
+
+  rubric_extensions:
+    - id: target-selection-binding
+      rule: Full credit requires evidence that the declared overlay target was selected in the controlled session.
+      fail_condition: The trace does not identify the selected anonymous target or uses a different mask label.
+    - id: coordinate-frame-binding
+      rule: Position and laterality claims must use the coordinate frame and orientation displayed by the viewer.
+      fail_condition: The answer relies on unstated array-axis or metadata conventions.
+    - id: native-measurement-only
+      rule: Numeric geometry must come from an attested viewer operation with its unit or voxel convention.
+      fail_condition: The result is derived from raw bytes, header metadata, arbitrary code, or an unavailable operation.
+    - id: no-clinical-overreach
+      rule: The answer is limited to geometry and localization supported by the displayed target.
+      fail_condition: The response adds diagnosis, pathology, or clinical interpretation not present in the task.

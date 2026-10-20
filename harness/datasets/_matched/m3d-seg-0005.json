@@ -1,0 +1,409 @@
+{
+  "schema_version": "1.0",
+  "dataset": "m3d-seg-0005",
+  "generated_at": "2026-05-19T10:22:58+00:00",
+  "policy": "strict_present_on_disk",
+  "count": 20,
+  "records": [
+    {
+      "qid": "m3d-seg-0005-0",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "0",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/0/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/0/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/0/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/0/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/0/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-1",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "1",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/1/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/1/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/1/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/1/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/1/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-10",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "10",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/10/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/10/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/10/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/10/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/10/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-11",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "11",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/11/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/11/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/11/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/11/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/11/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-12",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "12",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/12/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/12/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/12/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/12/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/12/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-13",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "13",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/13/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/13/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/13/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/13/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/13/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-14",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "14",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/14/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/14/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/14/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/14/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/14/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-15",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "15",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/15/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/15/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/15/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/15/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/15/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-16",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "16",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/16/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/16/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/16/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/16/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/16/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-17",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "17",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/17/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/17/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/17/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/17/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/17/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-18",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "18",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/18/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/18/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/18/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/18/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/18/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-19",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "19",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/19/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/19/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/19/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/19/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/19/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-2",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "2",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/2/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/2/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/2/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/2/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/2/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-3",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "3",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/3/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/3/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/3/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/3/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/3/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-4",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "4",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/4/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/4/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/4/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/4/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/4/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-5",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "5",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/5/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/5/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/5/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/5/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/5/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-6",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "6",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/6/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/6/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/6/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/6/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/6/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-7",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "7",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/7/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/7/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/7/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/7/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/7/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-8",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "8",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/8/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/8/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/8/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/8/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/8/image.npy"
+      }
+    },
+    {
+      "qid": "m3d-seg-0005-9",
+      "dataset": "m3d-seg-0005",
+      "split": "0005",
+      "scene_or_case_id": "9",
+      "question": "Segment the following structures in this CT volume: Renal vein, Kidney, Renal artery, Tumor.",
+      "answer": "4-channel mask overlay — 1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+      "asset_kind": "nifti",
+      "path_repo": "datasets/_derived/m3d-seg-0005/9/image.nii.gz",
+      "url_viewer": "/datasets/_derived/m3d-seg-0005/9/image.nii.gz",
+      "extra": {
+        "mask_path_repo": "datasets/_derived/m3d-seg-0005/9/mask.nii.gz",
+        "mask_url_viewer": "/datasets/_derived/m3d-seg-0005/9/mask.nii.gz",
+        "no_qa": true,
+        "synthetic_qa": true,
+        "mask_text": "1=Renal vein · 2=Kidney · 3=Renal artery · 4=Tumor",
+        "mask_label_count": "4 classes",
+        "derived_from": "datasets/M3D-Seg/M3D_Seg/0005/9/image.npy"
+      }
+    }
+  ]
+}

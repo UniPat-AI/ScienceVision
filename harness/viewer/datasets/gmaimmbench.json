@@ -1,0 +1,21 @@
+[
+  {
+    "name": "gmaimmbench",
+    "label": "GMAI-MMBench",
+    "modality": "38 medical modalities",
+    "task_type": "MCQ",
+    "source": "huggingface.co/datasets/OpenGVLab/GMAI-MMBench",
+    "answer_kind": "mcq",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 6808,
+        "jsonl": "/out_samples/gmaimmbench/test.jsonl",
+        "first_qid": "gmaimmbench-test-01-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 6754,
+    "total_rows": 6808
+  }
+]

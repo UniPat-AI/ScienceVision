@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>ScienceVision Tasks · 3D QA Viewer</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  :root {
+    --sv-task-biology: var(--domain-bio);
+    --sv-task-medical: var(--domain-med);
+    --sv-task-industrial: var(--domain-ind);
+    --sv-task-robotics: var(--domain-rob);
+    --sv-task-pointcloud: var(--domain-pcl);
+    --sv-task-topological: var(--domain-topo);
+    --sv-task-astronomy: #ffd866;
+  }
+  body { min-height: 100%; }
+  main.sv-task-main {
+    max-width: none;
+    padding: 0;
+    height: calc(100vh - 49px);
+    display: grid;
+    grid-template-columns: 380px minmax(0, 1fr);
+  }
+  .sv-task-sidebar {
+    border-right: 1px solid var(--border);
+    background: var(--bg2);
+    min-width: 0;
+    overflow: auto;
+  }
+  .sv-task-toolbar {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    gap: 8px;
+  }
+  .sv-task-toolbar-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .sv-task-toolbar label {
+    color: var(--fg-dim);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .sv-task-toolbar input,
+  .sv-task-toolbar select {
+    min-width: 0;
+    flex: 1;
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 9px;
+    font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .sv-task-toolbar button {
+    background: var(--bg);
+    color: var(--fg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 7px 10px;
+    font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+    cursor: pointer;
+  }
+  .sv-task-toolbar button:hover { border-color: var(--accent); }
+  .sv-task-status {
+    color: var(--fg-dim);
+    font: 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .sv-task-stats {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    background: var(--bg);
+  }
+  .sv-task-stat {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 6px 8px;
+    text-align: center;
+    min-width: 0;
+  }
+  .sv-task-stat-value {
+    font: 700 18px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--fg);
+  }
+  .sv-task-stat-label {
+    margin-top: 2px;
+    color: var(--fg-dim);
+    font-size: 9px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .sv-task-stat[data-flavor="release"] .sv-task-stat-value { color: var(--accent); }
+  .sv-task-stat[data-flavor="release"][data-zero="true"] .sv-task-stat-value { color: #d29922; }
+  #sv-task-counts {
+    font-weight: 650;
+    color: var(--fg);
+  }
+  .sv-task-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .sv-task-links a { color: var(--accent); }
+  .sv-task-list {
+    padding: 10px;
+    display: grid;
+    gap: 8px;
+  }
+  .sv-task-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 10px;
+    cursor: pointer;
+    color: var(--fg);
+    text-align: left;
+    display: grid;
+    gap: 6px;
+  }
+  .sv-task-card:hover,
+  .sv-task-card[aria-selected="true"] {
+    border-color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  .sv-task-card[aria-selected="true"] {
+    background: rgba(88, 166, 255, 0.08);
+  }
+  .sv-task-card[data-domain="biology"] { border-left-color: var(--sv-task-biology); }
+  .sv-task-card[data-domain="medical"] { border-left-color: var(--sv-task-medical); }
+  .sv-task-card[data-domain="industrial"] { border-left-color: var(--sv-task-industrial); }
+  .sv-task-card[data-domain="robotics"] { border-left-color: var(--sv-task-robotics); }
+  .sv-task-card[data-domain="pointcloud"] { border-left-color: var(--sv-task-pointcloud); }
+  .sv-task-card[data-domain="topological_photonics"] { border-left-color: var(--sv-task-topological); }
+  .sv-task-card[data-domain="astronomy"] { border-left-color: var(--sv-task-astronomy); }
+  .sv-task-card-title {
+    font-weight: 650;
+    line-height: 1.3;
+  }
+  .sv-task-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .sv-task-chip {
+    display: inline-flex;
+    align-items: center;
+    height: 20px;
+    padding: 0 6px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--fg-dim);
+    background: var(--bg2);
+    font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .sv-task-card-path {
+    color: var(--fg-dim);
+    font: 11px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .sv-task-card-flag {
+    color: #d29922;
+    border-color: rgba(210, 153, 34, 0.6);
+    background: rgba(210, 153, 34, 0.08);
+  }
+  .sv-task-detail {
+    min-width: 0;
+    display: grid;
+    /* Panel row caps at 45vh and scrolls internally; iframe row keeps */
+    /* at least 360px so the 3D viewer canvas is always usable, even on */
+    /* V3/V4 tasks whose instruction paragraph is 500+ characters. */
+    grid-template-rows: minmax(0, auto) minmax(360px, 1fr);
+    background: var(--bg);
+  }
+  .sv-task-panel {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    padding: 14px 18px;
+    display: grid;
+    gap: 10px;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  .sv-task-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .sv-task-title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+  }
+  .sv-task-open {
+    flex: 0 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 10px;
+    color: var(--fg);
+    background: var(--bg2);
+    font: 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .sv-task-open:hover { border-color: var(--accent); text-decoration: none; }
+  .sv-task-instruction {
+    margin: 0;
+    color: var(--fg);
+    max-width: 1120px;
+  }
+  .sv-task-facts {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+  }
+  .sv-task-fact {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px;
+    background: var(--bg2);
+    min-width: 0;
+  }
+  .sv-task-fact-label {
+    color: var(--fg-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .sv-task-fact-value {
+    margin-top: 3px;
+    font: 12px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+    overflow-wrap: anywhere;
+  }
+  .sv-task-lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .sv-task-mini {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--bg2);
+    padding: 8px;
+    min-width: 0;
+  }
+  .sv-task-mini h3 {
+    margin: 0 0 5px;
+    color: var(--fg-dim);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .sv-task-mini code {
+    display: inline-block;
+    margin: 2px 3px 2px 0;
+    padding: 1px 5px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    background: var(--bg);
+    color: var(--fg);
+    font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .sv-task-mini-answer {
+    border-left: 3px solid #3fb950;
+    background: rgba(63, 185, 80, 0.07);
+    grid-column: 1 / -1;
+  }
+  .sv-task-mini-answer h3 {
+    color: #3fb950;
+    font-size: 12px;
+  }
+  .sv-task-mini-answer .sv-task-kv-k {
+    color: #b6e3c2;
+    font-weight: 600;
+  }
+  .sv-task-mini-answer .sv-task-kv code {
+    background: rgba(63, 185, 80, 0.18);
+    border-color: rgba(63, 185, 80, 0.5);
+    color: #d2f2dc;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .sv-task-mini-options {
+    border-left: 3px solid #58a6ff;
+  }
+  .sv-task-mini-source {
+    border-left: 3px solid #d29922;
+    background: rgba(210, 153, 34, 0.04);
+  }
+  .sv-task-source-text {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--fg);
+    font-style: italic;
+  }
+  .sv-task-rationale {
+    margin-top: 8px;
+    padding-top: 7px;
+    border-top: 1px dashed var(--border);
+    display: grid;
+    grid-template-columns: minmax(48px, max-content) 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+  .sv-task-rationale-label {
+    color: var(--fg-dim);
+    font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-top: 2px;
+  }
+  .sv-task-rationale p {
+    margin: 0;
+    font-size: 11px;
+    line-height: 1.45;
+    color: var(--fg);
+  }
+  .sv-task-mini h3 .sv-task-chip {
+    margin-left: 6px;
+    font-size: 9px;
+    padding: 1px 5px;
+  }
+  .sv-task-kvs {
+    display: grid;
+    gap: 4px;
+  }
+  .sv-task-kv {
+    display: grid;
+    grid-template-columns: minmax(120px, max-content) 1fr;
+    gap: 8px;
+    align-items: start;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+  .sv-task-kv-k {
+    color: var(--fg-dim);
+    font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    padding-top: 2px;
+  }
+  .sv-task-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+  .sv-task-review {
+    border: 1px solid rgba(210, 153, 34, 0.45);
+    border-left: 3px solid #d29922;
+    border-radius: 4px;
+    background: rgba(210, 153, 34, 0.07);
+    padding: 8px 10px;
+  }
+  .sv-task-review h3 {
+    margin: 0 0 5px;
+    color: #d29922;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .sv-task-review ul {
+    margin: 0;
+    padding-left: 18px;
+    color: var(--fg);
+  }
+  .sv-task-review li { margin: 2px 0; }
+  .sv-task-frame-wrap {
+    min-height: 0;
+    background: #05070a;
+    position: relative;
+  }
+  .sv-task-frame {
+    border: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #05070a;
+  }
+  .sv-task-empty,
+  .sv-task-error {
+    padding: 24px;
+    color: var(--fg-dim);
+  }
+  .sv-task-error { color: #ff7b72; white-space: pre-wrap; }
+  @media (max-width: 980px) {
+    main.sv-task-main {
+      height: auto;
+      min-height: calc(100vh - 49px);
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 720px;
+    }
+    .sv-task-sidebar {
+      max-height: 420px;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .sv-task-facts,
+    .sv-task-lists {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* --- verify trajectory --- */
+  .sv-verify { grid-column: 1 / -1; }
+  .sv-vcard { font-family: ui-monospace, Menlo, monospace; letter-spacing: 1px; }
+  .sv-vmeta { color: var(--muted, #8b93a1); font-size: 12px; margin: 2px 0 6px; }
+  .sv-vbadges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
+  .sv-vb { font-size: 11px; padding: 1px 8px; border-radius: 20px; border: 1px solid var(--border, #2a2f3a); }
+  .sv-vb-yes { background: #15331f; color: #7ee787; border-color: #1d4a2d; }
+  .sv-vb-no { background: transparent; color: #8b93a1; }
+  .sv-vb-warn { background: #332a15; color: #e3b341; border-color: #4a3d1d; }
+  .sv-vdetails summary { cursor: pointer; color: #7aa2f7; font-size: 13px; margin: 4px 0; }
+  .sv-vsteps { margin-top: 8px; }
+  .sv-vstep { border: 1px solid var(--border, #2a2f3a); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+  .sv-vhead { display: flex; gap: 9px; align-items: baseline; margin-bottom: 5px; }
+  .sv-viter { color: #8b93a1; font-size: 11px; font-variant-numeric: tabular-nums; }
+  .sv-vtool { font-weight: 600; color: #9ece6a; font-family: ui-monospace, Menlo, monospace; font-size: 13px; }
+  .sv-vfinish { color: #e0af68; }
+  .sv-vnotool { color: #8b93a1; }
+  .sv-vreason { background: rgba(61,89,161,0.12); border-left: 3px solid #3d59a1; padding: 6px 10px;
+                border-radius: 0 6px 6px 0; margin: 5px 0; white-space: pre-wrap; font-size: 13px; }
+  .sv-vpre { background: rgba(0,0,0,0.25); border: 1px solid var(--border, #20242e); border-radius: 6px;
+             padding: 6px 9px; overflow-x: auto; font: 12px/1.5 ui-monospace, Menlo, monospace; margin: 5px 0; }
+  .sv-vimgs { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
+  .sv-vimg { max-width: 220px; max-height: 220px; border: 1px solid var(--border, #2a2f3a);
+             border-radius: 6px; background: #000; }
+
+  /* ── expert review (V2) ─────────────────────────────────────────────── */
+  .sv-tier { color: #fff; }
+  .sv-tier-a { background: #2e9e5b; }
+  .sv-tier-b { background: #c9992b; }
+  .sv-tier-c { background: #c0463b; }
+  .sv-task-review-panel h4 { margin: 10px 0 4px; font-size: 12px; text-transform: uppercase;
+    letter-spacing: .04em; color: var(--muted, #8a94a6); }
+  .sv-rev-block { margin-bottom: 8px; }
+  .sv-rev-block .sv-task-kv-k { min-width: 72px; }
+  table.sv-diff { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.sv-diff th { text-align: left; font-weight: 600; color: var(--muted, #8a94a6);
+    padding: 2px 6px; }
+  table.sv-diff td { padding: 2px 6px; vertical-align: top; border-top: 1px solid var(--border, #2a3140); }
+  table.sv-diff .sv-diff-k { color: var(--muted, #8a94a6); white-space: nowrap; }
+  table.sv-diff .sv-diff-arrow { color: var(--muted, #8a94a6); }
+  table.sv-diff tr.sv-diff-changed td { background: rgba(201, 153, 43, .14); }
+  .sv-mode-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; width: 100%; }
+  .sv-mode-toggle button { min-height: 30px; border: 1px solid var(--border); background: var(--bg); color: var(--fg-dim); cursor: pointer; }
+  .sv-mode-toggle button[aria-pressed="true"] { background: #1f6feb; border-color: #58a6ff; color: #fff; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>
+    <a href="/viewer/index.html" class="back">←</a>
+    ScienceVision Tasks
+  </h1>
+  <span class="meta" id="sv-task-counts">loading…</span>
+</header>
+
+<main class="sv-task-main">
+  <aside class="sv-task-sidebar">
+    <div class="sv-task-stats" id="sv-task-stats">
+      <div class="sv-task-stat"><div class="sv-task-stat-value" id="sv-stat-total">–</div><div class="sv-task-stat-label">Tasks</div></div>
+      <div class="sv-task-stat" data-flavor="release"><div class="sv-task-stat-value" id="sv-stat-release">–</div><div class="sv-task-stat-label">Release-ready</div></div>
+      <div class="sv-task-stat"><div class="sv-task-stat-value" id="sv-stat-domains">–</div><div class="sv-task-stat-label">Domains</div></div>
+      <div class="sv-task-stat"><div class="sv-task-stat-value" id="sv-stat-vclass">–</div><div class="sv-task-stat-label">V-class</div></div>
+    </div>
+    <div class="sv-task-toolbar">
+      <div class="sv-task-toolbar-row">
+        <label for="sv-task-set">Set</label>
+        <input id="sv-task-set" list="sv-task-set-options" spellcheck="false" placeholder="loading sets…">
+        <datalist id="sv-task-set-options"></datalist>
+        <button id="sv-task-load" type="button">Load</button>
+      </div>
+      <div class="sv-task-toolbar-row">
+        <label for="sv-task-filter">Filter</label>
+        <select id="sv-task-filter">
+          <option value="">All domains</option>
+        </select>
+      </div>
+      <div class="sv-mode-toggle" id="sv-mode-toggle" aria-label="Task viewer mode">
+        <button type="button" data-route-mode="model" aria-pressed="false">Model</button>
+        <button type="button" data-route-mode="expert" aria-pressed="true">Expert</button>
+      </div>
+      <div class="sv-task-status" id="sv-task-status">loading…</div>
+      <div class="sv-task-links" id="sv-task-links"></div>
+    </div>
+    <div class="sv-task-list" id="sv-task-list"></div>
+  </aside>
+
+  <section class="sv-task-detail">
+    <div class="sv-task-panel" id="sv-task-panel">
+      <div class="sv-task-empty">Select a task.</div>
+    </div>
+    <div class="sv-task-frame-wrap">
+      <iframe class="sv-task-frame" id="sv-task-frame" title="ScienceVision asset viewer"></iframe>
+    </div>
+  </section>
+</main>
+
+<script>
+// Index of task sets actually present in this clone. Populated from
+// /data/qa_tasks_index.json on init. Used to (a) populate the Set picker's
+// <datalist>, (b) choose a sane default when the URL doesn't specify a set,
+// and (c) surface a clear error when the user requests a set that wasn't
+// mirrored into this clone instead of just a raw 404.
+let availableSets = [];
+
+const state = {
+  setName: '',
+  rows: [],
+  filtered: [],
+  selectedId: null,
+  routeMode: 'expert',
+  // Verify run bundle (process metrics + trajectories), lazy-loaded only for
+  // the WalkingSkeleton_LLM set. null = not loaded; {} keys = task_id.
+  verify: null,
+  verifyMeta: null,        // {run_id, model, mode, ...}
+  verifyTried: false,      // avoid re-fetching after a 404
+  manifestURL: '',
+};
+
+// Only this set has a verify run exported (scripts/eval/walkingskeleton).
+const VERIFY_SET = 'WalkingSkeleton_LLM';
+const VERIFY_JSON = '/viewer/verify_walkingskeleton_llm.json';
+
+const els = {
+  counts: document.getElementById('sv-task-counts'),
+  set: document.getElementById('sv-task-set'),
+  load: document.getElementById('sv-task-load'),
+  filter: document.getElementById('sv-task-filter'),
+  status: document.getElementById('sv-task-status'),
+  links: document.getElementById('sv-task-links'),
+  list: document.getElementById('sv-task-list'),
+  panel: document.getElementById('sv-task-panel'),
+  frame: document.getElementById('sv-task-frame'),
+  statTotal: document.getElementById('sv-stat-total'),
+  statRelease: document.getElementById('sv-stat-release'),
+  statDomains: document.getElementById('sv-stat-domains'),
+  statVclass: document.getElementById('sv-stat-vclass'),
+};
+
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function readURL() {
+  const p = new URLSearchParams(location.search);
+  return {
+    set: p.get('set') || '',
+    manifest: p.get('manifest') || '',
+    task: p.get('task') || '',
+    domain: p.get('domain') || '',
+    mode: p.get('mode') === 'model' ? 'model' : 'expert',
+  };
+}
+
+function writeURL() {
+  const p = new URLSearchParams();
+  if (state.manifestURL) p.set('manifest', state.manifestURL);
+  else if (state.setName) p.set('set', state.setName);
+  if (els.filter.value) p.set('domain', els.filter.value);
+  if (state.selectedId) p.set('task', state.selectedId);
+  p.set('mode', state.routeMode);
+  window.history.replaceState(null, '', `${location.pathname}?${p.toString()}`);
+}
+
+function taskPath(setName) {
+  const safe = setName.replace(/[^A-Za-z0-9_-]/g, '');
+  return `/QA-Gen/tasks/${safe}/ScienceVision_${safe}_final_tasks.jsonl`;
+}
+
+function setDir(setName) {
+  const safe = setName.replace(/[^A-Za-z0-9_-]/g, '');
+  return `/QA-Gen/tasks/${safe}`;
+}
+
+function parseJSONL(text) {
+  return text
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map((line, idx) => {
+      try {
+        return JSON.parse(line);
+      } catch (err) {
+        throw new Error(`Invalid JSONL at line ${idx + 1}: ${err.message}`);
+      }
+    });
+}
+
+function viewerURL(task) {
+  const a = task.asset || {};
+  const viewer = a.viewer;
+  const params = new URLSearchParams();
+  params.set('mode', state.routeMode);
+  if (viewer === 'cornerstone') {
+    params.set('series', a.path || '');
+  } else if (viewer === 'photonics') {
+    params.set('path', a.path || '');
+  } else {
+    params.set('file', a.path || '');
+  }
+  if (viewer === 'molstar' && a.format) params.set('type', a.format);
+  if (viewer === 'urdf' && a.format) params.set('format', a.format);
+  // niivue supports a second volume as ?overlay= (red colormap, 50% opacity);
+  // QA tasks that ship a mask file alongside the CT/MRI must surface it here
+  // so the agent can actually see the masked region the question refers to.
+  if (viewer === 'niivue' && a.mask_path) params.set('overlay', a.mask_path);
+  if (viewer === 'niivue') {
+    const maskId = a.mask_id ?? task.mask_id ?? task.target_selection?.mask_id;
+    if (maskId != null) params.set('mask_id', String(maskId));
+  }
+  const page = viewer || 'gltf';
+  return `/viewer/${encodeURIComponent(page)}.html?${params.toString()}`;
+}
+
+function modelAsset(asset) {
+  if (!asset || typeof asset !== 'object') return {};
+  const allowed = [
+    'asset_id', 'name', 'path', 'repo_path', 'viewer', 'format', 'thumb',
+    'role', 'candidate_label', 'mask_path', 'mask_repo_path', 'mask_id', 'view_hint',
+  ];
+  return Object.fromEntries(allowed.filter(key => asset[key] != null).map(key => [key, asset[key]]));
+}
+
+function modelTask(raw) {
+  return {
+    schema_version: raw.schema_version,
+    task_id: raw.task_id,
+    title: raw.title,
+    domain: raw.domain,
+    v_class: raw.v_class,
+    difficulty: raw.difficulty,
+    instruction: raw.instruction,
+    scientific_action: raw.scientific_action,
+    required_evidence: raw.required_evidence,
+    answer_schema: raw.answer_schema,
+    terminal_answer: raw.terminal_answer,
+    tool_policy: raw.tool_policy,
+    trace_requirements: raw.trace_requirements,
+    viewer_requirements: raw.viewer_requirements,
+    active_vision_evidence: raw.active_vision_evidence,
+    target_selection: raw.target_selection,
+    entity_selection: raw.entity_selection,
+    render_contract: raw.render_contract,
+    mask_id: raw.mask_id,
+    asset: modelAsset(raw.asset),
+    assets: Array.isArray(raw.assets) ? raw.assets.map(modelAsset) : undefined,
+  };
+}
+
+function syncRouteModeButtons() {
+  for (const button of document.querySelectorAll('[data-route-mode]')) {
+    button.setAttribute('aria-pressed', button.dataset.routeMode === state.routeMode ? 'true' : 'false');
+  }
+}
+
+function domainLabel(domain) {
+  return String(domain || '').replace(/_/g, ' ');
+}
+
+function reviewFlags(task) {
+  const title = String(task.title || '').toLowerCase();
+  const instruction = String(task.instruction || '').toLowerCase();
+  const prompt = `${title} ${instruction}`;
+  const assetName = String(task.asset?.name || '').toLowerCase();
+  const flags = [];
+  if (prompt.includes('damage') && !assetName.includes('damage')) {
+    flags.push('Prompt mentions damage, but the selected asset name does not.');
+  }
+  if (prompt.includes('heme') && task.asset?.name !== '4HHB') {
+    flags.push('Heme-oriented biology prompt needs molecule-level review.');
+  }
+  if (task.ground_truth?.status === 'needs_expert_annotation') {
+    flags.push('Ground truth still needs expert/rendered annotation.');
+  }
+  if (task.ground_truth?.status === 'auto_seed') {
+    flags.push('Ground truth is an auto-seed derived from source metadata; expert sign-off still pending.');
+  }
+  return flags;
+}
+
+function renderFilters(urlDomain) {
+  const domains = Array.from(new Set(state.rows.map(r => r.domain))).sort();
+  els.filter.innerHTML = '<option value="">All domains</option>' +
+    domains.map(d => `<option value="${esc(d)}">${esc(domainLabel(d))}</option>`).join('');
+  if (urlDomain && domains.includes(urlDomain)) els.filter.value = urlDomain;
+}
+
+function applyFilter() {
+  const domain = els.filter.value;
+  state.filtered = domain ? state.rows.filter(r => r.domain === domain) : [...state.rows];
+  renderList();
+  if (!state.filtered.some(r => r.task_id === state.selectedId)) {
+    selectTask(state.filtered[0]?.task_id || null, false);
+  } else {
+    markSelected();
+  }
+  writeURL();
+}
+
+function renderList() {
+  if (!state.filtered.length) {
+    els.list.innerHTML = '<div class="sv-task-empty">No tasks match this filter.</div>';
+    return;
+  }
+  els.list.innerHTML = state.filtered.map(task => {
+    const a = task.asset || {};
+    const flags = state.routeMode === 'expert' ? reviewFlags(task) : [];
+    const flagChip = flags.length ? `<span class="sv-task-chip sv-task-card-flag">${flags.length} review</span>` : '';
+    return `<button class="sv-task-card" type="button" data-task="${esc(task.task_id)}" data-domain="${esc(task.domain)}" aria-selected="${task.task_id === state.selectedId ? 'true' : 'false'}">
+      <div class="sv-task-card-title">${esc(task.title)}</div>
+      <div class="sv-task-card-meta">
+        <span class="sv-task-chip">${esc(task.v_class)}</span>
+        <span class="sv-task-chip">${esc(domainLabel(task.domain))}</span>
+        <span class="sv-task-chip">${esc(a.viewer || 'viewer')}</span>
+        <span class="sv-task-chip">${esc(a.format || 'format')}</span>
+        ${flagChip}
+        ${state.routeMode === 'expert' ? verifyCardFlags(task.task_id) : ''}
+      </div>
+      <div class="sv-task-card-path">${esc(a.name || a.path || '')}</div>
+    </button>`;
+  }).join('');
+  for (const card of els.list.querySelectorAll('.sv-task-card')) {
+    card.addEventListener('click', () => selectTask(card.dataset.task, true));
+  }
+}
+
+function markSelected() {
+  for (const card of els.list.querySelectorAll('.sv-task-card')) {
+    card.setAttribute('aria-selected', card.dataset.task === state.selectedId ? 'true' : 'false');
+  }
+}
+
+function renderSeedAnswer(task) {
+  // Show the concrete answer when the task ships one (e.g. auto_seed from
+  // mask_text). Without this the panel only displays the schema name —
+  // reviewers can't tell whether the task even has a seed value.
+  const value = task.ground_truth?.value;
+  if (value == null) return '';
+  let body;
+  if (typeof value === 'object' && !Array.isArray(value)) {
+    const entries = Object.entries(value);
+    if (!entries.length) return '';
+    body = entries.map(([k, v]) => {
+      const display = v == null ? '<span class="sv-task-status">—</span>'
+        : Array.isArray(v) ? `[${v.map(x => esc(JSON.stringify(x))).join(', ')}]`
+        : `<code>${esc(JSON.stringify(v))}</code>`;
+      return `<div class="sv-task-kv"><span class="sv-task-kv-k">${esc(k)}</span>${display}</div>`;
+    }).join('');
+  } else {
+    body = `<code>${esc(JSON.stringify(value))}</code>`;
+  }
+  const statusBadge = task.ground_truth?.status
+    ? `<span class="sv-task-chip">${esc(task.ground_truth.status)}</span>`
+    : '';
+  // Rationale lives on ground_truth.rationale (per build_records.py v3
+  // envelope). Render it as a separate prose block so reviewers see *why*
+  // the seed answer is what it is — not just the field/value pairs.
+  const rationale = task.ground_truth?.rationale;
+  const rationaleBlock = rationale
+    ? `<div class="sv-task-rationale"><span class="sv-task-rationale-label">Why</span><p>${esc(rationale)}</p></div>`
+    : '';
+  return `
+    <div class="sv-task-mini sv-task-mini-answer">
+      <h3>Reference Answer · 参考答案 ${statusBadge}</h3>
+      <div class="sv-task-kvs">${body}</div>
+      ${rationaleBlock}
+    </div>`;
+}
+
+function renderSourceObservation(task) {
+  // Show the source mask_text / caption the auto_seed was derived from.
+  // Backward compatible: records without provenance.source_mask_text skip.
+  const txt = task.provenance?.source_mask_text;
+  if (!txt) return '';
+  const manifest = task.provenance?.source_manifest
+    ? `<span class="sv-task-chip">${esc(task.provenance.source_manifest)}</span>`
+    : '';
+  return `
+    <div class="sv-task-mini sv-task-mini-source">
+      <h3>Source Observation · 原始标注 ${manifest}</h3>
+      <p class="sv-task-source-text">${esc(txt)}</p>
+    </div>`;
+}
+
+function renderAnswerOptions(task) {
+  // Show the candidate value set for each enum field so reviewers can see
+  // what the agent is allowed to choose from. Records without enums (older
+  // task sets) silently skip this block.
+  const enums = task.answer_schema?.enums;
+  if (!enums || typeof enums !== 'object' || !Object.keys(enums).length) return '';
+  const fields = Object.entries(enums).map(([field, options]) => {
+    if (!Array.isArray(options) || !options.length) return '';
+    const items = options.map(opt =>
+      `<code>${esc(typeof opt === 'string' ? opt : JSON.stringify(opt))}</code>`
+    ).join('');
+    return `<div class="sv-task-kv"><span class="sv-task-kv-k">${esc(field)}</span><div class="sv-task-options">${items}</div></div>`;
+  }).filter(Boolean).join('');
+  if (!fields) return '';
+  return `
+    <div class="sv-task-mini sv-task-mini-options">
+      <h3>Answer Options · 候选选项</h3>
+      <div class="sv-task-kvs">${fields}</div>
+    </div>`;
+}
+
+// --- verify trajectory integration ----------------------------------------
+async function ensureVerifyLoaded() {
+  if (state.verify !== null || state.verifyTried) return;
+  state.verifyTried = true;
+  try {
+    const resp = await fetch(VERIFY_JSON);
+    if (!resp.ok) return;            // no run exported → silently skip
+    const bundle = await resp.json();
+    state.verify = bundle.tasks || {};
+    state.verifyMeta = bundle;
+    // Re-render so freshly-available verify badges/panel appear.
+    renderList();
+    const sel = state.rows.find(r => r.task_id === state.selectedId) || null;
+    if (sel) renderPanel(sel);
+  } catch (err) {
+    /* leave verify null; UI degrades gracefully */
+  }
+}
+
+const VERIFY_BADGES = [
+  ['used_mcp_tool', 'MCP'], ['opened_scene', 'open'], ['rendered', 'render'],
+  ['inspected_pixels', 'pixels'], ['tool_policy_compliant', 'policy'],
+  ['metadata_only', 'shortcut'], ['finished', 'finish'],
+  ['timeout', 'timeout'], ['final_answer_shape_ok', 'shape'],
+];
+
+function verifyBadge(metrics, key, label) {
+  const v = metrics[key];
+  let cls = 'sv-vb-no', mark = '·';
+  if (key === 'metadata_only' || key === 'timeout') {
+    if (v) { cls = 'sv-vb-warn'; mark = '!'; } else { cls = 'sv-vb-yes'; mark = '·'; }
+  } else if (v === true) { cls = 'sv-vb-yes'; mark = '✓'; }
+  return `<span class="sv-vb ${cls}">${mark} ${esc(label)}</span>`;
+}
+
+// Compact 4-flag strip for the list cards.
+function verifyCardFlags(taskId) {
+  const v = state.verify && state.verify[taskId];
+  if (!v) return '';
+  const m = v.metrics || {};
+  const flags = ['opened_scene', 'rendered', 'inspected_pixels', 'finished']
+    .map(k => m[k] ? '✓' : '·').join('');
+  return `<span class="sv-task-chip sv-vcard" title="open·render·pixels·finish">${flags}</span>`;
+}
+
+function truncateText(s, n) {
+  s = String(s == null ? '' : s);
+  return s.length > n ? s.slice(0, n) + '…' : s;
+}
+
+function renderVerify(task) {
+  const v = state.verify && state.verify[task.task_id];
+  if (!v) {
+    if (state.setName !== VERIFY_SET) return '';
+    return `<div class="sv-task-mini"><h3>Verify Trajectory</h3>
+      <span class="sv-task-status">no verify run loaded for this task</span></div>`;
+  }
+  const m = v.metrics || {};
+  const badges = VERIFY_BADGES.map(([k, l]) => verifyBadge(m, k, l)).join('');
+  const meta = state.verifyMeta || {};
+  const head = `<div class="sv-vmeta">${esc(meta.model || '')} · ${esc(meta.run_id || '')} · `
+    + `${m.n_steps ?? '?'} steps · ${m.n_images ?? '?'} imgs · ${m.wall_s ?? '?'}s</div>`;
+  const policy = (m.out_of_policy_calls && m.out_of_policy_calls.length)
+    ? `<div class="sv-vmeta">out-of-policy: ${esc(JSON.stringify(m.out_of_policy_calls))}</div>` : '';
+  const steps = (v.steps || []).map(s => {
+    const toolCls = s.tool === 'finish' ? 'sv-vtool sv-vfinish'
+      : s.tool === '<no_tool_call>' ? 'sv-vtool sv-vnotool' : 'sv-vtool';
+    const reason = s.reasoning ? `<div class="sv-vreason">${esc(s.reasoning)}</div>` : '';
+    const args = s.args && Object.keys(s.args).length
+      ? `<pre class="sv-vpre">args: ${esc(truncateText(JSON.stringify(s.args), 400))}</pre>` : '';
+    const result = s.result
+      ? `<pre class="sv-vpre">result: ${esc(truncateText(JSON.stringify(s.result), 600))}</pre>` : '';
+    const imgs = (s.images || []).map(u =>
+      `<img class="sv-vimg" src="${u}" loading="lazy" alt="render">`).join('');
+    const imgWrap = imgs ? `<div class="sv-vimgs">${imgs}</div>` : '';
+    return `<div class="sv-vstep">
+      <div class="sv-vhead"><span class="sv-viter">iter ${s.iter}</span>
+        <span class="${toolCls}">${esc(s.tool)}</span></div>
+      ${reason}${args}${result}${imgWrap}</div>`;
+  }).join('');
+  const answer = v.final_answer != null
+    ? `<pre class="sv-vpre">final answer: ${esc(truncateText(JSON.stringify(v.final_answer), 800))}</pre>` : '';
+  return `<div class="sv-task-mini sv-verify">
+    <h3>Verify Trajectory · 主动3D-vision复盘</h3>
+    ${head}
+    <div class="sv-vbadges">${badges}</div>
+    ${policy}
+    <details class="sv-vdetails"><summary>${(v.steps || []).length} steps · 展开轨迹（操作+每步思考+渲染图）</summary>
+      <div class="sv-vsteps">${steps}</div>
+      ${answer}
+    </details>
+  </div>`;
+}
+
+function renderAnswerDiff(before, after) {
+  if (JSON.stringify(before) === JSON.stringify(after)) return '';
+  const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
+  const fmt = v => v === undefined ? '<span class="sv-task-status">—</span>'
+    : `<code>${esc(JSON.stringify(v))}</code>`;
+  let bodyRows;
+  if (isObj(before) && isObj(after)) {
+    const keys = Array.from(new Set([...Object.keys(before), ...Object.keys(after)]));
+    bodyRows = keys.map(k => {
+      const changed = JSON.stringify(before[k]) !== JSON.stringify(after[k]);
+      return `<tr class="${changed ? 'sv-diff-changed' : ''}">
+        <td class="sv-diff-k">${esc(k)}</td><td>${fmt(before[k])}</td>
+        <td class="sv-diff-arrow">→</td><td>${fmt(after[k])}</td></tr>`;
+    }).join('');
+  } else {
+    bodyRows = `<tr class="sv-diff-changed"><td class="sv-diff-k">value</td>
+      <td>${fmt(before)}</td><td class="sv-diff-arrow">→</td><td>${fmt(after)}</td></tr>`;
+  }
+  return `<div class="sv-rev-block"><h4>Original (V1) → Corrected (V2)</h4>
+    <table class="sv-diff"><thead><tr><th></th><th>original</th><th></th><th>corrected</th></tr></thead>
+    <tbody>${bodyRows}</tbody></table></div>`;
+}
+
+function renderExpertReview(task) {
+  // V2 expert-review panel: comments, what-changed, corrected ZH question,
+  // and the answer diff. Empty string for tasks without a review block.
+  const r = task.expert_review;
+  if (!r) return '';
+  const kv = (k, v) => `<div class="sv-task-kv"><span class="sv-task-kv-k">${esc(k)}</span><span>${esc(v)}</span></div>`;
+  const comments = [];
+  if (r.question_comment) comments.push(kv('question', r.question_comment));
+  if (r.answer_comment) comments.push(kv('answer', r.answer_comment));
+  const commentHtml = comments.length
+    ? `<div class="sv-rev-block"><h4>Reviewer Comments</h4>${comments.join('')}</div>` : '';
+  const changes = [];
+  if (r.question_change) changes.push(kv('Question', r.question_change));
+  if (r.answer_change) changes.push(kv('Answer', r.answer_change));
+  const changeHtml = changes.length
+    ? `<div class="sv-rev-block"><h4>What Changed</h4>${changes.join('')}</div>` : '';
+  const zhHtml = r.instruction_zh
+    ? `<div class="sv-rev-block"><h4>修改后题面（中文）</h4><p class="sv-task-source-text">${esc(r.instruction_zh)}</p></div>` : '';
+  const diffHtml = renderAnswerDiff(r.answer_before, r.answer_after);
+  if (!commentHtml && !changeHtml && !zhHtml && !diffHtml) return '';
+  return `<div class="sv-task-mini sv-task-review-panel">
+    <h3>Expert Review</h3>${commentHtml}${changeHtml}${zhHtml}${diffHtml}</div>`;
+}
+
+function renderPanel(task) {
+  if (!task) {
+    els.panel.innerHTML = '<div class="sv-task-empty">No task selected.</div>';
+    els.frame.removeAttribute('src');
+    return;
+  }
+  const a = task.asset || {};
+  const scoreChecks = (task.scorer?.checks || []).map(x => `<code>${esc(x)}</code>`).join('');
+  const evidence = (task.required_evidence || []).map(x => `<code>${esc(x)}</code>`).join('');
+  const tools = (task.tool_policy?.allowed_tools || []).map(x => `<code>${esc(x)}</code>`).join('');
+  const expertMode = state.routeMode === 'expert';
+  const flags = expertMode ? reviewFlags(task) : [];
+  const reviewHtml = expertMode && flags.length
+    ? `<div class="sv-task-review"><h3>Review Warnings</h3><ul>${flags.map(flag => `<li>${esc(flag)}</li>`).join('')}</ul></div>`
+    : '';
+  const seedAnswerHtml = expertMode ? renderSeedAnswer(task) : '';
+  const expertReviewHtml = expertMode ? renderExpertReview(task) : '';
+  const tier = task.expert_review?.change_tier || '';
+  const tierClass = tier.includes('C') ? 'c' : tier.includes('B') ? 'b' : tier ? 'a' : '';
+  const tierChip = expertMode && tier
+    ? `<span class="sv-task-chip sv-tier sv-tier-${tierClass}">tier ${esc(tier)}</span>` : '';
+  const answerOptionsHtml = renderAnswerOptions(task);
+  const sourceObsHtml = expertMode ? renderSourceObservation(task) : '';
+  const url = viewerURL(task);
+  els.panel.innerHTML = `
+    <div class="sv-task-title-row">
+      <div>
+        <h2 class="sv-task-title">${esc(task.title)}</h2>
+        <div class="sv-task-card-meta" style="margin-top:7px">
+          <span class="sv-task-chip">${esc(task.task_id)}</span>
+          <span class="sv-task-chip">${esc(task.v_class)}</span>
+          <span class="sv-task-chip">${esc(domainLabel(task.domain))}</span>
+          <span class="sv-task-chip">${esc(task.difficulty)}</span>
+          ${tierChip}
+        </div>
+      </div>
+      <a class="sv-task-open" href="${esc(url)}" target="_blank" rel="noopener">Open viewer</a>
+    </div>
+    <p class="sv-task-instruction">${esc(task.instruction)}</p>
+    ${reviewHtml}
+    <div class="sv-task-facts">
+      <div class="sv-task-fact">
+        <div class="sv-task-fact-label">Asset</div>
+        <div class="sv-task-fact-value">${esc(a.name)}<br>${esc(a.path)}</div>
+      </div>
+      <div class="sv-task-fact">
+        <div class="sv-task-fact-label">Viewer</div>
+        <div class="sv-task-fact-value">${esc(a.viewer)} · ${esc(a.format)}</div>
+      </div>
+      <div class="sv-task-fact">
+        <div class="sv-task-fact-label">Answer Schema</div>
+        <div class="sv-task-fact-value">${esc(task.answer_schema?.kind)}<br>${esc((task.answer_schema?.fields || []).join(', '))}</div>
+      </div>
+      ${expertMode ? `<div class="sv-task-fact">
+        <div class="sv-task-fact-label">GT Status</div>
+        <div class="sv-task-fact-value">${esc(task.ground_truth?.status)}<br>${esc(task.ground_truth?.type)}</div>
+      </div>` : ''}
+    </div>
+    <div class="sv-task-lists">
+      ${seedAnswerHtml}
+      ${expertReviewHtml}
+      ${sourceObsHtml}
+      ${answerOptionsHtml}
+      <div class="sv-task-mini">
+        <h3>Required Evidence</h3>
+        <div>${evidence || '<span class="sv-task-status">none</span>'}</div>
+      </div>
+      ${expertMode ? `<div class="sv-task-mini">
+        <h3>Scorer</h3>
+        <div><code>${esc(task.scorer?.primary || '')}</code>${scoreChecks}</div>
+      </div>` : ''}
+      <div class="sv-task-mini">
+        <h3>Allowed Tools</h3>
+        <div>${tools || '<span class="sv-task-status">none</span>'}</div>
+      </div>
+      ${expertMode ? renderVerify(task) : ''}
+    </div>
+  `;
+  els.frame.src = url;
+}
+
+function selectTask(taskId, updateURL) {
+  state.selectedId = taskId;
+  const task = state.rows.find(r => r.task_id === taskId) || null;
+  markSelected();
+  renderPanel(task);
+  if (updateURL) writeURL();
+}
+
+async function loadSetIndex() {
+  // /data/qa_tasks_index.json is generated by scripts/build_qa_tasks_index.py
+  // and committed to the repo. Missing or unparseable -> degrade silently;
+  // the page still works for sets the user types in by hand.
+  try {
+    const resp = await fetch('/data/qa_tasks_index.json');
+    if (!resp.ok) return;
+    const idx = await resp.json();
+    availableSets = (idx.sets || []).map(s => s.name);
+    const dl = document.getElementById('sv-task-set-options');
+    if (dl) dl.innerHTML = availableSets.map(n => `<option value="${esc(n)}"></option>`).join('');
+    els.set.placeholder = availableSets.length
+      ? `e.g. ${availableSets[0]}`
+      : 'no sets indexed';
+  } catch (err) { /* leave availableSets empty; UI degrades gracefully */ }
+}
+
+function defaultSetName() {
+  return availableSets[0] || '';
+}
+
+function canonicalJSON(value) {
+  if (Array.isArray(value)) return `[${value.map(canonicalJSON).join(',')}]`;
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value).sort().map(key =>
+      `${JSON.stringify(key)}:${canonicalJSON(value[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function sha256Fallback(text) {
+  const constants = new Uint32Array([
+    0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1,
+    0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3,
+    0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786,
+    0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+    0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+    0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13,
+    0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1, 0xa81a664b,
+    0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+    0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a,
+    0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+    0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+  ]);
+  const hash = new Uint32Array([
+    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
+  ]);
+  const input = new TextEncoder().encode(text);
+  const paddedLength = Math.ceil((input.length + 9) / 64) * 64;
+  const padded = new Uint8Array(paddedLength);
+  padded.set(input);
+  padded[input.length] = 0x80;
+  const view = new DataView(padded.buffer);
+  const bitLength = input.length * 8;
+  view.setUint32(paddedLength - 8, Math.floor(bitLength / 0x100000000), false);
+  view.setUint32(paddedLength - 4, bitLength >>> 0, false);
+  const words = new Uint32Array(64);
+  const rotateRight = (value, bits) => (value >>> bits) | (value << (32 - bits));
+  for (let offset = 0; offset < paddedLength; offset += 64) {
+    for (let index = 0; index < 16; index += 1) {
+      words[index] = view.getUint32(offset + index * 4, false);
+    }
+    for (let index = 16; index < 64; index += 1) {
+      const s0 = rotateRight(words[index - 15], 7)
+        ^ rotateRight(words[index - 15], 18) ^ (words[index - 15] >>> 3);
+      const s1 = rotateRight(words[index - 2], 17)
+        ^ rotateRight(words[index - 2], 19) ^ (words[index - 2] >>> 10);
+      words[index] = (words[index - 16] + s0 + words[index - 7] + s1) >>> 0;
+    }
+    let [a, b, c, d, e, f, g, h] = hash;
+    for (let index = 0; index < 64; index += 1) {
+      const sum1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25);
+      const choice = (e & f) ^ (~e & g);
+      const first = (h + sum1 + choice + constants[index] + words[index]) >>> 0;
+      const sum0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22);
+      const majority = (a & b) ^ (a & c) ^ (b & c);
+      const second = (sum0 + majority) >>> 0;
+      h = g; g = f; f = e; e = (d + first) >>> 0;
+      d = c; c = b; b = a; a = (first + second) >>> 0;
+    }
+    hash[0] = (hash[0] + a) >>> 0;
+    hash[1] = (hash[1] + b) >>> 0;
+    hash[2] = (hash[2] + c) >>> 0;
+    hash[3] = (hash[3] + d) >>> 0;
+    hash[4] = (hash[4] + e) >>> 0;
+    hash[5] = (hash[5] + f) >>> 0;
+    hash[6] = (hash[6] + g) >>> 0;
+    hash[7] = (hash[7] + h) >>> 0;
+  }
+  return Array.from(hash, value => value.toString(16).padStart(8, '0')).join('');
+}
+
+async function sha256Hex(text) {
+  if (!globalThis.crypto?.subtle) return sha256Fallback(text);
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(digest), byte =>
+    byte.toString(16).padStart(2, '0')).join('');
+}
+
+function decodedBundlePath(value, label, allowLeadingSlash = false) {
+  if (typeof value !== 'string' || !value || value !== value.trim()) {
+    throw new Error(`${label} must be a non-empty path.`);
+  }
+  let decoded = value;
+  try {
+    for (let pass = 0; pass < 2; pass += 1) {
+      const next = decodeURIComponent(decoded);
+      if (next === decoded) break;
+      decoded = next;
+    }
+  } catch (error) {
+    throw new Error(`${label} has invalid URL encoding.`);
+  }
+  if (decoded.includes('\\') || decoded.includes('?') || decoded.includes('#')
+      || /[\u0000-\u001f]/.test(decoded)) {
+    throw new Error(`${label} contains forbidden URL syntax.`);
+  }
+  if (/^[A-Za-z][A-Za-z0-9+.-]*:/.test(decoded) || decoded.startsWith('//')) {
+    throw new Error(`${label} must be a same-origin path.`);
+  }
+  if (decoded.startsWith('/')) {
+    if (!allowLeadingSlash || decoded.startsWith('//')) {
+      throw new Error(`${label} must be relative to its bundle.`);
+    }
+    decoded = decoded.slice(1);
+  }
+  const parts = decoded.split('/');
+  if (!parts.length || parts.some(part => !part || part === '.' || part === '..')) {
+    throw new Error(`${label} is not a safe POSIX path.`);
+  }
+  return parts.join('/');
+}
+
+function bundleManifestURL(reference) {
+  const relative = decodedBundlePath(reference, 'Bundle manifest', true);
+  const url = new URL(reference.startsWith('/') ? `/${relative}` : relative, location.href);
+  if (url.origin !== location.origin || url.search || url.hash) {
+    throw new Error('Bundle manifest must be a same-origin path without query or fragment.');
+  }
+  return url;
+}
+
+function bundleResourceURL(path, manifestURL) {
+  const relative = decodedBundlePath(path, 'Bundle resource', false);
+  const base = new URL('.', manifestURL);
+  const url = new URL(relative, base);
+  if (url.origin !== location.origin || url.search || url.hash
+      || !url.pathname.startsWith(base.pathname)) {
+    throw new Error('Bundle resource escapes the manifest directory.');
+  }
+  return url.pathname;
+}
+
+async function verifyBundleManifestDigest(manifest) {
+  const expected = manifest?.bundle_manifest_sha256;
+  if (!/^[0-9a-f]{64}$/.test(expected || '')) {
+    throw new Error('Bundle manifest has no valid SHA-256 digest.');
+  }
+  const body = Object.fromEntries(Object.entries(manifest)
+    .filter(([key]) => key !== 'bundle_manifest_sha256'));
+  if (await sha256Hex(canonicalJSON(body)) !== expected) {
+    throw new Error('Bundle manifest SHA-256 digest mismatch.');
+  }
+}
+
+function bindBundleAsset(asset, manifestURL, assetClosure) {
+  if (!asset || typeof asset !== 'object' || Array.isArray(asset)) return asset;
+  const bound = {...asset};
+  const bindPath = (pathKey, repoPathKey) => {
+    const candidates = [asset[repoPathKey], asset[pathKey]]
+      .filter(value => value != null && value !== '')
+      .map(value => decodedBundlePath(value, `Task asset ${pathKey}`, true));
+    if (!candidates.length) return;
+    const record = candidates.map(path => assetClosure.get(path)).find(Boolean);
+    if (!record) throw new Error(`Task asset is outside the bundle closure: ${candidates[0]}`);
+    bound[pathKey] = bundleResourceURL(record.path, manifestURL);
+  };
+  bindPath('path', 'repo_path');
+  bindPath('mask_path', 'mask_repo_path');
+  return bound;
+}
+
+function bindBundleTask(task, manifestURL, assetClosure) {
+  return {
+    ...task,
+    asset: bindBundleAsset(task.asset, manifestURL, assetClosure),
+    assets: Array.isArray(task.assets)
+      ? task.assets.map(asset => bindBundleAsset(asset, manifestURL, assetClosure))
+      : task.assets,
+  };
+}
+
+async function loadBundleManifest(manifestReference, opts = {}) {
+  els.status.textContent = 'loading bundle...';
+  els.counts.textContent = 'loading...';
+  els.panel.innerHTML = '<div class="sv-task-empty">Loading tasks...</div>';
+  els.frame.removeAttribute('src');
+  try {
+    const manifestURL = bundleManifestURL(manifestReference);
+    const manifestResponse = await fetch(manifestURL, {cache: 'no-store'});
+    if (!manifestResponse.ok) {
+      throw new Error(`HTTP ${manifestResponse.status} while loading ${manifestURL.pathname}`);
+    }
+    const manifest = await manifestResponse.json();
+    await verifyBundleManifestDigest(manifest);
+    if (![
+      'sciencevision.expert_task_bundle.v2',
+      'sciencevision.legacy_expert_package_adapter.v1',
+    ].includes(manifest.schema_version) || !manifest.task_file?.path
+        || !Array.isArray(manifest.assets)) {
+      throw new Error('URL does not identify a supported expert bundle manifest.');
+    }
+    const taskURL = bundleResourceURL(manifest.task_file.path, manifestURL);
+    const taskResponse = await fetch(taskURL, {cache: 'no-store'});
+    if (!taskResponse.ok) {
+      throw new Error(`HTTP ${taskResponse.status} while loading ${taskURL}`);
+    }
+    const taskText = await taskResponse.text();
+    if (!/^[0-9a-f]{64}$/.test(manifest.task_file.sha256 || '')
+        || await sha256Hex(taskText) !== manifest.task_file.sha256) {
+      throw new Error('Bundle task JSONL SHA-256 digest mismatch.');
+    }
+    const bundleRows = parseJSONL(taskText);
+    if (bundleRows.length !== manifest.task_file.count) {
+      throw new Error('Bundle task count does not match its manifest.');
+    }
+    const assetClosure = new Map(manifest.assets.map(record => {
+      const path = decodedBundlePath(record?.path, 'Bundle asset closure path', false);
+      return [path, record];
+    }));
+    if (assetClosure.size !== manifest.assets.length) {
+      throw new Error('Bundle asset closure contains duplicate paths.');
+    }
+    const unwrapped = bundleRows.map((row, index) => {
+      if (!row.task || typeof row.task !== 'object' || Array.isArray(row.task)) {
+        throw new Error(`Bundle task row ${index + 1} has no task object.`);
+      }
+      const task = bindBundleTask(row.task, manifestURL, assetClosure);
+      return {...task, task_id: row.task_id || task.task_id};
+    });
+    state.manifestURL = `${manifestURL.pathname}${manifestURL.search}`;
+    state.setName = manifest.bundle_id;
+    state.verify = null; state.verifyMeta = null; state.verifyTried = false;
+    state.rows = state.routeMode === 'model' ? unwrapped.map(modelTask) : unwrapped;
+    els.set.value = manifest.bundle_id;
+    els.set.disabled = true;
+    els.load.disabled = true;
+    els.links.replaceChildren();
+    renderFilters(opts.domain);
+    state.filtered = els.filter.value
+      ? state.rows.filter(row => row.domain === els.filter.value)
+      : [...state.rows];
+    const domains = new Set(state.rows.map(row => row.domain).filter(Boolean));
+    const vClasses = new Set(state.rows.map(row => row.v_class).filter(Boolean));
+    els.status.textContent = `${state.rows.length} tasks · ${domains.size} domains`;
+    els.counts.textContent = `${manifest.bundle_id} · ${state.rows.length} tasks`;
+    els.statTotal.textContent = String(state.rows.length);
+    els.statRelease.textContent = '0';
+    els.statRelease.closest('.sv-task-stat').setAttribute('data-zero', 'true');
+    els.statDomains.textContent = String(domains.size);
+    els.statVclass.textContent = Array.from(vClasses).sort().join('/') || '-';
+    renderList();
+    const requestedTask = opts.task && state.rows.some(row => row.task_id === opts.task)
+      ? opts.task : state.filtered[0]?.task_id;
+    selectTask(requestedTask || null, false);
+    writeURL();
+    return true;
+  } catch (err) {
+    state.rows = [];
+    state.filtered = [];
+    els.list.replaceChildren();
+    els.status.textContent = 'failed';
+    els.counts.textContent = 'error';
+    for (const id of ['statTotal', 'statRelease', 'statDomains', 'statVclass']) {
+      els[id].textContent = '-';
+    }
+    els.panel.innerHTML = `<div class="sv-task-error"><pre>${esc(err.stack || err.message || err)}</pre></div>`;
+    return false;
+  }
+}
+
+async function loadSet(setName, opts = {}) {
+  state.manifestURL = '';
+  els.set.disabled = false;
+  els.load.disabled = false;
+  const next = setName || defaultSetName();
+  if (!next) {
+    // No URL param and the index produced no sets either — empty clone.
+    els.status.textContent = 'no sets';
+    els.counts.textContent = '—';
+    els.panel.innerHTML = '<div class="sv-task-empty">No task sets are present in this clone. Add a set to <code>.mirror-include</code> and run <code>tools/sync_from_sciencevision.py</code>.</div>';
+    return;
+  }
+  if (next !== state.setName) {
+    // Switching sets invalidates any loaded verify bundle (it's set-specific).
+    state.verify = null; state.verifyMeta = null; state.verifyTried = false;
+  }
+  state.setName = next;
+  els.set.value = state.setName;
+  els.status.textContent = 'loading task JSONL…';
+  els.counts.textContent = 'loading…';
+  els.panel.innerHTML = '<div class="sv-task-empty">Loading tasks…</div>';
+  els.frame.removeAttribute('src');
+  try {
+    const path = taskPath(state.setName);
+    const dir = setDir(state.setName);
+    els.links.innerHTML = state.routeMode === 'expert'
+      ? `<a href="${dir}/GENERATION_STATS.md" target="_blank" rel="noopener">stats</a><a href="${dir}/REVIEW.md" target="_blank" rel="noopener">review</a><a href="${dir}/ScienceVision_${state.setName.replace(/[^A-Za-z0-9_-]/g, '')}_final_tasks.jsonl" target="_blank" rel="noopener">jsonl</a>`
+      : '';
+    const resp = await fetch(path);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status} while loading ${path}`);
+    const parsedRows = parseJSONL(await resp.text());
+    state.rows = state.routeMode === 'model' ? parsedRows.map(modelTask) : parsedRows;
+    renderFilters(opts.domain);
+    state.filtered = els.filter.value ? state.rows.filter(r => r.domain === els.filter.value) : [...state.rows];
+    const domains = new Set(state.rows.map(r => r.domain));
+    const vClasses = new Set(state.rows.map(r => r.v_class));
+    let statText = '';
+    try {
+      const statsResp = await fetch(`${dir}/generation_stats.json`);
+      if (statsResp.ok) {
+        const stats = await statsResp.json();
+        const counts = stats.task_counts || {};
+        statText = ` · kept ${counts.kept_total ?? state.rows.length}/${counts.generated_total ?? state.rows.length}`;
+      }
+    } catch (err) {
+      statText = '';
+    }
+    els.status.textContent = `${state.rows.length} tasks · ${domains.size} domains · ${Array.from(vClasses).sort().join('/')}${statText}`;
+    els.counts.textContent = `${state.setName} · ${state.rows.length} tasks`;
+    const releaseReady = state.rows.filter(r => r.validation_record?.release_gate === 'pass').length;
+    els.statTotal.textContent = String(state.rows.length);
+    els.statRelease.textContent = String(releaseReady);
+    els.statRelease.closest('.sv-task-stat').setAttribute('data-zero', releaseReady === 0 ? 'true' : 'false');
+    els.statDomains.textContent = String(domains.size);
+    els.statVclass.textContent = Array.from(vClasses).sort().join('/') || '–';
+    renderList();
+    const requestedTask = opts.task && state.rows.some(r => r.task_id === opts.task) ? opts.task : state.filtered[0]?.task_id;
+    selectTask(requestedTask || null, false);
+    writeURL();
+    // Lazy-load verify trajectories only for the set that has them.
+    if (state.routeMode === 'expert' && state.setName === VERIFY_SET) ensureVerifyLoaded();
+  } catch (err) {
+    state.rows = [];
+    state.filtered = [];
+    els.list.innerHTML = '';
+    els.status.textContent = 'failed';
+    els.counts.textContent = 'error';
+    for (const id of ['statTotal','statRelease','statDomains','statVclass']) els[id].textContent = '–';
+    els.statRelease.closest('.sv-task-stat').setAttribute('data-zero', 'false');
+    const notIndexed = availableSets.length && !availableSets.includes(state.setName);
+    const hint = notIndexed
+      ? `<p>Set <code>${esc(state.setName)}</code> is not mirrored into this clone. Available sets: ${availableSets.map(n => `<code>${esc(n)}</code>`).join(', ')}.</p><p>Add <code>QA-Gen/tasks/${esc(state.setName)}/**</code> to <code>.mirror-include</code> and re-run <code>tools/sync_from_sciencevision.py</code>.</p>`
+      : '';
+    els.panel.innerHTML = `<div class="sv-task-error">${hint}<pre>${esc(err.stack || err.message || err)}</pre></div>`;
+  }
+}
+
+els.load.addEventListener('click', () => loadSet(els.set.value.trim()));
+els.set.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') loadSet(els.set.value.trim());
+});
+els.filter.addEventListener('change', applyFilter);
+for (const button of document.querySelectorAll('[data-route-mode]')) {
+  button.addEventListener('click', () => {
+    const nextMode = button.dataset.routeMode;
+    if (nextMode === state.routeMode) return;
+    const selected = state.selectedId;
+    const domain = els.filter.value;
+    state.routeMode = nextMode;
+    if (nextMode === 'model') {
+      state.verify = null;
+      state.verifyMeta = null;
+      state.verifyTried = false;
+    }
+    syncRouteModeButtons();
+    if (state.manifestURL) loadBundleManifest(state.manifestURL, {task: selected, domain});
+    else loadSet(state.setName, { task: selected, domain });
+  });
+}
+
+(async () => {
+  const initial = readURL();
+  state.routeMode = initial.mode;
+  syncRouteModeButtons();
+  if (initial.manifest) {
+    const loaded = await loadBundleManifest(
+      initial.manifest, {task: initial.task, domain: initial.domain},
+    );
+    if (!loaded && initial.set) {
+      await loadSetIndex();
+      await loadSet(initial.set, {task: initial.task, domain: initial.domain});
+    }
+  } else {
+    await loadSetIndex();
+    await loadSet(initial.set, { task: initial.task, domain: initial.domain });
+  }
+})();
+</script>
+<script src="/viewer/shared/task-screenshot.js"></script>
+</body>
+</html>

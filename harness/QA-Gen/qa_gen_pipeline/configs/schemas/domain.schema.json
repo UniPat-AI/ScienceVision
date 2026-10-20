@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/domain.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "domain_status", "catalog_leaves", "policy", "viewer_defaults"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_domain_config"},
+    "id": {"enum": ["biology", "chemistry", "medical", "architecture", "mechanical_cad"]},
+    "domain_status": {"enum": ["sample_config_available", "catalog_only", "blocked"]},
+    "catalog_leaves": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z0-9_]+$"}
+    },
+    "blocked_reasons": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "policy": {"$ref": "#/definitions/policy"},
+    "viewer_defaults": {"$ref": "#/definitions/viewer_defaults"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"domain_status": {"const": "blocked"}}, "required": ["domain_status"]},
+      "then": {"required": ["blocked_reasons"]}
+    }
+  ],
+  "definitions": {
+    "policy": {
+      "type": "object",
+      "required": ["allowed_viewer_operations", "forbidden_capabilities"],
+      "properties": {
+        "allowed_viewer_operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "inspect",
+              "isolate",
+              "rotate",
+              "render",
+              "orbit",
+              "select",
+              "zoom",
+              "pan",
+              "slice",
+              "window_level",
+              "bbox",
+              "measure_distance",
+              "measure_angle",
+              "measure_dihedral",
+              "measure_area",
+              "measure_volume",
+              "explode",
+              "section_cut",
+              "overlay_compare"
+            ]
+          }
+        },
+        "forbidden_capabilities": {
+          "const": [
+            "network",
+            "asset_file_read",
+            "raw_asset_metadata",
+            "raw_asset_read",
+            "arbitrary_compute",
+            "unrestricted_compute"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "viewer_defaults": {
+      "type": "object",
+      "required": ["required_capabilities"],
+      "properties": {
+        "required_capabilities": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "anonymous_scene",
+              "controlled_session_request",
+              "native_dihedral_measurement",
+              "native_distance_measurement",
+              "stable_part_identifier_scheme",
+              "stated_scale_and_unit",
+              "stated_coordinate_frame"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

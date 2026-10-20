@@ -1,0 +1,663 @@
+{
+  "_source": {
+    "repo": "ScienceVision",
+    "commit": "dba2372d",
+    "files": [
+      "viewer/shared/molstar-mcp-adapter.js",
+      "viewer/shared/niivue-mcp-adapter.js"
+    ],
+    "captured": "2026-08-20",
+    "why": "The viewer declares its own functions and the workspace only receives them at runtime, from a repository this one does not contain. This is a snapshot of that vocabulary, kept so the Chinese wording for it can be pinned by a test. It is not the contract: the viewer is."
+  },
+  "viewers": {
+    "molstar": [
+      {
+        "name": "viewer_rotate",
+        "description": "Increment the molecular camera azimuth, elevation, and roll in degrees around its current target.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "d_azimuth_deg": {
+              "type": "number"
+            },
+            "d_elevation_deg": {
+              "type": "number"
+            },
+            "d_roll_deg": {
+              "type": "number",
+              "default": 0
+            }
+          },
+          "required": [
+            "d_azimuth_deg",
+            "d_elevation_deg"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_zoom",
+        "description": "Multiply camera zoom; factor > 1 moves closer and factor < 1 moves farther away.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "factor": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 20
+            }
+          },
+          "required": [
+            "factor"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_measure_distance",
+        "description": "Resolve two unambiguous atom selectors, draw a Mol* distance annotation, and return the distance in angstroms.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "a": {
+              "type": "object",
+              "description": "First atom selector; it must resolve to exactly one displayed atom.",
+              "properties": {
+                "structure_id": {
+                  "type": "string",
+                  "description": "Stable ID returned by viewer_get_state."
+                },
+                "structure_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "model_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based model index within the structure."
+                },
+                "unit_id": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Mol* unit ID, useful when assembly copies are ambiguous."
+                },
+                "chain_id": {
+                  "type": "string",
+                  "description": "auth_asym_id or label_asym_id."
+                },
+                "residue_number": {
+                  "type": "integer",
+                  "description": "auth_seq_id or label_seq_id."
+                },
+                "insertion_code": {
+                  "type": "string"
+                },
+                "residue_name": {
+                  "type": "string",
+                  "description": "auth_comp_id or label_comp_id."
+                },
+                "atom_name": {
+                  "type": "string",
+                  "description": "auth_atom_id or label_atom_id."
+                },
+                "altloc": {
+                  "type": "string",
+                  "description": "Alternate-location ID; use an empty string for the blank conformer."
+                }
+              },
+              "additionalProperties": false
+            },
+            "b": {
+              "type": "object",
+              "description": "Second atom selector; it must resolve to exactly one displayed atom.",
+              "properties": {
+                "structure_id": {
+                  "type": "string",
+                  "description": "Stable ID returned by viewer_get_state."
+                },
+                "structure_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "model_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based model index within the structure."
+                },
+                "unit_id": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Mol* unit ID, useful when assembly copies are ambiguous."
+                },
+                "chain_id": {
+                  "type": "string",
+                  "description": "auth_asym_id or label_asym_id."
+                },
+                "residue_number": {
+                  "type": "integer",
+                  "description": "auth_seq_id or label_seq_id."
+                },
+                "insertion_code": {
+                  "type": "string"
+                },
+                "residue_name": {
+                  "type": "string",
+                  "description": "auth_comp_id or label_comp_id."
+                },
+                "atom_name": {
+                  "type": "string",
+                  "description": "auth_atom_id or label_atom_id."
+                },
+                "altloc": {
+                  "type": "string",
+                  "description": "Alternate-location ID; use an empty string for the blank conformer."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "a",
+            "b"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_switch_structure",
+        "description": "Show exactly one loaded structure, hide the others, and focus the selected structure.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "structure_id": {
+              "type": "string"
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_highlight",
+        "description": "Highlight a structure, chain, residue, or atom selection, or clear the current highlight.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "object",
+              "description": "Selection to highlight.",
+              "properties": {
+                "structure_id": {
+                  "type": "string",
+                  "description": "Stable ID returned by viewer_get_state."
+                },
+                "structure_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "model_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based model index within the structure."
+                },
+                "unit_id": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Mol* unit ID, useful when assembly copies are ambiguous."
+                },
+                "chain_id": {
+                  "type": "string",
+                  "description": "auth_asym_id or label_asym_id."
+                },
+                "residue_number": {
+                  "type": "integer",
+                  "description": "auth_seq_id or label_seq_id."
+                },
+                "insertion_code": {
+                  "type": "string"
+                },
+                "residue_name": {
+                  "type": "string",
+                  "description": "auth_comp_id or label_comp_id."
+                },
+                "atom_name": {
+                  "type": "string",
+                  "description": "auth_atom_id or label_atom_id."
+                },
+                "altloc": {
+                  "type": "string",
+                  "description": "Alternate-location ID; use an empty string for the blank conformer."
+                }
+              },
+              "additionalProperties": false
+            },
+            "clear": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_focus",
+        "description": "Focus the Mol* camera on a structure, chain, residue, or atom selection.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "object",
+              "description": "Selection to focus.",
+              "properties": {
+                "structure_id": {
+                  "type": "string",
+                  "description": "Stable ID returned by viewer_get_state."
+                },
+                "structure_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "model_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based model index within the structure."
+                },
+                "unit_id": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Mol* unit ID, useful when assembly copies are ambiguous."
+                },
+                "chain_id": {
+                  "type": "string",
+                  "description": "auth_asym_id or label_asym_id."
+                },
+                "residue_number": {
+                  "type": "integer",
+                  "description": "auth_seq_id or label_seq_id."
+                },
+                "insertion_code": {
+                  "type": "string"
+                },
+                "residue_name": {
+                  "type": "string",
+                  "description": "auth_comp_id or label_comp_id."
+                },
+                "atom_name": {
+                  "type": "string",
+                  "description": "auth_atom_id or label_atom_id."
+                },
+                "altloc": {
+                  "type": "string",
+                  "description": "Alternate-location ID; use an empty string for the blank conformer."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "selector"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_visibility",
+        "description": "Show or hide a whole loaded structure. Partial residue/atom visibility is intentionally unsupported.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "selector": {
+              "type": "object",
+              "description": "Whole-structure selector (structure_id or structure_index only).",
+              "properties": {
+                "structure_id": {
+                  "type": "string",
+                  "description": "Stable ID returned by viewer_get_state."
+                },
+                "structure_index": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "model_index": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Zero-based model index within the structure."
+                },
+                "unit_id": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Mol* unit ID, useful when assembly copies are ambiguous."
+                },
+                "chain_id": {
+                  "type": "string",
+                  "description": "auth_asym_id or label_asym_id."
+                },
+                "residue_number": {
+                  "type": "integer",
+                  "description": "auth_seq_id or label_seq_id."
+                },
+                "insertion_code": {
+                  "type": "string"
+                },
+                "residue_name": {
+                  "type": "string",
+                  "description": "auth_comp_id or label_comp_id."
+                },
+                "atom_name": {
+                  "type": "string",
+                  "description": "auth_atom_id or label_atom_id."
+                },
+                "altloc": {
+                  "type": "string",
+                  "description": "Alternate-location ID; use an empty string for the blank conformer."
+                }
+              },
+              "additionalProperties": false
+            },
+            "visible": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "selector",
+            "visible"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_reset",
+        "description": "Restore the initial Mol* camera and structure visibility, and clear highlights.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_get_state",
+        "description": "Return camera state, stable structure IDs, visibility, and measurement count.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      }
+    ],
+    "niivue": [
+      {
+        "name": "viewer_rotate",
+        "description": "Increment the 3D volume-render azimuth/elevation in degrees. Non-zero roll is unsupported by NiiVue.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "d_azimuth_deg": {
+              "type": "number",
+              "description": "Incremental azimuth in degrees."
+            },
+            "d_elevation_deg": {
+              "type": "number",
+              "description": "Incremental elevation in degrees."
+            },
+            "d_roll_deg": {
+              "type": "number",
+              "default": 0,
+              "description": "Must be 0; NiiVue has no roll control."
+            }
+          },
+          "required": [
+            "d_azimuth_deg",
+            "d_elevation_deg"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_slice",
+        "description": "Show an anatomical slice and move the crosshair by voxel index or normalized fraction.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "axis": {
+              "type": "string",
+              "enum": [
+                "axial",
+                "coronal",
+                "sagittal"
+              ]
+            },
+            "index": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Inclusive zero-based voxel index."
+            },
+            "fraction": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Normalized slice position."
+            }
+          },
+          "required": [
+            "axis"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_window_level",
+        "description": "Set display window center and positive width for a volume layer.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "center": {
+              "type": "number"
+            },
+            "width": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "layer": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
+            }
+          },
+          "required": [
+            "center",
+            "width"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_bbox",
+        "description": "Compute the inclusive non-zero voxel bounding box of an overlay/mask layer; optionally center the crosshair.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "layer": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1,
+              "description": "Overlay layer index; the base image is layer 0."
+            },
+            "center": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_set_view",
+        "description": "Switch between 3D render, MPR, or a single anatomical plane.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "render",
+                "multiplanar",
+                "axial",
+                "coronal",
+                "sagittal"
+              ]
+            }
+          },
+          "required": [
+            "mode"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_crosshair",
+        "description": "Move the crosshair using a fixed three-number voxel or normalized-fraction coordinate.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "space": {
+              "type": "string",
+              "enum": [
+                "voxel",
+                "fraction"
+              ],
+              "default": "voxel"
+            },
+            "position": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3,
+              "description": "[x, y, z] in voxel or normalized fraction space."
+            }
+          },
+          "required": [
+            "position"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_zoom",
+        "description": "Multiply 2D and 3D zoom; factor > 1 zooms in.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "factor": {
+              "type": "number",
+              "minimum": 0.05,
+              "maximum": 20
+            }
+          },
+          "required": [
+            "factor"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_pan",
+        "description": "Increment the 2D pan vector in world millimeters.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "delta_mm": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "delta_mm"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_visibility",
+        "description": "Set a volume layer opacity or visible state. Layer 0 is the base image; overlays start at 1.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "layer": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "visible": {
+              "type": "boolean"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "layer"
+          ],
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_clip_plane",
+        "description": "Set or disable the 3D clip plane using NiiVue depth/azimuth/elevation parameters.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "depth": {
+              "type": "number",
+              "minimum": -1,
+              "maximum": 1,
+              "default": 0
+            },
+            "azimuth_deg": {
+              "type": "number",
+              "default": 0
+            },
+            "elevation_deg": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90,
+              "default": 0
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_reset",
+        "description": "Restore the view and loaded-layer display state captured after initial load.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      },
+      {
+        "name": "viewer_get_state",
+        "description": "Return the current NiiVue view, crosshair, layer, zoom, pan, and clip state.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        }
+      }
+    ]
+  }
+}

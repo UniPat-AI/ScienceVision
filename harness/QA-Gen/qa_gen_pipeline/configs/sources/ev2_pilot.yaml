@@ -1,0 +1,26 @@
+schema_version: 1
+kind: qagen_source_registry
+id: ev2_pilot
+
+version_resolution:
+  status: not_applicable
+  observed_versions: []
+  resolution_receipt_digest: null
+
+sources:
+  - id: local-fixture-seed-inventory
+    mode: local_fixture
+    fixture_path: ../fixtures/seed-inventory.fixture.json
+    fixture_payload_digest: sha256:8d54773301679be57a45fdd27415e77ecfee837b9ee22acd171e1422361f14be
+    local_only: true
+    production_eligible: false
+    status: fixture_only
+    reference_owners:
+      - repo_path: QA-Gen/tasks/EV2_Pilot/ScienceVision_EV2_Pilot_final_tasks.jsonl
+        purpose: legacy_reference_only
+      - repo_path: QA-Gen/tasks/EV2_Pilot/generation_stats.json
+        purpose: legacy_reference_only
+
+# A real version mismatch must use status: conflict (with two or more observed
+# labels and no receipt) until qa-gen seed accept-version records a resolved
+# receipt digest. This local fixture has no external version label.

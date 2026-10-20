@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Trajectory Replay — Science Vision</title>
+<link rel="stylesheet" href="/sv-annotate/viewer/shared/style.css">
+<style>
+  #stage { position: relative; width: 900px; height: 600px; background: #0d1117; border: 1px solid #30363d; margin: 8px 0; }
+  #cursor { position: absolute; width: 12px; height: 12px; border-radius: 50%; background: #58a6ff; box-shadow: 0 0 8px #58a6ff; transform: translate(-50%,-50%); }
+  #heat { position: absolute; inset: 0; pointer-events: none; display: none; }
+  #shot { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; }
+  .row { display: flex; gap: 8px; align-items: center; margin: 6px 0; }
+  button, select { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; border-radius: 4px; padding: 5px 10px; cursor: pointer; }
+  #cps button { display: block; width: 100%; text-align: left; margin: 2px 0; }
+  #meta { color: #8b949e; font: 12px ui-monospace, monospace; }
+</style>
+</head>
+<body>
+<header class="topbar"><div><a class="back" href="/sv-annotate/">← Shell</a><strong>Replay</strong></div></header>
+<div style="padding: 12px">
+  <div class="row">
+    <input type="file" id="file" accept=".json">
+    <button id="play">▶ Play</button>
+    <select id="speed"><option value="1">1×</option><option value="2">2×</option><option value="4">4×</option></select>
+    <button id="heattoggle" class="secondary">Toggle heatmap</button>
+  </div>
+  <div id="meta"></div>
+  <div id="stage">
+    <img id="shot"><img id="heat"><div id="cursor" style="display:none"></div>
+  </div>
+  <div id="cps"></div>
+</div>
+<script>
+let bundle = null, events = [], t0 = 0, tEnd = 0, playing = false, speed = 1, rafStart = 0, clockStart = 0;
+const stage = document.getElementById('stage'), cursor = document.getElementById('cursor');
+const heat = document.getElementById('heat'), shot = document.getElementById('shot'), meta = document.getElementById('meta');
+
+document.getElementById('file').onchange = async (e) => {
+  bundle = JSON.parse(await e.target.files[0].text());
+  const traj = bundle.trajectory;
+  events = traj.events.filter(ev => ev.type === 'mouse_move');
+  tEnd = events.length ? events[events.length - 1].t : 0;
+  meta.textContent = `${traj.task_id} · ${traj.question.v_class} · ${traj.derived.n_checkpoints} checkpoints · ${traj.derived.n_camera_changes} cam · active ${Math.round(traj.timing.active_ms/1000)}s`;
+  heat.src = bundle.assets[traj.derived.heatmap_uri] || '';
+  cursor.style.display = 'block';
+  renderCheckpoints(traj);
+};
+
+function renderCheckpoints(traj) {
+  const box = document.getElementById('cps');
+  box.innerHTML = '<strong>Checkpoints</strong>';
+  traj.checkpoints.forEach(cp => {
+    const b = document.createElement('button');
+    b.textContent = `t=${(cp.t/1000).toFixed(1)}s · ${cp.reasoning.slice(0, 60)}`;
+    b.onclick = () => { seek(cp.t); shot.src = bundle.assets[cp.screenshot_uri] || ''; shot.style.opacity = 1; };
+    box.appendChild(b);
+  });
+}
+
+function scaleXY(ev) {
+  const w = bundle.trajectory.asset_canvas_width || 900, h = bundle.trajectory.asset_canvas_height || 600;
+  return { x: ev.x / w * stage.clientWidth, y: ev.y / h * stage.clientHeight };
+}
+
+function seek(t) {
+  let ev = events[0];
+  for (const e of events) { if (e.t <= t) ev = e; else break; }
+  if (ev) { const p = scaleXY(ev); cursor.style.left = p.x + 'px'; cursor.style.top = p.y + 'px'; }
+}
+
+function loop(now) {
+  if (!playing) return;
+  const t = (now - rafStart) * speed + clockStart;
+  seek(t);
+  if (t >= tEnd) { playing = false; document.getElementById('play').textContent = '▶ Play'; return; }
+  requestAnimationFrame(loop);
+}
+
+document.getElementById('play').onclick = () => {
+  if (!events.length) return;
+  playing = !playing;
+  document.getElementById('play').textContent = playing ? '⏸ Pause' : '▶ Play';
+  if (playing) { shot.style.opacity = 0; clockStart = 0; rafStart = performance.now(); requestAnimationFrame(loop); }
+};
+document.getElementById('speed').onchange = (e) => { speed = Number(e.target.value); };
+document.getElementById('heattoggle').onclick = () => { heat.style.display = heat.style.display === 'block' ? 'none' : 'block'; };
+</script>
+</body>
+</html>

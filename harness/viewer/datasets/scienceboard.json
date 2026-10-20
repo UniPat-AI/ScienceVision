@@ -1,0 +1,17 @@
+[
+  {
+    "name": "scienceboard",
+    "label": "ScienceBoard",
+    "modality": "OS-level multi-domain agent",
+    "task_type": "agent task (not VQA)",
+    "source": "github.com/OS-Copilot/ScienceBoard",
+    "answer_kind": "string",
+    "availability": "out_of_scope",
+    "unavailable_reason": "OS-level agent operation tasks — not VQA, outside Sci3D scope",
+    "status": "disabled",
+    "splits": {},
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 0
+  }
+]

@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/compiled_selection_viewer_capability_mapping.schema.json",
+  "description": "Static local-review capability profiles used to bind a compiled selection slot to a controlled viewer. These profiles are not scene evidence or release approval.",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "status", "profiles"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_compiled_selection_viewer_capability_mapping"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+    "status": {"const": "local_review_only"},
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "viewer_family",
+          "source_viewers",
+          "asset_formats",
+          "leaf_coverage",
+          "source_operation_aliases",
+          "controlled_operations",
+          "native_measurement_operations",
+          "unsupported_operations",
+          "evidence"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z][a-z0-9_-]*$"},
+          "viewer_family": {"enum": ["molstar", "niivue"]},
+          "source_viewers": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "asset_formats": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "leaf_coverage": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"}},
+          "source_operation_aliases": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {"type": "string", "minLength": 1}
+          },
+          "controlled_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "native_measurement_operations": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+          "unsupported_operations": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+          "evidence": {
+            "type": "object",
+            "required": ["mcp_adapter", "render_bridge", "scope"],
+            "properties": {
+              "mcp_adapter": {"type": "string", "minLength": 1},
+              "render_bridge": {"type": "string", "minLength": 1},
+              "scope": {"const": "existing_local_implementation_only"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,479 @@
+.sv-mcp-frame-layout {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 42px;
+  grid-template-rows: 38px minmax(0, 1fr);
+  grid-template-areas:
+    "bar bar"
+    "viewer controls";
+  overflow: hidden;
+}
+
+.sv-mcp-frame-layout.sv-mcp-open {
+  grid-template-columns: minmax(0, 1fr) clamp(300px, 28vw, 380px);
+}
+
+.sv-mcp-frame-layout > .sv-task-viewer-bar {
+  grid-area: bar;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.sv-task-viewer-title {
+  color: var(--fg);
+  font: 650 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+}
+
+.sv-mcp-frame-layout > .sv-task-frame {
+  grid-area: viewer;
+  min-width: 0;
+  min-height: 0;
+}
+
+.sv-mcp-controls {
+  grid-area: controls;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  border-left: 1px solid var(--border);
+  background: var(--bg2);
+}
+
+.sv-mcp-controls[open] {
+  display: grid;
+  grid-template-rows: 36px minmax(0, 1fr);
+}
+
+.sv-mcp-content {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: 32px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.sv-mcp-controls[open] > .sv-mcp-content {
+  box-sizing: border-box;
+  height: calc(100% - 36px);
+}
+
+.sv-mcp-controls > summary {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--fg);
+  cursor: pointer;
+  list-style: none;
+  font: 650 11px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+}
+
+.sv-mcp-controls > summary::-webkit-details-marker { display: none; }
+
+.sv-mcp-controls > summary::before {
+  content: ">";
+  color: var(--accent);
+  transition: transform 120ms ease;
+}
+
+.sv-mcp-controls[open] > summary::before { transform: rotate(90deg); }
+
+.sv-mcp-controls:not([open]) > summary {
+  width: 42px;
+  height: 100%;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 10px;
+  padding: 12px 0;
+  border-bottom: 0;
+}
+
+.sv-mcp-controls:not([open]) .sv-mcp-summary-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.sv-mcp-controls:not([open]) .sv-mcp-status { display: none; }
+
+.sv-mcp-status {
+  min-width: 0;
+  margin-left: auto;
+  color: var(--fg-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: none;
+  font-weight: 400;
+}
+
+.sv-mcp-status[data-state="ready"] { color: #3fb950; }
+.sv-mcp-status[data-state="running"] { color: #d29922; }
+.sv-mcp-status[data-state="success"] { color: #56d364; }
+.sv-mcp-status[data-state="error"] { color: #ff7b72; }
+
+.sv-mcp-tabs {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+
+.sv-mcp-tabs button {
+  min-width: 0;
+  border: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--fg-dim);
+  cursor: pointer;
+  font: 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+  text-transform: uppercase;
+}
+
+.sv-mcp-tabs button:last-child { border-right: 0; }
+.sv-mcp-tabs button[aria-selected="true"] {
+  background: var(--bg);
+  color: var(--accent);
+}
+
+.sv-mcp-panel[hidden] { display: none; }
+
+.sv-mcp-body {
+  min-height: 0;
+  height: auto;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-rows: auto minmax(80px, 1fr) minmax(84px, 0.8fr);
+  gap: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.sv-trajectory-root {
+  min-width: 0;
+  min-height: 0;
+  height: auto;
+  overflow: auto;
+}
+
+.sv-mcp-command {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.sv-mcp-command > .sv-mcp-field,
+.sv-mcp-feedback,
+.sv-mcp-tool-description { grid-column: 1 / -1; }
+
+/* Execution feedback, rendered inside the command block so it stays visible
+   while the panel is open. The header .sv-mcp-status is hidden whenever the
+   panel is collapsed, which is why a click used to look like a no-op. */
+.sv-mcp-feedback {
+  min-width: 0;
+  border-left: 2px solid var(--border);
+  padding-left: 7px;
+  color: var(--fg-dim);
+  font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+
+.sv-mcp-feedback[data-state="running"] { border-left-color: #d29922; color: #d29922; }
+.sv-mcp-feedback[data-state="success"] { border-left-color: #56d364; color: #56d364; }
+.sv-mcp-feedback[data-state="error"] { border-left-color: #ff7b72; color: #ff7b72; }
+
+.sv-mcp-exploration-label {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--fg-dim);
+  cursor: pointer;
+  font: 10px/1.25 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sv-mcp-exploration-label input {
+  width: 14px;
+  height: 14px;
+  margin: 0;
+}
+
+.sv-mcp-exploration-label:has(input:disabled) {
+  cursor: default;
+  opacity: 0.55;
+}
+
+.sv-mcp-field {
+  min-width: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.sv-mcp-field-head {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sv-mcp-field label {
+  color: var(--fg-dim);
+  font: 10px/1.25 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+
+.sv-mcp-present-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.sv-mcp-present-label input { margin: 0; }
+
+.sv-mcp-command select,
+.sv-mcp-field input[type="text"],
+.sv-mcp-field input[type="number"],
+.sv-mcp-field select,
+.sv-mcp-field textarea,
+.sv-mcp-run {
+  min-width: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sv-mcp-command select,
+.sv-mcp-field input[type="text"],
+.sv-mcp-field input[type="number"],
+.sv-mcp-field select {
+  width: 100%;
+  height: 30px;
+  padding: 4px 7px;
+}
+
+.sv-mcp-field textarea {
+  width: 100%;
+  min-height: 82px;
+  padding: 7px;
+  resize: vertical;
+}
+
+.sv-mcp-field input:disabled,
+.sv-mcp-field select:disabled,
+.sv-mcp-field textarea:disabled { opacity: 0.5; }
+
+.sv-mcp-run {
+  align-self: end;
+  height: 30px;
+  padding: 0 12px;
+  cursor: pointer;
+}
+
+.sv-mcp-run {
+  border-color: var(--accent);
+  color: var(--fg);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sv-mcp-run:hover:not(:disabled) { background: var(--accent); color: #05070a; }
+.sv-mcp-run:disabled { cursor: not-allowed; opacity: 0.55; }
+.sv-mcp-run[data-busy="true"] { border-color: #d29922; color: #d29922; }
+
+.sv-mcp-tool-description {
+  color: var(--fg-dim);
+  font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  overflow-wrap: anywhere;
+}
+
+.sv-mcp-params {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.sv-mcp-array {
+  display: grid;
+  gap: 5px;
+}
+
+.sv-mcp-result {
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 8px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--fg-dim);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: 10px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media (max-width: 720px) {
+  .sv-mcp-frame-layout.sv-mcp-open {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 38px minmax(120px, 1fr) minmax(120px, 50%);
+    grid-template-areas:
+      "bar"
+      "viewer"
+      "controls";
+  }
+
+  .sv-mcp-frame-layout.sv-mcp-open > .sv-mcp-controls {
+    border-top: 1px solid var(--border);
+    border-left: 0;
+  }
+
+  .sv-mcp-body {
+    grid-template-rows: auto minmax(24px, 1fr) minmax(28px, 0.8fr);
+    gap: 6px;
+    padding: 8px;
+  }
+}
+
+/* Local expert acceptance: keep the viewer full-size and float one continuous GT sheet. */
+.sv-mcp-frame-layout,
+.sv-mcp-frame-layout.sv-mcp-open {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 38px minmax(0, 1fr);
+  grid-template-areas:
+    "bar"
+    "viewer";
+}
+
+.sv-mcp-controls {
+  position: absolute;
+  z-index: 20;
+  top: 38px;
+  right: 0;
+  bottom: 0;
+  width: 42px;
+  height: auto;
+  box-shadow: -10px 0 24px rgba(0, 0, 0, 0.28);
+}
+
+.sv-mcp-controls[open] {
+  width: clamp(320px, 34vw, 430px);
+}
+
+.sv-mcp-content {
+  display: block;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.sv-mcp-tabs { display: none; }
+
+.sv-mcp-body {
+  height: auto;
+  display: grid;
+  grid-template-rows: auto auto auto;
+  overflow: visible;
+  border-bottom: 1px solid var(--border);
+}
+
+.sv-mcp-params {
+  overflow: visible;
+}
+
+.sv-mcp-availability {
+  grid-column: 1 / -1;
+  padding: 7px 8px;
+  border: 1px solid rgba(88, 166, 255, 0.45);
+  border-radius: 4px;
+  background: rgba(88, 166, 255, 0.08);
+  color: var(--fg-dim);
+  font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sv-mcp-availability[data-state="ready"] { color: #7ee787; border-color: rgba(63, 185, 80, 0.55); }
+.sv-mcp-availability[data-state="blocked"] {
+  color: #ffb86c;
+  border-color: rgba(210, 153, 34, 0.75);
+  background: rgba(210, 153, 34, 0.12);
+}
+
+.sv-mcp-result-details {
+  min-width: 0;
+  color: var(--fg-dim);
+  font: 10px/1.35 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sv-mcp-result-details > summary {
+  cursor: pointer;
+  padding: 5px 0;
+}
+
+.sv-mcp-result-details:not([open]) .sv-mcp-result { display: none; }
+.sv-mcp-result { max-height: 180px; }
+
+@media (max-width: 720px) {
+  .sv-mcp-frame-layout,
+  .sv-mcp-frame-layout.sv-mcp-open {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 38px minmax(0, 1fr);
+    grid-template-areas:
+      "bar"
+      "viewer";
+  }
+
+  .sv-mcp-controls {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 42px;
+    border-top: 1px solid var(--border);
+    border-left: 0;
+    box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.32);
+  }
+
+  .sv-mcp-controls[open] {
+    width: 100%;
+    height: min(44dvh, 55%);
+    max-height: calc(100% - 48px);
+  }
+
+  .sv-mcp-controls:not([open]) > summary {
+    width: 100%;
+    height: 42px;
+    flex-direction: row;
+    justify-content: flex-start;
+    padding: 0 12px;
+  }
+
+  .sv-mcp-controls:not([open]) .sv-mcp-summary-label {
+    writing-mode: horizontal-tb;
+  }
+
+  .sv-mcp-body { padding: 8px; }
+}

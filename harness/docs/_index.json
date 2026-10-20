@@ -1,0 +1,176 @@
+{
+  "generated_at": "2026-06-23T00:00:00Z",
+  "tree": [
+    {
+      "title": "Platform",
+      "children": [
+        {
+          "title": "Quickstart",
+          "path": "platform/quickstart"
+        },
+        {
+          "title": "API reference",
+          "path": "platform/api-reference"
+        },
+        {
+          "title": "Architecture",
+          "path": "platform/architecture"
+        },
+        {
+          "title": "New-domain template",
+          "path": "platform/new-domain-template"
+        },
+        {
+          "title": "Designing a new viewer page",
+          "path": "platform/new-viewer-page"
+        },
+        {
+          "title": "SOP: QA case → dataset → domain platform → 公开 URL",
+          "path": "platform/qa-case-to-public-url-sop"
+        },
+        {
+          "title": "QA-Gen → viewer reload loop",
+          "path": "platform/qa-to-viewer-loop"
+        },
+        {
+          "title": "3D Assets & Viewer",
+          "path": "platform/viewer-and-assets"
+        }
+      ]
+    },
+    {
+      "title": "MCP tools",
+      "children": [
+        {
+          "title": "MCP library — the tool surface an expert annotates with",
+          "path": "mcp/MCP_LIBRARY"
+        },
+        {
+          "title": "ScienceVision MCP Server — Phased Rollout Plan",
+          "path": "mcp/MCP_ROLLOUT_PLAN"
+        },
+        {
+          "title": "ScienceVision MCP Server — Tool Specification",
+          "path": "mcp/MCP_SERVER_SPEC"
+        },
+        {
+          "title": "Which MCP tools are actually in use",
+          "path": "mcp/MCP_TOOLS_IN_USE"
+        },
+        {
+          "title": "Platform MCP <-> ccmcp parity",
+          "path": "mcp/PLATFORM_PARITY"
+        },
+        {
+          "title": "compute_volume",
+          "path": "mcp/tools/compute_volume",
+          "kind": "mcp-tool",
+          "domain": "medical"
+        },
+        {
+          "title": "extract_segment",
+          "path": "mcp/tools/extract_segment",
+          "kind": "mcp-tool",
+          "domain": "medical"
+        },
+        {
+          "title": "load_nifti",
+          "path": "mcp/tools/load_nifti",
+          "kind": "mcp-tool",
+          "domain": "medical"
+        }
+      ]
+    },
+    {
+      "title": "Partners",
+      "children": [
+        {
+          "title": "Partner Onboarding Guide",
+          "path": "partners/README"
+        },
+        {
+          "title": "Genesis AI — embodied physics integration",
+          "path": "partners/examples/genesis-embodied"
+        },
+        {
+          "title": "Medical Spatial — GT-grounded reasoning",
+          "path": "partners/examples/medical-spatial"
+        }
+      ]
+    },
+    {
+      "title": "Benchmark",
+      "children": [
+        {
+          "title": "Evaluation protocol",
+          "path": "benchmark/evaluation-protocol"
+        },
+        {
+          "title": "Leaderboard",
+          "path": "benchmark/leaderboard"
+        },
+        {
+          "title": "Positioning — measuring the impact of 3D vision on reasoning",
+          "path": "benchmark/positioning"
+        },
+        {
+          "title": "Results: scale-v2.1 information-access ablation",
+          "path": "benchmark/results-scale-v21"
+        },
+        {
+          "title": "Submission guide",
+          "path": "benchmark/submission-guide"
+        },
+        {
+          "title": "Task families",
+          "path": "benchmark/task-families"
+        }
+      ]
+    },
+    {
+      "title": "Research notes",
+      "children": [
+        {
+          "title": "ScienceVision Tools",
+          "path": "Tools"
+        },
+        {
+          "title": "M3D-RefSeg Evaluation Notes",
+          "path": "evaluation/M3D-RefSeg/M3D-RefSeg_evaluation_notes"
+        },
+        {
+          "title": "M3D-RefSeg — Baseline & Evaluation Design",
+          "path": "evaluation/M3D-RefSeg/baseline_and_evaluation"
+        },
+        {
+          "title": "`docs/evaluation/` — per-dataset baseline & evaluation specs",
+          "path": "evaluation/README"
+        },
+        {
+          "title": "SQA3D — Baseline & Evaluation Design",
+          "path": "evaluation/SQA3D/baseline_and_evaluation"
+        },
+        {
+          "title": "ScienceVision scale-v2.1 build",
+          "path": "qa-gen/SCALE_V2_1_BUILD"
+        },
+        {
+          "title": "ScienceVision scale-v2.1 contract",
+          "path": "qa-gen/SCALE_V2_1_CONTRACT"
+        },
+        {
+          "title": "Medical K-axis Seeds — Professional Knowledge × 3D Vision for CT QA",
+          "path": "qa-gen/medical_k_axis_seeds"
+        },
+        {
+          "title": "QA-gen pipeline — architecture and extension points",
+          "path": "qa-gen/pipeline-overview"
+        },
+        {
+          "title": "QA-Gen vNext integration boundary",
+          "path": "qa-gen/vnext-integration-boundary"
+        }
+      ]
+    }
+  ]
+}

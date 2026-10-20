@@ -1,0 +1,5230 @@
+{
+  "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+  "task_id": "arch-jdc-clash-c01",
+  "batch_id": "batch_c827fd58febb08df492d4df9",
+  "question": {
+    "zh": "A/V - 服务管线与环梁净距检测\n\n给定三维场景中存在多条服务管线（如机电管线），它们穿越多个环向梁。其中部分梁沿跨度方向为直梁，部分梁为曲梁。\n\n任务目标是计算管线与梁之间真实的竖向净距。不要直接使用包围盒（Bounding Box）进行最终判断，尤其对于曲梁，因为包围盒可能导致错误的间距判断。\n\n需要完成：\n\n判断每个管线穿越位置是否能够安全通过梁下方，或者是否与梁发生碰撞；\n仅考虑能够通过的穿越位置，找到其中最小竖向净距；\n标注该位置，并报告对应的管线-梁组合和净距数值。\n测量约定\n\n所有坐标和距离均需使用 Rhino模型空间：\n\n单位：毫米（mm）\n坐标系：Z轴向上（Z-up）\n\n当前查看器显示的是 glTF 场景：\n\n单位：米\n坐标系：Y轴向上（Y-up）\n\n坐标转换公式：\n\n$$ rhino\\_mm=(gltf_x,-gltf_z,gltf_y)\\times1000 $$\n\n最终返回一个 JSON 对象，仅包含以下字段：\n{\n  \"tightest_clear_pair\": \"\",\n  \"least_clearance_mm\": 0\n}",
+    "en": "A/V - Service Run and Ring Beam Clearance Check\n\nA set of service runs crosses several ring beams in the provided 3D scene. Some beams are straight, while others are curved along their span.\nThe objective is to evaluate the actual vertical clearance between the service runs and the beams they cross. Do not use bounding-box clearance as the final measurement, especially for curved beams, because it may give incorrect results.\nFor each crossing:\nDetermine whether the service run passes below the beam with sufficient clearance or intersects the beam.\nAmong all valid clear crossings, identify the pair with the smallest vertical clearance.\nAnnotate the crossing location and report the clearance value.\nMeasurement Convention\nReport all coordinates and distances in Rhino model space:\nUnit: millimetres (mm)\nCoordinate system: Z-up\nThe viewer displays the glTF scene in metres with a Y-up coordinate system. Convert coordinates using:\n$$ rhino\\_mm=(gltf_x,-gltf_z,gltf_y)\\times1000 $$\nReturn one JSON object containing exactly:\n{\n  \"tightest_clear_pair\": \"\",\n  \"least_clearance_mm\": 0\n}",
+    "source": "effective_question"
+  },
+  "answer": {
+    "answer": "约为0.2m",
+    "reasoning": "仅打开结构与管线图层，测量管道与梁之间的垂直距离",
+    "validation": {
+      "feedback": "2,1,1",
+      "status": "uncertain"
+    }
+  },
+  "trajectory": {
+    "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+    "sealed_manifest_sha256": "f6369f61bc45f859bae6964dc008fc2d51e4cb1719a7a73a439a48d76fcc3817",
+    "submission_id": "sub_a5ac50d5153d22408b64ce8a",
+    "submitted_at": "2026-09-03T12:07:06Z",
+    "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+    "initial_state": {
+      "annotation_count": 0,
+      "camera": {
+        "azimuth_deg": 45,
+        "elevation_deg": 19.471221,
+        "pan_right": 0,
+        "pan_up": 0,
+        "position": [
+          16.297058,
+          10.494529,
+          16.716979
+        ],
+        "target": [
+          0,
+          2.346,
+          0.41992
+        ],
+        "up": [
+          0,
+          1,
+          0
+        ],
+        "zoom": 1
+      },
+      "cutaway": {
+        "axis": "y",
+        "max_m": 7.82,
+        "min_m": 0,
+        "value_m": 7.82
+      },
+      "layers": [
+        {
+          "label": "B场地|Site",
+          "name": "B场地|Site",
+          "opacity": 1,
+          "visible": true
+        },
+        {
+          "label": "C结构|Structure",
+          "name": "C结构|Structure",
+          "opacity": 1,
+          "visible": true
+        },
+        {
+          "label": "D楼板墙|Floor&Wall",
+          "name": "D楼板墙|Floor&Wall",
+          "opacity": 1,
+          "visible": true
+        },
+        {
+          "label": "E幕墙|Façade",
+          "name": "E幕墙|Façade",
+          "opacity": 1,
+          "visible": true
+        },
+        {
+          "label": "G室内|Interior",
+          "name": "G室内|Interior",
+          "opacity": 1,
+          "visible": true
+        }
+      ],
+      "measurement_count": 0,
+      "view": "iso",
+      "viewer": "gltf",
+      "zoom": 1
+    },
+    "operation_count": 18,
+    "keyframe_count": 18,
+    "operations": [
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_54937c1fea7c4f4b9bafa5122e13b392",
+        "operation_seq": 3,
+        "parent_operation_id": null,
+        "function": {
+          "name": "sv3d_toggle_layer",
+          "version": "1"
+        },
+        "input": {
+          "layer": "B场地|Site",
+          "visible": false
+        },
+        "replay_input": {
+          "layer": "B场地|Site",
+          "visible": false
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "result": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:12.800Z",
+          "completed_at": "2026-09-03T08:17:12.800Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-ef97b0f3-27d8-4751-b041-7178eca156c8",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-ef97b0f3-27d8-4751-b041-7178eca156c8-a25e0c45ef828f83f971a543829a6dd09db7692451e6badde34ce7214620926c.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "a25e0c45ef828f83f971a543829a6dd09db7692451e6badde34ce7214620926c",
+            "byte_size": 169334,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:12.882Z"
+          },
+          "acknowledged_at": "2026-09-03T08:17:14Z",
+          "screenshot_file": "screenshots/操作003.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_152b1e066fa547e2a1bb641a9f4f817b",
+        "operation_seq": 4,
+        "parent_operation_id": "op_54937c1fea7c4f4b9bafa5122e13b392",
+        "function": {
+          "name": "sv3d_toggle_layer",
+          "version": "1"
+        },
+        "input": {
+          "layer": "E幕墙|Façade",
+          "visible": false
+        },
+        "replay_input": {
+          "layer": "E幕墙|Façade",
+          "visible": false
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "result": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:14.256Z",
+          "completed_at": "2026-09-03T08:17:14.256Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-e1d1e2aa-7772-44c9-8e35-ee2088422e31",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-e1d1e2aa-7772-44c9-8e35-ee2088422e31-0468f9d845bd3ae7d3bea79d43d8dc4b5038ec08d0975ed805973077d652e8f8.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "0468f9d845bd3ae7d3bea79d43d8dc4b5038ec08d0975ed805973077d652e8f8",
+            "byte_size": 125946,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:14.315Z"
+          },
+          "acknowledged_at": "2026-09-03T08:17:15Z",
+          "screenshot_file": "screenshots/操作004.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_2f24b5c0d5cb4a6c859d8c45693a6b33",
+        "operation_seq": 5,
+        "parent_operation_id": "op_152b1e066fa547e2a1bb641a9f4f817b",
+        "function": {
+          "name": "sv3d_toggle_layer",
+          "version": "1"
+        },
+        "input": {
+          "layer": "D楼板墙|Floor&Wall",
+          "visible": false
+        },
+        "replay_input": {
+          "layer": "D楼板墙|Floor&Wall",
+          "visible": false
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "result": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.297058,
+              10.494529,
+              16.716979
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:15.765Z",
+          "completed_at": "2026-09-03T08:17:15.766Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-276a0c4c-11d8-48db-be26-e3266674d101",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-276a0c4c-11d8-48db-be26-e3266674d101-e731a32985ccd791a24dbecb05987ff93eb0aa9cb152afee894ae11935240bdc.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "e731a32985ccd791a24dbecb05987ff93eb0aa9cb152afee894ae11935240bdc",
+            "byte_size": 122867,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:15.825Z"
+          },
+          "acknowledged_at": "2026-09-03T08:17:18Z",
+          "screenshot_file": "screenshots/操作005.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_787289f682a34c19be677b2f1efe5e96",
+        "operation_seq": 6,
+        "parent_operation_id": "op_2f24b5c0d5cb4a6c859d8c45693a6b33",
+        "function": {
+          "name": "viewer_zoom",
+          "version": "1"
+        },
+        "input": {
+          "zoom": 0.917004
+        },
+        "replay_input": {
+          "zoom": 0.917004
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              17.772069,
+              11.232035,
+              18.191989
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              17.772069,
+              11.232035,
+              18.191989
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "result": {
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": 45,
+              "elevation_deg": 19.471221,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                17.772069,
+                11.232035,
+                18.191989
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 0.917004
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 0.917004
+          },
+          "zoom": 0.917004
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:23.054Z",
+          "completed_at": "2026-09-03T08:17:23.055Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-6b36630d-cb6a-48ae-8b40-907fff3b7496",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-6b36630d-cb6a-48ae-8b40-907fff3b7496-dc31770814b482d35dadaff069be5aa62c57d5d068296ff7cdec0d49214bd578.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "dc31770814b482d35dadaff069be5aa62c57d5d068296ff7cdec0d49214bd578",
+            "byte_size": 127563,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:23.129Z"
+          },
+          "acknowledged_at": "2026-09-03T08:17:24Z",
+          "screenshot_file": "screenshots/操作006.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_1a86ef93f28940a291f1e0edf02b26ec",
+        "operation_seq": 7,
+        "parent_operation_id": "op_787289f682a34c19be677b2f1efe5e96",
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -90,
+          "elevation_deg": 4
+        },
+        "replay_input": {
+          "azimuth_deg": -90,
+          "elevation_deg": 4
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -90,
+            "elevation_deg": 4,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -26.593166,
+              4.205575,
+              0.41992
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -90,
+            "elevation_deg": 4,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -26.593166,
+              4.205575,
+              0.41992
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "result": {
+          "azimuth_deg": -90,
+          "elevation_deg": 4,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -90,
+              "elevation_deg": 4,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -26.593166,
+                4.205575,
+                0.41992
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 0.917004
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 0.917004
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:36.190Z",
+          "completed_at": "2026-09-03T08:17:36.190Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-492f3fef-7a08-44de-b595-beb4784cfc7d",
+          "expert_note": "调整到侧视图",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-492f3fef-7a08-44de-b595-beb4784cfc7d-8bc67b9f585fd3c3dfaaa70ee283780943c4c8bfe3dfe634ccfa877e06336a14.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "8bc67b9f585fd3c3dfaaa70ee283780943c4c8bfe3dfe634ccfa877e06336a14",
+            "byte_size": 73218,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:36.269Z"
+          },
+          "acknowledged_at": "2026-09-03T08:17:37Z",
+          "screenshot_file": "screenshots/操作007.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_d07e7c352e534285b3fd8377946b6e5e",
+        "operation_seq": 8,
+        "parent_operation_id": "op_1a86ef93f28940a291f1e0edf02b26ec",
+        "function": {
+          "name": "sv3d_measure_distance",
+          "version": "1"
+        },
+        "input": {
+          "end": [
+            -3.04825,
+            5.6581,
+            -0.068036
+          ],
+          "start": [
+            -4.6,
+            5.721232,
+            -0.035645
+          ]
+        },
+        "replay_input": {
+          "end": [
+            -3.04825,
+            5.6581,
+            -0.068036
+          ],
+          "start": [
+            -4.6,
+            5.721232,
+            -0.035645
+          ]
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -90,
+            "elevation_deg": 4,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -26.593166,
+              4.205575,
+              0.41992
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -90,
+            "elevation_deg": 4,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -26.593166,
+              4.205575,
+              0.41992
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "result": {
+          "replay_input": {
+            "end": [
+              -3.04825,
+              5.6581,
+              -0.068036
+            ],
+            "start": [
+              -4.6,
+              5.721232,
+              -0.035645
+            ]
+          },
+          "result": {
+            "distance_m": 1.553371,
+            "end_m": [
+              -3.04825,
+              5.6581,
+              -0.068036
+            ],
+            "expert_summary": "距离：1.553 m",
+            "rhino_mm": {
+              "distance": 1553.371459,
+              "end": [
+                -3048.25,
+                68.036,
+                5658.1
+              ],
+              "start": [
+                -4600,
+                35.645,
+                5721.232
+              ]
+            },
+            "start_m": [
+              -4.6,
+              5.721232,
+              -0.035645
+            ]
+          },
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -90,
+              "elevation_deg": 4,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -26.593166,
+                4.205575,
+                0.41992
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 0.917004
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 0.917004
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T08:17:59.373Z",
+          "completed_at": "2026-09-03T08:17:59.375Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-c4defe58-133a-49b9-be60-cd4a2019c2e5",
+          "expert_note": "测量管线与梁之间的距离",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-c4defe58-133a-49b9-be60-cd4a2019c2e5-d16f8df79a78b6ce27f6e13621abc924326b0999a241ab36116c6fb0ecb1960f.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "d16f8df79a78b6ce27f6e13621abc924326b0999a241ab36116c6fb0ecb1960f",
+            "byte_size": 73973,
+            "width": 1315,
+            "height": 1696,
+            "captured_at": "2026-09-03T08:17:59.475Z"
+          },
+          "acknowledged_at": "2026-09-03T08:18:00Z",
+          "screenshot_file": "screenshots/操作008.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_4977f9ad9ecb43ec848950696e2d2c2d",
+        "operation_seq": 10,
+        "parent_operation_id": "op_d07e7c352e534285b3fd8377946b6e5e",
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -83,
+          "elevation_deg": -27
+        },
+        "replay_input": {
+          "azimuth_deg": -83,
+          "elevation_deg": -27
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -83,
+            "elevation_deg": -27,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -32.446698,
+              -14.310574,
+              4.403874
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -83,
+            "elevation_deg": -27,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -32.446698,
+              -14.310574,
+              4.403874
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "result": {
+          "azimuth_deg": -83,
+          "elevation_deg": -27,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -83,
+              "elevation_deg": -27,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -32.446698,
+                -14.310574,
+                4.403874
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 0.917004
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 0.917004
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:02:54.825Z",
+          "completed_at": "2026-09-03T12:02:54.826Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-333e0e43-6183-40d2-96c5-58dd275c490d",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-333e0e43-6183-40d2-96c5-58dd275c490d-43d1b5b7d8f680ffd5c93a5284b91bd26da19207a4ef669f93becce287465aa4.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "43d1b5b7d8f680ffd5c93a5284b91bd26da19207a4ef669f93becce287465aa4",
+            "byte_size": 79982,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:02:54.896Z"
+          },
+          "acknowledged_at": "2026-09-03T12:02:55Z",
+          "screenshot_file": "screenshots/操作010.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_9b0052717e8340e29f58d6d47b3c8b78",
+        "operation_seq": 11,
+        "parent_operation_id": "op_4977f9ad9ecb43ec848950696e2d2c2d",
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -67,
+          "elevation_deg": -11
+        },
+        "replay_input": {
+          "azimuth_deg": -67,
+          "elevation_deg": -11
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": -11,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -33.15214,
+              -4.65464,
+              14.492169
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": -11,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -33.15214,
+              -4.65464,
+              14.492169
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 0.917004
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 0.917004
+        },
+        "result": {
+          "azimuth_deg": -67,
+          "elevation_deg": -11,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": -11,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -33.15214,
+                -4.65464,
+                14.492169
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 0.917004
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 0.917004
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:03:38.252Z",
+          "completed_at": "2026-09-03T12:03:38.252Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-fef2f173-071b-48c3-bf92-3e7ebc8ea842",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-fef2f173-071b-48c3-bf92-3e7ebc8ea842-4da93f0b01cb16381403b2b8d3cb8660154ecb572a4f66526d7d681ad09584b1.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "4da93f0b01cb16381403b2b8d3cb8660154ecb572a4f66526d7d681ad09584b1",
+            "byte_size": 82039,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:03:38.335Z"
+          },
+          "acknowledged_at": "2026-09-03T12:03:39Z",
+          "screenshot_file": "screenshots/操作011.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_ecc95178573c4b7fa31b7bf346fa0ce2",
+        "operation_seq": 12,
+        "parent_operation_id": "op_9b0052717e8340e29f58d6d47b3c8b78",
+        "function": {
+          "name": "viewer_zoom",
+          "version": "1"
+        },
+        "input": {
+          "zoom": 1.834008
+        },
+        "replay_input": {
+          "zoom": 1.834008
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": -11,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.57607,
+              -1.15432,
+              7.456045
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": -11,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.57607,
+              -1.15432,
+              7.456045
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": -11,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.57607,
+                -1.15432,
+                7.456045
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          },
+          "zoom": 1.834008
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:03:56.517Z",
+          "completed_at": "2026-09-03T12:03:56.518Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-0c2e6333-f859-4b55-aef4-a5bc51acbb74",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-0c2e6333-f859-4b55-aef4-a5bc51acbb74-21b6bc2a5e55541298b3dbc627349d987846b6973f5de7da87072ae887487834.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "21b6bc2a5e55541298b3dbc627349d987846b6973f5de7da87072ae887487834",
+            "byte_size": 107139,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:03:56.580Z"
+          },
+          "acknowledged_at": "2026-09-03T12:03:57Z",
+          "screenshot_file": "screenshots/操作012.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_99feca12bfe14453b612ec108560e8cb",
+        "operation_seq": 13,
+        "parent_operation_id": "op_ecc95178573c4b7fa31b7bf346fa0ce2",
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -67,
+          "elevation_deg": 8
+        },
+        "replay_input": {
+          "azimuth_deg": -67,
+          "elevation_deg": 8
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "azimuth_deg": -67,
+          "elevation_deg": 8,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:03.587Z",
+          "completed_at": "2026-09-03T12:04:03.587Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-108a4436-f911-423d-9600-fa4a697b51a7",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-108a4436-f911-423d-9600-fa4a697b51a7-fb923a86f05fa292acd9a5d9a5e068163b6947ce76c36ba9f27a808ab63de7cf.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "fb923a86f05fa292acd9a5d9a5e068163b6947ce76c36ba9f27a808ab63de7cf",
+            "byte_size": 68459,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:03.653Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:04Z",
+          "screenshot_file": "screenshots/操作013.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_d28665676ced44bca8709e698fd48f9d",
+        "operation_seq": 14,
+        "parent_operation_id": "op_99feca12bfe14453b612ec108560e8cb",
+        "function": {
+          "name": "sv3d_measure_distance",
+          "version": "1"
+        },
+        "input": {
+          "end": [
+            -5.588997,
+            5.506059,
+            4.85
+          ],
+          "start": [
+            -4.6,
+            5.723079,
+            4.609063
+          ]
+        },
+        "replay_input": {
+          "end": [
+            -5.588997,
+            5.506059,
+            4.85
+          ],
+          "start": [
+            -4.6,
+            5.723079,
+            4.609063
+          ]
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 2,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "replay_input": {
+            "end": [
+              -5.588997,
+              5.506059,
+              4.85
+            ],
+            "start": [
+              -4.6,
+              5.723079,
+              4.609063
+            ]
+          },
+          "result": {
+            "distance_m": 1.040799,
+            "end_m": [
+              -5.588997,
+              5.506059,
+              4.85
+            ],
+            "expert_summary": "距离：1.041 m",
+            "rhino_mm": {
+              "distance": 1040.799397,
+              "end": [
+                -5588.997,
+                -4850,
+                5506.059
+              ],
+              "start": [
+                -4600,
+                -4609.063,
+                5723.079
+              ]
+            },
+            "start_m": [
+              -4.6,
+              5.723079,
+              4.609063
+            ]
+          },
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 2,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:11.760Z",
+          "completed_at": "2026-09-03T12:04:11.760Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-ea9e95c0-2a91-4431-a5a4-2c050591a146",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-ea9e95c0-2a91-4431-a5a4-2c050591a146-eee22fa42637c90f480f8bc2c673a099d978589b62063624cba317adbc2644a0.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "eee22fa42637c90f480f8bc2c673a099d978589b62063624cba317adbc2644a0",
+            "byte_size": 68483,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:11.836Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:12Z",
+          "screenshot_file": "screenshots/操作014.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_0bab72a8f4404073be262445f46a58b7",
+        "operation_seq": 15,
+        "parent_operation_id": "op_d28665676ced44bca8709e698fd48f9d",
+        "function": {
+          "name": "sv3d_clear_measurements",
+          "version": "1"
+        },
+        "input": {},
+        "replay_input": {},
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 2,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "cleared": true,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:26.642Z",
+          "completed_at": "2026-09-03T12:04:26.643Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-0fdcaa91-a941-498b-a45e-8ce3b5ef4dd0",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-0fdcaa91-a941-498b-a45e-8ce3b5ef4dd0-b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c",
+            "byte_size": 67445,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:26.703Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:27Z",
+          "screenshot_file": "screenshots/操作015.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_3cb4121b59ae4793b8515ccee0444e59",
+        "operation_seq": 16,
+        "parent_operation_id": "op_0bab72a8f4404073be262445f46a58b7",
+        "function": {
+          "name": "sv3d_measure_distance",
+          "version": "1"
+        },
+        "input": {
+          "end": [
+            -3.049751,
+            5.640673,
+            1.048263
+          ],
+          "start": [
+            -4.6,
+            5.74461,
+            1.794794
+          ]
+        },
+        "replay_input": {
+          "end": [
+            -3.049751,
+            5.640673,
+            1.048263
+          ],
+          "start": [
+            -4.6,
+            5.74461,
+            1.794794
+          ]
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "replay_input": {
+            "end": [
+              -3.049751,
+              5.640673,
+              1.048263
+            ],
+            "start": [
+              -4.6,
+              5.74461,
+              1.794794
+            ]
+          },
+          "result": {
+            "distance_m": 1.72377,
+            "end_m": [
+              -3.049751,
+              5.640673,
+              1.048263
+            ],
+            "expert_summary": "距离：1.724 m",
+            "rhino_mm": {
+              "distance": 1723.770111,
+              "end": [
+                -3049.751,
+                -1048.263,
+                5640.673
+              ],
+              "start": [
+                -4600,
+                -1794.794,
+                5744.61
+              ]
+            },
+            "start_m": [
+              -4.6,
+              5.74461,
+              1.794794
+            ]
+          },
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:33.486Z",
+          "completed_at": "2026-09-03T12:04:33.487Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-2124a390-1de5-4a25-8cee-20cb36c3c7a3",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-2124a390-1de5-4a25-8cee-20cb36c3c7a3-c1071b4ffc92e9f7498a210205ab964ae48b0ef2a3dd0edb2c8143b6f4a2ecdc.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "c1071b4ffc92e9f7498a210205ab964ae48b0ef2a3dd0edb2c8143b6f4a2ecdc",
+            "byte_size": 67322,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:33.570Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:34Z",
+          "screenshot_file": "screenshots/操作016.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_50e5a9dcb2c74e6990bdf2281c59d41a",
+        "operation_seq": 17,
+        "parent_operation_id": "op_3cb4121b59ae4793b8515ccee0444e59",
+        "function": {
+          "name": "sv3d_clear_measurements",
+          "version": "1"
+        },
+        "input": {},
+        "replay_input": {},
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "cleared": true,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:48.207Z",
+          "completed_at": "2026-09-03T12:04:48.207Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-7e233e5c-3ac4-4365-b5b7-ee8d2b57a0a8",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-7e233e5c-3ac4-4365-b5b7-ee8d2b57a0a8-b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c",
+            "byte_size": 67445,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:48.281Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:50Z",
+          "screenshot_file": "screenshots/操作017.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_558b47aaa13449e2a6a669160342b1aa",
+        "operation_seq": 18,
+        "parent_operation_id": "op_50e5a9dcb2c74e6990bdf2281c59d41a",
+        "function": {
+          "name": "sv3d_measure_distance",
+          "version": "1"
+        },
+        "input": {
+          "end": [
+            -3.030203,
+            5.684801,
+            0.663049
+          ],
+          "start": [
+            -4.6,
+            5.742558,
+            1.450452
+          ]
+        },
+        "replay_input": {
+          "end": [
+            -3.030203,
+            5.684801,
+            0.663049
+          ],
+          "start": [
+            -4.6,
+            5.742558,
+            1.450452
+          ]
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "replay_input": {
+            "end": [
+              -3.030203,
+              5.684801,
+              0.663049
+            ],
+            "start": [
+              -4.6,
+              5.742558,
+              1.450452
+            ]
+          },
+          "result": {
+            "distance_m": 1.757157,
+            "end_m": [
+              -3.030203,
+              5.684801,
+              0.663049
+            ],
+            "expert_summary": "距离：1.757 m",
+            "rhino_mm": {
+              "distance": 1757.157357,
+              "end": [
+                -3030.203,
+                -663.049,
+                5684.801
+              ],
+              "start": [
+                -4600,
+                -1450.452,
+                5742.558
+              ]
+            },
+            "start_m": [
+              -4.6,
+              5.742558,
+              1.450452
+            ]
+          },
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:04:55.708Z",
+          "completed_at": "2026-09-03T12:04:55.708Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-c2b9a070-ef64-4e1b-9d14-195559b109ba",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-c2b9a070-ef64-4e1b-9d14-195559b109ba-80e342f7c311711d87ca5cc4c7625507c50c1ea514401babac4c276c4ce513b4.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "80e342f7c311711d87ca5cc4c7625507c50c1ea514401babac4c276c4ce513b4",
+            "byte_size": 67590,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:04:55.791Z"
+          },
+          "acknowledged_at": "2026-09-03T12:04:57Z",
+          "screenshot_file": "screenshots/操作018.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_3ab2c369bef543189935413e3d718f3f",
+        "operation_seq": 19,
+        "parent_operation_id": "op_558b47aaa13449e2a6a669160342b1aa",
+        "function": {
+          "name": "sv3d_clear_measurements",
+          "version": "1"
+        },
+        "input": {},
+        "replay_input": {},
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -67,
+            "elevation_deg": 8,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -16.721983,
+              4.899079,
+              7.517981
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "cleared": true,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -67,
+              "elevation_deg": 8,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -16.721983,
+                4.899079,
+                7.517981
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:05:16.126Z",
+          "completed_at": "2026-09-03T12:05:16.126Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-b7d04f87-f8cc-45e7-a3ed-01fd51ac2693",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-b7d04f87-f8cc-45e7-a3ed-01fd51ac2693-b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c",
+            "byte_size": 67445,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:05:16.199Z"
+          },
+          "acknowledged_at": "2026-09-03T12:05:17Z",
+          "screenshot_file": "screenshots/操作019.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_cf714793fefc47b09d1f257ee6c6b12f",
+        "operation_seq": 20,
+        "parent_operation_id": "op_3ab2c369bef543189935413e3d718f3f",
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -52,
+          "elevation_deg": 6
+        },
+        "replay_input": {
+          "azimuth_deg": -52,
+          "elevation_deg": 6
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -52,
+            "elevation_deg": 6,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -14.376574,
+              4.263536,
+              11.652131
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -52,
+            "elevation_deg": 6,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -14.376574,
+              4.263536,
+              11.652131
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "azimuth_deg": -52,
+          "elevation_deg": 6,
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -52,
+              "elevation_deg": 6,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -14.376574,
+                4.263536,
+                11.652131
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 0,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:05:32.488Z",
+          "completed_at": "2026-09-03T12:05:32.488Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-e28493f2-0479-40f1-9b86-b90bc2b74cc9",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-e28493f2-0479-40f1-9b86-b90bc2b74cc9-3ef00c31d676bd25c4344faede2be475ca347910b73875009a3b18da279bda55.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "3ef00c31d676bd25c4344faede2be475ca347910b73875009a3b18da279bda55",
+            "byte_size": 93145,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:05:32.666Z"
+          },
+          "acknowledged_at": "2026-09-03T12:05:34Z",
+          "screenshot_file": "screenshots/操作020.png"
+        }
+      },
+      {
+        "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+        "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+        "operation_id": "op_4906d45740e84007b9daeb971b6c2887",
+        "operation_seq": 21,
+        "parent_operation_id": "op_cf714793fefc47b09d1f257ee6c6b12f",
+        "function": {
+          "name": "sv3d_measure_distance",
+          "version": "1"
+        },
+        "input": {
+          "end": [
+            -5.555161,
+            5.515004,
+            4.85
+          ],
+          "start": [
+            -4.6,
+            5.780469,
+            4.051277
+          ]
+        },
+        "replay_input": {
+          "end": [
+            -5.555161,
+            5.515004,
+            4.85
+          ],
+          "start": [
+            -4.6,
+            5.780469,
+            4.051277
+          ]
+        },
+        "state_before": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -52,
+            "elevation_deg": 6,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -14.376574,
+              4.263536,
+              11.652131
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 0,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "state_after": {
+          "annotation_count": 0,
+          "camera": {
+            "azimuth_deg": -52,
+            "elevation_deg": 6,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              -14.376574,
+              4.263536,
+              11.652131
+            ],
+            "target": [
+              0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ],
+            "zoom": 1.834008
+          },
+          "cutaway": {
+            "axis": "y",
+            "max_m": 7.82,
+            "min_m": 0,
+            "value_m": 7.82
+          },
+          "layers": [
+            {
+              "label": "B场地|Site",
+              "name": "B场地|Site",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "C结构|Structure",
+              "name": "C结构|Structure",
+              "opacity": 1,
+              "visible": true
+            },
+            {
+              "label": "D楼板墙|Floor&Wall",
+              "name": "D楼板墙|Floor&Wall",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "E幕墙|Façade",
+              "name": "E幕墙|Façade",
+              "opacity": 1,
+              "visible": false
+            },
+            {
+              "label": "G室内|Interior",
+              "name": "G室内|Interior",
+              "opacity": 1,
+              "visible": true
+            }
+          ],
+          "measurement_count": 1,
+          "view": "iso",
+          "viewer": "gltf",
+          "zoom": 1.834008
+        },
+        "result": {
+          "replay_input": {
+            "end": [
+              -5.555161,
+              5.515004,
+              4.85
+            ],
+            "start": [
+              -4.6,
+              5.780469,
+              4.051277
+            ]
+          },
+          "result": {
+            "distance_m": 1.273092,
+            "end_m": [
+              -5.555161,
+              5.515004,
+              4.85
+            ],
+            "expert_summary": "距离：1.273 m",
+            "rhino_mm": {
+              "distance": 1273.091761,
+              "end": [
+                -5555.161,
+                -4850,
+                5515.004
+              ],
+              "start": [
+                -4600,
+                -4051.277,
+                5780.469
+              ]
+            },
+            "start_m": [
+              -4.6,
+              5.780469,
+              4.051277
+            ]
+          },
+          "state": {
+            "annotation_count": 0,
+            "camera": {
+              "azimuth_deg": -52,
+              "elevation_deg": 6,
+              "pan_right": 0,
+              "pan_up": 0,
+              "position": [
+                -14.376574,
+                4.263536,
+                11.652131
+              ],
+              "target": [
+                0,
+                2.346,
+                0.41992
+              ],
+              "up": [
+                0,
+                1,
+                0
+              ],
+              "zoom": 1.834008
+            },
+            "cutaway": {
+              "axis": "y",
+              "max_m": 7.82,
+              "min_m": 0,
+              "value_m": 7.82
+            },
+            "layers": [
+              {
+                "label": "B场地|Site",
+                "name": "B场地|Site",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "C结构|Structure",
+                "name": "C结构|Structure",
+                "opacity": 1,
+                "visible": true
+              },
+              {
+                "label": "D楼板墙|Floor&Wall",
+                "name": "D楼板墙|Floor&Wall",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "E幕墙|Façade",
+                "name": "E幕墙|Façade",
+                "opacity": 1,
+                "visible": false
+              },
+              {
+                "label": "G室内|Interior",
+                "name": "G室内|Interior",
+                "opacity": 1,
+                "visible": true
+              }
+            ],
+            "measurement_count": 1,
+            "view": "iso",
+            "viewer": "gltf",
+            "zoom": 1.834008
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T12:05:41.899Z",
+          "completed_at": "2026-09-03T12:05:41.900Z"
+        },
+        "registry_sha256": "b99bd34e7a5760d9fef51167dc26877a2c583a9c1f6fc3650f918611fa326376",
+        "keyframe": {
+          "keyframe_id": "kf-eed15c97-8d06-4462-8f23-4de0ffafcc19",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_dfa41e26cc529f9f76896116/attempt-1/kf-eed15c97-8d06-4462-8f23-4de0ffafcc19-d5a61ed0f91493275273436f10fce264ad34779515927748bfd333f4fc49ed5b.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "d5a61ed0f91493275273436f10fce264ad34779515927748bfd333f4fc49ed5b",
+            "byte_size": 93156,
+            "width": 1024,
+            "height": 1024,
+            "captured_at": "2026-09-03T12:05:41.994Z"
+          },
+          "acknowledged_at": "2026-09-03T12:05:43Z",
+          "screenshot_file": "screenshots/操作021.png"
+        }
+      }
+    ],
+    "final_result": {
+      "draft_id": "draft_27eb3559120cf5b86c13a3dc",
+      "assignment_id": "asgn_dfa41e26cc529f9f76896116",
+      "answer": "约为0.2m",
+      "reasoning": "仅打开结构与管线图层，测量管道与梁之间的垂直距离",
+      "task_validation": {
+        "feedback": "2,1,1",
+        "status": "uncertain"
+      }
+    },
+    "screenshot_gaps": []
+  },
+  "meta": {
+    "expert_id": "architecture1",
+    "approved_at": "2026-09-03T13:31:59Z",
+    "ever_returned": false,
+    "domain": "architecture",
+    "sub_domain_slug": "utility_network_clash_detection",
+    "sub_domain_label": "综合公用管线碰撞检测",
+    "sub_domain_source": "effective_sub_domain"
+  },
+  "task_context": {
+    "viewer": "gltf",
+    "viewer_label": "glTF 三维模型查看器",
+    "engine": "three.js glTF",
+    "domain_label": "建筑",
+    "answer_shape": {
+      "fields": [
+        "tightest_clear_pair",
+        "least_clearance_mm"
+      ],
+      "kind": "structured"
+    },
+    "assets": [
+      {
+        "name": "A_JDC_C_01.glb",
+        "path": "assets/A_JDC_C_01.glb",
+        "role": "primary",
+        "type": null,
+        "sha256": "6e7faed592fd68bf742edd33840ef9686d30ebe73ba0082cd03f25ba2ffe1e79",
+        "byte_size": 636780,
+        "mask_id": null,
+        "included": true,
+        "asset_file": "assets/A_JDC_C_01.glb"
+      }
+    ],
+    "assets_note": "3D 素材文件已随包，见各题 `assets/`；sha256 与封存清单一致。"
+  },
+  "tool_glossary": {
+    "sv3d_toggle_layer": {
+      "label_zh": "显示或隐藏图层",
+      "help_zh": "",
+      "description_en": "Show or hide a named glTF scene-graph layer.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "layer": {
+            "type": "string"
+          },
+          "visible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "layer",
+          "visible"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "viewer_zoom": {
+      "label_zh": "缩放",
+      "help_zh": "",
+      "description_en": "Set the glTF zoom to an absolute multiple of the fitted view; 1 is fitted, 2 is twice as close.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "zoom": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 8
+          }
+        },
+        "required": [
+          "zoom"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_orbit": {
+      "label_zh": "环绕旋转相机",
+      "help_zh": "",
+      "description_en": "Point the glTF camera at an absolute azimuth/elevation around its current target.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "elevation_deg": {
+            "type": "number",
+            "minimum": -89,
+            "maximum": 89
+          }
+        },
+        "required": [
+          "azimuth_deg",
+          "elevation_deg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_measure_distance": {
+      "label_zh": "测量网格点距离",
+      "help_zh": "",
+      "description_en": "Measure the 3D distance between two world points on the glTF mesh. Reports glTF metres and Rhino millimetres.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          },
+          "end": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 3,
+            "maxItems": 3
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_clear_measurements": {
+      "label_zh": "清除测量",
+      "help_zh": "",
+      "description_en": "Clear glTF measurement overlays and results.",
+      "input_schema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    }
+  },
+  "original_task": {
+    "title_en": null,
+    "title_zh": "",
+    "question_en_original": "Where a service run crosses the ring beams of a cantilevered wing, some beams are straight and some are curved in elevation. A straight beam's bounding box is the beam, so a crude clearance check happens to be right about it. A curved beam's is not: its box takes its lowest point and extends it along the whole span, so every crossing under it reads far tighter than it is. A coordination review that ranks crossings by that reading works on the wrong ones first.\n\nObject: The service runs at the wing level of the supplied scene and the ring beams they cross, some straight and some curved along their span.\n\nQuestion: Some of these runs pass clear of the beams they cross and some do not. Considering only the crossings where the run passes clear, report the least vertical clearance between a run and a beam, in the stated frame and unit, and annotate the crossing where it occurs.\n\nMeasurement convention: Report coordinates and distances in Rhino model space: millimetres, Z-up. The viewer loads glTF scene space in metres, Y-up. Convert every point exactly as rhino_mm = (gltf_x, -gltf_z, gltf_y) * 1000.\n\nReturn one JSON object with exactly these fields: tightest_clear_pair, least_clearance_mm.",
+    "question_zh_original": "当服务管线跨越悬臂机翼的环向梁时，有些梁是直的，有些在立面方向是弯曲的。直梁的包围盒即为其本身，因此粗略的间隙检查碰巧正确。而弯曲梁的包围盒并非如此：其盒体取其最低点并沿整个跨度延伸，因此在其下方的每个穿越都显示得比实际情况紧凑得多。按该读数对穿越进行排序的协调审查会先处理错误的对象。\n\n对象：所提供场景中机翼层面的服务管线及其跨越的环向梁，其中一些梁沿跨度方向为直梁，另一些为弯曲梁。\n\n问题：这些管线中有些能顺利通过所跨越的梁，有些则不能。仅考虑管线能顺利通过的穿越，报告管线与梁之间的最小垂直间隙（按所给坐标系和单位），并标注该穿越发生的位置。\n\n测量约定：以Rhino模型空间报告坐标和距离：单位为毫米，Z轴向上。查看器加载的glTF场景空间以米为单位，Y轴向上。按 rhino_mm = (gltf_x, -gltf_z, gltf_y) * 1000 精确转换每个点。\n\n返回一个JSON对象，必须包含以下字段：tightest_clear_pair, least_clearance_mm。",
+    "question_id": "arch-jdc-clash-c01",
+    "vision_class": null,
+    "vision_class_code": null,
+    "vision_class_group": null,
+    "source_domain": "architecture",
+    "source_sub_domain": "utility_network_clash_detection",
+    "forbidden_strategies": [
+      "bounding_box_only_shortcut",
+      "measurement_sidecar_lookup",
+      "source_model_lookup",
+      "answer_key_lookup"
+    ],
+    "trace_requirements": {
+      "max_steps": 24,
+      "must_change_viewpoint": true,
+      "must_include_final_state": true,
+      "must_include_viewer_measurement": true,
+      "must_save_operation_trace": true
+    },
+    "provenance": {},
+    "initial_view_note": "平台没有记录第 0 帧截图；题目打开时查看器的确切状态见 trajectory.initial_state（每次回放都从这个状态 viewer_reset 开始）。"
+  },
+  "question_review": {
+    "decision": "adopt_question_only",
+    "submitted_at": "2026-09-03T08:18:59Z",
+    "decided_at": "2026-09-03T09:44:13Z",
+    "decided_by": "architecture1",
+    "expert_validation_feedback": "2,1,1",
+    "expert_question_edit_zh": "A/V - 服务管线与环梁净距检测\n\n给定三维场景中存在多条服务管线（如机电管线），它们穿越多个环向梁。其中部分梁沿跨度方向为直梁，部分梁为曲梁。\n\n任务目标是计算管线与梁之间真实的竖向净距。不要直接使用包围盒（Bounding Box）进行最终判断，尤其对于曲梁，因为包围盒可能导致错误的间距判断。\n\n需要完成：\n\n判断每个管线穿越位置是否能够安全通过梁下方，或者是否与梁发生碰撞；\n仅考虑能够通过的穿越位置，找到其中最小竖向净距；\n标注该位置，并报告对应的管线-梁组合和净距数值。\n测量约定\n\n所有坐标和距离均需使用 Rhino模型空间：\n\n单位：毫米（mm）\n坐标系：Z轴向上（Z-up）\n\n当前查看器显示的是 glTF 场景：\n\n单位：米\n坐标系：Y轴向上（Y-up）\n\n坐标转换公式：\n\n$$ rhino\\_mm=(gltf_x,-gltf_z,gltf_y)\\times1000 $$\n\n最终返回一个 JSON 对象，仅包含以下字段：\n{\n  \"tightest_clear_pair\": \"\",\n  \"least_clearance_mm\": 0\n}",
+    "expert_question_edit_en": "A/V - Service Run and Ring Beam Clearance Check\n\nA set of service runs crosses several ring beams in the provided 3D scene. Some beams are straight, while others are curved along their span.\nThe objective is to evaluate the actual vertical clearance between the service runs and the beams they cross. Do not use bounding-box clearance as the final measurement, especially for curved beams, because it may give incorrect results.\nFor each crossing:\nDetermine whether the service run passes below the beam with sufficient clearance or intersects the beam.\nAmong all valid clear crossings, identify the pair with the smallest vertical clearance.\nAnnotate the crossing location and report the clearance value.\nMeasurement Convention\nReport all coordinates and distances in Rhino model space:\nUnit: millimetres (mm)\nCoordinate system: Z-up\nThe viewer displays the glTF scene in metres with a Y-up coordinate system. Convert coordinates using:\n$$ rhino\\_mm=(gltf_x,-gltf_z,gltf_y)\\times1000 $$\nReturn one JSON object containing exactly:\n{\n  \"tightest_clear_pair\": \"\",\n  \"least_clearance_mm\": 0\n}",
+    "sub_domain_edit": "utility_network_clash_detection",
+    "question_changed": true
+  },
+  "timeline": [
+    {
+      "at": "2026-09-02T07:40:20Z",
+      "event": "assignment.assigned",
+      "actor": "admin",
+      "actor_role": "admin"
+    },
+    {
+      "at": "2026-09-03T08:18:59Z",
+      "event": "assignment.question_review_submitted",
+      "actor": "architecture1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-03T09:44:13Z",
+      "event": "assignment.question_review_approved",
+      "actor": "architecture1",
+      "actor_role": "admin"
+    },
+    {
+      "at": "2026-09-03T12:07:06Z",
+      "event": "assignment.submitted",
+      "actor": "architecture1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-03T12:07:06Z",
+      "event": "assignment.pending_review",
+      "actor": "task-manager",
+      "actor_role": "system"
+    },
+    {
+      "at": "2026-09-03T13:31:59Z",
+      "event": "assignment.approved",
+      "actor": "architecture1",
+      "actor_role": "admin"
+    }
+  ],
+  "showcase": {
+    "schema": "sciencevision.showcase_task.v1",
+    "exported_at": "2026-09-04T13:20:22Z",
+    "source": "生产库 manager.db 只读快照 + OSS 归档截图（sha256 已校验）",
+    "screenshots": [
+      {
+        "operation_seq": 3,
+        "file": "screenshots/操作003.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 169334,
+        "sha256": "a25e0c45ef828f83f971a543829a6dd09db7692451e6badde34ce7214620926c"
+      },
+      {
+        "operation_seq": 4,
+        "file": "screenshots/操作004.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 125946,
+        "sha256": "0468f9d845bd3ae7d3bea79d43d8dc4b5038ec08d0975ed805973077d652e8f8"
+      },
+      {
+        "operation_seq": 5,
+        "file": "screenshots/操作005.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 122867,
+        "sha256": "e731a32985ccd791a24dbecb05987ff93eb0aa9cb152afee894ae11935240bdc"
+      },
+      {
+        "operation_seq": 6,
+        "file": "screenshots/操作006.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 127563,
+        "sha256": "dc31770814b482d35dadaff069be5aa62c57d5d068296ff7cdec0d49214bd578"
+      },
+      {
+        "operation_seq": 7,
+        "file": "screenshots/操作007.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 73218,
+        "sha256": "8bc67b9f585fd3c3dfaaa70ee283780943c4c8bfe3dfe634ccfa877e06336a14"
+      },
+      {
+        "operation_seq": 8,
+        "file": "screenshots/操作008.png",
+        "width": 1315,
+        "height": 1696,
+        "byte_size": 73973,
+        "sha256": "d16f8df79a78b6ce27f6e13621abc924326b0999a241ab36116c6fb0ecb1960f"
+      },
+      {
+        "operation_seq": 10,
+        "file": "screenshots/操作010.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 79982,
+        "sha256": "43d1b5b7d8f680ffd5c93a5284b91bd26da19207a4ef669f93becce287465aa4"
+      },
+      {
+        "operation_seq": 11,
+        "file": "screenshots/操作011.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 82039,
+        "sha256": "4da93f0b01cb16381403b2b8d3cb8660154ecb572a4f66526d7d681ad09584b1"
+      },
+      {
+        "operation_seq": 12,
+        "file": "screenshots/操作012.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 107139,
+        "sha256": "21b6bc2a5e55541298b3dbc627349d987846b6973f5de7da87072ae887487834"
+      },
+      {
+        "operation_seq": 13,
+        "file": "screenshots/操作013.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 68459,
+        "sha256": "fb923a86f05fa292acd9a5d9a5e068163b6947ce76c36ba9f27a808ab63de7cf"
+      },
+      {
+        "operation_seq": 14,
+        "file": "screenshots/操作014.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 68483,
+        "sha256": "eee22fa42637c90f480f8bc2c673a099d978589b62063624cba317adbc2644a0"
+      },
+      {
+        "operation_seq": 15,
+        "file": "screenshots/操作015.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 67445,
+        "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c"
+      },
+      {
+        "operation_seq": 16,
+        "file": "screenshots/操作016.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 67322,
+        "sha256": "c1071b4ffc92e9f7498a210205ab964ae48b0ef2a3dd0edb2c8143b6f4a2ecdc"
+      },
+      {
+        "operation_seq": 17,
+        "file": "screenshots/操作017.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 67445,
+        "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c"
+      },
+      {
+        "operation_seq": 18,
+        "file": "screenshots/操作018.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 67590,
+        "sha256": "80e342f7c311711d87ca5cc4c7625507c50c1ea514401babac4c276c4ce513b4"
+      },
+      {
+        "operation_seq": 19,
+        "file": "screenshots/操作019.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 67445,
+        "sha256": "b2c990d3832c51c222cd4c3a77655d19e5150d1859cd35e61c8ac49a79252c4c"
+      },
+      {
+        "operation_seq": 20,
+        "file": "screenshots/操作020.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 93145,
+        "sha256": "3ef00c31d676bd25c4344faede2be475ca347910b73875009a3b18da279bda55"
+      },
+      {
+        "operation_seq": 21,
+        "file": "screenshots/操作021.png",
+        "width": 1024,
+        "height": 1024,
+        "byte_size": 93156,
+        "sha256": "d5a61ed0f91493275273436f10fce264ad34779515927748bfd333f4fc49ed5b"
+      }
+    ],
+    "duration_seconds": 13709.1,
+    "tools_used": {
+      "sv3d_toggle_layer": 3,
+      "viewer_zoom": 2,
+      "sv3d_orbit": 5,
+      "sv3d_measure_distance": 5,
+      "sv3d_clear_measurements": 3
+    },
+    "arg_glossary_zh": {
+      "azimuth_deg": "方位角（度）",
+      "elevation_deg": "俯仰角（度）",
+      "end": "终点",
+      "layer": "图层",
+      "start": "起点",
+      "visible": "是否可见",
+      "zoom": "取景倍数"
+    },
+    "initial_frame": {
+      "file": "screenshots/操作000-初始状态-重建.png",
+      "kind": "reconstruction",
+      "note": "平台未记录第 0 帧。此图由同一查看器引擎 + 同一素材 + 同一 URL 参数在本地重新渲染并用平台截图 API 捕获，画幅取专家第一张截图的尺寸。它不是原始记录。",
+      "rebuilt_at": "2026-09-04T13:24:23Z",
+      "viewer_url_params": "file=%2Fassets%2FA_JDC_C_01.glb&sv_interaction=mcp_only",
+      "canvas": {
+        "width": 1315,
+        "height": 1696,
+        "matched_first_keyframe": true
+      },
+      "alignment_applied": [
+        {
+          "tool": "viewer_zoom",
+          "input": {
+            "zoom": 1.676582
+          },
+          "reason": "对齐到记录的 initial_state.camera"
+        }
+      ],
+      "state_check": {
+        "expected": "trajectory.initial_state",
+        "observed": {
+          "viewer": "gltf",
+          "view": "iso",
+          "camera": {
+            "azimuth_deg": 45,
+            "elevation_deg": 19.471221,
+            "zoom": 1.676582,
+            "pan_right": 0,
+            "pan_up": 0,
+            "position": [
+              16.29706,
+              10.49453,
+              16.716981
+            ],
+            "target": [
+              -0.0,
+              2.346,
+              0.41992
+            ],
+            "up": [
+              0,
+              1,
+              0
+            ]
+          },
+          "zoom": 1.676582,
+          "layers": [
+            {
+              "name": "B场地|Site",
+              "label": "B场地|Site",
+              "visible": true,
+              "opacity": 1
+            },
+            {
+              "name": "C结构|Structure",
+              "label": "C结构|Structure",
+              "visible": true,
+              "opacity": 1
+            },
+            {
+              "name": "D楼板墙|Floor&Wall",
+              "label": "D楼板墙|Floor&Wall",
+              "visible": true,
+              "opacity": 1
+            },
+            {
+              "name": "E幕墙|Façade",
+              "label": "E幕墙|Façade",
+              "visible": true,
+              "opacity": 1
+            },
+            {
+              "name": "G室内|Interior",
+              "label": "G室内|Interior",
+              "visible": true,
+              "opacity": 1
+            }
+          ],
+          "cutaway": {
+            "axis": "y",
+            "value_m": 7.82,
+            "min_m": -0.0,
+            "max_m": 7.82
+          },
+          "annotation_count": 0,
+          "measurement_count": 0
+        },
+        "camera_match": true,
+        "other_differences": [
+          "zoom"
+        ],
+        "other_differences_note": "camera 以外的差异来自查看器 adapter 版本演进（新版本多报了 chains / mask_id 等字段，旧版本对 .xyz 少报了 structures；glTF 的 zoom 读数基准在记录之后改过，但相机位置已按记录对齐），不代表画面不同。",
+        "verdict": "camera_match"
+      },
+      "page_errors": []
+    },
+    "folder": "建筑001-arch-jdc-clash-c01"
+  }
+}

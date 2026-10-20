@@ -1,0 +1,35 @@
+schema_version: 1
+kind: qagen_domain_config
+id: medical
+domain_status: blocked
+blocked_reasons:
+  - "Medical remains blocked until a real seed is repaired and expert-reviewed."
+catalog_leaves:
+  - medical.lesion_localization
+  - medical.anatomical_region
+  - medical.imaging_feature_assessment
+  - medical.volumetric_target_geometry
+
+policy:
+  allowed_viewer_operations:
+    - inspect
+    - render
+    - zoom
+    - pan
+    - slice
+    - window_level
+  forbidden_capabilities:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+
+viewer_defaults:
+  required_capabilities:
+    - anonymous_scene
+    - controlled_session_request
+    - native_distance_measurement
+    - stated_scale_and_unit
+    - stated_coordinate_frame

@@ -1,0 +1,19 @@
+schema_version: 1
+kind: qagen_curated_semantic_gt_source
+id: m3d_refseg_doctor_annotation
+
+# This is an interface declaration, not an imported annotation corpus. It
+# deliberately carries no anatomy or organ claims until the approved source
+# import supplies them verbatim.
+source_status: missing
+annotation_count: 210
+
+solver_projection:
+  primary_image: true
+  excluded_artifacts: [segmentation, mask, overlay]
+
+gt_contract:
+  source_type: curated_source_label
+  required_annotation_fields: [finding, location, impression]
+  verbatim_provenance_required: true
+  expert_approval_required: true

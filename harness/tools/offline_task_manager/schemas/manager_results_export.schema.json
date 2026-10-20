@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.manager_results_export.v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "exchange_mode", "result_schema_versions", "container_id_fields", "exported_at", "results"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.manager_results_export.v2"},
+    "contract_version": {"const": "sciencevision.manager_results_exchange.v2"},
+    "exchange_mode": {"const": "mixed-v1-v2"},
+    "result_schema_versions": {
+      "const": ["sciencevision.expert_result.v1", "sciencevision.expert_bundle_result.v2"]
+    },
+    "container_id_fields": {
+      "const": {
+        "sciencevision.expert_result.v1": "package_id",
+        "sciencevision.expert_bundle_result.v2": "bundle_id"
+      }
+    },
+    "exported_at": {"type": "string"},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["schema_version", "batch_id", "package_id", "bundle_id", "expert_id", "expert_name", "assignment_id", "task_id", "task_revision_sha256", "attempt", "validation_status", "validation_feedback", "answer", "reasoning", "trajectory_status", "evidence_count", "imported_at"],
+        "properties": {
+          "schema_version": {"enum": ["sciencevision.expert_result.v1", "sciencevision.expert_bundle_result.v2"]},
+          "batch_id": {"type": "string"},
+          "package_id": {"type": ["string", "null"]},
+          "bundle_id": {"type": ["string", "null"]},
+          "expert_id": {"type": "string"},
+          "expert_name": {"type": "string"},
+          "assignment_id": {"type": "string"},
+          "task_id": {"type": "string"},
+          "task_revision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "attempt": {"type": "integer", "minimum": 1},
+          "validation_status": {"enum": ["valid", "invalid", "uncertain"]},
+          "validation_feedback": {"type": "string"},
+          "answer": {"type": "string"},
+          "reasoning": {"type": "string"},
+          "trajectory_status": {"type": "string"},
+          "evidence_count": {"type": "integer", "minimum": 0},
+          "imported_at": {"type": "string"}
+        }
+      }
+    }
+  }
+}

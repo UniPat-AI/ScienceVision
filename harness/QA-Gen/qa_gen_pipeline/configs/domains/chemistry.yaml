@@ -1,0 +1,33 @@
+schema_version: 1
+kind: qagen_domain_config
+id: chemistry
+domain_status: sample_config_available
+catalog_leaves:
+  - chemistry.stereochemistry_chirality
+  - chemistry.conformation_analysis
+  - chemistry.steric_accessibility
+  - chemistry.coordination_chemistry
+  - chemistry.crystallography_packing
+  - chemistry.reactive_conformation
+
+policy:
+  allowed_viewer_operations:
+    - inspect
+    - rotate
+    - render
+    - zoom
+    - measure_distance
+    - measure_dihedral
+  forbidden_capabilities:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+
+viewer_defaults:
+  required_capabilities:
+    - anonymous_scene
+    - controlled_session_request
+    - native_dihedral_measurement

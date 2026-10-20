@@ -1,0 +1,53 @@
+schema_version: 1
+kind: qagen_subdomain_knowledge_fixture
+id: medical.volumetric_target_geometry
+fixture:
+  local_only: true
+  purpose: unapproved_snapshot_draft
+  production_approval: false
+  approval_receipt: null
+fixture_payload:
+  id: medical.volumetric_target_geometry
+  domain: medical
+  subdomain: volumetric_target_geometry
+  state: blocked
+  blocked_reasons:
+    - repaired_expert_reviewed_seed_missing
+    - expert_knowledge_approval_missing
+    - viewer_capability_evidence_missing
+    - selection_mapping_approval_missing
+    - medical_production_approval_missing
+  source_refs:
+    - source_id: medical-volumetric-target-geometry-expert-draft
+      content_digest: sha256:1932c9794f42f32de88e488f7e09bec7fb1be7fc10e56614ed7bc41fdccf3b5c
+      source_status: draft_reference
+  scientific_scope:
+    - declared segmentation target localization
+    - viewer-native bounding-box and extent measurement
+    - viewer-attested representative-slice selection
+  visual_target_types:
+    - ct_segmentation_overlay
+    - mri_segmentation_overlay
+    - declared_volumetric_target
+  allowed_truth_modes:
+    - visual_annotation
+    - viewer_native_measurement
+  required_viewer_operations:
+    - inspect
+    - select
+    - slice
+    - measure_distance
+    - measure_area
+    - overlay_compare
+  forbidden_shortcuts:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+    - nifti_array_access
+    - nifti_header_lookup
+    - upstream_identifier_lookup
+  production_approval: false
+fixture_digest: sha256:7a88d367b46bc06f011837c1d0102ef5af85b2500129aa921c0e9ed5d22c0b68

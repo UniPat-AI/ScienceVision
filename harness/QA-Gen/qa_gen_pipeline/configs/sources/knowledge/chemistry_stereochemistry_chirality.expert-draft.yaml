@@ -1,0 +1,85 @@
+schema_version: 1
+kind: qagen_expert_knowledge_source
+id: chemistry-stereochemistry-chirality-expert-draft
+leaf_id: chemistry.stereochemistry_chirality
+source_status: draft_reference
+production_approval: false
+
+reference_sources:
+  - repo_path: QA-Gen/qa_gen_pipeline/docs/ev2-subdomain-coverage-draft.md
+    content_digest: sha256:ca708ea315488554d389e7705c88b3526c1c6ef89f814a1008fdf345e95208ee
+    use: deidentified_seed_review_synthesis
+  - repo_path: docs/qa-gen/QA_QC_PIPELINE.md
+    content_digest: sha256:f1d0f4fc6dee0d4cec2c297be77ec4debb2e81dcd99213d0bcb6a18498d40303
+    use: shortcut_and_evidence_policy
+
+fixture_reference:
+  id: chemistry.stereochemistry_chirality
+  fixture_digest: sha256:280fb03b4a33ff5b07c3e208461122fc990a4044e6e4f9fb1b0ef84b2f0eb809
+  use: structure_only
+  production_approval: false
+
+content:
+  scientific_scope:
+    included:
+      - Determine whether a viewer-visible tetrahedral site is stereogenic from four distinguishable substituent paths.
+      - Count and localize stereogenic centers from complete, viewer-visible molecular geometry.
+      - Assign a stereochemical configuration only when connectivity, priority ordering, and viewing convention are explicit and observable.
+      - Compare handedness across controlled rotations of the same anonymous scene.
+    excluded:
+      - Compound identification or stereochemical lookup from names, public identifiers, filenames, or metadata.
+      - Configuration assignment from raw coordinates, line notations, parsed files, or stereochemistry software.
+      - Claims about sites whose hydrogens, connectivity, substituent paths, or local geometry are not sufficiently visible.
+      - Conformational, axial, planar, or helical chirality unless a separately reviewed scenario explicitly brings it into scope.
+
+  scenario_cards:
+    - id: tetrahedral-center-assessment
+      observable_targets:
+        - candidate tetrahedral center
+        - four viewer-visible substituent paths
+        - local three-dimensional arrangement
+      valid_question_patterns:
+        - Ask whether an indicated site is stereogenic and require a visible distinction among all four substituent paths.
+        - Ask for a count or localization of stereogenic centers and require center-by-center visual evidence.
+      invalid_question_patterns:
+        - Ask for configuration when a substituent, hydrogen, bond, or connectivity relation is not observable.
+        - Treat a planar site or a site with duplicate substituent paths as stereogenic.
+    - id: configuration-under-controlled-view
+      observable_targets:
+        - priority-ordered substituent paths
+        - orientation after a traceable viewer rotation
+        - stable anonymous atom labels
+      valid_question_patterns:
+        - Ask for configuration only after the four priorities and the viewing convention can be verified in the controlled scene.
+        - Compare two controlled views while requiring the response to distinguish rotation from reflection.
+      invalid_question_patterns:
+        - Infer handedness from a compound name, remembered structure, or an unverified mirror image.
+        - Substitute a known enantiomer for the geometry actually displayed.
+
+  allowed_inference:
+    - Distinguish substituent paths using atom identity and connectivity that are visible in the controlled scene.
+    - Apply the declared priority convention only after each relevant path is visually grounded.
+    - Infer handedness from a traceable three-dimensional arrangement after controlled rotation.
+    - Exclude a candidate site when visible planarity or duplicate substituent paths makes it non-stereogenic.
+
+  common_failure_modes:
+    - A hidden or omitted substituent makes a configuration claim underdetermined.
+    - A rotation is mistaken for a reflection or for a different enantiomer.
+    - Priority is assigned from proximity in the current camera view instead of the declared stereochemical convention.
+    - A planar atom, rapidly interconverting site, or duplicate-path center is counted without justification.
+    - A compound identity or familiar scaffold replaces observation of the anonymous scene.
+    - A categorical result is supplied without a viewer trace identifying the center and four paths.
+
+  rubric_extensions:
+    - id: chirality-observability
+      rule: Full credit requires all four substituent paths and the local geometry to be observable in the bound viewer evidence.
+      fail_condition: Any required substituent or connectivity relation is absent, ambiguous, or inferred from hidden source data.
+    - id: stereochemical-convention
+      rule: Configuration claims must state and correctly apply the reviewed priority and viewing convention.
+      fail_condition: Priority or orientation is assumed from screen position, memory, or metadata.
+    - id: rotation-reflection-control
+      rule: Evidence must preserve the distinction between rotating one scene and reflecting or replacing it.
+      fail_condition: The reasoning silently changes handedness or substitutes a mirror-related structure.
+    - id: taxonomy-alignment
+      rule: The legacy seed tag remains provenance only; constrained chirality as an invariant is reviewed under the visual taxonomy's V6 semantics.
+      fail_condition: The legacy V2 seed tag is treated as an approved semantic taxonomy mapping.

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_normalized_explicit_feedback",
+  "source_snapshot": "v3_2_expert_feedback.medical_imaging",
+  "records": [
+    {
+      "id": "v32-medical-row-2",
+      "source_row": 2,
+      "reviewer": "reviewer_a",
+      "task_id": "sv-medi-med_mri_anatomy-0135",
+      "subdomain_label": "病灶定位",
+      "scope": "single_named_case_with_collection_level_language",
+      "verbatim_feedback": "1、所有case题面基本一样，并且没有临床影像学专业性。我倾向于作出修改：1️⃣去掉拗口的参数题面，修改为对应的临床场景，原数据库应该是有的。",
+      "quoted_prompt": "The target is the region carrying mask label 1 in the segmentation supplied with this CT volume. A bounding box extent includes both bounding voxels, so along each axis it equals the difference between the two bounds plus 1. The axial axis is axis 2 of the sampling grid. Voxel indices count from 0, and each one lies inside the bounding box it is reported for. If several slices tie, report the one with the lowest index.\nPlace a target relative to the image FOV midpoint. Select the target overlay and inspect its centroid. Locate the inclusive bounding-box maximum, locate the inclusive bounding-box minimum, classify centroid side relative to the FOV midpoint and find the smallest maximum-area axial index.\nAnswer format",
+      "normalization_note": "The row remains evidence, not an approved replacement prompt or a ground-truth source."
+    },
+    {
+      "id": "v32-medical-row-7",
+      "source_row": 7,
+      "reviewer": "reviewer_b",
+      "task_id": "sv-medi-med_mri_anatomy-0006",
+      "subdomain_label": "解剖区域划分",
+      "scope": "single_named_case_with_generalization_request",
+      "verbatim_feedback": "题面本身不够通俗易懂，测量是可以完成的，但是和医学的影像及诊断没有太大关系，不太会在医学真实场景里面这么表示考察。如果只是识图测距离是没有问题的，但是我看不出用医学影像这些ct片子的意义在哪里。如果说能够让ai自己去从没有标记的影像里面去发现问题，并指出哪部分是哪个器官，发生了什么问题，我觉得会不会更好一些。",
+      "quoted_prompt": null,
+      "normalization_note": "The row remains evidence, not an approved medical diagnosis label or a ground-truth source."
+    }
+  ]
+}

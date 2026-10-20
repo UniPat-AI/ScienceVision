@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.drawing_section_consistency
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [mechanical_cad.section_view_consistency]
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.paired_section_and_model, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [section_to_model_consistency]
+seed:
+  query: {domain: mechanical_cad, subdomain: drawing_section_consistency, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, paired_section_and_model, stable_feature_identifiers]
+viewer:
+  required_operations: [inspect, rotate, section_cut, overlay_compare]
+answer:
+  allowed_truth_modes: [visual_annotation, expert_visual_judgment]
+evidence:
+  required: [viewer_trace, cross_representation_evidence]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: drawing_section_consistency, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/measurement_verifier_approval.schema.json",
+  "description": "Independent approval of a verifier result that cites a digest-only measurement receipt.",
+  "type": "object",
+  "required": [
+    "approval_version",
+    "decision",
+    "actor_role",
+    "candidate_digest",
+    "target_spec_digest",
+    "measurement_receipt_digest",
+    "verifier_output_digest",
+    "rationale"
+  ],
+  "properties": {
+    "approval_version": {"const": 1},
+    "decision": {"const": "approved"},
+    "actor_role": {"const": "independent_verifier"},
+    "candidate_digest": {"$ref": "#/definitions/digest"},
+    "target_spec_digest": {"$ref": "#/definitions/digest"},
+    "measurement_receipt_digest": {"$ref": "#/definitions/digest"},
+    "verifier_output_digest": {"$ref": "#/definitions/digest"},
+    "rationale": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false,
+  "definitions": {"digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}}
+}

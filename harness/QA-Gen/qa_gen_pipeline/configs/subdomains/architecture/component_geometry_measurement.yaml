@@ -1,0 +1,29 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.component_geometry_measurement
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.scaled_component_geometry, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [component_geometry_measurement]
+seed:
+  query: {domain: architecture, subdomain: component_geometry_measurement, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, stable_component_identifiers, stated_scale]
+viewer:
+  required_operations: [inspect, isolate, rotate, measure_distance, measure_area, measure_volume]
+answer:
+  allowed_truth_modes: [viewer_native_measurement]
+evidence:
+  required: [viewer_trace, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: doxcnHceff1q2o7Jij2KtpvmBNe, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: scaled component geometry and approved knowledge are missing."}

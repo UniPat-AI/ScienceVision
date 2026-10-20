@@ -1,0 +1,159 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Expert Annotation — BabyVision-v2</title>
+<style>
+  body { font: 15px/1.55 -apple-system, Segoe UI, Roboto, sans-serif; max-width: 760px;
+         margin: 0 auto; padding: 0 20px 60px; color: #e6edf3; background: #0d1117; }
+  .topbar { display:flex; align-items:center; gap:14px; padding:12px 0; margin-bottom:8px;
+            border-bottom:1px solid #21262d; position:sticky; top:0; background:#0d1117; z-index:5; }
+  .topbar a.home { color:#58a6ff; text-decoration:none; font-weight:600; }
+  .topbar a.home:hover { text-decoration:underline; }
+  h1 { font-size: 20px; margin: 18px 0 4px; } h2 { font-size: 15px; color: #8b949e; margin-top: 28px; }
+  .domain-label { color:#58a6ff; }
+  a.card { display: block; padding: 12px 14px; margin: 8px 0; border: 1px solid #30363d;
+           border-radius: 8px; text-decoration: none; color: #e6edf3; background: #161b22; }
+  a.card:hover { border-color: #58a6ff; }
+  a.domain { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  a.domain .dl { font-weight:600; font-size:16px; }
+  a.domain .dr { display:flex; align-items:center; gap:10px; color:#8b949e; font-size:13px; white-space:nowrap; }
+  .count { display:inline-block; min-width:22px; text-align:center; padding:1px 8px;
+           border-radius:999px; background:#21262d; color:#58a6ff; font-weight:600; font-size:12px; }
+  .chev { color:#6e7681; font-size:18px; line-height:1; }
+  .vc { display: inline-block; min-width: 58px; font-weight: 600; color: #58a6ff; }
+  .q { color: #8b949e; font-size: 13px; }
+  code { background: #161b22; padding: 1px 5px; border-radius: 4px; }
+  .empty { color:#6e7681; font-size:13px; }
+  a.back { color:#58a6ff; text-decoration:none; font-size:13px; display:inline-block; margin-top:16px; }
+  a.back:hover { text-decoration:underline; }
+</style>
+<header class="topbar">
+  <a class="home" href="/">← BabyVision-v2 Home</a>
+  <strong>Expert Annotation</strong>
+</header>
+
+<div id="app"><p class="empty">Loading…</p></div>
+
+<script type="module">
+const SETS = [
+  { key:'chemistry', label:'Chemistry · 化学', set:'ChemistryKAxis-expert-v2' },
+  { key:'biology',   label:'Biology · 生物',   set:'BiologyKAxis-expert-v2' },
+  { key:'medical',   label:'Medical · 医学',   set:'MedicalKAxis-expert-v2' },
+];
+const MOLSTAR_FMT = new Set(['xyz','mol','cif','mmcif','sdf','mol2','pdb']);
+const CAFFEINE = '/sv-annotate/viewer/molstar.html?file=/sv-annotate/crawl_data/biology/small_molecules_derived/2519_caffeine.mol&type=mol';
+
+// Static Phase-0 domain (hardcoded caffeine → Mol* tasks).
+const PHASE0 = {
+  key:'phase0', label:'Phase-0 · caffeine → Mol*',
+  tasks: [
+    { href:`${CAFFEINE}&annotate=bio_caffeine_v2_topology`,           vc:'V2',      title:'topology',           q:'嘌呤双环骨架：14 个重原子是否严格共面？' },
+    { href:`${CAFFEINE}&annotate=bio_caffeine_spatial_distance`,      vc:'Spatial', title:'distance',           q:'两个羰基氧的 3D 直线距离及比值估计' },
+    { href:`${CAFFEINE}&annotate=bio_caffeine_v3_occlusion`,          vc:'V3',      title:'occlusion',          q:'当前视角下被部分遮挡的 H / C 原子分割' },
+    { href:`${CAFFEINE}&annotate=bio_caffeine_v4_rotation_occlusion`, vc:'V4',      title:'rotation occlusion', q:'绕 X 轴后翻 90° 后的遮挡推理' },
+  ],
+};
+
+// Industrial · CAD is a standalone sub-app (its own viewer + 7 part models),
+// so its domain card links out directly instead of rendering a task list here.
+const CAD = {
+  key:'cad', label:'Industrial · CAD 机械零件', link:'/sv-annotate/cad-qa/viewer/', countLabel:'7 parts',
+  blurb:'7 个零件（bearing / bracket / gear / nut / screw / shaft / sprocket）· 3D 模型 + 题目 + 点开显示参考答案。left-drag 旋转、滚轮缩放、剖切/线框/多视角。',
+};
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function viewerHref(task, set){
+  const a = task.asset || {};
+  const fmt = (a.format || '').toLowerCase();
+  const file = a.path || (a.repo_path ? '/' + a.repo_path : '');
+  const qs = 'file=' + encodeURIComponent(file) + '&type=' + encodeURIComponent(fmt)
+           + '&annotate=' + encodeURIComponent(task.task_id) + '&set=' + encodeURIComponent(set);
+  if (fmt === 'nifti' || /\.nii(\.gz)?$/.test(file)) return '/sv-annotate/viewer/niivue.html?' + qs;
+  if (MOLSTAR_FMT.has(fmt)) return '/sv-annotate/viewer/molstar.html?' + qs;
+  return null;   // unknown format → non-annotatable
+}
+
+// Normalize an expert-v2 raw task into the common render shape used below.
+function normalize(t, set){
+  return {
+    href: viewerHref(t, set),
+    vc: t.v_class || '',
+    title: t.title || t.task_id,
+    q: t.instruction || '',
+    fmt: (t.asset || {}).format,
+  };
+}
+
+async function loadSet(s){
+  const url = `/QA-Gen/tasks/${s.set}/ScienceVision_${s.set}_final_tasks.jsonl`;
+  try {
+    const res = await fetch(url, { cache:'no-cache' });
+    if (!res.ok) return { ...s, tasks: [] };
+    const raw = (await res.text()).trim().split('\n').filter(Boolean).map(JSON.parse);
+    return { ...s, tasks: raw.map(t => normalize(t, s.set)) };
+  } catch (e) {
+    return { ...s, tasks: [] };
+  }
+}
+
+function cardHTML(t){
+  if (t.href){
+    return `<a class="card" href="${t.href}"><span class="vc">${esc(t.vc)}</span> ${esc(t.title)}<div class="q">${esc(t.q)}</div></a>`;
+  }
+  return `<div class="card" style="opacity:.6"><span class="vc">${esc(t.vc)}</span> ${esc(t.title)}<div class="q">${esc(t.q)}<br><em>no viewer for format ${esc(t.fmt)}</em></div></div>`;
+}
+
+let DOMAINS = [];   // filled after load
+
+function domainCard(d){
+  const href = d.link ? d.link : `#domain=${encodeURIComponent(d.key)}`;
+  let meta;
+  if (d.link) meta = `<span class="count">${esc(d.countLabel || '↗')}</span>`;
+  else if (d.tasks.length) meta = `<span class="count">${d.tasks.length}</span>`;
+  else meta = '<span class="empty">not mirrored</span>';
+  return `<a class="card domain" href="${href}">
+      <span class="dl domain-label">${esc(d.label)}</span>
+      <span class="dr">${meta}<span class="chev">›</span></span></a>`;
+}
+
+function renderLanding(){
+  const html = [];
+  html.push('<h1>Expert Annotation Platform</h1>');
+  html.push('<p class="q">选择一个领域进入题目列表。点开任一任务进入标注模式：交互 → <b>Mark key step</b> 记 checkpoint → <b>Submit &amp; download</b> 下载 <code>&lt;task_id&gt;.bundle.json</code>。QC 门：交互≥60s、≥2 checkpoints、答案非空、有相机变化。</p>');
+  html.push('<h2>领域 / Domains</h2>');
+  for (const d of DOMAINS) html.push(domainCard(d));
+  html.push('<h2>工具 / Tools</h2>');
+  html.push('<a class="card" href="/sv-annotate/viewer/replay.html"><span class="vc">▶</span> Replay<div class="q">加载下载的 <code>*.bundle.json</code></div></a>');
+  html.push(`<a class="card" href="${CAFFEINE}"><span class="vc">—</span> 纯 viewer（无 <code>?annotate=</code>）<div class="q">原样纯 viewer，回归对照</div></a>`);
+  document.getElementById('app').innerHTML = html.join('\n');
+}
+
+function renderDomain(key){
+  const d = DOMAINS.find(x => x.key === key);
+  if (!d || d.link){ location.hash = ''; return; }   // unknown or link-out → back to landing
+  const html = [];
+  html.push(`<h1><span class="domain-label">${esc(d.label)}</span></h1>`);
+  html.push(`<p class="q">${d.tasks.length} tasks</p>`);
+  if (!d.tasks.length){
+    html.push('<p class="empty">（该域暂不可用 / not mirrored）</p>');
+  } else {
+    for (const t of d.tasks) html.push(cardHTML(t));
+  }
+  html.push('<a class="back" href="#">← 返回领域列表 / Back to domains</a>');
+  document.getElementById('app').innerHTML = html.join('\n');
+  window.scrollTo(0, 0);
+}
+
+function route(){
+  const m = /(?:^|&)domain=([^&]+)/.exec(location.hash.replace(/^#/, ''));
+  if (m) renderDomain(decodeURIComponent(m[1]));
+  else renderLanding();
+}
+
+(async () => {
+  const expert = await Promise.all(SETS.map(loadSet));
+  DOMAINS = [...expert, CAD, PHASE0];
+  window.addEventListener('hashchange', route);
+  route();
+})();
+</script>

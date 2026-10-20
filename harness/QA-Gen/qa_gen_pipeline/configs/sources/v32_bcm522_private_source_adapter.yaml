@@ -1,0 +1,38 @@
+schema_version: 1
+kind: qagen_v32_private_source_spec
+id: v32_bcm522_private_source_adapter
+selection:
+  schema_version: sciencevision.eval_v32_selection.v1
+  file_sha256: sha256:75ae4cbb771d42ff68811b2e06a82ca34cb00749f888673518dac937336463d6
+  id_sha256: 149b29605da6cd2862e427dacb4d1098b106d23eb95b248ffdf6dc0bdf1846d4
+  total: 60
+  domain_counts:
+    biology: 20
+    chemistry: 20
+    medical: 20
+bundle:
+  manifest_filename: MANIFEST.json
+  manifest_sha256: sha256:56842b35629d81537abd598b9a9b585bfa7340d446e5fba171809c6239c39199
+  manifest_schema_version: sciencevision.question_assets_bundle_manifest.v1
+  package_id: scale-v3.2-bcm522-question-assets-bundle-20260826-v1.2.0
+  checksums_filename: SHA256SUMS
+  question_assets:
+    filename: question_assets.jsonl
+    sha256: sha256:e093b1f92ebc5ecc9d9a79508db7be9712104251d69bc01859220fd1dcaefeb1
+    schema_version: sciencevision.question_assets.v3
+  answer_keys:
+    filename: answer_keys.jsonl
+    sha256: sha256:6755d27b19fc17057094f182e3087052f0fcb98c1d291da531fd97dd6793c56b
+    schema_version: sciencevision.answer_keys.v1
+  max_asset_bytes: 134217728
+compute_policy:
+  allowed_capabilities:
+    - asset_file_read
+    - python_compute
+  allowed_packages:
+    - gemmi==0.7.5
+    - nibabel==5.3.2
+    - numpy==2.5.1
+    - rdkit==2026.3.5
+  allowed_runtimes:
+    - python3.12

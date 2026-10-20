@@ -1,0 +1,26 @@
+[
+  {
+    "name": "V2 · 土星合相时土星环的可见性",
+    "path": "/crawl_data/astronomy/ephemeris/saturn_from_earth_2026_conjunction.json",
+    "size": 14882,
+    "viewer": "saturn",
+    "format": "json",
+    "note": "Sci3D V2 question — saturn_ring_occlusion_2026_conjunction"
+  },
+  {
+    "name": "V4 · 土星合相事件的多视角自一致性",
+    "path": "/crawl_data/astronomy/ephemeris/saturn_from_earth_2026_conjunction.json",
+    "size": 14882,
+    "viewer": "saturn",
+    "format": "json",
+    "note": "Sci3D V4 question — flipeval_astro_saturn_conjunction_multiviewpoint"
+  },
+  {
+    "name": "V6 · 太阳系行星轨道共面性",
+    "path": "/crawl_data/astronomy/ephemeris/solar_system_elements_j2000.json",
+    "size": 2380,
+    "viewer": "solar_system",
+    "format": "json",
+    "note": "Sci3D V6 question — solar_system_coplanar_invariant_j2000"
+  }
+]

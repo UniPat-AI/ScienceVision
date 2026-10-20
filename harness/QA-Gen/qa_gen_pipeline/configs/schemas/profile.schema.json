@@ -1,0 +1,332 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/profile.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "mode", "domains", "inputs", "fixture_policy", "release"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_run_profile"},
+    "id": {"type": "string", "minLength": 1},
+    "mode": {"enum": ["catalog_only", "local_fixture_compile", "local_provider_pilot", "production_release"]},
+    "domains": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "enabled_leaves": {"type": "array", "items": {"type": "string"}},
+    "blocked_leaves": {"type": "array", "items": {"type": "string"}},
+    "viewer_profile_requirement": {"$ref": "#/definitions/viewer_profile_requirement"},
+    "planning": {"$ref": "#/definitions/planning"},
+    "inputs": {
+      "type": "object",
+      "required": ["registry_mode", "base", "rubric", "domain_configs", "leaf_configs"],
+      "properties": {
+        "registry_mode": {"enum": ["catalog_only", "static_fixture", "workspace_registry"]},
+        "base": {"type": "string"},
+        "source_registry": {"type": "string"},
+        "seed_index": {"type": "string", "minLength": 1},
+        "asset_manifest": {"type": "string"},
+        "viewer_definitions": {"type": "string"},
+        "rubric": {"type": "string"},
+        "knowledge_index": {"type": "string"},
+        "model_routing": {"type": "string", "minLength": 1},
+        "provider_runtime": {"type": "string", "minLength": 1},
+        "workspace_registry": {
+          "type": "object",
+          "required": ["seed_index"],
+          "properties": {
+            "seed_index": {"$ref": "#/definitions/workspace_artifact_ref"},
+            "knowledge_index": {"$ref": "#/definitions/workspace_artifact_ref"},
+            "knowledge_approval": {"$ref": "#/definitions/pending_knowledge_approval"},
+            "scene_registry": {"$ref": "#/definitions/workspace_artifact_or_pending"},
+            "viewer_profile": {"$ref": "#/definitions/workspace_artifact_or_pending"}
+          },
+          "additionalProperties": false
+        },
+        "fixture_routing": {"type": "string", "minLength": 1},
+        "domain_configs": {"type": "array", "items": {"type": "string"}},
+        "leaf_configs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"registry_mode": {"const": "static_fixture"}}, "required": ["registry_mode"]},
+          "then": {"required": ["source_registry", "knowledge_index", "asset_manifest", "viewer_definitions"]}
+        },
+        {
+          "if": {"properties": {"registry_mode": {"const": "workspace_registry"}}, "required": ["registry_mode"]},
+          "then": {
+            "anyOf": [
+              {"required": ["workspace_registry"]},
+              {"required": ["seed_index", "knowledge_index"]}
+            ]
+          }
+        }
+      ]
+    },
+    "fixture_policy": {
+      "type": "object",
+      "required": ["allow_local_fixture_compile", "require_local_fixture_digest_match", "require_production_approval", "production_eligible"],
+      "properties": {
+        "allow_local_fixture_compile": {"type": "boolean"},
+        "require_local_fixture_digest_match": {"type": "boolean"},
+        "require_production_approval": {"type": "boolean"},
+        "production_eligible": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "release": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1},
+        "blocked_reasons": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "workspace_artifact_ref": {
+      "type": "object",
+      "required": ["path", "content_digest"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^(?!/)(?![A-Za-z]:[\\\\/])(?!.*(?:^|/)\\.\\.(?:/|$))[A-Za-z0-9.][A-Za-z0-9._/-]*$"
+        },
+        "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "pending_workspace_artifact": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": {"const": "pending"}
+      },
+      "additionalProperties": false
+    },
+    "workspace_artifact_or_pending": {
+      "oneOf": [
+        {"$ref": "#/definitions/workspace_artifact_ref"},
+        {"$ref": "#/definitions/pending_workspace_artifact"}
+      ]
+    },
+    "pending_knowledge_approval": {
+      "type": "object",
+      "required": ["state", "leaf_id"],
+      "properties": {
+        "state": {"const": "pending_human_approval"},
+        "leaf_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z0-9_]+$"}
+      },
+      "additionalProperties": false
+    },
+    "viewer_profile_requirement": {
+      "type": "object",
+      "required": ["adapter_id", "definition_digest", "required_operations", "require_non_fixture", "require_scene_registry"],
+      "properties": {
+        "adapter_id": {"type": "string", "minLength": 1},
+        "definition_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "required_operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "require_non_fixture": {"const": true},
+        "require_scene_registry": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "planning": {
+      "type": "object",
+      "required": ["default_count", "quota", "batch", "per_work_item_budget"],
+      "properties": {
+        "default_count": {"const": 1},
+        "quota": {"type": "integer", "minimum": 5, "maximum": 10},
+        "batch": {
+          "type": "object",
+          "required": ["min_count", "max_count", "seed_selection", "variation"],
+          "properties": {
+            "min_count": {"type": "integer", "minimum": 5, "maximum": 10},
+            "max_count": {"type": "integer", "minimum": 5, "maximum": 10},
+            "seed_selection": {
+              "type": "object",
+              "required": ["policy", "dedupe_policy"],
+              "properties": {
+                "policy": {"const": "locked_seed_digest"},
+                "dedupe_policy": {"const": "seed_variation_pair"}
+              },
+              "additionalProperties": false
+            },
+            "variation": {
+              "type": "object",
+              "required": ["policy"],
+              "properties": {"policy": {"const": "deterministic_unique_slot"}},
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "per_work_item_budget": {
+          "type": "object",
+          "required": ["max_candidates", "max_revisions"],
+          "properties": {
+            "max_candidates": {"const": 1},
+            "max_revisions": {"const": 1}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {"properties": {"batch": {"required": ["min_count", "max_count"]}}},
+          "then": {
+            "properties": {
+              "batch": {
+                "properties": {
+                  "max_count": {"minimum": 5}
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": ["release"],
+        "properties": {
+          "release": {
+            "required": ["enabled"],
+            "properties": {"enabled": {"const": true}}
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "mode": {"const": "production_release"},
+          "fixture_policy": {
+            "properties": {
+              "allow_local_fixture_compile": {"const": false},
+              "require_local_fixture_digest_match": {"const": false},
+              "require_production_approval": {"const": true},
+              "production_eligible": {"const": true}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["mode"],
+        "properties": {"mode": {"const": "catalog_only"}}
+      },
+      "then": {
+        "properties": {
+          "enabled_leaves": {"maxItems": 0},
+          "release": {"properties": {"enabled": {"const": false}}},
+          "fixture_policy": {
+            "properties": {
+              "allow_local_fixture_compile": {"const": false},
+              "require_local_fixture_digest_match": {"const": false},
+              "require_production_approval": {"const": true},
+              "production_eligible": {"const": false}
+            }
+          },
+          "inputs": {"properties": {"registry_mode": {"const": "catalog_only"}}}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["mode"],
+        "properties": {"mode": {"const": "local_provider_pilot"}}
+      },
+      "then": {
+        "required": ["viewer_profile_requirement", "planning"],
+        "properties": {
+          "id": {"enum": ["chirality_provider_pilot", "chirality_workspace_knowledge_pilot"]},
+          "domains": {"const": ["chemistry"]},
+          "enabled_leaves": {"const": ["chemistry.stereochemistry_chirality"]},
+          "release": {"properties": {"enabled": {"const": false}}},
+          "fixture_policy": {
+            "properties": {
+              "allow_local_fixture_compile": {"const": false},
+              "require_local_fixture_digest_match": {"const": false},
+              "require_production_approval": {"const": false},
+              "production_eligible": {"const": false}
+            }
+          },
+          "inputs": {"required": ["model_routing", "provider_runtime"]}
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["id"],
+        "properties": {"id": {"const": "chirality_workspace_knowledge_pilot"}}
+      },
+      "then": {
+        "properties": {
+          "inputs": {
+            "required": ["workspace_registry"],
+            "properties": {
+              "workspace_registry": {
+                "required": ["scene_registry", "viewer_profile"],
+                "properties": {
+                  "scene_registry": {"$ref": "#/definitions/workspace_artifact_ref"},
+                  "viewer_profile": {"$ref": "#/definitions/workspace_artifact_ref"}
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["mode"],
+        "properties": {"mode": {"const": "local_fixture_compile"}}
+      },
+      "then": {
+        "properties": {
+          "release": {"properties": {"enabled": {"const": false}}},
+          "fixture_policy": {
+            "properties": {
+              "allow_local_fixture_compile": {"const": true},
+              "production_eligible": {"const": false}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["release", "inputs"],
+        "properties": {
+          "release": {
+            "required": ["enabled"],
+            "properties": {"enabled": {"const": true}}
+          },
+          "inputs": {
+            "required": ["registry_mode"],
+            "properties": {"registry_mode": {"const": "workspace_registry"}}
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "inputs": {
+            "required": ["workspace_registry"],
+            "properties": {
+              "workspace_registry": {"required": ["seed_index", "knowledge_index"]}
+            }
+          }
+        }
+      }
+    }
+  ]
+}

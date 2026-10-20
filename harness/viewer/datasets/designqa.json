@@ -1,0 +1,41 @@
+[
+  {
+    "name": "designqa",
+    "label": "DesignQA",
+    "modality": "engineering / CAD docs",
+    "task_type": "open-ended QA",
+    "source": "github.com/anniedoris/design_qa",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "rule_definition": {
+        "rows": 62,
+        "jsonl": "/out_samples/designqa/rule_definition.jsonl",
+        "first_qid": "designqa-rule_definition-000000"
+      },
+      "rule_dimension_context": {
+        "rows": 120,
+        "jsonl": "/out_samples/designqa/rule_dimension_context.jsonl",
+        "first_qid": "designqa-rule_dimension_context-000000"
+      },
+      "rule_dimension_detailed_context": {
+        "rows": 120,
+        "jsonl": "/out_samples/designqa/rule_dimension_detailed_context.jsonl",
+        "first_qid": "designqa-rule_dimension_detailed_context-000000"
+      },
+      "rule_functional_performance": {
+        "rows": 32,
+        "jsonl": "/out_samples/designqa/rule_functional_performance.jsonl",
+        "first_qid": "designqa-rule_functional_performance-000000"
+      },
+      "rule_presence": {
+        "rows": 124,
+        "jsonl": "/out_samples/designqa/rule_presence.jsonl",
+        "first_qid": "designqa-rule_presence-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 212,
+    "total_rows": 458
+  }
+]

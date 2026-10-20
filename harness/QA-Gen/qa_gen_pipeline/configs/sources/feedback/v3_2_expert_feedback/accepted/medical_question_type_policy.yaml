@@ -1,0 +1,91 @@
+schema_version: 1
+kind: qagen_expert_feedback_source
+id: v3_2_medical_question_type_policy
+leaf_id: medical.lesion_localization
+source_status: accepted
+production_approval: false
+reference_sources:
+  - repo_path: QA-Gen/qa_gen_pipeline/configs/sources/feedback/v3_2_expert_feedback/derived/triage_claims.json
+    use: typed-policy-boundary-and-current-thread-direction
+    content_digest: sha256:31fdff0930bbc0cbe852610d9d5326fc1e3e601b16afa6460e623e1b853c6d71
+content:
+  claims:
+    - claim_id: forbid-procedural-ui-language
+      rule_id: forbid_ui_or_operation_instruction
+    - claim_id: forbid-ungrounded-ground-truth
+      rule_id: forbid_ungrounded_ground_truth
+    - claim_id: forbid-viewer-shortcuts
+      rule_id: forbid_viewer_shortcuts
+    - claim_id: measurement-is-minority
+      rule_id: limit_measurement_saturation
+    - claim_id: require-expert-ground-truth-approval
+      rule_id: require_expert_ground_truth_approval
+    - claim_id: require-viewer-grounded-evidence
+      rule_id: require_viewer_grounded_evidence
+  question_family_policy:
+    allowed_families:
+      - family_id: anatomical-localization
+        family_kind: attribute
+      - family_id: finding-location-impression
+        family_kind: property
+      - family_id: imaging-feature-characterization
+        family_kind: property
+      - family_id: lesion-localization
+        family_kind: attribute
+      - family_id: localize-then-measure
+        family_kind: measurement
+      - family_id: morphology
+        family_kind: property
+      - family_id: spatial-relation
+        family_kind: comparison
+    quota:
+      scope: portfolio
+      unit: percentage_points
+      measurement_max: 25
+      non_measurement_min: 75
+  gt_policy:
+    gt_source_types:
+      - curated_source_label
+      - expert_annotation
+      - measurement_receipt
+      - paired_comparison
+    expert_approval_required: true
+  subdomain_semantics: question_type_only
+  asset_facets_schema:
+    facets:
+      - facet_id: anatomy
+        cardinality: multiple
+        required: false
+      - facet_id: body_region
+        cardinality: single
+        required: true
+      - facet_id: dataset
+        cardinality: single
+        required: true
+      - facet_id: finding_class
+        cardinality: multiple
+        required: false
+      - facet_id: label_identity
+        cardinality: multiple
+        required: false
+      - facet_id: modality
+        cardinality: single
+        required: true
+      - facet_id: organ_system
+        cardinality: multiple
+        required: false
+      - facet_id: pathology
+        cardinality: multiple
+        required: false
+      - facet_id: study_series
+        cardinality: single
+        required: true
+      - facet_id: timepoint
+        cardinality: single
+        required: false
+  medical_visibility_policy:
+    solver_visible_segmentation: false
+    hidden_reference_mask_allowed: conditional
+    label_identity_policy: preserve
+    semantic_scoring_required: true
+    duplicate_coverage_key: dataset-facets-question-kernel

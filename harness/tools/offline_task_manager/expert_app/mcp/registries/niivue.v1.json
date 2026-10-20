@@ -1,0 +1,235 @@
+{
+  "version": "niivue.v1",
+  "viewer": "niivue",
+  "tools": [
+    {
+      "name": "viewer_get_state",
+      "description": "Return the current NiiVue view, crosshair, layer, zoom, pan, and clip state.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_reset",
+      "description": "Restore the NiiVue view recorded when the volume first became ready.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_set_view_mode",
+      "description": "Switch NiiVue between multiplanar, axial-only, and 3D volume render.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"mode": {"type": "string", "enum": ["mpr", "axial", "render"]}},
+        "required": ["mode"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_slice",
+      "description": "Set one or more crosshair slice indices. Unspecified axes stay unchanged.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sagittal": {"type": "integer", "minimum": 0},
+          "coronal": {"type": "integer", "minimum": 0},
+          "axial": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false,
+        "minProperties": 1
+      }
+    },
+    {
+      "name": "viewer_window_level",
+      "description": "Set the primary volume window and level.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "window": {"type": "number", "exclusiveMinimum": 0},
+          "level": {"type": "number"}
+        },
+        "required": ["window", "level"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_zoom",
+      "description": "Set the NiiVue volume scale to an absolute multiplier.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"scale": {"type": "number", "exclusiveMinimum": 0, "maximum": 8}},
+        "required": ["scale"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_pan",
+      "description": "Set an absolute 2D plane viewport pan target relative to the initial view.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "plane": {"type": "string", "enum": ["axial", "coronal", "sagittal"]},
+          "right_fraction": {"type": "number", "minimum": -1, "maximum": 1},
+          "up_fraction": {"type": "number", "minimum": -1, "maximum": 1}
+        },
+        "required": ["plane", "right_fraction", "up_fraction"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_render_angles",
+      "description": "Set 3D volume-render azimuth and elevation in degrees.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {"type": "number", "minimum": -180, "maximum": 180},
+          "elevation_deg": {"type": "number", "minimum": -89, "maximum": 89}
+        },
+        "required": ["azimuth_deg", "elevation_deg"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_clip_plane",
+      "description": "Enable or disable the 3D clip plane using NiiVue depth/azimuth/elevation.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "enabled": {"type": "boolean"},
+          "depth": {"type": "number", "minimum": 0, "maximum": 1},
+          "azimuth_deg": {"type": "number"},
+          "elevation_deg": {"type": "number"}
+        },
+        "required": ["enabled"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_mask_visibility",
+      "description": "Show or hide the overlay mask volume.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"visible": {"type": "boolean"}},
+        "required": ["visible"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_mask_opacity",
+      "description": "Set overlay mask opacity.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"opacity": {"type": "number", "minimum": 0.12, "maximum": 1}},
+        "required": ["opacity"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure",
+      "description": "Start or commit a length or angle measurement in world RAS millimetres.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {"type": "string", "enum": ["length", "angle"]},
+          "commit": {"enum": [true]},
+          "plane": {"type": "string", "enum": ["axial", "coronal", "sagittal"]},
+          "points_ras_mm": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {"type": "number"}
+            }
+          },
+          "value": {"type": "string"}
+        },
+        "required": ["kind"],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {"type": "string", "enum": ["length", "angle"]}
+            },
+            "required": ["kind"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {"enum": ["length"]},
+              "commit": {"enum": [true]},
+              "plane": {"type": "string", "enum": ["axial", "coronal", "sagittal"]},
+              "points_ras_mm": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {"type": "number"}
+                }
+              },
+              "value": {"type": "string"}
+            },
+            "required": ["kind", "commit", "plane", "points_ras_mm"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {"enum": ["angle"]},
+              "commit": {"enum": [true]},
+              "plane": {"type": "string", "enum": ["axial", "coronal", "sagittal"]},
+              "points_ras_mm": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {"type": "number"}
+                }
+              },
+              "value": {"type": "string"}
+            },
+            "required": ["kind", "commit", "plane", "points_ras_mm"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "sv3d_clear_measurements",
+      "description": "Clear every NiiVue length and angle annotation.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_mask_geometry",
+      "description": "Compute bounding box, centroid, volume, and best axial slice of the current mask_id, optionally jumping the crosshair there.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "goto": {"type": "string", "enum": ["none", "best_axial"]}
+        },
+        "additionalProperties": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/scene_inventory.schema.json",
+  "description": "Private structural inventory for one controlled scene. It intentionally contains selectable entities but no measured values or answers.",
+  "type": "object",
+  "required": [
+    "inventory_version",
+    "source_record_digest",
+    "target_leaf",
+    "scene_registry_digest",
+    "anonymous_scene_ref",
+    "asset_set_digest",
+    "asset_sha256",
+    "selector_types",
+    "selector_catalog",
+    "backend_selector_map",
+    "local_only",
+    "release_eligible"
+  ],
+  "properties": {
+    "inventory_version": {"const": 1},
+    "source_record_digest": {"$ref": "#/definitions/digest"},
+    "target_leaf": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"},
+    "scene_registry_digest": {"$ref": "#/definitions/digest"},
+    "selection_slot_digest": {"$ref": "#/definitions/digest"},
+    "anonymous_scene_ref": {"type": "string", "pattern": "^scene://[A-Za-z0-9._:-]+$"},
+    "asset_set_digest": {"$ref": "#/definitions/digest"},
+    "asset_sha256": {
+      "type": "object",
+      "required": ["primary"],
+      "properties": {
+        "primary": {"$ref": "#/definitions/digest"},
+        "mask": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    },
+    "selector_types": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"enum": ["atom", "atom_pair", "atom_quadruplet", "residue", "residue_pair", "component_pair", "mask_label_axis"]}
+    },
+    "selector_catalog": {
+      "type": "object",
+      "required": ["components", "residues", "atoms", "mask_labels", "axes", "volume_shape", "layers"],
+      "properties": {
+        "components": {"type": "array", "items": {"$ref": "#/definitions/component"}},
+        "residues": {"type": "array", "items": {"$ref": "#/definitions/residue"}},
+        "atoms": {"type": "array", "items": {"$ref": "#/definitions/atom"}},
+        "mask_labels": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}},
+        "axes": {"type": "array", "uniqueItems": true, "items": {"enum": ["x", "y", "z"]}},
+        "volume_shape": {"type": "array", "maxItems": 7, "items": {"type": "integer", "minimum": 1}},
+        "layers": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^layer-[0-9]{4,}$"}}
+      },
+      "additionalProperties": false
+    },
+    "selector_index": {
+      "description": "Complete, anonymous selector coverage. Paged categories keep their entries in private selector-page envelopes instead of silently truncating the catalog.",
+      "type": "object",
+      "required": ["version", "components", "residues", "atoms"],
+      "properties": {
+        "version": {"const": 1},
+        "components": {"$ref": "#/definitions/selector_index_category"},
+        "residues": {"$ref": "#/definitions/selector_index_category"},
+        "atoms": {"$ref": "#/definitions/selector_index_category"}
+      },
+      "additionalProperties": false
+    },
+    "backend_selector_map": {
+      "type": "object",
+      "additionalProperties": {"type": "object", "minProperties": 1}
+    },
+    "local_only": {"const": true},
+    "release_eligible": {"const": false}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "component": {
+      "type": "object",
+      "required": ["component_id", "chain_id"],
+      "properties": {
+        "component_id": {"type": "string", "pattern": "^component-[0-9]{4,}$"},
+        "chain_id": {"type": "string", "pattern": "^chain-[0-9]{4,}$"}
+      },
+      "additionalProperties": false
+    },
+    "residue": {
+      "type": "object",
+      "required": ["residue_id", "component_id", "residue_name", "residue_number", "insertion_code"],
+      "properties": {
+        "residue_id": {"type": "string", "pattern": "^residue-[0-9]{6,}$"},
+        "component_id": {"type": "string", "pattern": "^component-[0-9]{4,}$"},
+        "residue_name": {"type": "string", "pattern": "^residue-[0-9]{6,}$"},
+        "residue_number": {"type": "integer", "minimum": 1},
+        "insertion_code": {"const": ""}
+      },
+      "additionalProperties": false
+    },
+    "atom": {
+      "type": "object",
+      "required": ["atom_id", "residue_id", "atom_name", "element", "coordinate_identity"],
+      "properties": {
+        "atom_id": {"type": "string", "pattern": "^atom-[0-9]{8,}$"},
+        "residue_id": {"type": "string", "pattern": "^residue-[0-9]{6,}$"},
+        "atom_name": {"type": "string", "pattern": "^atom-[0-9]{8,}$"},
+        "element": {"type": "string", "pattern": "^[A-Z][a-z]?$"},
+        "coordinate_identity": {"type": "string", "pattern": "^coordinate-[0-9]{8,}$"}
+      },
+      "additionalProperties": false
+    },
+    "selector_index_category": {
+      "type": "object",
+      "required": ["mode", "count", "pages"],
+      "properties": {
+        "mode": {"enum": ["inline", "paged"]},
+        "count": {"type": "integer", "minimum": 0},
+        "pages": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/selector_page"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "selector_page": {
+      "type": "object",
+      "required": ["page_number", "entry_count", "first_id", "last_id", "content_digest"],
+      "properties": {
+        "page_number": {"type": "integer", "minimum": 1},
+        "entry_count": {"type": "integer", "minimum": 1},
+        "first_id": {"type": "string", "minLength": 1},
+        "last_id": {"type": "string", "minLength": 1},
+        "content_digest": {"$ref": "#/definitions/digest"}
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_package.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "package_id", "batch_id", "expert_id", "expert", "admission", "created_at", "offline", "task_count", "tasks_path", "assignments", "asset_count", "asset_bytes", "assets", "viewer_path", "redaction", "submission", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.expert_package.v1"},
+    "contract_version": {"const": "sciencevision.offline_exchange.v1"},
+    "package_id": {"type": "string", "pattern": "^pkg_[0-9a-f]{24}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "expert": {"type": "object"},
+    "admission": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_version", "status", "purpose", "receipt_digest", "tasks", "task_revision_set", "policy", "admission_lock_sha256"],
+      "properties": {
+        "schema_version": {"const": "sciencevision.qa_export_admission_receipt.v1"},
+        "status": {"const": "passed"},
+        "purpose": {"const": "expert_review_distribution"},
+        "receipt_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "tasks": {"type": "object"},
+        "task_revision_set": {"type": "object"},
+        "policy": {"type": "object"},
+        "admission_lock_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "created_at": {"type": "string"},
+    "offline": {"const": true},
+    "task_count": {"type": "integer", "minimum": 1},
+    "tasks_path": {"const": "tasks/tasks.jsonl"},
+    "assignments": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+    "asset_count": {"type": "integer", "minimum": 0},
+    "asset_bytes": {"type": "integer", "minimum": 0},
+    "assets": {"type": "array", "items": {"type": "object"}},
+    "viewer_path": {"const": "/viewer/"},
+    "redaction": {"type": "object"},
+    "submission": {"type": "object"},
+    "manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

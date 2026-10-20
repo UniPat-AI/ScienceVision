@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.legacy_expert_package_adapter.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "bundle_id", "batch_id", "expert_id", "expert", "read_only", "admission_status", "task_file", "assignments", "asset_count", "asset_bytes", "asset_closure_sha256", "assets", "runtime_requirement", "legacy_package", "bundle_manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.legacy_expert_package_adapter.v1"},
+    "contract_version": {"const": "sciencevision.offline_exchange.v1"},
+    "bundle_id": {"type": "string", "pattern": "^pkg_[0-9a-f]{24}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "expert": {"type": "object"},
+    "read_only": {"const": true},
+    "admission_status": {"const": "legacy_pre_admission"},
+    "task_file": {"type": "object"},
+    "assignments": {"type": "array", "minItems": 1},
+    "asset_count": {"type": "integer", "minimum": 0},
+    "asset_bytes": {"type": "integer", "minimum": 0},
+    "asset_closure_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assets": {"type": "array"},
+    "runtime_requirement": {"type": "object"},
+    "legacy_package": {"type": "object"},
+    "bundle_manifest_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

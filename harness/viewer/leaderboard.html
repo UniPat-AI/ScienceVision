@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Leaderboard — BabyVision-v2</title>
+<link rel="stylesheet" href="shared/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <a href="index.html" class="home-link" style="color:inherit;text-decoration:none">
+      <strong id="brand">BabyVision-v2</strong>
+    </a>
+    <span style="color:var(--fg-dim);margin-left:8px;font-size:12px">/ Leaderboard</span>
+  </div>
+  <div class="topbar-right">
+    <nav class="bv2-globalnav" aria-label="Global">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Doc</a>
+      <a href="assets.html">Domain 3D Assets</a>
+      <a href="qagen.html">QA Tasks</a>
+      <a href="leaderboard.html" aria-current="page" class="is-active">Leaderboard</a>
+      <a href="/sv-annotate/">Expert</a>
+    </nav>
+    <div class="meta" id="counts">loading…</div>
+  </div>
+</header>
+<main style="padding:24px;max-width:1400px;margin:0 auto">
+  <h1 style="font-size:24px;margin:0 0 8px">Leaderboard</h1>
+  <p style="color:var(--fg-dim);margin:0 0 24px;max-width:760px">
+    Submissions are evaluated per task family and per baseline profile (coding ·
+    vision · fusion). All entries link back to their reproduce-recipe and tool-trace
+    so any third party can re-run them.
+  </p>
+  <div class="bv2-filters" style="display:flex;gap:12px;margin-bottom:16px">
+    <select id="filter-profile" disabled aria-label="Profile filter">
+      <option>All profiles</option>
+      <option>coding</option>
+      <option>vision</option>
+      <option>fusion</option>
+    </select>
+    <select id="filter-family" disabled aria-label="Family filter">
+      <option>All families</option>
+      <option>V2</option><option>V3</option><option>V4</option><option>V6</option>
+      <option>Genesis_VP</option><option>Medical_Spatial</option>
+    </select>
+  </div>
+  <table id="lb-table" class="bv2-lb-table" aria-label="Leaderboard">
+    <thead>
+      <tr>
+        <th>Submission</th><th>Profile</th><th>Family</th>
+        <th>Score</th><th>Date</th><th>Trace</th>
+      </tr>
+    </thead>
+    <tbody id="lb-rows"></tbody>
+  </table>
+  <div id="lb-empty" class="bv2-lb-empty" hidden>
+    <p><strong>No submissions yet.</strong></p>
+    <p style="color:var(--fg-dim)">
+      The 6 task families above are open for baselines. Submit a run by following
+      the <a href="docs.html?doc=benchmark/submission-guide">submission guide</a>
+      — your entry lands here within 24 hours of evaluation.
+    </p>
+  </div>
+</main>
+<script src="shared/manifest.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function $(id) { return document.getElementById(id); }
+
+  function renderRows(rows) {
+    const tbody = $('lb-rows');
+    tbody.innerHTML = '';
+    if (!rows || rows.length === 0) {
+      $('lb-table').style.display = 'none';
+      $('lb-empty').hidden = false;
+      return;
+    }
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + (r.submission || '—') + '</td>' +
+        '<td>' + (r.profile    || '—') + '</td>' +
+        '<td>' + (r.family     || '—') + '</td>' +
+        '<td>' + (r.score      != null ? r.score : '—') + '</td>' +
+        '<td>' + (r.date       || '—') + '</td>' +
+        '<td>' + (r.trace ? ('<a href="' + r.trace + '">view</a>') : '—') + '</td>';
+      tbody.appendChild(tr);
+    }
+  }
+
+  window.ManifestReady.then((m) => {
+    $('counts').textContent = m.brand + ' v' + m.version;
+    fetch(m.urls.data.leaderboard, { cache: 'no-cache' })
+      .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(renderRows)
+      .catch(() => renderRows([]));   // file may not exist yet → empty state
+  });
+})();
+</script>
+</body>
+</html>

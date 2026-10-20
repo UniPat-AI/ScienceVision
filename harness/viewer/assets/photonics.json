@@ -1,0 +1,167 @@
+[
+  {
+    "name": "GPU Acceleration for Grating Coupler Optimizations in the Cloud with Ansys Access on Microsoft Azure",
+    "path": "/crawl_data/photonics/ansys_optics/31017876729107__gpu-acceleration-for-grating-coupler-optimizations-in-the-cloud-with-ansys-access-on-microsoft-azure/SOURCE.json",
+    "size": 1143,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "31017876729107",
+    "physics_topic": "coupler",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/31017876729107-GPU-Acceleration-for-Grating-Coupler-Optimizations-in-the-Cloud-with-Ansys-Access-on-Microsoft-Azure",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 1,
+    "n_figures": 0,
+    "total_bytes": 26325307
+  },
+  {
+    "name": "Fiber-to-Chip Edge Coupler with a Microlens",
+    "path": "/crawl_data/photonics/ansys_optics/33444674330131__fiber-to-chip-edge-coupler-with-a-microlens/SOURCE.json",
+    "size": 1862,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "33444674330131",
+    "physics_topic": "coupler",
+    "tools": [
+      "Lumerical FDTD",
+      "Lumerical MODE",
+      "Zemax OpticStudio"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/33444674330131-Fiber-to-Chip-Edge-Coupler-with-a-Microlens",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 8,
+    "n_figures": 0,
+    "total_bytes": 11588783
+  },
+  {
+    "name": "Equi-frequency contours of photonic crystal",
+    "path": "/crawl_data/photonics/ansys_optics/360041567854__equi-frequency-contours-of-photonic-crystal/SOURCE.json",
+    "size": 1476,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360041567854",
+    "physics_topic": "photonic_crystal",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360041567854-Equi-frequency-contours-of-photonic-crystal",
+    "source_subdomain": "ansys_optics",
+    "thumb": "/crawl_data/photonics/ansys_optics/360041567854__equi-frequency-contours-of-photonic-crystal/figures/01_fig_efc_brillourin.png",
+    "n_attachments": 2,
+    "n_figures": 7,
+    "total_bytes": 1069990
+  },
+  {
+    "name": "Metamaterial microbolometer",
+    "path": "/crawl_data/photonics/ansys_optics/360041621694__metamaterial-microbolometer/SOURCE.json",
+    "size": 2041,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360041621694",
+    "physics_topic": "metamaterial",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360041621694-Metamaterial-microbolometer",
+    "source_subdomain": "ansys_optics",
+    "thumb": "/crawl_data/photonics/ansys_optics/360041621694__metamaterial-microbolometer/figures/01_attachment_360057601133.jpg",
+    "n_attachments": 3,
+    "n_figures": 9,
+    "total_bytes": 1078578
+  },
+  {
+    "name": "PC fiber coupling with ASAP",
+    "path": "/crawl_data/photonics/ansys_optics/360042303174__pc-fiber-coupling-with-asap/SOURCE.json",
+    "size": 1082,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360042303174",
+    "physics_topic": "fiber-optic",
+    "tools": [
+      "Lumerical MODE",
+      "Breault ASAP"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360042303174-PC-fiber-coupling-with-ASAP",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 4,
+    "n_figures": 0,
+    "total_bytes": 2763338
+  },
+  {
+    "name": "Spot size converter",
+    "path": "/crawl_data/photonics/ansys_optics/360042305134__spot-size-converter/SOURCE.json",
+    "size": 862,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360042305134",
+    "physics_topic": "coupler",
+    "tools": [
+      "Lumerical MODE"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360042305134-Spot-size-converter",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 2,
+    "n_figures": 0,
+    "total_bytes": 460778
+  },
+  {
+    "name": "Grating coupler",
+    "path": "/crawl_data/photonics/ansys_optics/360042305334__grating-coupler/SOURCE.json",
+    "size": 1571,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360042305334",
+    "physics_topic": "coupler",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360042305334-Grating-coupler",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 7,
+    "n_figures": 0,
+    "total_bytes": 27880922
+  },
+  {
+    "name": "Silicon solar cell with moth-eye anti-reflection coatings",
+    "path": "/crawl_data/photonics/ansys_optics/360042646833__silicon-solar-cell-with-moth-eye-anti-reflection-coatings/SOURCE.json",
+    "size": 940,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360042646833",
+    "physics_topic": "solar_cell",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360042646833-Silicon-solar-cell-with-moth-eye-anti-reflection-coatings",
+    "source_subdomain": "ansys_optics",
+    "thumb": null,
+    "n_attachments": 2,
+    "n_figures": 0,
+    "total_bytes": 264627
+  },
+  {
+    "name": "Bandstructure of photonic crystal with a woodpile lattice",
+    "path": "/crawl_data/photonics/ansys_optics/360042818153__bandstructure-of-photonic-crystal-with-a-woodpile-lattice/SOURCE.json",
+    "size": 1088,
+    "viewer": "ansys_record",
+    "format": "ansys_optics_kb",
+    "record_id": "360042818153",
+    "physics_topic": "photonic_crystal",
+    "tools": [
+      "Lumerical FDTD"
+    ],
+    "source_url": "https://optics.ansys.com/hc/en-us/articles/360042818153-Bandstructure-of-photonic-crystal-with-a-woodpile-lattice",
+    "source_subdomain": "ansys_optics",
+    "thumb": "/crawl_data/photonics/ansys_optics/360042818153__bandstructure-of-photonic-crystal-with-a-woodpile-lattice/figures/01_fig_woodpile.PNG",
+    "n_attachments": 2,
+    "n_figures": 2,
+    "total_bytes": 342500
+  }
+]

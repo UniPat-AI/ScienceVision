@@ -1,0 +1,1979 @@
+{
+  "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+  "task_id": "sv-biol-bio_docking_plausibility-0105",
+  "batch_id": "batch_2b2ee6007752263e850a0399",
+  "question": {
+    "zh": "显示的结构包含占据的重元素 C、Fe、N、O 和 S。从模型 0 出发，具有最多占据重原子、并列时按标识符顺序打破的非水非聚合物残基，是链 A 中第 284 号残基的非聚合物组分。一个原子由其链、残基名称、残基编号、原子名称和元素标识，而非序列号。对于此问题，组分原子是链 A 中残基 HEM 284 的原子 O2D，聚合物原子是链 A 中残基 HIS 45 的原子 NE2。\n\n测量显式结合的原子对之间的间隔。在查看器中测量声明的端点之间的距离。测量声明的接触距离。\n\n**答案格式**\n\n```json\n{\n  \"contact_distance_A\": <number>\n}\n```",
+    "en": "The displayed structure contains the occupied heavy elements C, Fe, N, O and S. Working from model 0, the non-water non-polymer residue with the most occupied heavy atoms, ties broken in identifier order, is the non-polymer component in chain A at residue 284. An atom is identified by its chain, residue name, residue number, atom name and element, not by a serial number. For this question the component atom is atom O2D of residue HEM 284 in chain A and the polymer atom is atom NE2 of residue HIS 45 in chain A.\n\nMeasure the separation of the explicitly bound atom pair. Measure the distance between the declared endpoints in the viewer. Measure the declared contact distance.\n\n**Answer format**\n\n```json\n{\n  \"contact_distance_A\": <number>\n}\n```",
+    "source": "effective_question"
+  },
+  "answer": {
+    "answer": "{\n  \"contact_distance_A\": 2.898\n}",
+    "reasoning": "使用测量工具定位目标残基位置，然后放大视图，并旋转视角、平移视图，确定目标残基位置；切换球棍模型，显示目标原子，使用测量工具测量他们之间的距离，得到答案",
+    "validation": {
+      "feedback": "无",
+      "status": "uncertain"
+    }
+  },
+  "trajectory": {
+    "draft_id": "draft_0cc3485a29469b415f6bc145",
+    "sealed_manifest_sha256": "6f4671663ebd55aba7c7facd8f0e0ae6f72c79dfd5b5eba4ca1bec1ddf14d39a",
+    "submission_id": "sub_b01e06e7ed6deff274a4c2eb",
+    "submitted_at": "2026-09-02T16:05:27Z",
+    "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+    "initial_state": {
+      "camera": {
+        "azimuth_deg": 0,
+        "elevation_deg": 0,
+        "pan_right": 0,
+        "pan_up": 0,
+        "zoom": 1
+      },
+      "chains": [
+        {
+          "chain_id": "A",
+          "first_seq_id": 1,
+          "last_seq_id": 283,
+          "polymer_heavy_atoms": 2142,
+          "residue_count": 283,
+          "visible": true
+        },
+        {
+          "chain_id": "B",
+          "first_seq_id": 1,
+          "last_seq_id": 146,
+          "polymer_heavy_atoms": 1125,
+          "residue_count": 146,
+          "visible": true
+        },
+        {
+          "chain_id": "D",
+          "first_seq_id": 1,
+          "last_seq_id": 146,
+          "polymer_heavy_atoms": 1125,
+          "residue_count": 146,
+          "visible": true
+        }
+      ],
+      "components": [
+        {
+          "label": "Polymer",
+          "representation": "cartoon",
+          "type": "polymer",
+          "visible": true
+        },
+        {
+          "label": "Ligand",
+          "representation": "ball-and-stick",
+          "type": "ligand",
+          "visible": true
+        },
+        {
+          "label": "Water",
+          "representation": "ball-and-stick",
+          "type": "water",
+          "visible": true
+        }
+      ],
+      "focused_residue": null,
+      "measurements": {
+        "angles": 0,
+        "dihedrals": 0,
+        "distances": 0
+      },
+      "structures": [
+        {
+          "element_count": 5017,
+          "index": 0,
+          "label": "Model",
+          "structure_id": "structure-0",
+          "visible": true
+        }
+      ],
+      "symmetry_preset": "model",
+      "view": "iso",
+      "viewer": "molstar"
+    },
+    "operation_count": 5,
+    "keyframe_count": 5,
+    "operations": [
+      {
+        "draft_id": "draft_0cc3485a29469b415f6bc145",
+        "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+        "operation_id": "op_0b0c8cb22adc454187e2881050df3a5a",
+        "operation_seq": 1,
+        "parent_operation_id": null,
+        "function": {
+          "name": "sv3d_orbit",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -154,
+          "elevation_deg": 0
+        },
+        "replay_input": {
+          "azimuth_deg": -154,
+          "elevation_deg": 0
+        },
+        "state_before": {
+          "camera": {
+            "azimuth_deg": 0,
+            "elevation_deg": 0,
+            "pan_right": 0,
+            "pan_up": 0,
+            "zoom": 1
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "state_after": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": 0,
+            "pan_up": 0,
+            "zoom": 1
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "result": {
+          "replay_input": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0
+          },
+          "state": {
+            "camera": {
+              "azimuth_deg": -154,
+              "elevation_deg": 0,
+              "pan_right": 0,
+              "pan_up": 0,
+              "zoom": 1
+            },
+            "chains": [
+              {
+                "chain_id": "A",
+                "first_seq_id": 1,
+                "last_seq_id": 283,
+                "polymer_heavy_atoms": 2142,
+                "residue_count": 283,
+                "visible": true
+              },
+              {
+                "chain_id": "B",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              },
+              {
+                "chain_id": "D",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              }
+            ],
+            "components": [
+              {
+                "label": "Polymer",
+                "representation": "cartoon",
+                "type": "polymer",
+                "visible": true
+              },
+              {
+                "label": "Ligand",
+                "representation": "ball-and-stick",
+                "type": "ligand",
+                "visible": true
+              },
+              {
+                "label": "Water",
+                "representation": "ball-and-stick",
+                "type": "water",
+                "visible": true
+              }
+            ],
+            "focused_residue": null,
+            "measurements": {
+              "angles": 0,
+              "dihedrals": 0,
+              "distances": 0
+            },
+            "structures": [
+              {
+                "element_count": 5017,
+                "index": 0,
+                "label": "Model",
+                "structure_id": "structure-0",
+                "visible": true
+              }
+            ],
+            "symmetry_preset": "model",
+            "view": "iso",
+            "viewer": "molstar"
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-02T15:59:51.760Z",
+          "completed_at": "2026-09-02T15:59:51.785Z"
+        },
+        "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+        "keyframe": {
+          "keyframe_id": "kf-0056c049-8717-4b02-b14d-15f5176d50cd",
+          "expert_note": "旋转方位角，看到chain A的HEM 284旋转到屏幕正前方，辅助定位到目标残基",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_45d8b1892fac660c540b6ac8/attempt-1/kf-0056c049-8717-4b02-b14d-15f5176d50cd-723327b1d6f05533a84c05f7b605d20d7e1844dec5df288044d48e42317385b1.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "723327b1d6f05533a84c05f7b605d20d7e1844dec5df288044d48e42317385b1",
+            "byte_size": 583713,
+            "width": 974,
+            "height": 1598,
+            "captured_at": "2026-09-02T15:59:51.834Z"
+          },
+          "acknowledged_at": "2026-09-02T15:59:52Z",
+          "screenshot_file": "screenshots/操作001.png"
+        }
+      },
+      {
+        "draft_id": "draft_0cc3485a29469b415f6bc145",
+        "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+        "operation_id": "op_09af0fd5871c4be2a6c6ba793b29463c",
+        "operation_seq": 2,
+        "parent_operation_id": "op_0b0c8cb22adc454187e2881050df3a5a",
+        "function": {
+          "name": "viewer_zoom",
+          "version": "1"
+        },
+        "input": {
+          "zoom": 2.828427
+        },
+        "replay_input": {
+          "zoom": 2.828427
+        },
+        "state_before": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": 0,
+            "pan_up": 0,
+            "zoom": 1
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "state_after": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": 0,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "result": {
+          "replay_input": {
+            "zoom": 2.828427
+          },
+          "state": {
+            "camera": {
+              "azimuth_deg": -154,
+              "elevation_deg": 0,
+              "pan_right": 0,
+              "pan_up": 0,
+              "zoom": 2.828427
+            },
+            "chains": [
+              {
+                "chain_id": "A",
+                "first_seq_id": 1,
+                "last_seq_id": 283,
+                "polymer_heavy_atoms": 2142,
+                "residue_count": 283,
+                "visible": true
+              },
+              {
+                "chain_id": "B",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              },
+              {
+                "chain_id": "D",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              }
+            ],
+            "components": [
+              {
+                "label": "Polymer",
+                "representation": "cartoon",
+                "type": "polymer",
+                "visible": true
+              },
+              {
+                "label": "Ligand",
+                "representation": "ball-and-stick",
+                "type": "ligand",
+                "visible": true
+              },
+              {
+                "label": "Water",
+                "representation": "ball-and-stick",
+                "type": "water",
+                "visible": true
+              }
+            ],
+            "focused_residue": null,
+            "measurements": {
+              "angles": 0,
+              "dihedrals": 0,
+              "distances": 0
+            },
+            "structures": [
+              {
+                "element_count": 5017,
+                "index": 0,
+                "label": "Model",
+                "structure_id": "structure-0",
+                "visible": true
+              }
+            ],
+            "symmetry_preset": "model",
+            "view": "iso",
+            "viewer": "molstar"
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-02T16:00:00.871Z",
+          "completed_at": "2026-09-02T16:00:00.893Z"
+        },
+        "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+        "keyframe": {
+          "keyframe_id": "kf-627f78f9-4751-4d60-bd17-9b44d9e2affe",
+          "expert_note": "放大视图，看到聚合物和配体结构放大，辅助定位目标残基",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_45d8b1892fac660c540b6ac8/attempt-1/kf-627f78f9-4751-4d60-bd17-9b44d9e2affe-6c55af582df379d633ccfd23facffbfec2d1d5057a7cfdc5943de13dd9f61ff9.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "6c55af582df379d633ccfd23facffbfec2d1d5057a7cfdc5943de13dd9f61ff9",
+            "byte_size": 1431014,
+            "width": 974,
+            "height": 1598,
+            "captured_at": "2026-09-02T16:00:00.949Z"
+          },
+          "acknowledged_at": "2026-09-02T16:00:01Z",
+          "screenshot_file": "screenshots/操作002.png"
+        }
+      },
+      {
+        "draft_id": "draft_0cc3485a29469b415f6bc145",
+        "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+        "operation_id": "op_9b539739f0244ff1981e002eafa02ea2",
+        "operation_seq": 3,
+        "parent_operation_id": "op_09af0fd5871c4be2a6c6ba793b29463c",
+        "function": {
+          "name": "viewer_pan",
+          "version": "1"
+        },
+        "input": {
+          "pan_right": -0.33,
+          "pan_up": 0
+        },
+        "replay_input": {
+          "pan_right": -0.33,
+          "pan_up": 0
+        },
+        "state_before": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": 0,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "state_after": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": -0.33,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "result": {
+          "replay_input": {
+            "pan_right": -0.33,
+            "pan_up": 0
+          },
+          "state": {
+            "camera": {
+              "azimuth_deg": -154,
+              "elevation_deg": 0,
+              "pan_right": -0.33,
+              "pan_up": 0,
+              "zoom": 2.828427
+            },
+            "chains": [
+              {
+                "chain_id": "A",
+                "first_seq_id": 1,
+                "last_seq_id": 283,
+                "polymer_heavy_atoms": 2142,
+                "residue_count": 283,
+                "visible": true
+              },
+              {
+                "chain_id": "B",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              },
+              {
+                "chain_id": "D",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              }
+            ],
+            "components": [
+              {
+                "label": "Polymer",
+                "representation": "cartoon",
+                "type": "polymer",
+                "visible": true
+              },
+              {
+                "label": "Ligand",
+                "representation": "ball-and-stick",
+                "type": "ligand",
+                "visible": true
+              },
+              {
+                "label": "Water",
+                "representation": "ball-and-stick",
+                "type": "water",
+                "visible": true
+              }
+            ],
+            "focused_residue": null,
+            "measurements": {
+              "angles": 0,
+              "dihedrals": 0,
+              "distances": 0
+            },
+            "structures": [
+              {
+                "element_count": 5017,
+                "index": 0,
+                "label": "Model",
+                "structure_id": "structure-0",
+                "visible": true
+              }
+            ],
+            "symmetry_preset": "model",
+            "view": "iso",
+            "viewer": "molstar"
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-02T16:00:08.890Z",
+          "completed_at": "2026-09-02T16:00:08.918Z"
+        },
+        "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+        "keyframe": {
+          "keyframe_id": "kf-83db0155-9964-426e-8310-47cf95da8382",
+          "expert_note": "平移视图，看到看到chain A的HEM 284平移至屏幕中央，辅助定位到目标残基",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_45d8b1892fac660c540b6ac8/attempt-1/kf-83db0155-9964-426e-8310-47cf95da8382-d2746610f9e4d86bf1cf42b08b2446384e1461e1e1e60fa12c3cc73e37a738d7.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "d2746610f9e4d86bf1cf42b08b2446384e1461e1e1e60fa12c3cc73e37a738d7",
+            "byte_size": 1186492,
+            "width": 974,
+            "height": 1598,
+            "captured_at": "2026-09-02T16:00:08.975Z"
+          },
+          "acknowledged_at": "2026-09-02T16:00:09Z",
+          "screenshot_file": "screenshots/操作003.png"
+        }
+      },
+      {
+        "draft_id": "draft_0cc3485a29469b415f6bc145",
+        "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+        "operation_id": "op_6a8996a8959541e781b4d769b9eedfbb",
+        "operation_seq": 4,
+        "parent_operation_id": "op_9b539739f0244ff1981e002eafa02ea2",
+        "function": {
+          "name": "sv3d_set_representation",
+          "version": "1"
+        },
+        "input": {
+          "style": "ball-and-stick",
+          "target": "polymer"
+        },
+        "replay_input": {
+          "style": "ball-and-stick",
+          "target": "polymer"
+        },
+        "state_before": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": -0.33,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "cartoon",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "state_after": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": -0.33,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "ball-and-stick",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 0
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "result": {
+          "replay_input": {
+            "style": "ball-and-stick",
+            "target": "polymer"
+          },
+          "state": {
+            "camera": {
+              "azimuth_deg": -154,
+              "elevation_deg": 0,
+              "pan_right": -0.33,
+              "pan_up": 0,
+              "zoom": 2.828427
+            },
+            "chains": [
+              {
+                "chain_id": "A",
+                "first_seq_id": 1,
+                "last_seq_id": 283,
+                "polymer_heavy_atoms": 2142,
+                "residue_count": 283,
+                "visible": true
+              },
+              {
+                "chain_id": "B",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              },
+              {
+                "chain_id": "D",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              }
+            ],
+            "components": [
+              {
+                "label": "Polymer",
+                "representation": "ball-and-stick",
+                "type": "polymer",
+                "visible": true
+              },
+              {
+                "label": "Ligand",
+                "representation": "ball-and-stick",
+                "type": "ligand",
+                "visible": true
+              },
+              {
+                "label": "Water",
+                "representation": "ball-and-stick",
+                "type": "water",
+                "visible": true
+              }
+            ],
+            "focused_residue": null,
+            "measurements": {
+              "angles": 0,
+              "dihedrals": 0,
+              "distances": 0
+            },
+            "structures": [
+              {
+                "element_count": 5017,
+                "index": 0,
+                "label": "Model",
+                "structure_id": "structure-0",
+                "visible": true
+              }
+            ],
+            "symmetry_preset": "model",
+            "view": "iso",
+            "viewer": "molstar"
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-02T16:00:44.225Z",
+          "completed_at": "2026-09-02T16:00:44.283Z"
+        },
+        "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+        "keyframe": {
+          "keyframe_id": "kf-3fb2bf43-cdc9-4a90-9e51-12e73d5a959b",
+          "expert_note": "将聚合物切换为球棍模型，看到聚合物的原子级别结构，辅助定位目标残基上的目标原子",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_45d8b1892fac660c540b6ac8/attempt-1/kf-3fb2bf43-cdc9-4a90-9e51-12e73d5a959b-81259c7ef921f963f24aef896b8233d0a5c9d4a48e6ee4a668f4fd3d8b68af20.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "81259c7ef921f963f24aef896b8233d0a5c9d4a48e6ee4a668f4fd3d8b68af20",
+            "byte_size": 1918622,
+            "width": 974,
+            "height": 1598,
+            "captured_at": "2026-09-02T16:00:44.351Z"
+          },
+          "acknowledged_at": "2026-09-02T16:00:44Z",
+          "screenshot_file": "screenshots/操作004.png"
+        }
+      },
+      {
+        "draft_id": "draft_0cc3485a29469b415f6bc145",
+        "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+        "operation_id": "op_d1e65c22c2cd41ea9e74beaec3c0a635",
+        "operation_seq": 6,
+        "parent_operation_id": "op_6a8996a8959541e781b4d769b9eedfbb",
+        "function": {
+          "name": "sv3d_measure",
+          "version": "1"
+        },
+        "input": {
+          "atoms": [
+            {
+              "atom_id": "O2D",
+              "chain_id": "A",
+              "comp_id": "HEM",
+              "coordinate_A": [
+                17.843000411987305,
+                15.371999740600586,
+                15.746000289916992
+              ],
+              "icode": "",
+              "identity": "A:284 HEM / O2D",
+              "seq_id": 284,
+              "unit_id": 7
+            },
+            {
+              "atom_id": "NE2",
+              "chain_id": "A",
+              "comp_id": "HIS",
+              "coordinate_A": [
+                16.934999465942383,
+                12.621999740600586,
+                15.640000343322754
+              ],
+              "icode": "",
+              "identity": "A:45 HIS / NE2",
+              "seq_id": 45,
+              "unit_id": 0
+            }
+          ],
+          "commit": true,
+          "kind": "distance",
+          "value": "2.898 Å"
+        },
+        "replay_input": {
+          "atoms": [
+            {
+              "atom_id": "O2D",
+              "chain_id": "A",
+              "comp_id": "HEM",
+              "coordinate_A": [
+                17.843000411987305,
+                15.371999740600586,
+                15.746000289916992
+              ],
+              "icode": "",
+              "identity": "A:284 HEM / O2D",
+              "seq_id": 284,
+              "unit_id": 7
+            },
+            {
+              "atom_id": "NE2",
+              "chain_id": "A",
+              "comp_id": "HIS",
+              "coordinate_A": [
+                16.934999465942383,
+                12.621999740600586,
+                15.640000343322754
+              ],
+              "icode": "",
+              "identity": "A:45 HIS / NE2",
+              "seq_id": 45,
+              "unit_id": 0
+            }
+          ],
+          "commit": true,
+          "kind": "distance",
+          "value": "2.898 Å"
+        },
+        "state_before": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": -0.33,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "ball-and-stick",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 1
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "state_after": {
+          "camera": {
+            "azimuth_deg": -154,
+            "elevation_deg": 0,
+            "pan_right": -0.33,
+            "pan_up": 0,
+            "zoom": 2.828427
+          },
+          "chains": [
+            {
+              "chain_id": "A",
+              "first_seq_id": 1,
+              "last_seq_id": 283,
+              "polymer_heavy_atoms": 2142,
+              "residue_count": 283,
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "first_seq_id": 1,
+              "last_seq_id": 146,
+              "polymer_heavy_atoms": 1125,
+              "residue_count": 146,
+              "visible": true
+            }
+          ],
+          "components": [
+            {
+              "label": "Polymer",
+              "representation": "ball-and-stick",
+              "type": "polymer",
+              "visible": true
+            },
+            {
+              "label": "Ligand",
+              "representation": "ball-and-stick",
+              "type": "ligand",
+              "visible": true
+            },
+            {
+              "label": "Water",
+              "representation": "ball-and-stick",
+              "type": "water",
+              "visible": true
+            }
+          ],
+          "focused_residue": null,
+          "measurements": {
+            "angles": 0,
+            "dihedrals": 0,
+            "distances": 1
+          },
+          "structures": [
+            {
+              "element_count": 5017,
+              "index": 0,
+              "label": "Model",
+              "structure_id": "structure-0",
+              "visible": true
+            }
+          ],
+          "symmetry_preset": "model",
+          "view": "iso",
+          "viewer": "molstar"
+        },
+        "result": {
+          "replay_input": {
+            "atoms": [
+              {
+                "atom_id": "O2D",
+                "chain_id": "A",
+                "comp_id": "HEM",
+                "coordinate_A": [
+                  17.843000411987305,
+                  15.371999740600586,
+                  15.746000289916992
+                ],
+                "icode": "",
+                "identity": "A:284 HEM / O2D",
+                "seq_id": 284,
+                "unit_id": 7
+              },
+              {
+                "atom_id": "NE2",
+                "chain_id": "A",
+                "comp_id": "HIS",
+                "coordinate_A": [
+                  16.934999465942383,
+                  12.621999740600586,
+                  15.640000343322754
+                ],
+                "icode": "",
+                "identity": "A:45 HIS / NE2",
+                "seq_id": 45,
+                "unit_id": 0
+              }
+            ],
+            "commit": true,
+            "kind": "distance",
+            "value": "2.898 Å"
+          },
+          "result": {
+            "expert_summary": "距离：2.898 Å（A:284 HEM / O2D — A:45 HIS / NE2）"
+          },
+          "state": {
+            "camera": {
+              "azimuth_deg": -154,
+              "elevation_deg": 0,
+              "pan_right": -0.33,
+              "pan_up": 0,
+              "zoom": 2.828427
+            },
+            "chains": [
+              {
+                "chain_id": "A",
+                "first_seq_id": 1,
+                "last_seq_id": 283,
+                "polymer_heavy_atoms": 2142,
+                "residue_count": 283,
+                "visible": true
+              },
+              {
+                "chain_id": "B",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              },
+              {
+                "chain_id": "D",
+                "first_seq_id": 1,
+                "last_seq_id": 146,
+                "polymer_heavy_atoms": 1125,
+                "residue_count": 146,
+                "visible": true
+              }
+            ],
+            "components": [
+              {
+                "label": "Polymer",
+                "representation": "ball-and-stick",
+                "type": "polymer",
+                "visible": true
+              },
+              {
+                "label": "Ligand",
+                "representation": "ball-and-stick",
+                "type": "ligand",
+                "visible": true
+              },
+              {
+                "label": "Water",
+                "representation": "ball-and-stick",
+                "type": "water",
+                "visible": true
+              }
+            ],
+            "focused_residue": null,
+            "measurements": {
+              "angles": 0,
+              "dihedrals": 0,
+              "distances": 1
+            },
+            "structures": [
+              {
+                "element_count": 5017,
+                "index": 0,
+                "label": "Model",
+                "structure_id": "structure-0",
+                "visible": true
+              }
+            ],
+            "symmetry_preset": "model",
+            "view": "iso",
+            "viewer": "molstar"
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-02T16:01:12.101Z",
+          "completed_at": "2026-09-02T16:01:12.135Z"
+        },
+        "registry_sha256": "33431314955681e851991c1aae49b4597267cb7a171ba8a8394f0d2d235d72e0",
+        "keyframe": {
+          "keyframe_id": "kf-230a447c-3378-4b18-8628-e782e21b6885",
+          "expert_note": "使用测量工具，测量链 A 中残基 HEM 284 的原子 O2D 与链 A 中残基 HIS 45 的原子 NE2 之间的距离，得到答案",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_45d8b1892fac660c540b6ac8/attempt-1/kf-230a447c-3378-4b18-8628-e782e21b6885-1e4d73b5b8f88a6afc1e6e45c9d933036b4f947da90155023236691fc42a0638.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "1e4d73b5b8f88a6afc1e6e45c9d933036b4f947da90155023236691fc42a0638",
+            "byte_size": 1917318,
+            "width": 974,
+            "height": 1598,
+            "captured_at": "2026-09-02T16:01:12.207Z"
+          },
+          "acknowledged_at": "2026-09-02T16:01:12Z",
+          "screenshot_file": "screenshots/操作006.png"
+        }
+      }
+    ],
+    "final_result": {
+      "draft_id": "draft_0cc3485a29469b415f6bc145",
+      "assignment_id": "asgn_45d8b1892fac660c540b6ac8",
+      "answer": "{\n  \"contact_distance_A\": 2.898\n}",
+      "reasoning": "使用测量工具定位目标残基位置，然后放大视图，并旋转视角、平移视图，确定目标残基位置；切换球棍模型，显示目标原子，使用测量工具测量他们之间的距离，得到答案",
+      "task_validation": {
+        "feedback": "无",
+        "status": "uncertain"
+      }
+    },
+    "screenshot_gaps": []
+  },
+  "meta": {
+    "expert_id": "biology1",
+    "approved_at": "2026-09-02T16:05:43Z",
+    "ever_returned": false,
+    "domain": "biology",
+    "sub_domain_slug": "bio_docked_component_proximity",
+    "sub_domain_label": "对接组分邻近性",
+    "sub_domain_source": "effective_sub_domain"
+  },
+  "task_context": {
+    "viewer": "molstar",
+    "viewer_label": "Mol*（分子结构查看器）",
+    "engine": "Mol* 4.5.0",
+    "domain_label": "生物学",
+    "answer_shape": {
+      "fields": [
+        "contact_distance_A"
+      ],
+      "kind": "structured"
+    },
+    "assets": [
+      {
+        "name": "sv3dqa_6f16720feeda.cif",
+        "path": "assets/biology/bio_docked_component_proximity/crawl_data/_anon/scale-v3.4/biology/sv3dqa_6f16720feeda.cif",
+        "role": "primary",
+        "type": null,
+        "sha256": "286fcdd00a667c2152c059e7be1cea49814c8777fea1cf3370dede419c992676",
+        "byte_size": 572862,
+        "mask_id": null,
+        "included": true,
+        "asset_file": "assets/sv3dqa_6f16720feeda.cif"
+      }
+    ],
+    "assets_note": "3D 素材文件已随包，见各题 `assets/`；sha256 与封存清单一致。"
+  },
+  "tool_glossary": {
+    "sv3d_orbit": {
+      "label_zh": "环绕旋转相机",
+      "help_zh": "",
+      "description_en": "Look at the structure from an absolute world azimuth and elevation, in degrees.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "elevation_deg": {
+            "type": "number",
+            "minimum": -89,
+            "maximum": 89
+          }
+        },
+        "required": [
+          "azimuth_deg",
+          "elevation_deg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "viewer_zoom": {
+      "label_zh": "缩放",
+      "help_zh": "",
+      "description_en": "Set the Mol* camera distance as an absolute multiple of the distance that just fits the visible structure. Greater than 1 is closer.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "zoom": {
+            "type": "number",
+            "minimum": 0.125,
+            "maximum": 32
+          }
+        },
+        "required": [
+          "zoom"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "viewer_pan": {
+      "label_zh": "移动视角",
+      "help_zh": "",
+      "description_en": "Offset the Mol* look-at point from the visible-sphere centre, along camera-right and camera-up, as fractions of the visible radius. pan_right > 0 moves the look-at toward screen-right, so the structure slides left.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "pan_right": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2
+          },
+          "pan_up": {
+            "type": "number",
+            "minimum": -2,
+            "maximum": 2
+          }
+        },
+        "required": [
+          "pan_right",
+          "pan_up"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_set_representation": {
+      "label_zh": "切换分子表示",
+      "help_zh": "",
+      "description_en": "Set the Mol* representation of an auto-preset component class (polymer, ligand, carbohydrate), every component, or one picked residue overlay. Restyle carbohydrate to ball-and-stick to expose the atoms its SNFG symbol hides.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string",
+            "enum": [
+              "polymer",
+              "ligand",
+              "carbohydrate",
+              "all",
+              "residue"
+            ]
+          },
+          "style": {
+            "type": "string",
+            "enum": [
+              "cartoon",
+              "ball-and-stick",
+              "spacefill",
+              "carbohydrate-symbol"
+            ]
+          },
+          "chain_id": {
+            "type": "string"
+          },
+          "seq_id": {
+            "type": "integer"
+          },
+          "comp_id": {
+            "type": "string"
+          },
+          "icode": {
+            "type": "string"
+          },
+          "commit": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "target",
+          "style"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_measure": {
+      "label_zh": "测量距离",
+      "help_zh": "",
+      "description_en": "Start an atom-bound distance, angle, or dihedral measurement and record the completed result.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "distance",
+              "angle",
+              "dihedral"
+            ]
+          },
+          "commit": {
+            "type": "boolean"
+          },
+          "atoms": {
+            "type": "array"
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "original_task": {
+    "title_en": null,
+    "title_zh": "显示的结构包含占据的重元素 C、Fe、N、O 和 S。从模型 0 出发，具有最多占据重原子、并列时按标识符顺序打破的非水非聚合物残基，是链 A 中第 284 号残基的非聚合物组分。一个原子由其链、残基名称、残基编号、原子名称和元素标识，而非序列号。对于此问题，组分原子是链 A 中残基 HEM 284 的原子 O2D，聚合物原子是链 A 中残基 HIS 45 的原子 NE2。\n\n测量显式结合的原子对之间的间隔。在查看器中测量声明的端点之间的距离。测量声明的接触距离。\n\n**答案格式**\n\n```json\n{\n  \"contact_distance_A\": <number>\n}\n```",
+    "question_en_original": "The displayed structure contains the occupied heavy elements C, Fe, N, O and S. Working from model 0, the non-water non-polymer residue with the most occupied heavy atoms, ties broken in identifier order, is the non-polymer component in chain A at residue 284. An atom is identified by its chain, residue name, residue number, atom name and element, not by a serial number. For this question the component atom is atom O2D of residue HEM 284 in chain A and the polymer atom is atom NE2 of residue HIS 45 in chain A.\n\nMeasure the separation of the explicitly bound atom pair. Measure the distance between the declared endpoints in the viewer. Measure the declared contact distance.\n\n**Answer format**\n\n```json\n{\n  \"contact_distance_A\": <number>\n}\n```",
+    "question_zh_original": "显示的结构包含占据的重元素 C、Fe、N、O 和 S。从模型 0 出发，具有最多占据重原子、并列时按标识符顺序打破的非水非聚合物残基，是链 A 中第 284 号残基的非聚合物组分。一个原子由其链、残基名称、残基编号、原子名称和元素标识，而非序列号。对于此问题，组分原子是链 A 中残基 HEM 284 的原子 O2D，聚合物原子是链 A 中残基 HIS 45 的原子 NE2。\n\n测量显式结合的原子对之间的间隔。在查看器中测量声明的端点之间的距离。测量声明的接触距离。\n\n**答案格式**\n\n```json\n{\n  \"contact_distance_A\": <number>\n}\n```",
+    "question_id": "sv-biol-bio_docking_plausibility-0105",
+    "vision_class": "pixel-grounded evidence trace",
+    "vision_class_code": "V3",
+    "vision_class_group": "hard moat",
+    "source_domain": "biology",
+    "source_sub_domain": "bio_docked_component_proximity",
+    "forbidden_strategies": [],
+    "trace_requirements": {
+      "max_steps": 10,
+      "must_include_final_state": true,
+      "must_save_operation_trace": true,
+      "required_artifacts": [
+        "screenshot"
+      ]
+    },
+    "provenance": {
+      "dataset_version": "scale-v3.4-stage1",
+      "difficulty": "hard",
+      "generator": "ScienceVisionTaskGenerator-directions",
+      "access_track": "viewer_measurement"
+    },
+    "initial_view_note": "平台没有记录第 0 帧截图；题目打开时查看器的确切状态见 trajectory.initial_state（每次回放都从这个状态 viewer_reset 开始）。"
+  },
+  "question_review": {
+    "decision": "keep_original",
+    "submitted_at": "2026-09-02T16:03:28Z",
+    "decided_at": "2026-09-02T16:04:17Z",
+    "decided_by": "biology1",
+    "expert_validation_feedback": "无",
+    "expert_question_edit_zh": "无",
+    "expert_question_edit_en": "无",
+    "sub_domain_edit": "",
+    "question_changed": false
+  },
+  "timeline": [
+    {
+      "at": "2026-09-02T12:06:01Z",
+      "event": "assignment.assigned",
+      "actor": "biology1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-02T16:03:28Z",
+      "event": "assignment.question_review_submitted",
+      "actor": "biology1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-02T16:04:17Z",
+      "event": "assignment.question_review_approved",
+      "actor": "biology1",
+      "actor_role": "admin"
+    },
+    {
+      "at": "2026-09-02T16:05:27Z",
+      "event": "assignment.submitted",
+      "actor": "biology1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-02T16:05:27Z",
+      "event": "assignment.pending_review",
+      "actor": "task-manager",
+      "actor_role": "system"
+    },
+    {
+      "at": "2026-09-02T16:05:43Z",
+      "event": "assignment.approved",
+      "actor": "biology1",
+      "actor_role": "admin"
+    }
+  ],
+  "showcase": {
+    "schema": "sciencevision.showcase_task.v1",
+    "exported_at": "2026-09-04T13:20:52Z",
+    "source": "生产库 manager.db 只读快照 + OSS 归档截图（sha256 已校验）",
+    "screenshots": [
+      {
+        "operation_seq": 1,
+        "file": "screenshots/操作001.png",
+        "width": 974,
+        "height": 1598,
+        "byte_size": 583713,
+        "sha256": "723327b1d6f05533a84c05f7b605d20d7e1844dec5df288044d48e42317385b1"
+      },
+      {
+        "operation_seq": 2,
+        "file": "screenshots/操作002.png",
+        "width": 974,
+        "height": 1598,
+        "byte_size": 1431014,
+        "sha256": "6c55af582df379d633ccfd23facffbfec2d1d5057a7cfdc5943de13dd9f61ff9"
+      },
+      {
+        "operation_seq": 3,
+        "file": "screenshots/操作003.png",
+        "width": 974,
+        "height": 1598,
+        "byte_size": 1186492,
+        "sha256": "d2746610f9e4d86bf1cf42b08b2446384e1461e1e1e60fa12c3cc73e37a738d7"
+      },
+      {
+        "operation_seq": 4,
+        "file": "screenshots/操作004.png",
+        "width": 974,
+        "height": 1598,
+        "byte_size": 1918622,
+        "sha256": "81259c7ef921f963f24aef896b8233d0a5c9d4a48e6ee4a668f4fd3d8b68af20"
+      },
+      {
+        "operation_seq": 6,
+        "file": "screenshots/操作006.png",
+        "width": 974,
+        "height": 1598,
+        "byte_size": 1917318,
+        "sha256": "1e4d73b5b8f88a6afc1e6e45c9d933036b4f947da90155023236691fc42a0638"
+      }
+    ],
+    "duration_seconds": 80.4,
+    "tools_used": {
+      "sv3d_orbit": 1,
+      "viewer_zoom": 1,
+      "viewer_pan": 1,
+      "sv3d_set_representation": 1,
+      "sv3d_measure": 1
+    },
+    "arg_glossary_zh": {
+      "atoms": "测量原子",
+      "azimuth_deg": "方位角（度）",
+      "commit": "提交测量",
+      "elevation_deg": "俯仰角（度）",
+      "kind": "测量类型",
+      "pan_right": "水平平移（半径倍数）",
+      "pan_up": "垂直平移（半径倍数）",
+      "style": "表示样式",
+      "target": "目标组分",
+      "value": "测量值",
+      "zoom": "取景倍数"
+    },
+    "initial_frame": {
+      "file": "screenshots/操作000-初始状态-重建.png",
+      "kind": "reconstruction",
+      "note": "平台未记录第 0 帧。此图由同一查看器引擎 + 同一素材 + 同一 URL 参数在本地重新渲染并用平台截图 API 捕获，画幅取专家第一张截图的尺寸。它不是原始记录。",
+      "rebuilt_at": "2026-09-04T13:22:18Z",
+      "viewer_url_params": "file=%2Fassets%2Fbiology%2Fbio_docked_component_proximity%2Fcrawl_data%2F_anon%2Fscale-v3.4%2Fbiology%2Fsv3dqa_6f16720feeda.cif&type=cif&embed=expert&sv_interaction=mcp_only",
+      "canvas": {
+        "width": 974,
+        "height": 1598,
+        "matched_first_keyframe": true
+      },
+      "alignment_applied": [
+        {
+          "tool": "viewer_zoom",
+          "input": {
+            "zoom": 1.0
+          },
+          "reason": "对齐到记录的 initial_state.camera"
+        }
+      ],
+      "state_check": {
+        "expected": "trajectory.initial_state",
+        "observed": {
+          "viewer": "molstar",
+          "view": "iso",
+          "camera": {
+            "azimuth_deg": 0,
+            "elevation_deg": 0,
+            "zoom": 1,
+            "pan_right": 0,
+            "pan_up": 0
+          },
+          "structures": [
+            {
+              "structure_id": "structure-0",
+              "index": 0,
+              "label": "Model",
+              "visible": true,
+              "element_count": 5017
+            }
+          ],
+          "measurements": {
+            "distances": 0,
+            "angles": 0,
+            "dihedrals": 0
+          },
+          "symmetry_preset": "model",
+          "components": [
+            {
+              "type": "polymer",
+              "label": "Polymer",
+              "visible": true,
+              "representation": "cartoon"
+            },
+            {
+              "type": "ligand",
+              "label": "Ligand",
+              "visible": true,
+              "representation": "ball-and-stick"
+            },
+            {
+              "type": "water",
+              "label": "Water",
+              "visible": true,
+              "representation": "ball-and-stick"
+            }
+          ],
+          "chains": [
+            {
+              "chain_id": "A",
+              "entity_kinds": [
+                "non-polymer",
+                "polymer",
+                "water"
+              ],
+              "atom_count": 2510,
+              "residue_count": 283,
+              "glycan_chains": [],
+              "visible": true
+            },
+            {
+              "chain_id": "B",
+              "entity_kinds": [
+                "non-polymer",
+                "polymer",
+                "water"
+              ],
+              "atom_count": 1260,
+              "residue_count": 146,
+              "glycan_chains": [],
+              "visible": true
+            },
+            {
+              "chain_id": "D",
+              "entity_kinds": [
+                "non-polymer",
+                "polymer",
+                "water"
+              ],
+              "atom_count": 1247,
+              "residue_count": 146,
+              "glycan_chains": [],
+              "visible": true
+            }
+          ],
+          "focused_residue": null
+        },
+        "camera_match": true,
+        "other_differences": [
+          "chains"
+        ],
+        "other_differences_note": "camera 以外的差异来自查看器 adapter 版本演进（新版本多报了 chains / mask_id 等字段，或旧版本对 .xyz 少报了 structures），不代表画面不同。",
+        "verdict": "camera_match"
+      },
+      "page_errors": []
+    },
+    "folder": "生物001-sv-biol-bio_docking_plausibility-0105"
+  }
+}

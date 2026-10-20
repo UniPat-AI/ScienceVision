@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_viewer_definition_fixture",
+  "fixture": {
+    "local_only": true,
+    "production_eligible": false
+  },
+  "fixture_payload": {
+    "viewer_id": "local-fixture-viewer-v1",
+    "capabilities": [
+      "anonymous_scene",
+      "controlled_session_request",
+      "inspect",
+      "isolate",
+      "rotate",
+      "render",
+      "native_dihedral_measurement"
+    ],
+    "forbidden_capabilities": [
+      "network",
+      "asset_file_read",
+      "raw_asset_metadata",
+      "raw_asset_read",
+      "arbitrary_compute",
+      "unrestricted_compute"
+    ],
+    "session_scope_mode": "simulated_fixture_only"
+  },
+  "fixture_payload_digest": "sha256:9c73378950b3a20f99fef89d380e859553579ac04276bac77fb67b468d7445c3"
+}

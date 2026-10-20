@@ -1,0 +1,257 @@
+[
+  {
+    "name": "Avocado",
+    "path": "/crawl_data/industrial/khronos_gltf/Avocado.glb",
+    "size": 360236,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "BoomBox",
+    "path": "/crawl_data/industrial/khronos_gltf/BoomBox.glb",
+    "size": 854576,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "Box",
+    "path": "/crawl_data/industrial/khronos_gltf/Box.glb",
+    "size": 1940,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "DamagedHelmet",
+    "path": "/crawl_data/industrial/khronos_gltf/DamagedHelmet.glb",
+    "size": 2284996,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "Duck",
+    "path": "/crawl_data/industrial/khronos_gltf/Duck.glb",
+    "size": 39552,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "occt_screw",
+    "path": "/crawl_data/industrial/step_samples/occt_screw.step",
+    "size": 88552,
+    "viewer": "occt",
+    "format": "step"
+  },
+  {
+    "name": "occt_linkrods",
+    "path": "/crawl_data/industrial/step_iges_samples/occt_linkrods.step",
+    "size": 1793282,
+    "viewer": "occt",
+    "format": "step"
+  },
+  {
+    "name": "occt_bearing",
+    "path": "/crawl_data/industrial/step_iges_samples/occt_bearing.iges",
+    "size": 1284903,
+    "viewer": "occt",
+    "format": "iges",
+    "note": "OCCT IGES — best-effort tessellation"
+  },
+  {
+    "name": "trimesh_featuretype",
+    "path": "/crawl_data/industrial/mesh_samples/trimesh_featuretype.stl",
+    "size": 173884,
+    "viewer": "gltf",
+    "format": "stl"
+  },
+  {
+    "name": "stanford_bunny",
+    "path": "/crawl_data/industrial/mesh_samples/stanford_bunny.obj",
+    "size": 205917,
+    "viewer": "gltf",
+    "format": "obj"
+  },
+  {
+    "name": "threejs_walt_head",
+    "path": "/crawl_data/industrial/mesh_samples/threejs_walt_head.obj",
+    "size": 1071914,
+    "viewer": "gltf",
+    "format": "obj"
+  },
+  {
+    "name": "trimesh_bunny",
+    "path": "/crawl_data/industrial/mesh_samples/trimesh_bunny.ply",
+    "size": 658744,
+    "viewer": "gltf",
+    "format": "ply"
+  },
+  {
+    "name": "apple_teapot.usdz",
+    "path": "/crawl_data/industrial/usd_samples/apple_teapot.usdz",
+    "size": 9021664,
+    "viewer": "usdz",
+    "format": "usdz",
+    "note": "USDZ — in-browser zip extraction + texture preview; full 3D requires Apple Quick Look or USD-WASM"
+  },
+  {
+    "name": "pixar_hello_world.usda",
+    "path": "/crawl_data/industrial/usd_samples/pixar_hello_world.usda",
+    "size": 339,
+    "viewer": "usda",
+    "format": "usda",
+    "note": "USDA — text USD; syntax highlight + prim tree"
+  },
+  {
+    "name": "LEGO 42107 engine — live physics",
+    "path": "/crawl_data/industrial/lego_demo/interactive/standalone_42107_engine.html",
+    "size": 6922535,
+    "viewer": "html",
+    "format": "demo",
+    "note": "Self-contained offline demo — drive the crankshaft, 4 pistons reciprocate + conrods follow. Constraint-solver motion, not keyframes."
+  },
+  {
+    "name": "LEGO 42107 engine — exploded parts",
+    "path": "/crawl_data/industrial/lego_demo/interactive/standalone_explode_42107_engine.html",
+    "size": 6786282,
+    "viewer": "html",
+    "format": "demo",
+    "note": "Self-contained offline demo — slider explodes the assembly into individual parts and reassembles."
+  },
+  {
+    "name": "LEGO 42107 engine (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42107_engine.glb",
+    "size": 819292,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "LEGO 42115 differential (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42115_differential.glb",
+    "size": 898536,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "LEGO 8835 forklift (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/8835.glb",
+    "size": 3278436,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "LEGO 6607 (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/6607.glb",
+    "size": 1062992,
+    "viewer": "gltf",
+    "format": "glb"
+  },
+  {
+    "name": "LEGO 42107 engine (OBJ mesh)",
+    "path": "/crawl_data/industrial/lego_demo/mesh/42107_engine.obj",
+    "size": 3507842,
+    "viewer": "gltf",
+    "format": "obj"
+  },
+  {
+    "name": "LEGO 42107 engine (STL mesh)",
+    "path": "/crawl_data/industrial/lego_demo/mesh/42107_engine.stl",
+    "size": 1726584,
+    "viewer": "gltf",
+    "format": "stl"
+  },
+  {
+    "name": "LEGO 42110 camshaft (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42110_camshaft.step",
+    "size": 27286982,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42115 differential (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42115_differential.step",
+    "size": 63085157,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42056 gearbox (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42056_gearbox.step",
+    "size": 67391472,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42107 gearbox (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42107_gearbox.step",
+    "size": 84151542,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42107 engine (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42107_engine.step",
+    "size": 91682909,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42110 engine (STEP)",
+    "path": "/crawl_data/industrial/lego_demo/step/42110_engine.step",
+    "size": 92921442,
+    "viewer": "occt",
+    "format": "step",
+    "note": "Faceted B-rep STEP (AP214) — measurable/interoperable, non-parametric. Large file, allow time to tessellate."
+  },
+  {
+    "name": "LEGO 42056 flat-6 engine (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42056_flat6-engine.glb",
+    "size": 267772,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  },
+  {
+    "name": "LEGO 42083 W16 engine (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42083_w16-engine.glb",
+    "size": 1014016,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  },
+  {
+    "name": "LEGO 42115 V12 engine (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42115_v12-engine.glb",
+    "size": 371692,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  },
+  {
+    "name": "LEGO 42083 gearbox (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42083_gearbox.glb",
+    "size": 823616,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  },
+  {
+    "name": "LEGO 42115 gearbox (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42115_gearbox.glb",
+    "size": 921724,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  },
+  {
+    "name": "LEGO 42110 rear gearbox (GLB)",
+    "path": "/crawl_data/industrial/lego_demo/meshes/42110_reargearbox.glb",
+    "size": 205136,
+    "viewer": "gltf",
+    "format": "glb",
+    "note": "Web-viewable mesh derived from the faceted STEP; the measurement-grade STEP is download-only due to size."
+  }
+]

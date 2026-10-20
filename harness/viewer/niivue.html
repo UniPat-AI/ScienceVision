@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Niivue viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<link rel="stylesheet" href="/viewer/shared/niivue-measurements.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<script src="/viewer/shared/screenshot-api.js"></script>
+<script src="/viewer/shared/viewer-mcp-api.js"></script>
+<script src="/viewer/shared/niivue-mcp-adapter.js"></script>
+<script src="/viewer/shared/niivue-measurements.js"></script>
+<link rel="preload" as="script" href="/viewer/shared/vendor/@niivue/niivue/0.45.0/dist/niivue.umd.js">
+<style>
+  #gl { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #view-toggle { position: fixed; top: 60px; right: 12px; background: rgba(13,17,23,0.9); padding: 6px; border-radius: 4px; border: 1px solid #30363d; display: flex; gap: 4px; z-index: 10; }
+  #view-toggle button { background: #161b22; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 10px; border-radius: 3px; font: 11px ui-monospace, monospace; cursor: pointer; }
+  #view-toggle button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+  #view-toggle button:hover:not(.active) { background: #21262d; }
+  #gesture-hint { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.85); color: #c9d1d9; padding: 5px 9px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, SFMono-Regular, Menlo, monospace; z-index: 10; pointer-events: none; }
+  #location-readout { position: fixed; bottom: 12px; right: 12px; min-width: 260px; background: rgba(13,17,23,0.9); color: #f0f3f6; padding: 7px 10px; border: 1px solid #30363d; border-radius: 4px; font: 11px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; z-index: 10; pointer-events: none; }
+  #viewer-mode { color: #79c0ff; }
+  @media (max-width: 560px) {
+    #location-readout { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Niivue</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta"><span id="viewer-mode">model</span> · NIfTI · MPR / 3D volume render</div>
+</header>
+<canvas id="gl"></canvas>
+<div id="view-toggle">
+  <button data-mode="render" aria-pressed="false" title="full-screen 3D volume render">3D</button>
+  <button data-mode="multiplanar" class="active" aria-pressed="true" title="axial / coronal / sagittal triplanar">MPR</button>
+  <button data-mode="axial" aria-pressed="false" title="axial slice only">Axial</button>
+</div>
+<div id="gesture-hint">drag = pan · wheel = slice · right-drag = window/level</div>
+<div id="location-readout">voxel: -<br>world RAS mm: -<br>slice: -</div>
+<script src="/viewer/shared/vendor/@niivue/niivue/0.45.0/dist/niivue.umd.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  const overlay = params.get('overlay');
+  const rawMaskId = params.get('mask_id');
+  const routeMode = params.get('mode') === 'expert' ? 'expert' : 'model';
+  const screenshotProvider = window.__ScienceVisionScreenshotProvider;
+  const mcpProvider = window.__ScienceVisionViewerMCPProvider;
+  let measurementController = null;
+  document.getElementById('viewer-mode').textContent = routeMode;
+  const maskId = rawMaskId == null ? null : (/^(0|[1-9]\d*)$/.test(rawMaskId) ? Number(rawMaskId) : NaN);
+  document.getElementById('filename').textContent = file ? file.split('/').pop() + (overlay ? ' + label' : '') : '(no file)';
+  async function initializeViewer() {
+    // niivue 0.45 SLICE_TYPE: AXIAL=0, CORONAL=1, SAGITTAL=2, MULTIPLANAR=3, RENDER=4
+    const SLICE = { axial: 0, coronal: 1, sagittal: 2, multiplanar: 3, render: 4 };
+    const nv = new niivue.Niivue({
+      backColor: [0.05, 0.06, 0.09, 1],
+      sliceType: SLICE.multiplanar,
+      isColorbar: true,
+      isOrientCube: true,
+      isNearestInterpolation: false,   // trilinear interpolation — smoother on low-res volumes
+      crosshairWidth: 1,
+      crosshairColor: [1, 0.35, 0.15, 1],
+    });
+    await nv.attachTo('gl');
+    const volumes = [{ url: file, opacity: 1.0 }];
+    if (overlay) {
+      if (Number.isNaN(maskId)) {
+        document.body.insertAdjacentHTML('beforeend', '<div class="error-box">mask_id must be a non-negative integer.</div>');
+      } else {
+        volumes.push({
+          url: overlay,
+          opacity: 0.5,
+          colormap: 'red',
+        });
+      }
+    }
+    function filterOverlayToMaskId(volume, targetMaskId) {
+      if (!volume?.img || !ArrayBuffer.isView(volume.img)) {
+        throw new Error('Loaded mask has no typed voxel buffer.');
+      }
+      let selectedVoxelCount = 0;
+      for (let index = 0; index < volume.img.length; index += 1) {
+        if (Number(volume.img[index]) === targetMaskId) selectedVoxelCount += 1;
+      }
+      for (let index = 0; index < volume.img.length; index += 1) {
+        volume.img[index] = Number(volume.img[index]) === targetMaskId ? 1 : 0;
+      }
+
+      // The filtered image is a new binary label volume, independent of the
+      // source NIfTI datatype and scaling metadata.
+      if (volume.hdr) {
+        volume.hdr.scl_slope = 1;
+        volume.hdr.scl_inter = 0;
+        volume.hdr.cal_min = 0;
+        volume.hdr.cal_max = 1;
+      }
+      volume.cal_min = 0;
+      volume.cal_max = 1;
+      volume.robust_min = 0;
+      volume.robust_max = 1;
+      volume.global_min = 0;
+      volume.global_max = 1;
+      return selectedVoxelCount;
+    }
+    const readout = document.getElementById('location-readout');
+    function updateReadout(location = null) {
+      if (!nv.volumes.length) return;
+      const frac = nv.scene.crosshairPos.slice(0, 3);
+      const vox = Array.isArray(location?.vox) ? location.vox : nv.frac2vox(frac);
+      const mm = window.ScienceVisionNiiVueMeasurements.fractionToWorldRASMM(nv, frac);
+      const vi = vox.slice(0, 3).map(value => Math.round(Number(value)));
+      const ras = mm.slice(0, 3).map(value => Number(value).toFixed(2));
+      readout.innerHTML = `voxel: [${vi.join(', ')}]<br>`
+        + `world RAS mm: [${ras.join(', ')}]<br>`
+        + `slice: sagittal ${vi[0]} · coronal ${vi[1]} · axial ${vi[2]}`;
+    }
+    nv.onLocationChange = updateReadout;
+    await nv.loadVolumes(volumes);
+    if (maskId != null && nv.volumes[1]) {
+      const maskVolume = nv.volumes[1];
+      let selectedVoxelCount = 0;
+      try {
+        selectedVoxelCount = filterOverlayToMaskId(maskVolume, maskId);
+      } catch (error) {
+        maskVolume.opacity = 0;
+        nv.updateGLVolume();
+        throw error;
+      }
+      nv.updateGLVolume();
+      if (selectedVoxelCount === 0) {
+        throw new Error(`mask_id ${maskId} is absent from the loaded mask.`);
+      }
+      document.body.dataset.maskFilter = 'applied';
+      document.body.dataset.maskId = String(maskId);
+    }
+    try {
+      measurementController = window.ScienceVisionNiiVueMeasurements.install(nv);
+      window.__svNiiVueMeasurements = measurementController;
+    } catch (error) {
+      console.error('[niivue-measurements]', error);
+    }
+    updateReadout();
+    mcpProvider.ready(window.__ScienceVisionCreateNiiVueMCPProvider(nv));
+
+    window.addEventListener('pagehide', () => {
+      measurementController?.destroy?.();
+      if (window.__svNiiVueMeasurements === measurementController) {
+        delete window.__svNiiVueMeasurements;
+      }
+      measurementController = null;
+    }, { once: true });
+
+    const toggle = document.getElementById('view-toggle');
+    const hint = document.getElementById('gesture-hint');
+    const HINTS = {
+      render:       'drag = rotate · wheel = clip · right-drag = pan',
+      multiplanar:  'drag = pan · wheel = slice · right-drag = window/level',
+      axial:        'drag = pan · wheel = slice · right-drag = window/level',
+    };
+    toggle.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-mode]');
+      if (!btn) return;
+      const mode = btn.dataset.mode;
+      nv.setSliceType(SLICE[mode]);
+      for (const b of toggle.querySelectorAll('button')) {
+        const active = b === btn;
+        b.classList.toggle('active', active);
+        b.setAttribute('aria-pressed', String(active));
+      }
+      hint.textContent = HINTS[mode] || '';
+    });
+
+    // The plane, crosshair and render angle a screenshot was taken from, so a
+    // reviewer can come back to the same view.
+    function describeNiivueView() {
+      if (!nv.volumes.length) return null;
+      const number = (value, digits) =>
+        Number.isFinite(Number(value)) ? Number(Number(value).toFixed(digits)) : null;
+      const triple = (value, digits) => {
+        if (!value || value.length < 3) return null;
+        return Array.from(value).slice(0, 3).map(item => number(item, digits));
+      };
+      const raw = nv.scene?.crosshairPos;
+      const frac = raw && raw.length >= 3 ? Array.from(raw).slice(0, 3) : null;
+      const sliceType = nv.opts?.sliceType;
+      const view = {
+        viewer: 'niivue',
+        mode: Object.keys(SLICE).find(name => SLICE[name] === sliceType) || null,
+        slice_type: Number.isFinite(Number(sliceType)) ? Number(sliceType) : null,
+        crosshair: null,
+        angles_degrees: {
+          azimuth: number(nv.scene?.renderAzimuth, 2),
+          elevation: number(nv.scene?.renderElevation, 2),
+        },
+      };
+      if (frac) {
+        const worldRASMM = measurementController?.crosshairRASMM?.() || nv.frac2mm(frac);
+        view.crosshair = {
+          voxel: triple(nv.frac2vox(frac), 0),
+          world_ras_mm: triple(worldRASMM, 2),
+        };
+      }
+      const measurements = measurementController?.list?.();
+      if (measurements?.items?.length) view.measurements = measurements;
+      return view;
+    }
+
+    screenshotProvider.ready(() => {
+      const canvas = nv.canvas || document.getElementById('gl');
+      if (!canvas || !canvas.width || !canvas.height) {
+        throw new Error('NiiVue render canvas is unavailable.');
+      }
+      nv.drawScene();
+      return new Promise((resolve, reject) => {
+        canvas.toBlob(blob => {
+          if (blob) resolve(blob);
+          else reject(new Error('NiiVue could not encode its render canvas.'));
+        }, 'image/png');
+      });
+    }, { describeView: describeNiivueView });
+  }
+
+  if (!file) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="error-box">No ?file= query param.</div>');
+    const error = new Error('No volume file was provided.');
+    screenshotProvider.fail(error);
+    mcpProvider.fail(error);
+  } else {
+    initializeViewer().catch(err => {
+      screenshotProvider.fail(err);
+      mcpProvider.fail(err);
+      document.body.insertAdjacentHTML('beforeend',
+        '<div class="error-box">Failed to load:\n' + err + '</div>');
+    });
+  }
+</script>
+</body>
+</html>

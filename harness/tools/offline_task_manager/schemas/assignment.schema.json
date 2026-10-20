@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.assignment.v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "assignment_id", "batch_id", "expert_id", "task_id", "task_revision_sha256"],
+  "properties": {
+    "schema_version": {"const": "sciencevision.assignment.v1"},
+    "assignment_id": {"type": "string", "pattern": "^asgn_[0-9a-f]{24}$"},
+    "batch_id": {"type": "string"},
+    "expert_id": {"type": "string"},
+    "task_id": {"type": "string"},
+    "task_revision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

@@ -1,0 +1,57 @@
+schema_version: 1
+kind: qagen_knowledge_source_registry
+id: local_reference_sources
+
+sources:
+  - id: expert-knowledge-master
+    mode: source_only
+    provider: lark_doc
+    document_id: VkSxdiSTwoxwgFx4atxcHb0Qnfh
+    wiki_token: AZlyw5VsXi2sokkPQjGcYC5WnHh
+    source_revision: 298
+    source_locator: https://ncn595olgbv0.feishu.cn/wiki/AZlyw5VsXi2sokkPQjGcYC5WnHh
+    live_fetch: false
+    approval_state: unapproved
+  - id: expert-architecture-mechanical-synthesis
+    mode: source_only
+    provider: lark_doc
+    document_id: HTpQdSZCPoaJkjxkMdPc6Rc4nIh
+    source_revision: 9
+    source_locator: lark-doc:HTpQdSZCPoaJkjxkMdPc6Rc4nIh
+    live_fetch: false
+    approval_state: unapproved
+  - id: qagen-vnext-plan
+    repo_path: QA-Gen/docs/QA-gen-pipeline-vNext-plan.md
+    mode: reference_only
+    live_fetch: false
+  - id: question-rubric
+    repo_path: QA-Gen/docs/Question-Rubric.md
+    mode: digest_locked_reference
+    live_fetch: false
+    content_digest: sha256:67bd4bd91f1e970e3366c7a92c3daa3e38326bbd77a047df427e8bde0a668875
+  - id: qa-generation-blueprint
+    repo_path: QA-Gen/docs/ScienceVision_QA_Generation_Blueprint.md
+    mode: reference_only
+    live_fetch: false
+  - id: chemistry-stereochemistry-chirality-expert-draft
+    repo_path: QA-Gen/qa_gen_pipeline/configs/sources/knowledge/chemistry_stereochemistry_chirality.expert-draft.yaml
+    mode: digest_locked_reference
+    live_fetch: false
+    content_digest: sha256:c7a9199b82626124f5fcf99053f9f2d9dbe58514ee47ee0931340e4e8e2f56a7
+  - id: chemistry-stereochemistry-chirality-visual-taxonomy
+    repo_path: QA-Gen/qa_gen_pipeline/configs/sources/knowledge/chemistry_stereochemistry_chirality.visual-taxonomy.yaml
+    mode: digest_locked_reference
+    live_fetch: false
+    content_digest: sha256:5df913d8087a069b5320b2dec15e011a7a5fa157c3fbc0e629f044091d397892
+  - id: medical-volumetric-target-geometry-expert-draft
+    repo_path: QA-Gen/qa_gen_pipeline/configs/sources/knowledge/medical_volumetric_target_geometry.expert-draft.yaml
+    mode: digest_locked_reference
+    live_fetch: false
+    content_digest: sha256:1932c9794f42f32de88e488f7e09bec7fb1be7fc10e56614ed7bc41fdccf3b5c
+
+# Versioned source-only records preserve traceability to the expert documents;
+# they are not knowledge snapshots and do not authorize generation. No expert
+# source is represented as approved here. Local fixtures under
+# knowledge/ are deliberately non-production examples. The chirality expert
+# sources are drafts for human review, and the visual-taxonomy source is a
+# local reference; none is a production approval.

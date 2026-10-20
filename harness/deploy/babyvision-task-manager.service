@@ -1,0 +1,35 @@
+[Unit]
+Description=BabyVision-v2 authenticated expert task manager
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=matianyi
+Group=matianyi
+WorkingDirectory=/home/matianyi/services/babyvision-task-manager/app
+# Placeholder only: configure DNS, TLS, and a distinct reverse-proxy hostname
+# before enabling review bundles with this review public origin.
+ExecStart=/usr/bin/python3 -m tools.offline_task_manager \
+  --db /home/matianyi/services/babyvision-task-manager/state/manager.db \
+  serve-online \
+  --credentials /home/matianyi/services/babyvision-task-manager/state/credentials.json \
+  --session-secret /home/matianyi/services/babyvision-task-manager/state/session.key \
+  --public-origin https://babyvision-v2.unipatai.com \
+  --review-public-origin https://review.babyvision-v2.unipatai.com \
+  --port 4174 \
+  --base-path /sv-annotate
+Restart=on-failure
+RestartSec=3s
+TimeoutStopSec=10s
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+# Active asset_root paths under /home must remain immutable; do not add them to
+# ReadWritePaths. ProtectHome makes the read-only publication contract explicit.
+ProtectHome=read-only
+ReadWritePaths=/home/matianyi/services/babyvision-task-manager/state
+LimitNOFILE=1048576
+
+[Install]
+WantedBy=multi-user.target

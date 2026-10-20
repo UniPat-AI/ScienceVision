@@ -1,0 +1,46 @@
+[
+  {
+    "name": "v_classify",
+    "label": "v_classify",
+    "modality": "?",
+    "task_type": "?",
+    "source": "?",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "_mmmu_val_input": {
+        "rows": 900,
+        "jsonl": "/out_samples/v_classify/_mmmu_val_input.jsonl",
+        "first_qid": ""
+      },
+      "m3d-refseg_claude100": {
+        "rows": 100,
+        "jsonl": "/out_samples/v_classify/m3d-refseg_claude100.jsonl",
+        "first_qid": ""
+      },
+      "m3d-refseg_nomaskhint100": {
+        "rows": 100,
+        "jsonl": "/out_samples/v_classify/m3d-refseg_nomaskhint100.jsonl",
+        "first_qid": ""
+      },
+      "mmmu_pilot100": {
+        "rows": 100,
+        "jsonl": "/out_samples/v_classify/mmmu_pilot100.jsonl",
+        "first_qid": ""
+      },
+      "scanqa_claude100": {
+        "rows": 100,
+        "jsonl": "/out_samples/v_classify/scanqa_claude100.jsonl",
+        "first_qid": ""
+      },
+      "sqa3d_claude100": {
+        "rows": 100,
+        "jsonl": "/out_samples/v_classify/sqa3d_claude100.jsonl",
+        "first_qid": ""
+      }
+    },
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 1400
+  }
+]

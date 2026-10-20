@@ -1,0 +1,26 @@
+[
+  {
+    "name": "m3drefseg",
+    "label": "M3D-RefSeg",
+    "modality": "3D CT + segmentation + referring text",
+    "task_type": "referring segmentation",
+    "source": "huggingface.co/datasets/GoodBaiBai88/M3D-RefSeg",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 555,
+        "jsonl": "/out_samples/m3drefseg/test.jsonl",
+        "first_qid": "m3drefseg-test-000000"
+      },
+      "train": {
+        "rows": 2222,
+        "jsonl": "/out_samples/m3drefseg/train.jsonl",
+        "first_qid": "m3drefseg-train-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 332,
+    "total_rows": 2777
+  }
+]

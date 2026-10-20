@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/base.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "policy", "quality", "budget", "fixture_policy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_base_config"},
+    "policy": {"$ref": "#/definitions/policy"},
+    "quality": {"$ref": "#/definitions/quality"},
+    "budget": {"$ref": "#/definitions/budget"},
+    "fixture_policy": {"$ref": "#/definitions/fixture_policy"}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "policy": {
+      "type": "object",
+      "required": ["allowed_truth_modes", "solver_forbidden_capabilities", "author_compute_exception"],
+      "properties": {
+        "allowed_truth_modes": {
+          "const": ["visual_annotation", "expert_visual_judgment", "viewer_native_measurement"]
+        },
+        "solver_forbidden_capabilities": {
+          "const": [
+            "network",
+            "asset_file_read",
+            "raw_asset_metadata",
+            "raw_asset_read",
+            "arbitrary_compute",
+            "unrestricted_compute"
+          ]
+        },
+        "author_compute_exception": {
+          "type": "object",
+          "required": ["enabled", "required_receipt"],
+          "properties": {
+            "enabled": {"const": false},
+            "required_receipt": {"const": "AuthorTruthReceipt"}
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "quality": {
+      "type": "object",
+      "required": ["require_reference_answer", "require_reasoning", "require_field_rubric", "require_independent_viewer_evidence"],
+      "properties": {
+        "require_reference_answer": {"const": true},
+        "require_reasoning": {"const": true},
+        "require_field_rubric": {"const": true},
+        "require_independent_viewer_evidence": {"const": true}
+      },
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "required": ["max_candidates_per_leaf", "max_revisions"],
+      "properties": {
+        "max_candidates_per_leaf": {"const": 1},
+        "max_revisions": {"const": 1}
+      },
+      "additionalProperties": false
+    },
+    "fixture_policy": {
+      "type": "object",
+      "required": ["allow_local_fixture_compile", "never_release_fixture_inputs", "require_explicit_profile_opt_in", "local_only", "production_eligible"],
+      "properties": {
+        "allow_local_fixture_compile": {"const": false},
+        "never_release_fixture_inputs": {"const": true},
+        "require_explicit_profile_opt_in": {"const": true},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  }
+}

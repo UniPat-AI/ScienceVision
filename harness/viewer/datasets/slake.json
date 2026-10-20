@@ -1,0 +1,31 @@
+[
+  {
+    "name": "slake",
+    "label": "SLAKE",
+    "modality": "radiology + segmentation",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/BoKelvin/SLAKE",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 2094,
+        "jsonl": "/out_samples/slake/test.jsonl",
+        "first_qid": "slake-test-000000"
+      },
+      "train": {
+        "rows": 9835,
+        "jsonl": "/out_samples/slake/train.jsonl",
+        "first_qid": "slake-train-000000"
+      },
+      "val": {
+        "rows": 2099,
+        "jsonl": "/out_samples/slake/val.jsonl",
+        "first_qid": "slake-val-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 642,
+    "total_rows": 14028
+  }
+]

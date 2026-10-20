@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.expert_trajectory_submission.v1",
+  "description": "Request body POSTed by the browser trajectory drawer to /api/expert/trajectory. The drawer sends submission_id and idempotency_key in both members; the server refuses a submission whose copies disagree.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "identity"],
+  "properties": {
+    "identity": {
+      "type": "object",
+      "required": ["submission_id", "idempotency_key"],
+      "properties": {
+        "submission_id": {"type": "string", "minLength": 1},
+        "idempotency_key": {"type": "string", "minLength": 1},
+        "storage_key": {"type": "string"},
+        "qualified_task_id": {"type": "string"},
+        "context_fingerprint": {"type": "string"}
+      }
+    },
+    "payload": {
+      "$ref": "#/$defs/trajectory_document"
+    }
+  },
+  "$defs": {
+    "trajectory_document": {
+      "type": "object",
+      "required": [
+        "schema_version", "task_id", "qualified_task_id", "context_fingerprint",
+        "session_id", "submission_id", "idempotency_key", "status", "created_at",
+        "updated_at", "task_input", "trajectory", "final_result"
+      ],
+      "properties": {
+        "schema_version": {"const": "sciencevision.expert_trajectory.v1"},
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Must be one of the task_id values in the expert's active bundle."
+        },
+        "qualified_task_id": {"type": "string", "minLength": 1},
+        "context_fingerprint": {"type": "string", "minLength": 1},
+        "session_id": {"type": "string", "minLength": 1},
+        "submission_id": {"type": "string", "minLength": 1},
+        "idempotency_key": {"type": "string", "minLength": 1},
+        "status": {"enum": ["draft", "submitted"]},
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": "string", "format": "date-time"},
+        "submitted_at": {"type": ["string", "null"], "format": "date-time"},
+        "submission_attempted_at": {"type": "string", "format": "date-time"},
+        "task_input": {
+          "type": "object",
+          "description": "The task record the drawer captured against, including the bundle context the host attached."
+        },
+        "trajectory": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/step"}
+        },
+        "final_result": {"type": ["string", "null"]}
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["step_id", "step", "function", "input", "result", "screenshot"],
+      "properties": {
+        "step_id": {"type": "string", "minLength": 1},
+        "step": {"type": "integer", "minimum": 1},
+        "function": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Browser viewer function name, e.g. viewer_reset or viewer_set_camera."
+        },
+        "input": {"type": ["object", "null"]},
+        "result": {},
+        "result_state": {},
+        "description": {"type": ["string", "null"]},
+        "action_interval": {"type": ["object", "null"]},
+        "cut_seq": {"type": ["integer", "null"]},
+        "candidate_actions": {"type": ["array", "null"]},
+        "execution_receipt": {
+          "type": ["object", "null"],
+          "description": "Policy receipt for the committed action: task_allowed_tools, viewer_utility, or free_exploration_extension."
+        },
+        "screenshot": {
+          "type": "object",
+          "required": ["mime_type", "data_url"],
+          "properties": {
+            "mime_type": {"type": "string"},
+            "width": {"type": ["integer", "null"]},
+            "height": {"type": ["integer", "null"]},
+            "captured_at": {"type": ["string", "null"], "format": "date-time"},
+            "data_url": {"type": "string", "pattern": "^data:"}
+          }
+        }
+      }
+    }
+  }
+}

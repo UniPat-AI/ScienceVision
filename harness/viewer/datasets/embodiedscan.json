@@ -1,0 +1,17 @@
+[
+  {
+    "name": "embodiedscan",
+    "label": "EmbodiedScan",
+    "modality": "3D scenes + 1M views",
+    "task_type": "open-ended QA",
+    "source": "github.com/OpenRobotLab/EmbodiedScan",
+    "answer_kind": "string",
+    "availability": "data_unavailable",
+    "unavailable_reason": "Raw scenes huge — only code/annotations fetched; no QA on disk",
+    "status": "disabled",
+    "splits": {},
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 0
+  }
+]

@@ -1,0 +1,33 @@
+[
+  {
+    "name": "m3dvqa",
+    "label": "M3D-VQA",
+    "modality": "3D CT / MRI volumetric",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/GoodBaiBai88/M3D-VQA",
+    "answer_kind": "string",
+    "availability": "data_unavailable",
+    "unavailable_reason": "Companion M3D-Cap (image source) was DMCA-disabled on HF; QA text loaded but no images",
+    "status": "disabled",
+    "splits": {
+      "test": {
+        "rows": 13791,
+        "jsonl": "/out_samples/m3dvqa/test.jsonl",
+        "first_qid": "m3dvqa-test-000000"
+      },
+      "test5k": {
+        "rows": 5000,
+        "jsonl": "/out_samples/m3dvqa/test5k.jsonl",
+        "first_qid": "m3dvqa-test5k-000000"
+      },
+      "val": {
+        "rows": 14067,
+        "jsonl": "/out_samples/m3dvqa/val.jsonl",
+        "first_qid": "m3dvqa-val-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 32858
+  }
+]

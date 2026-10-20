@@ -1,0 +1,302 @@
+{
+  "task_id": "sv-arch-a4-1",
+  "sub_domain": "arch_structural_deformation",
+  "domain": "architecture",
+  "viewer": "architecture_inspection",
+  "folder": "tasks/architecture/arch_structural_deformation/001-sv-arch-a4-1",
+  "question_en": "Inspect the public MG1 bridge baseline and deformed models using 3D views and interactive browser controls. Observe the overall and local deformation patterns of the bridge, determine whether the end support positions remain unchanged, and compare the vertical deformation and twist behavior on both sides of the midspan to assess their symmetry. Identify the most significant deformation region along the span and determine whether the observed deformation is consistent with expected symmetric bending behavior. Provide evidence from 3D views of both halves of the span to support the judgment.supports remain stable and whether the vertical deflection and twist are symmetric about the midspan. Identify the critical deformation region along the span and determine whether the observed pattern is consistent with expected symmetric bending or suggests abnormal constraints or support changes. Support the judgment with evidence from 3D views of both halves of the span.",
+  "ground_truth": "The supports at both ends are unchanged and the deformation is symmetric: it is most pronounced at the midpoint of the bridge, matching the expected symmetric bending.",
+  "ground_truth_source": "expert_submission",
+  "rubric_status": "draft - written to exercise the mechanism, awaiting expert sign-off",
+  "proposed_rubric": {
+    "required": [
+      {
+        "any": [
+          "support",
+          "supports"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "unchanged",
+          "unmoved",
+          "same",
+          "fixed"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "symmetric",
+          "symmetry"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "midpoint",
+          "mid-span",
+          "midspan",
+          "mid span"
+        ],
+        "negated": false
+      }
+    ],
+    "forbidden": [],
+    "source": "authored",
+    "notes": "MG1 end supports unchanged; symmetric bending peaking at midpoint"
+  },
+  "derived_rubric": {
+    "required": [
+      {
+        "any": [
+          "supports",
+          "support"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "ends",
+          "end"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "unchanged"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "deformation"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "symmetric"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "pronounced"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "midpoint"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "bridge"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "matching"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "expected"
+        ],
+        "negated": false
+      },
+      {
+        "any": [
+          "bending"
+        ],
+        "negated": false
+      }
+    ],
+    "forbidden": [],
+    "source": "derived",
+    "notes": "extracted from the ground-truth sentence; cannot see paraphrase"
+  },
+  "derived_group_count": 11,
+  "cases": [
+    {
+      "label": "paraphrase, correct",
+      "answer": "Both end supports are unchanged and the deformation is symmetric, peaking at the middle of the span.",
+      "authored": {
+        "value": 0.75,
+        "degraded": false,
+        "matched": [
+          "support",
+          "unchanged",
+          "symmetric"
+        ],
+        "missed": [
+          "midpoint"
+        ],
+        "required": 4,
+        "groups": [
+          {
+            "any_of": [
+              "support",
+              "supports"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "supports"
+            ]
+          },
+          {
+            "any_of": [
+              "unchanged",
+              "unmoved",
+              "same",
+              "fixed"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "unchanged"
+            ]
+          },
+          {
+            "any_of": [
+              "symmetric",
+              "symmetry"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "symmetric"
+            ]
+          },
+          {
+            "any_of": [
+              "midpoint",
+              "mid-span",
+              "midspan",
+              "mid span"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.4545,
+        "degraded": true,
+        "matched": [
+          "supports",
+          "ends",
+          "unchanged",
+          "deformation",
+          "symmetric"
+        ],
+        "missed": [
+          "pronounced",
+          "midpoint",
+          "bridge",
+          "matching",
+          "expected",
+          "bending"
+        ],
+        "required": 11
+      }
+    },
+    {
+      "label": "contradicts the reference",
+      "answer": "Both end supports moved and the deformation is asymmetric.",
+      "authored": {
+        "value": 0.25,
+        "degraded": false,
+        "matched": [
+          "support"
+        ],
+        "missed": [
+          "unchanged",
+          "symmetric",
+          "midpoint"
+        ],
+        "required": 4,
+        "groups": [
+          {
+            "any_of": [
+              "support",
+              "supports"
+            ],
+            "negated": false,
+            "matched": true,
+            "reason": "present",
+            "alternatives_present": [
+              "supports"
+            ]
+          },
+          {
+            "any_of": [
+              "unchanged",
+              "unmoved",
+              "same",
+              "fixed"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          },
+          {
+            "any_of": [
+              "symmetric",
+              "symmetry"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          },
+          {
+            "any_of": [
+              "midpoint",
+              "mid-span",
+              "midspan",
+              "mid span"
+            ],
+            "negated": false,
+            "matched": false,
+            "reason": "no alternative appears in the answer",
+            "alternatives_present": []
+          }
+        ]
+      },
+      "derived": {
+        "value": 0.2727,
+        "degraded": true,
+        "matched": [
+          "supports",
+          "ends",
+          "deformation"
+        ],
+        "missed": [
+          "unchanged",
+          "symmetric",
+          "pronounced",
+          "midpoint",
+          "bridge",
+          "matching",
+          "expected",
+          "bending"
+        ],
+        "required": 11
+      }
+    }
+  ]
+}

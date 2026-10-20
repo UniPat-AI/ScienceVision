@@ -1,0 +1,45 @@
+schema_version: 1
+kind: qagen_run_profile
+id: bio_chem_fixture_compile
+mode: local_fixture_compile
+
+domains:
+  - biology
+  - chemistry
+enabled_leaves:
+  - biology.docking_pose_plausibility
+  - chemistry.stereochemistry_chirality
+blocked_leaves:
+  - biology.molecular_collision_check
+  - biology.bio_multi_structure_compare
+  - chemistry.conformation_analysis
+  - chemistry.steric_accessibility
+  - chemistry.coordination_chemistry
+  - chemistry.crystallography_packing
+  - chemistry.reactive_conformation
+
+inputs:
+  registry_mode: static_fixture
+  base: ../base.yaml
+  source_registry: ../sources/ev2_pilot.yaml
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/viewer_definitions.yaml
+  rubric: ../rubric.yaml
+  knowledge_index: ../../knowledge/index.yaml
+  fixture_routing: ../agents/model_routing.fixture.yaml
+  domain_configs:
+    - ../domains/biology.yaml
+    - ../domains/chemistry.yaml
+  leaf_configs:
+    - ../subdomains/biology/docking_pose_plausibility.yaml
+    - ../subdomains/chemistry/stereochemistry_chirality.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: true
+  require_local_fixture_digest_match: true
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  reason: "Fixture inputs demonstrate compilation only and are never release eligible."

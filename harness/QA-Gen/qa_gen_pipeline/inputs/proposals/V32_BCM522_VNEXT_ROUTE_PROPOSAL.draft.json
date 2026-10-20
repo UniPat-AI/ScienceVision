@@ -1,0 +1,203 @@
+{
+  "schema_version": "sciencevision.qagen.vnext_route_proposal.v0.draft",
+  "proposal_id": "v32-bcm522-sixroute-vnext-route-proposal-20260827",
+  "status": "draft_unapproved",
+  "approval": {
+    "human_approved": false,
+    "approved_by": null,
+    "approval_receipt": null
+  },
+  "source_lock": {
+    "selection_id_sha256": "149b29605da6cd2862e427dacb4d1098b106d23eb95b248ffdf6dc0bdf1846d4",
+    "selection_file_sha256": "75ae4cbb771d42ff68811b2e06a82ca34cb00749f888673518dac937336463d6",
+    "bundle_package_id": "scale-v3.2-bcm522-question-assets-bundle-20260826-v1.1.0",
+    "manifest_file_sha256": "656e1c2d3192c7a74477367a461a717767e90b1424e6e6a8055e77b5992fa71a",
+    "question_assets_file_sha256": "e093b1f92ebc5ecc9d9a79508db7be9712104251d69bc01859220fd1dcaefeb1",
+    "answer_keys_file_sha256": "6755d27b19fc17057094f182e3087052f0fcb98c1d291da531fd97dd6793c56b",
+    "source_corpus_sha256": {
+      "biology": "b0e568950a8a67441f6239d8d251d05b467ebcb5af87511e20395785b6579480",
+      "chemistry": "afe520f7b1541659a598e5c0c8da02ca00e5856963b03e53b96c6f29cd2728b2",
+      "medical": "d17e604de6bc1da0a2b248bc72c4dacf65fb9dd8a72fd4870a300468fd07d8e7",
+      "physical_asset_questions": "3387d65f0d188fb5fb1ee6c57698ff1362cbf948314093157b0aee8b13a1f91f"
+    }
+  },
+  "privacy_boundary": {
+    "private_reference_truth_available_for_all_slots": true,
+    "reference_answer_values_embedded": false,
+    "excluded_from_proposal": [
+      "reference_answer",
+      "rubric",
+      "solving_approach",
+      "evidence",
+      "receipt",
+      "compute_contract",
+      "selection_hints",
+      "asset_paths",
+      "upstream_identifiers"
+    ]
+  },
+  "policy": {
+    "preserve_intent": "Keep the source scientific action and answer shape only when it is already viewer-native; rebuild the wording, anonymous scene binding, evidence, and truth.",
+    "reauthor_on_asset": "Keep only the asset class and broad scientific theme; author a new viewer-answerable task without solver-side raw compute.",
+    "old_truth_reuse": "false for every slot; a new candidate requires a new truth and evidence chain even when intent is preserved."
+  },
+  "viewer_capability_sets": {
+    "molstar_collision_measurement_v0": [
+      "inspect",
+      "isolate_component",
+      "rotate",
+      "zoom",
+      "select_atom_or_residue",
+      "measure_distance",
+      "show_contact_or_clash_context"
+    ],
+    "molstar_docking_review_v0": [
+      "inspect",
+      "isolate_component",
+      "rotate",
+      "zoom",
+      "show_molecular_surface",
+      "show_contact_or_clash_context",
+      "measure_distance"
+    ],
+    "molstar_steric_accessibility_v0": [
+      "inspect",
+      "isolate_component",
+      "rotate",
+      "zoom",
+      "select_atom_or_residue",
+      "show_molecular_surface",
+      "measure_distance"
+    ],
+    "molstar_conformation_measurement_v0": [
+      "inspect",
+      "rotate",
+      "zoom",
+      "select_atom",
+      "measure_distance",
+      "measure_dihedral"
+    ],
+    "niivue_target_geometry_v0": [
+      "inspect",
+      "slice",
+      "window_level",
+      "select_overlay",
+      "show_bounding_box",
+      "measure_extent",
+      "measure_centroid",
+      "identify_representative_slice"
+    ]
+  },
+  "risk_profiles": {
+    "bio_collision_reauthor_v0": [
+      "source_depends_on_raw_compute",
+      "source_target_identifiers_must_not_leak",
+      "distance_and_clash_viewer_capabilities_unattested",
+      "scientific_semantics_require_domain_review"
+    ],
+    "bio_docking_reauthor_v0": [
+      "source_depends_on_raw_compute",
+      "deposited_complex_is_not_automatically_a_docking_pose",
+      "surface_and_contact_viewer_capabilities_unattested",
+      "scientific_semantics_require_domain_review"
+    ],
+    "chem_steric_reauthor_v0": [
+      "source_depends_on_raw_compute",
+      "binding_context_to_steric_accessibility_is_a_semantic_shift",
+      "source_target_identifiers_must_not_leak",
+      "viewer_capabilities_unattested"
+    ],
+    "chem_steric_preserve_v0": [
+      "explicit_endpoint_selection_must_be_question_local",
+      "viewer_capabilities_unattested",
+      "fresh_truth_and_evidence_required"
+    ],
+    "chem_conformation_reauthor_v0": [
+      "source_depends_on_raw_compute",
+      "farthest_pair_or_extent_search_cannot_be_solver_compute",
+      "source_target_identifiers_must_not_leak",
+      "viewer_capabilities_unattested"
+    ],
+    "chem_conformation_preserve_v0": [
+      "explicit_atom_selection_must_be_question_local",
+      "dihedral_viewer_capability_unattested",
+      "fresh_truth_and_evidence_required"
+    ],
+    "medical_geometry_reauthor_v0": [
+      "source_depends_on_raw_compute",
+      "proposed_leaf_not_configured",
+      "medical_domain_release_blocked",
+      "axis_label_and_overlay_semantics_require_review",
+      "viewer_capabilities_unattested"
+    ],
+    "medical_geometry_preserve_v0": [
+      "proposed_leaf_not_configured",
+      "medical_domain_release_blocked",
+      "mask_label_and_axis_semantics_require_review",
+      "viewer_capabilities_unattested",
+      "fresh_truth_and_evidence_required"
+    ]
+  },
+  "slots": [
+    {"source_slot_id":"sv-biol-bio_collision_check-0052","source_domain":"biology","source_sub_domain":"bio_component_polymer_context","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0057","source_domain":"biology","source_sub_domain":"bio_collision_overlap_magnitude","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0068","source_domain":"biology","source_sub_domain":"bio_component_polymer_context","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0072","source_domain":"biology","source_sub_domain":"molecular_contact_geometry","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0103","source_domain":"biology","source_sub_domain":"bio_collision_pair_distance","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0107","source_domain":"biology","source_sub_domain":"bio_collision_pair_distance","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0108","source_domain":"biology","source_sub_domain":"bio_collision_overlap_magnitude","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0122","source_domain":"biology","source_sub_domain":"bio_component_nonpolymer_inventory","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0127","source_domain":"biology","source_sub_domain":"molecular_contact_geometry","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_collision_check-0130","source_domain":"biology","source_sub_domain":"bio_component_nonpolymer_inventory","source_access_track":"raw_compute","target_leaf":"biology.molecular_collision_check","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_collision_measurement_v0","risk_profile":"bio_collision_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0027","source_domain":"biology","source_sub_domain":"bio_docking_component_coverage","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0045","source_domain":"biology","source_sub_domain":"bio_docking_component_clash","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0053","source_domain":"biology","source_sub_domain":"bio_docking_component_absence","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0055","source_domain":"biology","source_sub_domain":"bio_docking_component_absence","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0060","source_domain":"biology","source_sub_domain":"bio_docking_component_coverage","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0066","source_domain":"biology","source_sub_domain":"bio_docking_component_contacts","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0067","source_domain":"biology","source_sub_domain":"bio_docking_component_contacts","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0069","source_domain":"biology","source_sub_domain":"bio_docking_component_nearest_pair","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0093","source_domain":"biology","source_sub_domain":"bio_docking_component_clash","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-biol-bio_docking_plausibility-0097","source_domain":"biology","source_sub_domain":"bio_docking_component_nearest_pair","source_access_track":"raw_compute","target_leaf":"biology.docking_pose_plausibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_docking_review_v0","risk_profile":"bio_docking_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0005","source_domain":"chemistry","source_sub_domain":"chem_binding_polymer_population_context","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0007","source_domain":"chemistry","source_sub_domain":"chem_binding_component_residue","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0013","source_domain":"chemistry","source_sub_domain":"chem_binding_component_summary","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0015","source_domain":"chemistry","source_sub_domain":"molecular_contact_geometry","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0030","source_domain":"chemistry","source_sub_domain":"molecular_contact_geometry","source_access_track":"viewer_measurement","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"preserve_intent","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0084","source_domain":"chemistry","source_sub_domain":"chem_binding_het_contact","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0091","source_domain":"chemistry","source_sub_domain":"chem_binding_component_atom_context","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0115","source_domain":"chemistry","source_sub_domain":"chem_binding_het_polymer_atom_inventory","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0118","source_domain":"chemistry","source_sub_domain":"chem_binding_component_nearest_pair","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0120","source_domain":"chemistry","source_sub_domain":"chem_binding_het_contact","source_access_track":"raw_compute","target_leaf":"chemistry.steric_accessibility","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_steric_accessibility_v0","risk_profile":"chem_steric_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0122","source_domain":"chemistry","source_sub_domain":"chem_binding_component_chain_context","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_binding_geometry-0129","source_domain":"chemistry","source_sub_domain":"chem_binding_nonpolymer_inventory","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0031","source_domain":"chemistry","source_sub_domain":"chem_conformation_explicit_dihedral","source_access_track":"viewer_measurement","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"preserve_intent","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0049","source_domain":"chemistry","source_sub_domain":"chem_xyz_farthest_heavy_pair","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0051","source_domain":"chemistry","source_sub_domain":"chem_xyz_farthest_heavy_pair","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0053","source_domain":"chemistry","source_sub_domain":"chem_xyz_centroid_radius","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0057","source_domain":"chemistry","source_sub_domain":"chem_xyz_heavy_extent","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0076","source_domain":"chemistry","source_sub_domain":"chem_conformation_explicit_dihedral","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0080","source_domain":"chemistry","source_sub_domain":"chem_conformation_continuous_signed_dihedral","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-chem-chem_conformation-0097","source_domain":"chemistry","source_sub_domain":"chem_conformation_signed_absolute_dihedral","source_access_track":"raw_compute","target_leaf":"chemistry.conformation_analysis","target_leaf_kind":"existing","route_strategy":"reauthor_on_asset","viewer_capability_set":"molstar_conformation_measurement_v0","risk_profile":"chem_conformation_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0005","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0014","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0019","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0067","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0148","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0156","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0171","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0174","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0217","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0222","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0292","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0296","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"viewer_measurement","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"preserve_intent","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_preserve_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0323","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_ct_geometry-0343","source_domain":"medical","source_sub_domain":"med_ct_geometry","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0006","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0032","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0071","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0148","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0190","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false},
+    {"source_slot_id":"sv-medi-med_mri_anatomy-0215","source_domain":"medical","source_sub_domain":"med_mri_anatomy","source_access_track":"raw_compute","target_leaf":"medical.volumetric_target_geometry","target_leaf_kind":"proposed_new","route_strategy":"reauthor_on_asset","viewer_capability_set":"niivue_target_geometry_v0","risk_profile":"medical_geometry_reauthor_v0","old_truth_reusable":false}
+  ]
+}

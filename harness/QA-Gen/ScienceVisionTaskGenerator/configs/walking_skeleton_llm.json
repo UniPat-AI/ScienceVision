@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "assets_path": "viewer/assets.json",
+  "matched_index_path": "datasets/_matched/index.json",
+  "runs_dir": "data/runs",
+  "target_domains": [
+    "biology",
+    "medical",
+    "industrial",
+    "robotics",
+    "pointcloud",
+    "topological_photonics",
+    "astronomy"
+  ],
+  "v_classes": ["V1", "V2", "V3", "V4", "V5", "V6"],
+  "tasks_per_cell": 1,
+  "max_tasks": null,
+  "include_extension_domains": false,
+  "validation": {
+    "max_validation_iterations": 4,
+    "auto_pass_threshold": 0.85,
+    "allow_unverified_final_export": false,
+    "require_expert_for_release": true
+  },
+  "llm": {
+    "enabled": true,
+    "default_model": "claude-sonnet-4-6",
+    "model_by_v_class": {
+      "V1": "claude-sonnet-4-6",
+      "V2": "claude-sonnet-4-6",
+      "V3": "claude-opus-4-7",
+      "V4": "claude-opus-4-7",
+      "V5": "gemini-3.1-pro-preview",
+      "V6": "gemini-3.1-pro-preview"
+    },
+    "challenger_cross_model": true,
+    "temperature": 0.2,
+    "timeout_seconds": 60,
+    "pricing_per_mtok": {
+      "_note": "Mindra OpenAI-compat gateway prices, fetched 2026-06-03 from https://api.mindracode.com/api/pricing. Formula: USD/M_input = model_ratio*2, USD/M_output = model_ratio*completion_ratio*2. gemini-3.1-pro-preview has tier_pricing: in/out flips to $4/$9 per M tokens above 200K input (not modeled here; current runs stay well under).",
+      "claude-sonnet-4-6": {"in": 3.0, "out": 15.0},
+      "claude-opus-4-7": {"in": 5.0, "out": 25.0},
+      "gemini-3.1-pro-preview": {"in": 2.0, "out": 12.0}
+    }
+  }
+}

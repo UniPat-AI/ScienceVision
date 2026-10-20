@@ -1,0 +1,36 @@
+schema_version: 1
+kind: qagen_run_profile
+id: biology_workspace_registry_compile
+mode: local_fixture_compile
+
+domains:
+  - biology
+enabled_leaves:
+  - biology.docking_pose_plausibility
+blocked_leaves:
+  - biology.molecular_collision_check
+  - biology.bio_multi_structure_compare
+
+inputs:
+  registry_mode: workspace_registry
+  base: ../base.yaml
+  seed_index: .qagen/private/catalog/current.json
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/viewer_definitions.yaml
+  rubric: ../rubric.yaml
+  knowledge_index: knowledge/index.yaml
+  fixture_routing: ../agents/model_routing.fixture.yaml
+  domain_configs:
+    - ../domains/biology.yaml
+  leaf_configs:
+    - ../subdomains/biology/docking_pose_plausibility.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: true
+  require_local_fixture_digest_match: true
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  reason: "Workspace registries are compiled with fixture assets and routing for local integration only."

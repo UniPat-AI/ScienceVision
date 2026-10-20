@@ -1,0 +1,7 @@
+schema_version: 1
+kind: qagen_subdomain_aliases
+id: ev2_vnext_subdomain_aliases
+version: 1
+aliases:
+  - source_leaf: chemistry.chirality
+    target_leaf: chemistry.stereochemistry_chirality

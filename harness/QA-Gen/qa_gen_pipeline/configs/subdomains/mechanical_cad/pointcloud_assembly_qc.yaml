@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: mechanical_cad.pointcloud_assembly_qc
+domain: mechanical_cad
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [mechanical_cad.structure_qc_pointcloud]
+blocked_reasons: [catalog_prerequisites_incomplete, approved_knowledge_snapshot_missing]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.registered_pointcloud_and_nominal_assembly, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [pointcloud_to_nominal_assembly_comparison]
+seed:
+  query: {domain: mechanical_cad, subdomain: pointcloud_assembly_qc, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, registered_pointcloud, nominal_assembly, stated_tolerance]
+viewer:
+  required_operations: [inspect, isolate, rotate, overlay_compare, measure_distance]
+answer:
+  allowed_truth_modes: [visual_annotation, expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, registration_evidence, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-architecture-mechanical-synthesis, source_revision: 9, section_id: pointcloud_assembly_qc, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: no approved local CAD knowledge snapshot or verified generation chain exists."}

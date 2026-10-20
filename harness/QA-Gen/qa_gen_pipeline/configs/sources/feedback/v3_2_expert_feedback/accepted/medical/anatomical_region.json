@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_expert_feedback_source",
+  "id": "v3-2-feedback-medical-anatomical-region",
+  "leaf_id": "medical.anatomical_region",
+  "source_status": "accepted",
+  "production_approval": false,
+  "reference_sources": [
+    {
+      "repo_path": "qa_gen_pipeline/configs/sources/feedback/v3_2_expert_feedback/derived/triage_claims.json",
+      "content_digest": "sha256:31fdff0930bbc0cbe852610d9d5326fc1e3e601b16afa6460e623e1b853c6d71",
+      "use": "medical question-type, visibility, and coverage policy derivation"
+    },
+    {
+      "repo_path": "qa_gen_pipeline/configs/sources/feedback/v3_2_expert_feedback/normalized/explicit_feedback.json",
+      "content_digest": "sha256:28be808ea5d89fb976c257587e8c2398a78fad5ebece39a4a7d5ee8bfbc1c611",
+      "use": "medical reviewer evidence for rejecting geometry-only prompt shells"
+    },
+    {
+      "repo_path": "qa_gen_pipeline/configs/sources/medical_m3d_refseg_annotations.yaml",
+      "content_digest": "sha256:92417e53ab366951d6a0b3e2a9f43901ca9d7689634086d249d2fb144968a44d",
+      "use": "semantic GT interface declaration; missing source status blocks any binding"
+    }
+  ],
+  "content": {
+    "claims": [
+      {"claim_id": "forbid-ui-or-operation-instruction", "rule_id": "forbid_ui_or_operation_instruction"},
+      {"claim_id": "forbid-ungrounded-ground-truth", "rule_id": "forbid_ungrounded_ground_truth"},
+      {"claim_id": "forbid-viewer-shortcuts", "rule_id": "forbid_viewer_shortcuts"},
+      {"claim_id": "limit-measurement-saturation", "rule_id": "limit_measurement_saturation"},
+      {"claim_id": "require-expert-ground-truth-approval", "rule_id": "require_expert_ground_truth_approval"},
+      {"claim_id": "require-viewer-grounded-evidence", "rule_id": "require_viewer_grounded_evidence"}
+    ],
+    "question_family_policy": {
+      "allowed_families": [
+        {"family_id": "anatomical-localization", "family_kind": "attribute"},
+        {"family_id": "anatomical-relation-comparison", "family_kind": "comparison"},
+        {"family_id": "image-grounded-anatomical-property", "family_kind": "property"}
+      ],
+      "quota": {
+        "scope": "portfolio",
+        "unit": "percentage_points",
+        "measurement_max": 0,
+        "non_measurement_min": 100
+      }
+    },
+    "gt_policy": {
+      "gt_source_types": ["curated_source_label", "expert_annotation"],
+      "expert_approval_required": true
+    },
+    "subdomain_semantics": "question_type_only",
+    "asset_facets_schema": {
+      "facets": [
+        {"facet_id": "anatomy", "cardinality": "multiple", "required": true},
+        {"facet_id": "body-region", "cardinality": "single", "required": true},
+        {"facet_id": "dataset", "cardinality": "single", "required": true},
+        {"facet_id": "finding-class", "cardinality": "multiple", "required": false},
+        {"facet_id": "label-identity", "cardinality": "multiple", "required": false},
+        {"facet_id": "modality", "cardinality": "single", "required": true},
+        {"facet_id": "organ-system", "cardinality": "multiple", "required": true},
+        {"facet_id": "study-series", "cardinality": "single", "required": true},
+        {"facet_id": "timepoint", "cardinality": "single", "required": false}
+      ]
+    },
+    "medical_visibility_policy": {
+      "solver_visible_segmentation": false,
+      "hidden_reference_mask_allowed": "conditional",
+      "label_identity_policy": "preserve",
+      "semantic_scoring_required": true,
+      "duplicate_coverage_key": "dataset-facet-question-kernel"
+    }
+  }
+}

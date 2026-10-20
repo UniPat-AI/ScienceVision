@@ -7,6 +7,8 @@ set -euo pipefail
 : "${WORK:?set WORK to a fresh empty directory}"
 : "${DATASET:?set DATASET to the dataset root}"
 : "${CONTRACTS:?set CONTRACTS to the exported contracts.jsonl}"
+: "${CONTRACTS_CODEX:=${CONTRACTS}}"
+: "${CONTRACTS_CLAUDE:=${CONTRACTS}}"
 : "${SCORER_IMAGE:?set SCORER_IMAGE to a scorer image reference (prefer @sha256:...)}"
 
 REPO=${REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}
@@ -19,15 +21,20 @@ if [[ $# -eq 0 ]]; then
 fi
 
 mkdir -p "$WORK"
+export PYTHONPATH="$REPO${PYTHONPATH:+:$PYTHONPATH}"
 "$PYTHON" -m venv "$VENV"
 "$VENV/bin/pip" install --quiet --upgrade pip
-"$VENV/bin/pip" install --quiet -e "${REPO}[harbor]"
+"$VENV/bin/pip" install --quiet -e "${REPO}/harness[harbor]"
 
 pids=()
 for harness in codex claude-code; do
+  case "$harness" in
+    codex) contracts="$CONTRACTS_CODEX" ;;
+    *) contracts="$CONTRACTS_CLAUDE" ;;
+  esac
   for route in cc ccmcp; do
     "$VENV/bin/python" -m sandbox.build_trees \
-      --contracts "$CONTRACTS" \
+      --contracts "$contracts" \
       --dataset-root "$DATASET" \
       --out "$WORK/trees-$harness" \
       --route "$route" \

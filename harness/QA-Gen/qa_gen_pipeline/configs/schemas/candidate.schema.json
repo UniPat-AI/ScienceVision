@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/candidate.schema.json",
+  "description": "Private author candidate. This artifact is never solver-safe.",
+  "type": "object",
+  "required": ["artifact_kind", "task_id", "prompt", "anonymous_scene_ref", "viewer_session_request", "reference_answer", "reasoning", "rubric", "provenance"],
+  "properties": {
+    "artifact_kind": {"const": "author_private_candidate"},
+    "task_id": {"type": "string", "minLength": 1},
+    "prompt": {"type": "string", "minLength": 1},
+    "anonymous_scene_ref": {"type": "string", "minLength": 1},
+    "target_spec_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "viewer_session_request": {
+      "type": "object",
+      "required": ["request_id", "viewer_profile_digest", "allowed_operations"],
+      "properties": {
+        "request_id": {"type": "string", "minLength": 1},
+        "viewer_profile_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "allowed_operations": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "reference_answer": {"type": "object", "minProperties": 1},
+    "reasoning": {"type": "string", "minLength": 1},
+    "rubric": {"type": "object", "minProperties": 1},
+    "visual_target": {
+      "oneOf": [
+        {"type": "string", "minLength": 1},
+        {"type": "object", "minProperties": 1}
+      ]
+    },
+    "attested_evidence": {
+      "type": "object",
+      "required": ["handoff_digest", "receipt_digests", "render_digests"],
+      "properties": {
+        "handoff_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "receipt_digests": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        },
+        "render_digests": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "question_contract": {"type": "object", "minProperties": 1},
+    "provenance": {
+      "type": "object",
+      "required": ["plan_digest", "config_digest", "knowledge_snapshot_digest"],
+      "properties": {
+        "plan_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "config_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "knowledge_snapshot_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "work_item_id": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

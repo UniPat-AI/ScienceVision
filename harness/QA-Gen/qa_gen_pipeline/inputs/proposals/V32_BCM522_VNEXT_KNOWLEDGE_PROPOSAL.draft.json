@@ -1,0 +1,252 @@
+{
+  "schema_version": "sciencevision.qagen.subdomain_knowledge_proposal.v0.draft",
+  "proposal_id": "v32-bcm522-sixroute-knowledge-proposal-20260827",
+  "status": "draft_unapproved",
+  "approval": {
+    "human_approved": false,
+    "domain_expert_approved": false,
+    "approved_by": null,
+    "approval_receipt": null
+  },
+  "source_lock": {
+    "selection_id_sha256": "149b29605da6cd2862e427dacb4d1098b106d23eb95b248ffdf6dc0bdf1846d4",
+    "selection_file_sha256": "75ae4cbb771d42ff68811b2e06a82ca34cb00749f888673518dac937336463d6",
+    "manifest_file_sha256": "656e1c2d3192c7a74477367a461a717767e90b1424e6e6a8055e77b5992fa71a",
+    "route_proposal_file_sha256": "b4e79ae61b60cf752e1a55c76c5e5e02fdaf3872c4983e368fb049ece6ce1866"
+  },
+  "source_material_policy": {
+    "may_use": [
+      "source domain and sub-domain labels",
+      "asset format and content digest",
+      "visual skill and viewer affordance",
+      "answer shape without answer values",
+      "source scientific action after de-identification",
+      "failure modes and forbidden shortcuts"
+    ],
+    "must_not_enter_author_prompt": [
+      "reference answer values",
+      "old rubric thresholds derived from the answer",
+      "old solving approach",
+      "oracle or independent-oracle receipts",
+      "compute contract",
+      "selection hints",
+      "raw asset or upstream paths",
+      "stable accession, case, subject, or asset identifiers"
+    ],
+    "truth_rule": "Every generated candidate receives a fresh truth and evidence chain. Old truth is private regression material only."
+  },
+  "global_generation_constraints": [
+    "solver receives only an anonymous scene reference and controlled viewer operations",
+    "prefer direct inspection and viewer-native measurement over formula-heavy computation",
+    "do not ask for exhaustive nearest-pair, farthest-pair, centroid, volume, or global search unless the viewer exposes an attested native operation",
+    "do not infer docking, pathology, or clinical meaning solely from file origin",
+    "every leaf remains blocked until seed, knowledge, asset, viewer, provider, and review locks are approved"
+  ],
+  "leaf_proposals": [
+    {
+      "leaf_id": "biology.molecular_collision_check",
+      "disposition": "reuse_existing",
+      "source_slot_count": 10,
+      "source_sub_domains": [
+        "bio_collision_overlap_magnitude",
+        "bio_collision_pair_distance",
+        "bio_component_nonpolymer_inventory",
+        "bio_component_polymer_context",
+        "molecular_contact_geometry"
+      ],
+      "knowledge_scope": [
+        "visual signs of local atomic overlap and implausible contact",
+        "how atom or residue selection changes the claim being tested",
+        "distance-versus-contact judgments that are answerable in the viewer",
+        "distinguishing a local clash from a global structure-quality claim"
+      ],
+      "valid_question_patterns": [
+        "compare one declared local pair against a visible distance threshold",
+        "identify which of two declared local regions has the more severe visible clash",
+        "judge whether a declared contact remains after isolating the relevant components"
+      ],
+      "invalid_question_patterns": [
+        "search the complete structure for the nearest or worst pair",
+        "compute a global van-der-Waals overlap table",
+        "derive centroids or principal axes from raw coordinates"
+      ],
+      "viewer_capability_set": "molstar_collision_measurement_v0",
+      "current_config_gaps": [
+        "approved knowledge snapshot missing",
+        "anonymous scene lock missing",
+        "attested atom-selection and distance-measurement evidence missing"
+      ],
+      "required_human_review": [
+        "biology domain expert",
+        "viewer capability owner"
+      ]
+    },
+    {
+      "leaf_id": "biology.docking_pose_plausibility",
+      "disposition": "reuse_existing",
+      "source_slot_count": 10,
+      "source_sub_domains": [
+        "bio_docking_component_absence",
+        "bio_docking_component_clash",
+        "bio_docking_component_contacts",
+        "bio_docking_component_coverage",
+        "bio_docking_component_nearest_pair"
+      ],
+      "knowledge_scope": [
+        "visual plausibility of a declared interface or placed component",
+        "interface coverage, solvent exposure, gaps, and severe clashes",
+        "limits of what can be concluded from a deposited assembly",
+        "distinguishing pose plausibility from binding affinity"
+      ],
+      "valid_question_patterns": [
+        "compare two declared interface regions for visible packing plausibility",
+        "identify a conspicuous clash or unsupported gap at a declared interface",
+        "judge whether a declared component is visibly engaged with its stated partner"
+      ],
+      "invalid_question_patterns": [
+        "claim that every deposited complex is a docking prediction",
+        "predict binding energy or affinity from appearance",
+        "perform exhaustive contact or nearest-pair computation"
+      ],
+      "viewer_capability_set": "molstar_docking_review_v0",
+      "current_config_gaps": [
+        "production knowledge snapshot missing",
+        "verified docking provenance missing for each selected asset",
+        "surface and contact viewer evidence missing"
+      ],
+      "required_human_review": [
+        "structural biology domain expert",
+        "asset provenance owner",
+        "viewer capability owner"
+      ]
+    },
+    {
+      "leaf_id": "chemistry.steric_accessibility",
+      "disposition": "reuse_existing",
+      "source_slot_count": 8,
+      "source_sub_domains": [
+        "chem_binding_component_atom_context",
+        "chem_binding_component_nearest_pair",
+        "chem_binding_component_residue",
+        "chem_binding_component_summary",
+        "chem_binding_het_contact",
+        "molecular_contact_geometry"
+      ],
+      "knowledge_scope": [
+        "local steric shielding and accessibility around a declared site",
+        "visible contact geometry and the limits of distance-only inference",
+        "how molecular surface and neighboring residues affect access",
+        "separating steric access from reactivity or binding affinity"
+      ],
+      "valid_question_patterns": [
+        "compare the accessibility of two declared sites using surface and local neighbors",
+        "test one declared contact with a viewer-native distance measurement",
+        "judge whether a declared approach direction is visibly obstructed"
+      ],
+      "invalid_question_patterns": [
+        "search every atom pair for a global optimum",
+        "infer reaction outcome or affinity from steric appearance alone",
+        "expose upstream residue or asset selection hints outside the question"
+      ],
+      "viewer_capability_set": "molstar_steric_accessibility_v0",
+      "current_config_gaps": [
+        "approved knowledge snapshot missing",
+        "current leaf contract does not declare isolate, selection, surface, or distance operations",
+        "controlled viewer evidence missing"
+      ],
+      "required_human_review": [
+        "chemistry domain expert",
+        "viewer capability owner"
+      ]
+    },
+    {
+      "leaf_id": "chemistry.conformation_analysis",
+      "disposition": "reuse_existing",
+      "source_slot_count": 12,
+      "source_sub_domains": [
+        "chem_binding_component_chain_context",
+        "chem_binding_het_polymer_atom_inventory",
+        "chem_binding_nonpolymer_inventory",
+        "chem_binding_polymer_population_context",
+        "chem_conformation_continuous_signed_dihedral",
+        "chem_conformation_explicit_dihedral",
+        "chem_conformation_signed_absolute_dihedral",
+        "chem_xyz_centroid_radius",
+        "chem_xyz_farthest_heavy_pair",
+        "chem_xyz_heavy_extent"
+      ],
+      "knowledge_scope": [
+        "viewer-native torsion and local shape analysis",
+        "declared-atom dihedral conventions and signed-angle interpretation",
+        "qualitative compactness and extension without global coordinate search",
+        "distinguishing conformation from configuration and from molecular identity"
+      ],
+      "valid_question_patterns": [
+        "measure a declared four-atom dihedral and classify its conformation",
+        "compare two declared local torsions or visible conformational regions",
+        "judge compact versus extended shape from a controlled view with declared landmarks"
+      ],
+      "invalid_question_patterns": [
+        "search all heavy-atom pairs for the farthest pair",
+        "derive centroids, covariance axes, or global extents from raw coordinates",
+        "infer reaction products without a validated reactive-conformation protocol"
+      ],
+      "viewer_capability_set": "molstar_conformation_measurement_v0",
+      "current_config_gaps": [
+        "approved knowledge snapshot missing",
+        "attested atom-selection and dihedral evidence missing",
+        "distance operation is not declared in the current leaf config"
+      ],
+      "required_human_review": [
+        "chemistry domain expert",
+        "viewer capability owner"
+      ]
+    },
+    {
+      "leaf_id": "medical.volumetric_target_geometry",
+      "disposition": "propose_new_minimal_leaf",
+      "source_slot_count": 20,
+      "source_sub_domains": [
+        "med_ct_geometry",
+        "med_mri_anatomy"
+      ],
+      "why_existing_leaves_do_not_fit": [
+        "anatomical_region is identification, while these source tasks measure a supplied segmentation",
+        "lesion_localization assumes lesion semantics not guaranteed by every mask",
+        "imaging_feature_assessment concerns appearance rather than target geometry"
+      ],
+      "knowledge_scope": [
+        "geometry of a declared volumetric target in CT or MRI",
+        "inclusive bounding-box, extent, centroid, laterality, and representative-slice conventions",
+        "array-axis versus anatomical-orientation semantics",
+        "mask-label and complete-nonzero-overlay selection rules",
+        "which measurements are directly exposed by the controlled viewer"
+      ],
+      "valid_question_patterns": [
+        "locate a declared target and report viewer-native bounding-box or extent measurements",
+        "identify a representative slice using a viewer-attested overlay operation",
+        "classify laterality or compare declared axis extents from viewer evidence"
+      ],
+      "invalid_question_patterns": [
+        "ask the solver to load NIfTI arrays or execute code",
+        "derive voxel counts, physical volume, centroid, or exhaustive slice maxima without an attested viewer operation",
+        "infer lesion or diagnosis semantics from a generic segmentation",
+        "expose subject, case, or upstream dataset identifiers"
+      ],
+      "viewer_capability_set": "niivue_target_geometry_v0",
+      "required_new_config_before_generation": [
+        "canonical leaf config and schema validation",
+        "approved medical knowledge snapshot",
+        "repaired expert-reviewed seed",
+        "anonymous scene registry",
+        "attested overlay and measurement evidence",
+        "medical production approval"
+      ],
+      "required_human_review": [
+        "medical imaging domain expert",
+        "privacy and de-identification reviewer",
+        "viewer capability owner"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+[
+  {
+    "name": "kuka_iiwa",
+    "path": "/crawl_data/robotics/urdf_sdf_samples/kuka_iiwa.urdf",
+    "size": 11160,
+    "viewer": "urdf",
+    "format": "urdf",
+    "note": "URDF — XML kinematic spec; rendered as kinematic tree + primitives"
+  },
+  {
+    "name": "r2d2",
+    "path": "/crawl_data/robotics/urdf_sdf_samples/r2d2.urdf",
+    "size": 10829,
+    "viewer": "urdf",
+    "format": "urdf",
+    "note": "URDF — XML kinematic spec; rendered as kinematic tree + primitives"
+  },
+  {
+    "name": "gazebo_shapes",
+    "path": "/crawl_data/robotics/urdf_sdf_samples/gazebo_shapes.sdf",
+    "size": 7157,
+    "viewer": "urdf",
+    "format": "sdf",
+    "note": "SDF — Gazebo XML; primitive shapes from world/model"
+  }
+]

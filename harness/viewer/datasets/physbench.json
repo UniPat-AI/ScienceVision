@@ -1,0 +1,26 @@
+[
+  {
+    "name": "physbench",
+    "label": "PhysBench",
+    "modality": "physical-world video",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/USC-PSI-Lab/PhysBench",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "test": {
+        "rows": 3931,
+        "jsonl": "/out_samples/physbench/test.jsonl",
+        "first_qid": "physbench-test-000009"
+      },
+      "val": {
+        "rows": 65,
+        "jsonl": "/out_samples/physbench/val.jsonl",
+        "first_qid": "physbench-val-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 10009,
+    "total_rows": 3996
+  }
+]

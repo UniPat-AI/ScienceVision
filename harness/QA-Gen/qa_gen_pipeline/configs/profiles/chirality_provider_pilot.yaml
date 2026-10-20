@@ -1,0 +1,62 @@
+schema_version: 1
+kind: qagen_run_profile
+id: chirality_provider_pilot
+mode: local_provider_pilot
+
+domains:
+  - chemistry
+enabled_leaves:
+  - chemistry.stereochemistry_chirality
+blocked_leaves:
+  - chemistry.conformation_analysis
+  - chemistry.steric_accessibility
+  - chemistry.coordination_chemistry
+  - chemistry.crystallography_packing
+  - chemistry.reactive_conformation
+
+inputs:
+  registry_mode: static_fixture
+  base: ../base.yaml
+  source_registry: ../sources/ev2_pilot.yaml
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/molstar_chirality_pilot_viewer.yaml
+  rubric: ../rubric.yaml
+  knowledge_index: ../../knowledge/index.yaml
+  model_routing: ../agents/model_routing.pilot.yaml
+  provider_runtime: ../agents/provider_runtime.pilot.yaml
+  domain_configs:
+    - ../domains/chemistry.yaml
+  leaf_configs:
+    - ../pilots/chirality/stereochemistry_chirality.yaml
+
+viewer_profile_requirement:
+  adapter_id: molstar-chirality-host-v1
+  definition_digest: sha256:b487b742c6b7eb6444240c663e06ed9cb2a5ec6edb498343382f718139e91cb0
+  required_operations: [rotate, render]
+  require_non_fixture: true
+  require_scene_registry: true
+
+planning:
+  default_count: 1
+  quota: 10
+  batch:
+    min_count: 5
+    max_count: 10
+    seed_selection:
+      policy: locked_seed_digest
+      dedupe_policy: seed_variation_pair
+    variation:
+      policy: deterministic_unique_slot
+  per_work_item_budget:
+    max_candidates: 1
+    max_revisions: 1
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  reason: "Explicit local provider execution only; fixture inputs and outputs are never release eligible."

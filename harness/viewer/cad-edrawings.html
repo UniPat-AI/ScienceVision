@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CAD-native eDrawings — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  html, body { height: 100%; margin: 0; }
+  body { display: flex; flex-direction: column; background: #0d1117; }
+  .alts { display: inline-flex; gap: 6px; align-items: center; margin-left: 12px; flex-wrap: wrap; }
+  .alts a, .alts span.badge {
+    font: 11px ui-monospace, monospace;
+    padding: 2px 8px;
+    border-radius: 3px;
+    border: 1px solid #30363d;
+    text-decoration: none;
+    color: #c9d1d9;
+    background: #161b22;
+  }
+  .alts a:hover { filter: brightness(1.2); }
+  .alts span.badge.active { background: #1f6feb; border-color: #1f6feb; color: white; }
+  iframe#frame { flex: 1 1 auto; width: 100%; border: 0; background: white; }
+  #err {
+    color: #f85149;
+    padding: 24px;
+    font: 13px ui-monospace, monospace;
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <a class="back" href="/viewer/">← Shell</a>
+    <strong>CAD-native (eDrawings)</strong>
+    <span id="filename" class="meta"></span>
+  </div>
+  <div class="alts" id="alts"></div>
+</header>
+
+<iframe id="frame" src="about:blank"
+        sandbox="allow-scripts allow-same-origin allow-pointer-lock allow-popups"
+        title="eDrawings interactive viewer"></iframe>
+
+<script>
+const params = new URLSearchParams(location.search);
+const file   = params.get('file');                          // eDrawings HTML URL
+const glb    = params.get('glb');                           // optional colorized GLB
+const sldprt = params.get('sldprt');                        // optional original SLDPRT (download)
+const name   = params.get('name') || (file ? file.split('/').pop() : '(no name)');
+
+const frameEl    = document.getElementById('frame');
+const altsEl     = document.getElementById('alts');
+const filenameEl = document.getElementById('filename');
+
+if (!file) {
+  frameEl.remove();
+  const err = document.createElement('div');
+  err.id = 'err';
+  err.textContent = 'error: missing ?file= query param';
+  document.body.appendChild(err);
+} else {
+  filenameEl.textContent = decodeURIComponent(name);
+  // Active rep badge.
+  const active = document.createElement('span');
+  active.className = 'badge active';
+  active.textContent = '● eDrawings';
+  altsEl.appendChild(active);
+  if (glb) {
+    const a = document.createElement('a');
+    a.href = `/viewer/gltf.html?file=${glb}`;
+    a.textContent = 'colorized GLB ↗';
+    a.target = '_self';
+    altsEl.appendChild(a);
+  }
+  if (sldprt) {
+    const a = document.createElement('a');
+    a.href = decodeURIComponent(sldprt);
+    a.textContent = 'original .SLDPRT ↓';
+    a.setAttribute('download', '');
+    altsEl.appendChild(a);
+  }
+  // Load the eDrawings HTML directly. The iframe is sandboxed but with
+  // same-origin + scripts allowed because the eDrawings runtime (from
+  // Dassault Systemes) needs to draw to its own WebGL canvas.
+  frameEl.src = file;
+}
+</script>
+</body>
+</html>

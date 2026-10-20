@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://babyvision.unipat.ai/viewer/manifest.schema.json",
+  "title": "BabyVision-v2 viewer manifest",
+  "type": "object",
+  "required": ["brand", "version", "generated_at", "counts", "data", "docs", "domains"],
+  "additionalProperties": true,
+  "properties": {
+    "brand": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+([-+].*)?$"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "counts": {
+      "type": "object",
+      "required": ["assets", "qagen", "mcp_tools", "leaderboard_entries"],
+      "additionalProperties": false,
+      "properties": {
+        "assets":               { "type": "integer", "minimum": 0 },
+        "qagen":                { "type": "integer", "minimum": 0 },
+        "mcp_tools":            { "type": "integer", "minimum": 0 },
+        "leaderboard_entries":  { "type": "integer", "minimum": 0 }
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": ["assets_index", "qagen_index", "leaderboard"],
+      "additionalProperties": false,
+      "properties": {
+        "assets_index": { "type": "string", "minLength": 1 },
+        "qagen_index":  { "type": "string", "minLength": 1 },
+        "leaderboard":  { "type": "string", "minLength": 1 }
+      }
+    },
+    "docs": {
+      "type": "object",
+      "required": ["tree_index", "search_index", "base_url"],
+      "additionalProperties": false,
+      "properties": {
+        "tree_index":   { "type": "string", "minLength": 1 },
+        "search_index": { "type": "string", "minLength": 1 },
+        "base_url":     { "type": "string", "minLength": 1 }
+      }
+    },
+    "domains": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": ["id", "label", "color", "shipped"],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "label":   { "type": "string", "minLength": 1, "maxLength": 128 },
+          "color":   { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "shipped": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

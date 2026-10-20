@@ -1,0 +1,56 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: chemistry.crystallography_packing
+domain: chemistry
+status: blocked
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: blocked
+  release: blocked
+blocked_reasons:
+  - periodic_crystal_context_not_verified
+  - catalog_prerequisites_incomplete
+required_inputs:
+  - id: seed.verified_positive
+    state: missing
+  - id: asset.anonymous_periodic_scene
+    state: missing
+  - id: viewer.periodic_symmetry_context
+    state: unverified
+  - id: knowledge.approved_snapshot
+    state: missing
+
+visual_skills:
+  - crystal_packing_and_symmetry_assessment
+seed:
+  query:
+    domain: chemistry
+    subdomain: crystallography_packing
+    required_status: verified
+asset:
+  required_conditions:
+    - anonymous_scene
+    - periodic_context
+viewer:
+  required_operations:
+    - inspect
+    - rotate
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+evidence:
+  required:
+    - viewer_trace
+    - visual_annotation
+    - periodic_context_evidence
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      section_id: doxcntupYILYu3jGkUiodgAxfxh
+      coverage: source_only
+  locked_refs: []
+release:
+  eligible: false
+  reason: "Periodic scene and symmetry evidence are not established."

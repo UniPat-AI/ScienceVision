@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title data-i18n="login.documentTitle">ScienceVision 登录</title>
+  <link rel="stylesheet" href="../static/online.css">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="brand-panel">
+      <span class="eyebrow">BabyVision-v2</span>
+      <h1 data-i18n="login.heading">ScienceVision 审核</h1>
+      <p data-i18n="login.intro">已分配的 3D 任务、校验反馈、答案与推理过程，集中在一个工作台。</p>
+      <dl>
+        <div>
+          <dt data-i18n="login.facet.viewer.term">查看器</dt>
+          <dd data-i18n="login.facet.viewer.desc">按任务定制的 3D 查看器</dd>
+        </div>
+        <div>
+          <dt data-i18n="login.facet.drafts.term">草稿</dt>
+          <dd data-i18n="login.facet.drafts.desc">保存在当前浏览器中</dd>
+        </div>
+        <div>
+          <dt data-i18n="login.facet.submission.term">提交</dt>
+          <dd data-i18n="login.facet.submission.desc">校验后集中存储</dd>
+        </div>
+      </dl>
+    </section>
+    <form id="login-form" class="login-panel" autocomplete="on">
+      <div>
+        <span class="eyebrow" data-i18n="login.secureAccess">安全访问</span>
+        <h2 data-i18n="login.signInHeading">登录</h2>
+        <p data-i18n="login.signInHint">请使用管理员分配给你的专家账号凭据。</p>
+      </div>
+      <label for="username" data-i18n="login.usernameLabel">用户名</label>
+      <input id="username" name="username" autocomplete="username" required autofocus>
+      <label for="password" data-i18n="login.passwordLabel">密码</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit" data-i18n="login.submit">继续</button>
+      <p id="login-status" role="alert" aria-live="polite"></p>
+    </form>
+    <form id="password-form" class="login-panel" autocomplete="off" hidden>
+      <div>
+        <span class="eyebrow" data-i18n="login.activationEyebrow">账号激活</span>
+        <h2 data-i18n="login.activationHeading">设置你的密码</h2>
+        <p data-i18n="login.activationHint">临时密码无法打开已分配的任务，请设置一个仅你本人知晓的密码。</p>
+      </div>
+      <label for="new-password" data-i18n="login.newPasswordLabel">新密码</label>
+      <input id="new-password" name="new_password" type="password" autocomplete="new-password" minlength="16" maxlength="256" required>
+      <label for="confirm-password" data-i18n="login.confirmPasswordLabel">确认新密码</label>
+      <input id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="16" maxlength="256" required>
+      <button type="submit" data-i18n="login.activateSubmit">激活账号</button>
+      <button id="activation-logout" class="secondary-button" type="button" data-i18n="login.signOut">退出登录</button>
+      <p id="password-status" role="alert" aria-live="polite"></p>
+    </form>
+  </main>
+  <script src="../static/i18n.js"></script>
+  <script src="../static/login.js"></script>
+</body>
+</html>

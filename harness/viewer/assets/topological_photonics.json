@@ -1,0 +1,58 @@
+[
+  {
+    "name": "nanobeam_band_d1_0p0",
+    "path": "/crawl_data/topological_photonics/zenodo_15591239_topological_nanobeam/nanobeam_band_d1_0p0.dat",
+    "size": 607507,
+    "viewer": "bandplot",
+    "format": "dat",
+    "note": "Topological nanobeam band/transmission TSV (Zenodo 15591239)"
+  },
+  {
+    "name": "nanobeam_band_d1_1p0",
+    "path": "/crawl_data/topological_photonics/zenodo_15591239_topological_nanobeam/nanobeam_band_d1_1p0.dat",
+    "size": 570323,
+    "viewer": "bandplot",
+    "format": "dat",
+    "note": "Topological nanobeam band/transmission TSV (Zenodo 15591239)"
+  },
+  {
+    "name": "nanobeam_edge_vs_noedge",
+    "path": "/crawl_data/topological_photonics/zenodo_15591239_topological_nanobeam/nanobeam_edge_vs_noedge.dat",
+    "size": 133355,
+    "viewer": "bandplot",
+    "format": "dat",
+    "note": "Topological nanobeam band/transmission TSV (Zenodo 15591239)"
+  },
+  {
+    "name": "nanobeam_gap_dependence_a300_w07",
+    "path": "/crawl_data/topological_photonics/zenodo_15591239_topological_nanobeam/nanobeam_gap_dependence_a300_w07.dat",
+    "size": 424405,
+    "viewer": "bandplot",
+    "format": "dat",
+    "note": "Topological nanobeam band/transmission TSV (Zenodo 15591239)"
+  },
+  {
+    "name": "nanobeam_measured_spectrum",
+    "path": "/crawl_data/topological_photonics/zenodo_15591239_topological_nanobeam/nanobeam_measured_spectrum.dat",
+    "size": 47095,
+    "viewer": "bandplot",
+    "format": "dat",
+    "note": "Topological nanobeam band/transmission TSV (Zenodo 15591239)"
+  },
+  {
+    "name": "mpb_diamond_lattice",
+    "path": "/crawl_data/topological_photonics/specs_and_layouts/mpb_diamond_lattice.ctl",
+    "size": 1510,
+    "viewer": "mpbctl",
+    "format": "ctl",
+    "note": "MPB Scheme spec — syntax-highlighted text"
+  },
+  {
+    "name": "klayout_t10",
+    "path": "/crawl_data/topological_photonics/specs_and_layouts/klayout_t10.gds",
+    "size": 2762,
+    "viewer": "gdsii",
+    "format": "gds",
+    "note": "GDSII fab layout — in-browser BOUNDARY parser + Canvas2D"
+  }
+]

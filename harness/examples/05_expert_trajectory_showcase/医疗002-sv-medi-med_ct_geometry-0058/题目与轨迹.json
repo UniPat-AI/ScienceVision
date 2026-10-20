@@ -1,0 +1,4227 @@
+{
+  "assignment_id": "asgn_35536c5dd86e36933c99472a",
+  "task_id": "sv-medi-med_ct_geometry-0058",
+  "batch_id": "batch_40b02b7f67f780f6af5afecb",
+  "question": {
+    "zh": "此CT体数据中的靶区为所提供分割中携带掩膜标签1的区域。包围盒范围同时计入两个边界体素，因此沿每个轴其值为两个边界之差加1。采样网格的三个轴编号为0、1和2。轴向为采样网格的轴2。当多个轴在最宽上并列时，按递增顺序报告所有并列轴，而非只选一个。当多个切片并列时，报告索引最小的切片。计数是永不为负的整数，因此当无符合项时答案为0而非空白。\n\n比较靶区的三个空间范围。沿三个数组轴测量重叠跨度。沿所有三个数组轴测量靶区范围，识别每个最长的数组轴，找到面积最大的轴向索引中的最小者**答案格式**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n}\n```",
+    "en": "The target in this CT volume is the region carrying mask label 1 in the segmentation supplied alongside it. A bounding box extent counts both bounding voxels, so along each axis it is the difference between the two bounds plus 1. The three axes of the sampling grid are numbered 0, 1 and 2. The axial axis is axis 2 of the sampling grid. Where several axes tie for widest, report every tied axis, in increasing order, rather than choosing one. Where several slices tie, report the one with the lowest index. A count is a whole number that is never negative, so where nothing qualifies the answer is 0 rather than blank.\n\nCompare the target's three spatial extents. Measure overlay span along three array axes. Measure target extent on all three array axes, identify every longest array axis, find the smallest maximum-area axial index.\n\n**Answer format**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n}\n```",
+    "source": "effective_question"
+  },
+  "answer": {
+    "answer": "{\n  \"extent_vox\": <161-194，122-145，85-114>,\n  \"longest_axes\": <52>,\n  \"representative_axial_index\": <106>,\n}",
+    "reasoning": "在3D视角找到病灶，切换到MPR，滚动切片找到三轴的范围，在轴位找到最大面积",
+    "validation": {
+      "feedback": "左右质心偏移建议删除",
+      "status": "uncertain"
+    }
+  },
+  "trajectory": {
+    "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+    "sealed_manifest_sha256": "7e162d3d81d1ae6e3b0f1009e91f0b89ea4d54b594f543f9f21930db9af737b4",
+    "submission_id": "sub_e24818fe14a4040b3e1f9ddc",
+    "submitted_at": "2026-09-03T06:09:42Z",
+    "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+    "initial_state": {
+      "cal_max": 290.297,
+      "cal_min": -1023.88,
+      "clip": {
+        "azimuth_deg": 0,
+        "depth": 2,
+        "elevation_deg": 0,
+        "enabled": false
+      },
+      "crosshair": {
+        "fraction": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "voxel": [
+          133,
+          97,
+          106
+        ],
+        "world_ras_mm": [
+          5.0009307861328125,
+          151.87539672851562,
+          492.447998046875
+        ]
+      },
+      "dims": [
+        267,
+        194,
+        213
+      ],
+      "level": -366.7915,
+      "mask": {
+        "mask_id": null,
+        "opacity": 0.5,
+        "present": true,
+        "visible": true
+      },
+      "measurements": [],
+      "mode": "mpr",
+      "pan": {
+        "plane": "axial",
+        "right_fraction": 0,
+        "up_fraction": 0
+      },
+      "render": {
+        "azimuth_deg": 110,
+        "elevation_deg": 10
+      },
+      "slice_type": 3,
+      "viewer": "niivue",
+      "window": 1314.1770000000001,
+      "zoom": 1
+    },
+    "operation_count": 15,
+    "keyframe_count": 15,
+    "operations": [
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_c02c4c18f046481d9c7e6c3cc96e1391",
+        "operation_seq": 1,
+        "parent_operation_id": null,
+        "function": {
+          "name": "sv3d_set_view_mode",
+          "version": "1"
+        },
+        "input": {
+          "mode": "render"
+        },
+        "replay_input": {
+          "mode": "render"
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "mode": "render"
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": 110,
+              "elevation_deg": 10
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:10.500Z",
+          "completed_at": "2026-09-03T05:59:10.502Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-3d2fe7cf-4a98-4032-800e-4e884786040b",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-3d2fe7cf-4a98-4032-800e-4e884786040b-ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d",
+            "byte_size": 1186481,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:10.574Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:11Z",
+          "screenshot_file": "screenshots/操作001.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_adf7b326a92f46d49a55e6487ef09166",
+        "operation_seq": 2,
+        "parent_operation_id": "op_c02c4c18f046481d9c7e6c3cc96e1391",
+        "function": {
+          "name": "sv3d_set_mask_visibility",
+          "version": "1"
+        },
+        "input": {
+          "visible": false
+        },
+        "replay_input": {
+          "visible": false
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0,
+            "present": true,
+            "visible": false
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "visible": false
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0,
+              "present": true,
+              "visible": false
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": 110,
+              "elevation_deg": 10
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:17.681Z",
+          "completed_at": "2026-09-03T05:59:17.771Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-f59696ec-e40c-4002-980c-10526749d012",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-f59696ec-e40c-4002-980c-10526749d012-beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5",
+            "byte_size": 1162622,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:17.890Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:18Z",
+          "screenshot_file": "screenshots/操作002.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_34a72ae5abd443348406572bdadaea7d",
+        "operation_seq": 3,
+        "parent_operation_id": "op_adf7b326a92f46d49a55e6487ef09166",
+        "function": {
+          "name": "sv3d_set_mask_visibility",
+          "version": "1"
+        },
+        "input": {
+          "visible": true
+        },
+        "replay_input": {
+          "visible": true
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0,
+            "present": true,
+            "visible": false
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "visible": true
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": 110,
+              "elevation_deg": 10
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:19.963Z",
+          "completed_at": "2026-09-03T05:59:20.043Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-f836319b-2516-4b9d-ba05-36dd0dcdb12e",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-f836319b-2516-4b9d-ba05-36dd0dcdb12e-ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d",
+            "byte_size": 1186481,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:20.162Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:20Z",
+          "screenshot_file": "screenshots/操作003.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_ceeb345d416d4813ab9404c9685e99f2",
+        "operation_seq": 4,
+        "parent_operation_id": "op_34a72ae5abd443348406572bdadaea7d",
+        "function": {
+          "name": "sv3d_set_mask_visibility",
+          "version": "1"
+        },
+        "input": {
+          "visible": false
+        },
+        "replay_input": {
+          "visible": false
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0,
+            "present": true,
+            "visible": false
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "visible": false
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0,
+              "present": true,
+              "visible": false
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": 110,
+              "elevation_deg": 10
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:21.265Z",
+          "completed_at": "2026-09-03T05:59:21.354Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-dad9f0c8-513a-452c-9e41-9f977cb469d5",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-dad9f0c8-513a-452c-9e41-9f977cb469d5-beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5",
+            "byte_size": 1162622,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:21.470Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:21Z",
+          "screenshot_file": "screenshots/操作004.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_6df3643a43d34431953fa9484a1bb5e9",
+        "operation_seq": 5,
+        "parent_operation_id": "op_ceeb345d416d4813ab9404c9685e99f2",
+        "function": {
+          "name": "sv3d_set_mask_visibility",
+          "version": "1"
+        },
+        "input": {
+          "visible": true
+        },
+        "replay_input": {
+          "visible": true
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0,
+            "present": true,
+            "visible": false
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "visible": true
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": 110,
+              "elevation_deg": 10
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:22.881Z",
+          "completed_at": "2026-09-03T05:59:22.971Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-45ae3d53-7c1d-4c67-8f30-f0f314cb4314",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-45ae3d53-7c1d-4c67-8f30-f0f314cb4314-ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d",
+            "byte_size": 1186481,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:23.088Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:23Z",
+          "screenshot_file": "screenshots/操作005.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_e6cecdf22a2a45e5ad385148ccc917e6",
+        "operation_seq": 6,
+        "parent_operation_id": "op_6df3643a43d34431953fa9484a1bb5e9",
+        "function": {
+          "name": "sv3d_set_render_angles",
+          "version": "1"
+        },
+        "input": {
+          "azimuth_deg": -180,
+          "elevation_deg": 6
+        },
+        "replay_input": {
+          "azimuth_deg": -180,
+          "elevation_deg": 6
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "render",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 4,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:45.548Z",
+          "completed_at": "2026-09-03T05:59:45.549Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-0a7fde6a-26cf-46e9-bf6e-9d95b032b201",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-0a7fde6a-26cf-46e9-bf6e-9d95b032b201-98dafe72f64b29f414daee6bc118d00ea78461883d0ec4a2703cc42c7f31f3c7.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "98dafe72f64b29f414daee6bc118d00ea78461883d0ec4a2703cc42c7f31f3c7",
+            "byte_size": 1077315,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:45.619Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:45Z",
+          "screenshot_file": "screenshots/操作006.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_00b7b91c202e4e97ae9b1b7e5d5653c2",
+        "operation_seq": 7,
+        "parent_operation_id": "op_e6cecdf22a2a45e5ad385148ccc917e6",
+        "function": {
+          "name": "sv3d_set_view_mode",
+          "version": "1"
+        },
+        "input": {
+          "mode": "mpr"
+        },
+        "replay_input": {
+          "mode": "mpr"
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "render",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 4,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "mode": "mpr"
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.5,
+                0.5,
+                0.5
+              ],
+              "voxel": [
+                133,
+                97,
+                106
+              ],
+              "world_ras_mm": [
+                5.0009307861328125,
+                151.87539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T05:59:48.882Z",
+          "completed_at": "2026-09-03T05:59:48.884Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-4fe86044-a6dd-4b3f-b4fd-6cfac777dcdc",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-4fe86044-a6dd-4b3f-b4fd-6cfac777dcdc-81981a928a2e24824b8267626bbcd92706602fb47b18d4cbdec6bc6ef1155b14.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "81981a928a2e24824b8267626bbcd92706602fb47b18d4cbdec6bc6ef1155b14",
+            "byte_size": 1146295,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T05:59:48.939Z"
+          },
+          "acknowledged_at": "2026-09-03T05:59:49Z",
+          "screenshot_file": "screenshots/操作007.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_dbb0482e05b841d9ace7c0041b499281",
+        "operation_seq": 8,
+        "parent_operation_id": "op_00b7b91c202e4e97ae9b1b7e5d5653c2",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 106,
+          "coronal": 122,
+          "sagittal": 182
+        },
+        "replay_input": {
+          "axial": 106,
+          "coronal": 122,
+          "sagittal": 182
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.6314433217048645,
+              0.5
+            ],
+            "voxel": [
+              182,
+              122,
+              106
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              190.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.6314433217048645,
+              0.5
+            ],
+            "voxel": [
+              182,
+              122,
+              106
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              190.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 106,
+            "coronal": 122,
+            "sagittal": 182
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.6835206151008606,
+                0.6314433217048645,
+                0.5
+              ],
+              "voxel": [
+                182,
+                122,
+                106
+              ],
+              "world_ras_mm": [
+                78.50093841552734,
+                190.1254119873047,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:01:39.314Z",
+          "completed_at": "2026-09-03T06:01:39.315Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-84810ba8-56d9-4cde-a7b0-7d9be5ae5fce",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-84810ba8-56d9-4cde-a7b0-7d9be5ae5fce-8aee899a345fae02f09507dbe524c30a803665eb697bec5f3e6a6ea5e56cc2f9.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "8aee899a345fae02f09507dbe524c30a803665eb697bec5f3e6a6ea5e56cc2f9",
+            "byte_size": 1140150,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:01:39.379Z"
+          },
+          "acknowledged_at": "2026-09-03T06:01:42Z",
+          "screenshot_file": "screenshots/操作008.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_4ab8b17ae08b4a14ba688453705efb39",
+        "operation_seq": 9,
+        "parent_operation_id": "op_dbb0482e05b841d9ace7c0041b499281",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 106,
+          "coronal": 145,
+          "sagittal": 182
+        },
+        "replay_input": {
+          "axial": 106,
+          "coronal": 145,
+          "sagittal": 182
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.75,
+              0.5
+            ],
+            "voxel": [
+              182,
+              145,
+              106
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              224.62539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.75,
+              0.5
+            ],
+            "voxel": [
+              182,
+              145,
+              106
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              224.62539672851562,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 106,
+            "coronal": 145,
+            "sagittal": 182
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.6835206151008606,
+                0.75,
+                0.5
+              ],
+              "voxel": [
+                182,
+                145,
+                106
+              ],
+              "world_ras_mm": [
+                78.50093841552734,
+                224.62539672851562,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:01:44.746Z",
+          "completed_at": "2026-09-03T06:01:44.746Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-ee06a8e6-655f-4e55-a73c-2b71f7d2bce9",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-ee06a8e6-655f-4e55-a73c-2b71f7d2bce9-b8c0586d13b5d8f75c03cca214a866a5db4add812f0f2ea3bdcf0df4a185946e.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "b8c0586d13b5d8f75c03cca214a866a5db4add812f0f2ea3bdcf0df4a185946e",
+            "byte_size": 1130484,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:01:44.805Z"
+          },
+          "acknowledged_at": "2026-09-03T06:01:51Z",
+          "screenshot_file": "screenshots/操作009.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_7366f5d8745445f8a9621324dbc89628",
+        "operation_seq": 10,
+        "parent_operation_id": "op_4ab8b17ae08b4a14ba688453705efb39",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 114,
+          "coronal": 133,
+          "sagittal": 182
+        },
+        "replay_input": {
+          "axial": 114,
+          "coronal": 133,
+          "sagittal": 182
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.688144326210022,
+              0.5375586748123169
+            ],
+            "voxel": [
+              182,
+              133,
+              114
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              206.62539672851562,
+              504.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.688144326210022,
+              0.5375586748123169
+            ],
+            "voxel": [
+              182,
+              133,
+              114
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              206.62539672851562,
+              504.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 114,
+            "coronal": 133,
+            "sagittal": 182
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.6835206151008606,
+                0.688144326210022,
+                0.5375586748123169
+              ],
+              "voxel": [
+                182,
+                133,
+                114
+              ],
+              "world_ras_mm": [
+                78.50093841552734,
+                206.62539672851562,
+                504.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:02:14.564Z",
+          "completed_at": "2026-09-03T06:02:14.565Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-f10cd11a-cb25-49d6-aeb2-02f76333729e",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-f10cd11a-cb25-49d6-aeb2-02f76333729e-fa0a5fc388841c25d803cff87b7a376fda1c5e9bce1a4ad3e7c688db3f834e1f.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "fa0a5fc388841c25d803cff87b7a376fda1c5e9bce1a4ad3e7c688db3f834e1f",
+            "byte_size": 1145370,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:02:14.625Z"
+          },
+          "acknowledged_at": "2026-09-03T06:02:23Z",
+          "screenshot_file": "screenshots/操作010.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_81eb1759d1054d11806f4fd22346c506",
+        "operation_seq": 11,
+        "parent_operation_id": "op_7366f5d8745445f8a9621324dbc89628",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 85,
+          "coronal": 133,
+          "sagittal": 182
+        },
+        "replay_input": {
+          "axial": 85,
+          "coronal": 133,
+          "sagittal": 182
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.688144326210022,
+              0.40140846371650696
+            ],
+            "voxel": [
+              182,
+              133,
+              85
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              206.62539672851562,
+              460.947998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.6835206151008606,
+              0.688144326210022,
+              0.40140846371650696
+            ],
+            "voxel": [
+              182,
+              133,
+              85
+            ],
+            "world_ras_mm": [
+              78.50093841552734,
+              206.62539672851562,
+              460.947998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 85,
+            "coronal": 133,
+            "sagittal": 182
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.6835206151008606,
+                0.688144326210022,
+                0.40140846371650696
+              ],
+              "voxel": [
+                182,
+                133,
+                85
+              ],
+              "world_ras_mm": [
+                78.50093841552734,
+                206.62539672851562,
+                460.947998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:02:20.213Z",
+          "completed_at": "2026-09-03T06:02:20.214Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-7acb5537-d3ec-4ddf-a3c3-3a1fadf08129",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-7acb5537-d3ec-4ddf-a3c3-3a1fadf08129-1bddcc0b300fe668aa5e99ebdfc6e876f1cccaaa2b06c33983f4797e916b5d83.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "1bddcc0b300fe668aa5e99ebdfc6e876f1cccaaa2b06c33983f4797e916b5d83",
+            "byte_size": 1139651,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:02:20.274Z"
+          },
+          "acknowledged_at": "2026-09-03T06:02:25Z",
+          "screenshot_file": "screenshots/操作011.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_7324aa2cff7546adb983fc1c54fab44b",
+        "operation_seq": 12,
+        "parent_operation_id": "op_81eb1759d1054d11806f4fd22346c506",
+        "function": {
+          "name": "sv3d_measure",
+          "version": "1"
+        },
+        "input": {
+          "commit": true,
+          "kind": "length",
+          "plane": "coronal",
+          "points_ras_mm": [
+            [
+              70.826171875,
+              206.62539672851562,
+              506.77545166015625
+            ],
+            [
+              91.37162780761719,
+              206.62539672851562,
+              459.0518493652344
+            ]
+          ],
+          "value": "51.9582329903836"
+        },
+        "replay_input": {
+          "commit": true,
+          "kind": "length",
+          "plane": "coronal",
+          "points_ras_mm": [
+            [
+              70.826171875,
+              206.62539672851562,
+              506.77545166015625
+            ],
+            [
+              91.37162780761719,
+              206.62539672851562,
+              459.0518493652344
+            ]
+          ],
+          "value": "51.9582329903836"
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.7156571745872498,
+              0.688144326210022,
+              0.3954736888408661
+            ],
+            "voxel": [
+              191,
+              133,
+              84
+            ],
+            "world_ras_mm": [
+              91.37162780761719,
+              206.62539672851562,
+              459.0518493652344
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.7156571745872498,
+              0.688144326210022,
+              0.3954736888408661
+            ],
+            "voxel": [
+              191,
+              133,
+              84
+            ],
+            "world_ras_mm": [
+              91.37162780761719,
+              206.62539672851562,
+              459.0518493652344
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "commit": true,
+            "kind": "length",
+            "plane": "coronal",
+            "points_ras_mm": [
+              [
+                70.826171875,
+                206.62539672851562,
+                506.77545166015625
+              ],
+              [
+                91.37162780761719,
+                206.62539672851562,
+                459.0518493652344
+              ]
+            ],
+            "value": "51.9582329903836"
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.7156571745872498,
+                0.688144326210022,
+                0.3954736888408661
+              ],
+              "voxel": [
+                191,
+                133,
+                84
+              ],
+              "world_ras_mm": [
+                91.37162780761719,
+                206.62539672851562,
+                459.0518493652344
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [
+              {
+                "id": "L1",
+                "length_mm": 51.9582329903836,
+                "plane": "coronal",
+                "points_ras_mm": [
+                  [
+                    70.826171875,
+                    206.62539672851562,
+                    506.77545166015625
+                  ],
+                  [
+                    91.37162780761719,
+                    206.62539672851562,
+                    459.0518493652344
+                  ]
+                ],
+                "points_voxel_ras": [
+                  [
+                    177,
+                    133,
+                    116
+                  ],
+                  [
+                    191,
+                    133,
+                    84
+                  ]
+                ],
+                "slice_fraction": 0.688144326210022,
+                "type": "length"
+              }
+            ],
+            "mode": "mpr",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 3,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:03:17.651Z",
+          "completed_at": "2026-09-03T06:03:17.654Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-21ee91dc-e1fb-47e4-9723-b091abb7e8df",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-21ee91dc-e1fb-47e4-9723-b091abb7e8df-93c1b661cb2f43c146a34550c6a98ae7c261fb197aa7519721ad5f3fff33a250.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "93c1b661cb2f43c146a34550c6a98ae7c261fb197aa7519721ad5f3fff33a250",
+            "byte_size": 1139733,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:03:17.716Z"
+          },
+          "acknowledged_at": "2026-09-03T06:03:26Z",
+          "screenshot_file": "screenshots/操作012.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_de45fc7e4ce14cbbab9c9535ebf03d66",
+        "operation_seq": 13,
+        "parent_operation_id": "op_7324aa2cff7546adb983fc1c54fab44b",
+        "function": {
+          "name": "sv3d_set_view_mode",
+          "version": "1"
+        },
+        "input": {
+          "mode": "axial"
+        },
+        "replay_input": {
+          "mode": "axial"
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.7172284722328186,
+              0.688144326210022,
+              0.39671361446380615
+            ],
+            "voxel": [
+              191,
+              133,
+              84
+            ],
+            "world_ras_mm": [
+              92.00093078613281,
+              206.62539672851562,
+              459.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "mpr",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 3,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.7172284722328186,
+              0.688144326210022,
+              0.39671361446380615
+            ],
+            "voxel": [
+              191,
+              133,
+              84
+            ],
+            "world_ras_mm": [
+              92.00093078613281,
+              206.62539672851562,
+              459.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "axial",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 0,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "mode": "axial"
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.7172284722328186,
+                0.688144326210022,
+                0.39671361446380615
+              ],
+              "voxel": [
+                191,
+                133,
+                84
+              ],
+              "world_ras_mm": [
+                92.00093078613281,
+                206.62539672851562,
+                459.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [
+              {
+                "id": "L1",
+                "length_mm": 51.9582329903836,
+                "plane": "coronal",
+                "points_ras_mm": [
+                  [
+                    70.826171875,
+                    206.62539672851562,
+                    506.77545166015625
+                  ],
+                  [
+                    91.37162780761719,
+                    206.62539672851562,
+                    459.0518493652344
+                  ]
+                ],
+                "points_voxel_ras": [
+                  [
+                    177,
+                    133,
+                    116
+                  ],
+                  [
+                    191,
+                    133,
+                    84
+                  ]
+                ],
+                "slice_fraction": 0.688144326210022,
+                "type": "length"
+              }
+            ],
+            "mode": "axial",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 0,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:04:00.865Z",
+          "completed_at": "2026-09-03T06:04:00.866Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-101a2d9b-22d9-45ff-a29b-17585d10a2f5",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-101a2d9b-22d9-45ff-a29b-17585d10a2f5-5af29afb731675516798c6199371d0d47bd6f7e74322e03a5bace8e12a59592c.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "5af29afb731675516798c6199371d0d47bd6f7e74322e03a5bace8e12a59592c",
+            "byte_size": 753035,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:04:00.926Z"
+          },
+          "acknowledged_at": "2026-09-03T06:04:04Z",
+          "screenshot_file": "screenshots/操作013.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_54e6c22262154d5c8e834a086c1d349a",
+        "operation_seq": 14,
+        "parent_operation_id": "op_de45fc7e4ce14cbbab9c9535ebf03d66",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 106,
+          "coronal": 108,
+          "sagittal": 221
+        },
+        "replay_input": {
+          "axial": 106,
+          "coronal": 108,
+          "sagittal": 221
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.829587996006012,
+              0.5592783689498901,
+              0.5
+            ],
+            "voxel": [
+              221,
+              108,
+              106
+            ],
+            "world_ras_mm": [
+              137.0009307861328,
+              169.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "axial",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 0,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.829587996006012,
+              0.5592783689498901,
+              0.5
+            ],
+            "voxel": [
+              221,
+              108,
+              106
+            ],
+            "world_ras_mm": [
+              137.0009307861328,
+              169.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "axial",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 0,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 106,
+            "coronal": 108,
+            "sagittal": 221
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.829587996006012,
+                0.5592783689498901,
+                0.5
+              ],
+              "voxel": [
+                221,
+                108,
+                106
+              ],
+              "world_ras_mm": [
+                137.0009307861328,
+                169.1254119873047,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [
+              {
+                "id": "L1",
+                "length_mm": 51.9582329903836,
+                "plane": "coronal",
+                "points_ras_mm": [
+                  [
+                    70.826171875,
+                    206.62539672851562,
+                    506.77545166015625
+                  ],
+                  [
+                    91.37162780761719,
+                    206.62539672851562,
+                    459.0518493652344
+                  ]
+                ],
+                "points_voxel_ras": [
+                  [
+                    177,
+                    133,
+                    116
+                  ],
+                  [
+                    191,
+                    133,
+                    84
+                  ]
+                ],
+                "slice_fraction": 0.688144326210022,
+                "type": "length"
+              }
+            ],
+            "mode": "axial",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 0,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:04:34.832Z",
+          "completed_at": "2026-09-03T06:04:34.832Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-bf014fe2-9b5f-497d-9d57-40b552c31764",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-bf014fe2-9b5f-497d-9d57-40b552c31764-74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e",
+            "byte_size": 752044,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:04:34.888Z"
+          },
+          "acknowledged_at": "2026-09-03T06:04:36Z",
+          "screenshot_file": "screenshots/操作014.png"
+        }
+      },
+      {
+        "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+        "assignment_id": "asgn_35536c5dd86e36933c99472a",
+        "operation_id": "op_91719aeb7c5741e58c092fb3d7482fad",
+        "operation_seq": 15,
+        "parent_operation_id": "op_54e6c22262154d5c8e834a086c1d349a",
+        "function": {
+          "name": "sv3d_set_slice",
+          "version": "1"
+        },
+        "input": {
+          "axial": 106,
+          "coronal": 108,
+          "sagittal": 221
+        },
+        "replay_input": {
+          "axial": 106,
+          "coronal": 108,
+          "sagittal": 221
+        },
+        "state_before": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.829587996006012,
+              0.5592783689498901,
+              0.5
+            ],
+            "voxel": [
+              221,
+              108,
+              106
+            ],
+            "world_ras_mm": [
+              137.0009307861328,
+              169.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "axial",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 0,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "state_after": {
+          "cal_max": 290.297,
+          "cal_min": -1023.88,
+          "clip": {
+            "azimuth_deg": 0,
+            "depth": 2,
+            "elevation_deg": 0,
+            "enabled": false
+          },
+          "crosshair": {
+            "fraction": [
+              0.829587996006012,
+              0.5592783689498901,
+              0.5
+            ],
+            "voxel": [
+              221,
+              108,
+              106
+            ],
+            "world_ras_mm": [
+              137.0009307861328,
+              169.1254119873047,
+              492.447998046875
+            ]
+          },
+          "dims": [
+            267,
+            194,
+            213
+          ],
+          "level": -366.7915,
+          "mask": {
+            "mask_id": null,
+            "opacity": 0.5,
+            "present": true,
+            "visible": true
+          },
+          "measurements": [
+            {
+              "id": "L1",
+              "length_mm": 51.9582329903836,
+              "plane": "coronal",
+              "points_ras_mm": [
+                [
+                  70.826171875,
+                  206.62539672851562,
+                  506.77545166015625
+                ],
+                [
+                  91.37162780761719,
+                  206.62539672851562,
+                  459.0518493652344
+                ]
+              ],
+              "points_voxel_ras": [
+                [
+                  177,
+                  133,
+                  116
+                ],
+                [
+                  191,
+                  133,
+                  84
+                ]
+              ],
+              "slice_fraction": 0.688144326210022,
+              "type": "length"
+            }
+          ],
+          "mode": "axial",
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": -180,
+            "elevation_deg": 6
+          },
+          "slice_type": 0,
+          "viewer": "niivue",
+          "window": 1314.1770000000001,
+          "zoom": 1
+        },
+        "result": {
+          "replay_input": {
+            "axial": 106,
+            "coronal": 108,
+            "sagittal": 221
+          },
+          "state": {
+            "cal_max": 290.297,
+            "cal_min": -1023.88,
+            "clip": {
+              "azimuth_deg": 0,
+              "depth": 2,
+              "elevation_deg": 0,
+              "enabled": false
+            },
+            "crosshair": {
+              "fraction": [
+                0.829587996006012,
+                0.5592783689498901,
+                0.5
+              ],
+              "voxel": [
+                221,
+                108,
+                106
+              ],
+              "world_ras_mm": [
+                137.0009307861328,
+                169.1254119873047,
+                492.447998046875
+              ]
+            },
+            "dims": [
+              267,
+              194,
+              213
+            ],
+            "level": -366.7915,
+            "mask": {
+              "mask_id": null,
+              "opacity": 0.5,
+              "present": true,
+              "visible": true
+            },
+            "measurements": [
+              {
+                "id": "L1",
+                "length_mm": 51.9582329903836,
+                "plane": "coronal",
+                "points_ras_mm": [
+                  [
+                    70.826171875,
+                    206.62539672851562,
+                    506.77545166015625
+                  ],
+                  [
+                    91.37162780761719,
+                    206.62539672851562,
+                    459.0518493652344
+                  ]
+                ],
+                "points_voxel_ras": [
+                  [
+                    177,
+                    133,
+                    116
+                  ],
+                  [
+                    191,
+                    133,
+                    84
+                  ]
+                ],
+                "slice_fraction": 0.688144326210022,
+                "type": "length"
+              }
+            ],
+            "mode": "axial",
+            "pan": {
+              "plane": "axial",
+              "right_fraction": 0,
+              "up_fraction": 0
+            },
+            "render": {
+              "azimuth_deg": -180,
+              "elevation_deg": 6
+            },
+            "slice_type": 0,
+            "viewer": "niivue",
+            "window": 1314.1770000000001,
+            "zoom": 1
+          }
+        },
+        "timing": {
+          "started_at": "2026-09-03T06:06:47.629Z",
+          "completed_at": "2026-09-03T06:06:47.630Z"
+        },
+        "registry_sha256": "31bf92d55b15fd57266cdac9f2f253550ae5e981c2589e588e20452e44bf258c",
+        "keyframe": {
+          "keyframe_id": "kf-dae71dd9-b80b-4719-a6a2-e59c1d55d945",
+          "expert_note": "",
+          "screenshot": {
+            "object_key": "prod/expert-trajectories/asgn_35536c5dd86e36933c99472a/attempt-1/kf-dae71dd9-b80b-4719-a6a2-e59c1d55d945-74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e.png",
+            "bucket": "science-vision",
+            "environment": "prod",
+            "sha256": "74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e",
+            "byte_size": 752044,
+            "width": 1240,
+            "height": 1630,
+            "captured_at": "2026-09-03T06:06:47.687Z"
+          },
+          "acknowledged_at": "2026-09-03T06:07:19Z",
+          "screenshot_file": "screenshots/操作015.png"
+        }
+      }
+    ],
+    "final_result": {
+      "draft_id": "draft_9204a160e9c2d2cddf8d58f4",
+      "assignment_id": "asgn_35536c5dd86e36933c99472a",
+      "answer": "{\n  \"extent_vox\": <161-194，122-145，85-114>,\n  \"longest_axes\": <52>,\n  \"representative_axial_index\": <106>,\n}",
+      "reasoning": "在3D视角找到病灶，切换到MPR，滚动切片找到三轴的范围，在轴位找到最大面积",
+      "task_validation": {
+        "feedback": "左右质心偏移建议删除",
+        "status": "uncertain"
+      }
+    },
+    "screenshot_gaps": []
+  },
+  "meta": {
+    "expert_id": "medical1",
+    "approved_at": "2026-09-03T06:20:13Z",
+    "ever_returned": false,
+    "domain": "medical",
+    "sub_domain_slug": "med_ct_geometry",
+    "sub_domain_label": "CT 几何测量",
+    "sub_domain_source": "effective_sub_domain"
+  },
+  "task_context": {
+    "viewer": "niivue",
+    "viewer_label": "NiiVue（医学影像查看器）",
+    "engine": "NiiVue 0.45.0",
+    "domain_label": "医学",
+    "answer_shape": null,
+    "assets": [
+      {
+        "name": "ct.nii.gz",
+        "path": "assets/datasets/M3D-RefSeg/M3D_RefSeg/s0123/ct.nii.gz",
+        "role": "primary",
+        "type": null,
+        "sha256": "6bf891cfb6a5181db997f25ca96013182b1d0fbc5d7a3f435bfa94a8d594cf71",
+        "byte_size": 17331477,
+        "mask_id": null,
+        "included": true,
+        "asset_file": "assets/ct.nii.gz"
+      },
+      {
+        "name": "mask.nii.gz",
+        "path": "assets/datasets/M3D-RefSeg/M3D_RefSeg/s0123/mask.nii.gz",
+        "role": "mask",
+        "type": null,
+        "sha256": "f967a95b68ffd82ebf5a617daba0e1e113ef29f7e46e59dd703bca317462e9bf",
+        "byte_size": 99215,
+        "mask_id": 1,
+        "included": true,
+        "asset_file": "assets/mask.nii.gz"
+      }
+    ],
+    "assets_note": "3D 素材文件已随包，见各题 `assets/`；sha256 与封存清单一致。"
+  },
+  "tool_glossary": {
+    "sv3d_set_view_mode": {
+      "label_zh": "切换MPR/轴位/3D",
+      "help_zh": "",
+      "description_en": "Switch NiiVue between multiplanar, axial-only, and 3D volume render.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "enum": [
+              "mpr",
+              "axial",
+              "render"
+            ]
+          }
+        },
+        "required": [
+          "mode"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_set_mask_visibility": {
+      "label_zh": "显示或隐藏掩膜",
+      "help_zh": "",
+      "description_en": "Show or hide the overlay mask volume.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "visible": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "visible"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_set_render_angles": {
+      "label_zh": "设置三维方位",
+      "help_zh": "",
+      "description_en": "Set 3D volume-render azimuth and elevation in degrees.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          },
+          "elevation_deg": {
+            "type": "number",
+            "minimum": -89,
+            "maximum": 89
+          }
+        },
+        "required": [
+          "azimuth_deg",
+          "elevation_deg"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "sv3d_set_slice": {
+      "label_zh": "切换断层",
+      "help_zh": "",
+      "description_en": "Set one or more crosshair slice indices. Unspecified axes stay unchanged.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "sagittal": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "coronal": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "axial": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": false,
+        "minProperties": 1
+      }
+    },
+    "sv3d_measure": {
+      "label_zh": "测量距离",
+      "help_zh": "",
+      "description_en": "Start or commit a length or angle measurement in world RAS millimetres.",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "length",
+              "angle"
+            ]
+          },
+          "commit": {
+            "enum": [
+              true
+            ]
+          },
+          "plane": {
+            "type": "string",
+            "enum": [
+              "axial",
+              "coronal",
+              "sagittal"
+            ]
+          },
+          "points_ras_mm": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 3,
+            "items": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            }
+          },
+          "value": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "length",
+                  "angle"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "length"
+                ]
+              },
+              "commit": {
+                "enum": [
+                  true
+                ]
+              },
+              "plane": {
+                "type": "string",
+                "enum": [
+                  "axial",
+                  "coronal",
+                  "sagittal"
+                ]
+              },
+              "points_ras_mm": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "commit",
+              "plane",
+              "points_ras_mm"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "angle"
+                ]
+              },
+              "commit": {
+                "enum": [
+                  true
+                ]
+              },
+              "plane": {
+                "type": "string",
+                "enum": [
+                  "axial",
+                  "coronal",
+                  "sagittal"
+                ]
+              },
+              "points_ras_mm": {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": {
+                  "type": "array",
+                  "minItems": 3,
+                  "maxItems": 3,
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "commit",
+              "plane",
+              "points_ras_mm"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "original_task": {
+    "title_en": "CT target extent and dominant axis",
+    "title_zh": "CT靶区范围与主导轴",
+    "question_en_original": "The target in this CT volume is the region carrying mask label 1 in the segmentation supplied alongside it. A bounding box extent counts both bounding voxels, so along each axis it is the difference between the two bounds plus 1. The three axes of the sampling grid are numbered 0, 1 and 2. The axial axis is axis 2 of the sampling grid. Where several axes tie for widest, report every tied axis, in increasing order, rather than choosing one. Where several slices tie, report the one with the lowest index. A count is a whole number that is never negative, so where nothing qualifies the answer is 0 rather than blank.\n\nCompare the target's three spatial extents. Measure overlay span along three array axes. Measure target extent on all three array axes, identify every longest array axis, find the smallest maximum-area axial index and measure signed left-right centroid offset.\n\n**Answer format**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n  \"signed_lr_distance_mm\": <number>\n}\n```",
+    "question_zh_original": "此CT体数据中的靶区为所提供分割中携带掩膜标签1的区域。包围盒范围同时计入两个边界体素，因此沿每个轴其值为两个边界之差加1。采样网格的三个轴编号为0、1和2。轴向为采样网格的轴2。当多个轴在最宽上并列时，按递增顺序报告所有并列轴，而非只选一个。当多个切片并列时，报告索引最小的切片。计数是永不为负的整数，因此当无符合项时答案为0而非空白。\n\n比较靶区的三个空间范围。沿三个数组轴测量重叠跨度。沿所有三个数组轴测量靶区范围，识别每个最长的数组轴，找到面积最大的轴向索引中的最小者，并测量带符号的左右质心偏移。\n\n**答案格式**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n  \"signed_lr_distance_mm\": <number>\n}\n```",
+    "question_id": "sv-medi-med_ct_geometry-0058",
+    "vision_class": null,
+    "vision_class_code": null,
+    "vision_class_group": null,
+    "source_domain": "medical",
+    "source_sub_domain": "med_ct_geometry",
+    "forbidden_strategies": null,
+    "trace_requirements": {
+      "max_steps": 10,
+      "must_include_final_state": true,
+      "must_save_operation_trace": true,
+      "required_artifacts": [
+        "screenshot"
+      ]
+    },
+    "provenance": {},
+    "initial_view_note": "平台没有记录第 0 帧截图；题目打开时查看器的确切状态见 trajectory.initial_state（每次回放都从这个状态 viewer_reset 开始）。"
+  },
+  "question_review": {
+    "decision": "adopt_edits",
+    "submitted_at": "2026-09-02T07:35:54Z",
+    "decided_at": "2026-09-02T07:58:57Z",
+    "decided_by": "medical1",
+    "expert_validation_feedback": "左右质心偏移建议删除",
+    "expert_question_edit_zh": "此CT体数据中的靶区为所提供分割中携带掩膜标签1的区域。包围盒范围同时计入两个边界体素，因此沿每个轴其值为两个边界之差加1。采样网格的三个轴编号为0、1和2。轴向为采样网格的轴2。当多个轴在最宽上并列时，按递增顺序报告所有并列轴，而非只选一个。当多个切片并列时，报告索引最小的切片。计数是永不为负的整数，因此当无符合项时答案为0而非空白。\n\n比较靶区的三个空间范围。沿三个数组轴测量重叠跨度。沿所有三个数组轴测量靶区范围，识别每个最长的数组轴，找到面积最大的轴向索引中的最小者**答案格式**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n}\n```",
+    "expert_question_edit_en": "The target in this CT volume is the region carrying mask label 1 in the segmentation supplied alongside it. A bounding box extent counts both bounding voxels, so along each axis it is the difference between the two bounds plus 1. The three axes of the sampling grid are numbered 0, 1 and 2. The axial axis is axis 2 of the sampling grid. Where several axes tie for widest, report every tied axis, in increasing order, rather than choosing one. Where several slices tie, report the one with the lowest index. A count is a whole number that is never negative, so where nothing qualifies the answer is 0 rather than blank.\n\nCompare the target's three spatial extents. Measure overlay span along three array axes. Measure target extent on all three array axes, identify every longest array axis, find the smallest maximum-area axial index.\n\n**Answer format**\n\n```json\n{\n  \"extent_vox\": <list>,\n  \"longest_axes\": <list>,\n  \"representative_axial_index\": <integer>,\n}\n```",
+    "sub_domain_edit": "",
+    "question_changed": true
+  },
+  "timeline": [
+    {
+      "at": "2026-09-02T07:22:25Z",
+      "event": "assignment.assigned",
+      "actor": "medical1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-02T07:35:54Z",
+      "event": "assignment.question_review_submitted",
+      "actor": "medical1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-02T07:58:57Z",
+      "event": "assignment.question_review_approved",
+      "actor": "medical1",
+      "actor_role": "admin"
+    },
+    {
+      "at": "2026-09-03T06:09:42Z",
+      "event": "assignment.submitted",
+      "actor": "medical1",
+      "actor_role": "expert"
+    },
+    {
+      "at": "2026-09-03T06:09:42Z",
+      "event": "assignment.pending_review",
+      "actor": "task-manager",
+      "actor_role": "system"
+    },
+    {
+      "at": "2026-09-03T06:20:13Z",
+      "event": "assignment.approved",
+      "actor": "medical1",
+      "actor_role": "admin"
+    }
+  ],
+  "showcase": {
+    "schema": "sciencevision.showcase_task.v1",
+    "exported_at": "2026-09-04T13:20:47Z",
+    "source": "生产库 manager.db 只读快照 + OSS 归档截图（sha256 已校验）",
+    "screenshots": [
+      {
+        "operation_seq": 1,
+        "file": "screenshots/操作001.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1186481,
+        "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d"
+      },
+      {
+        "operation_seq": 2,
+        "file": "screenshots/操作002.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1162622,
+        "sha256": "beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5"
+      },
+      {
+        "operation_seq": 3,
+        "file": "screenshots/操作003.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1186481,
+        "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d"
+      },
+      {
+        "operation_seq": 4,
+        "file": "screenshots/操作004.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1162622,
+        "sha256": "beb333ef11110ac13de8325996184e193748dba8c544ece2c8e7fa2c8d463fa5"
+      },
+      {
+        "operation_seq": 5,
+        "file": "screenshots/操作005.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1186481,
+        "sha256": "ea0262d956e361a8b379e8b69691cc040be3af138ede1196443e26b17ea86d1d"
+      },
+      {
+        "operation_seq": 6,
+        "file": "screenshots/操作006.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1077315,
+        "sha256": "98dafe72f64b29f414daee6bc118d00ea78461883d0ec4a2703cc42c7f31f3c7"
+      },
+      {
+        "operation_seq": 7,
+        "file": "screenshots/操作007.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1146295,
+        "sha256": "81981a928a2e24824b8267626bbcd92706602fb47b18d4cbdec6bc6ef1155b14"
+      },
+      {
+        "operation_seq": 8,
+        "file": "screenshots/操作008.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1140150,
+        "sha256": "8aee899a345fae02f09507dbe524c30a803665eb697bec5f3e6a6ea5e56cc2f9"
+      },
+      {
+        "operation_seq": 9,
+        "file": "screenshots/操作009.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1130484,
+        "sha256": "b8c0586d13b5d8f75c03cca214a866a5db4add812f0f2ea3bdcf0df4a185946e"
+      },
+      {
+        "operation_seq": 10,
+        "file": "screenshots/操作010.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1145370,
+        "sha256": "fa0a5fc388841c25d803cff87b7a376fda1c5e9bce1a4ad3e7c688db3f834e1f"
+      },
+      {
+        "operation_seq": 11,
+        "file": "screenshots/操作011.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1139651,
+        "sha256": "1bddcc0b300fe668aa5e99ebdfc6e876f1cccaaa2b06c33983f4797e916b5d83"
+      },
+      {
+        "operation_seq": 12,
+        "file": "screenshots/操作012.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 1139733,
+        "sha256": "93c1b661cb2f43c146a34550c6a98ae7c261fb197aa7519721ad5f3fff33a250"
+      },
+      {
+        "operation_seq": 13,
+        "file": "screenshots/操作013.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 753035,
+        "sha256": "5af29afb731675516798c6199371d0d47bd6f7e74322e03a5bace8e12a59592c"
+      },
+      {
+        "operation_seq": 14,
+        "file": "screenshots/操作014.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 752044,
+        "sha256": "74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e"
+      },
+      {
+        "operation_seq": 15,
+        "file": "screenshots/操作015.png",
+        "width": 1240,
+        "height": 1630,
+        "byte_size": 752044,
+        "sha256": "74e8ee7d03a0f62889f27afd378f1974f3897a121707dbb834a9f4430bacc02e"
+      }
+    ],
+    "duration_seconds": 457.1,
+    "tools_used": {
+      "sv3d_set_view_mode": 3,
+      "sv3d_set_mask_visibility": 4,
+      "sv3d_set_render_angles": 1,
+      "sv3d_set_slice": 6,
+      "sv3d_measure": 1
+    },
+    "arg_glossary_zh": {
+      "axial": "轴位序号",
+      "azimuth_deg": "方位角（度）",
+      "commit": "提交测量",
+      "coronal": "冠状位序号",
+      "elevation_deg": "俯仰角（度）",
+      "kind": "测量类型",
+      "mode": "视图模式",
+      "plane": "断层平面",
+      "points_ras_mm": "测量点（RAS 毫米）",
+      "sagittal": "矢状位序号",
+      "value": "测量值",
+      "visible": "是否可见"
+    },
+    "initial_frame": {
+      "file": "screenshots/操作000-初始状态-重建.png",
+      "kind": "reconstruction",
+      "note": "平台未记录第 0 帧。此图由同一查看器引擎 + 同一素材 + 同一 URL 参数在本地重新渲染并用平台截图 API 捕获，画幅取专家第一张截图的尺寸。它不是原始记录。",
+      "rebuilt_at": "2026-09-04T13:22:08Z",
+      "viewer_url_params": "file=%2Fassets%2Fdatasets%2FM3D-RefSeg%2FM3D_RefSeg%2Fs0123%2Fct.nii.gz&overlay=%2Fassets%2Fdatasets%2FM3D-RefSeg%2FM3D_RefSeg%2Fs0123%2Fmask.nii.gz&mask_id=1&sv_interaction=mcp_only",
+      "canvas": {
+        "width": 1240,
+        "height": 1630,
+        "matched_first_keyframe": true
+      },
+      "alignment_applied": [],
+      "state_check": {
+        "expected": "trajectory.initial_state",
+        "observed": {
+          "viewer": "niivue",
+          "mode": "mpr",
+          "slice_type": 3,
+          "crosshair": {
+            "voxel": [
+              133,
+              97,
+              106
+            ],
+            "fraction": [
+              0.5,
+              0.5,
+              0.5
+            ],
+            "world_ras_mm": [
+              5.0009307861328125,
+              151.87539672851562,
+              492.447998046875
+            ]
+          },
+          "window": 1314.1770000000001,
+          "level": -366.7915,
+          "cal_min": -1023.88,
+          "cal_max": 290.297,
+          "zoom": 1,
+          "pan": {
+            "plane": "axial",
+            "right_fraction": 0,
+            "up_fraction": 0
+          },
+          "render": {
+            "azimuth_deg": 110,
+            "elevation_deg": 10
+          },
+          "clip": {
+            "enabled": false,
+            "depth": 2,
+            "azimuth_deg": 0,
+            "elevation_deg": 0
+          },
+          "mask": {
+            "present": true,
+            "visible": true,
+            "opacity": 0.5,
+            "mask_id": 1
+          },
+          "measurements": [],
+          "dims": [
+            267,
+            194,
+            213
+          ]
+        },
+        "camera_match": null,
+        "other_differences": [
+          "mask"
+        ],
+        "other_differences_note": "camera 以外的差异来自查看器 adapter 版本演进（新版本多报了 chains / mask_id 等字段，或旧版本对 .xyz 少报了 structures），不代表画面不同。",
+        "verdict": "no_camera_in_state"
+      },
+      "page_errors": []
+    },
+    "folder": "医疗002-sv-medi-med_ct_geometry-0058"
+  }
+}

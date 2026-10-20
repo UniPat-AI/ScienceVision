@@ -1,0 +1,51 @@
+schema_version: 1
+kind: qagen_run_profile
+id: ev2_v103_seed_ready
+mode: local_fixture_compile
+
+domains:
+  - biology
+  - chemistry
+enabled_leaves: []
+blocked_leaves:
+  - biology.docking_pose_plausibility
+  - biology.molecular_collision_check
+  - biology.bio_multi_structure_compare
+  - chemistry.stereochemistry_chirality
+  - chemistry.conformation_analysis
+  - chemistry.steric_accessibility
+  - chemistry.coordination_chemistry
+  - chemistry.crystallography_packing
+  - chemistry.reactive_conformation
+
+inputs:
+  registry_mode: workspace_registry
+  workspace_registry:
+    seed_index:
+      path: .qagen/private/catalog/e07bc402f604dd8f.seed-index.json
+      content_digest: sha256:e07bc402f604dd8fdcbf2000f07a46d8fe574551f3f423079b1c63f6260b8a57
+  base: ../base.yaml
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/viewer_definitions.yaml
+  rubric: ../rubric.yaml
+  fixture_routing: ../agents/model_routing.fixture.yaml
+  domain_configs:
+    - ../domains/biology.yaml
+    - ../domains/chemistry.yaml
+  leaf_configs:
+    - ../subdomains/biology/docking_pose_plausibility.yaml
+    - ../subdomains/chemistry/stereochemistry_chirality.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: true
+  require_local_fixture_digest_match: true
+  require_production_approval: false
+  production_eligible: false
+
+release:
+  enabled: false
+  blocked_reasons:
+    - knowledge_registry_not_ready
+    - controlled_viewer_profile_not_ready
+    - provider_routes_not_ready
+    - no_plan_or_release_approval

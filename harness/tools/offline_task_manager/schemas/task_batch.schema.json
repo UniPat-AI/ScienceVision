@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sciencevision.task_batch.v1",
+  "type": "object",
+  "required": ["task_id", "domain", "asset_hashes", "source_revision_sha256"],
+  "properties": {
+    "task_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{0,127}$"},
+    "domain": {"type": "string", "minLength": 1},
+    "asset_hashes": {"type": "array", "items": {"type": "object", "required": ["repo_path", "sha256"], "properties": {"repo_path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "byte_size": {"type": "integer", "minimum": 0}}}},
+    "source_revision_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

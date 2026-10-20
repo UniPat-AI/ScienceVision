@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/rubric.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "document", "release_thresholds", "fixture_policy"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_rubric_lock"},
+    "document": {
+      "type": "object",
+      "required": ["repo_path", "digest_algorithm", "digest"],
+      "properties": {
+        "repo_path": {"const": "QA-Gen/docs/Question-Rubric.md"},
+        "digest_algorithm": {"const": "sha256"},
+        "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "release_thresholds": {
+      "type": "object",
+      "required": ["authenticity", "correctness", "three_d_relevance"],
+      "properties": {
+        "authenticity": {"$ref": "#/definitions/authenticity_threshold"},
+        "correctness": {"$ref": "#/definitions/single_point_threshold"},
+        "three_d_relevance": {"$ref": "#/definitions/single_point_threshold"}
+      },
+      "additionalProperties": false
+    },
+    "fixture_policy": {
+      "type": "object",
+      "required": ["fixture_compile_uses_this_lock", "fixture_compile_is_release_eligible", "local_only", "production_eligible"],
+      "properties": {
+        "fixture_compile_uses_this_lock": {"const": true},
+        "fixture_compile_is_release_eligible": {"const": false},
+        "local_only": {"const": true},
+        "production_eligible": {"const": false}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "authenticity_threshold": {
+      "type": "object",
+      "required": ["required", "maximum"],
+      "properties": {
+        "required": {"const": 2},
+        "maximum": {"const": 2}
+      },
+      "additionalProperties": false
+    },
+    "single_point_threshold": {
+      "type": "object",
+      "required": ["required", "maximum"],
+      "properties": {
+        "required": {"const": 1},
+        "maximum": {"const": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

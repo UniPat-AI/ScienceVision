@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>USDA viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="stylesheet" href="/viewer/shared/vendor/prismjs/1.29.0/themes/prism-tomorrow.css">
+<style>
+  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  pre { background: #161b22 !important; border: 1px solid #30363d; border-radius: 6px; padding: 16px; overflow: auto; font-size: 13px; line-height: 1.5; }
+  .summary { color: var(--fg-dim); margin-bottom: 12px; font-size: 12px; }
+  .summary b { color: var(--domain-ind); }
+  .panel { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 12px; }
+  .panel h3 { margin: 0 0 8px; font-size: 13px; color: var(--domain-ind); }
+  .panel code { background: #0d1117; padding: 1px 6px; border-radius: 3px; }
+  .tree { font: 12px ui-monospace, monospace; color: var(--fg); }
+  .tree details { margin-left: 0; }
+  .tree details > summary { cursor: pointer; user-select: none; padding: 1px 0; list-style: none; }
+  .tree details > summary::-webkit-details-marker { display: none; }
+  .tree details > summary::before { content: '▸ '; color: var(--fg-dim); font-size: 10px; }
+  .tree details[open] > summary::before { content: '▾ '; }
+  .tree details > div, .tree details > details { margin-left: 16px; }
+  .tree .type { color: #79c0ff; }
+  .tree .name { color: #d2a8ff; }
+  .tree .leaf { color: var(--fg-dim); padding-left: 16px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>USDA</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">OpenUSD text · Pixar 3D scene description</div>
+</header>
+<main>
+  <div class="summary" id="summary">loading…</div>
+  <div class="panel" id="metapanel" style="display:none">
+    <h3>Stage metadata</h3>
+    <div id="metabody"></div>
+  </div>
+  <div class="panel" id="treepanel" style="display:none">
+    <h3>Prim tree (<code>def Type "Name"</code>)</h3>
+    <div class="tree" id="tree"></div>
+  </div>
+  <pre><code class="language-python" id="code">…</code></pre>
+</main>
+<script src="/viewer/shared/vendor/prismjs/1.29.0/components/prism-core.min.js"></script>
+<script src="/viewer/shared/vendor/prismjs/1.29.0/components/prism-python.min.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+function fail(msg) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">' + msg + '</div>');
+}
+
+// Very small USDA scanner: yields tokens `{ kind, type?, name?, body? }`.
+// We only need the high-level prim hierarchy and the leading metadata block.
+function parseUsda(text) {
+  const stage = { metadata: {}, version: null, prims: [] };
+  // Header: "#usda 1.0"
+  const v = text.match(/^#usda\s+(\S+)/);
+  if (v) stage.version = v[1];
+  // Leading "( ... )" stage metadata block (sloppy: just key = value lines)
+  const meta = text.match(/^\s*\([^()]*\)/m);
+  if (meta) {
+    for (const line of meta[0].split(/\r?\n/)) {
+      const m = line.match(/^\s*(\w+)\s*=\s*(.+?)\s*$/);
+      if (m) stage.metadata[m[1]] = m[2];
+    }
+  }
+  // Walk for `def [Type] "Name"` followed by a balanced { ... } body.
+  const defRe = /\bdef\s+(\w+)?\s*"([^"]+)"/g;
+  const positions = [];
+  let m;
+  while ((m = defRe.exec(text)) !== null) {
+    positions.push({ idx: m.index, type: m[1] || '(typeless)', name: m[2] });
+  }
+  // For each def, find matching opening '{' after the match, then walk balanced.
+  function bodyOf(startIdx) {
+    let i = text.indexOf('{', startIdx);
+    if (i < 0) return [startIdx, -1];
+    let depth = 1, j = i + 1;
+    while (j < text.length && depth > 0) {
+      const ch = text[j];
+      if (ch === '{') depth++;
+      else if (ch === '}') depth--;
+      else if (ch === '"') {
+        // skip string
+        const close = text.indexOf('"', j + 1);
+        if (close < 0) break;
+        j = close;
+      }
+      j++;
+    }
+    return [i, j];
+  }
+  // Build nested tree: a prim is a child of another if its def index falls
+  // inside that other prim's body range.
+  const ranges = positions.map(p => {
+    const [open, close] = bodyOf(p.idx);
+    return { ...p, open, close };
+  });
+  // Parent search: nearest enclosing range.
+  function leafProps(open, close) {
+    // grep simple attributes inside body excluding nested defs.
+    if (open < 0 || close < 0) return [];
+    const body = text.slice(open + 1, close);
+    // remove nested def bodies so attributes counted are owned by this prim
+    let cleaned = body;
+    let inner;
+    const innerRe = /\bdef\s+\w*\s*"[^"]+"\s*\{/g;
+    while ((inner = innerRe.exec(cleaned)) !== null) {
+      // find matching close
+      let depth = 1, k = inner.index + inner[0].length;
+      while (k < cleaned.length && depth > 0) {
+        if (cleaned[k] === '{') depth++;
+        else if (cleaned[k] === '}') depth--;
+        k++;
+      }
+      cleaned = cleaned.slice(0, inner.index) + cleaned.slice(k);
+      innerRe.lastIndex = inner.index;
+    }
+    // pluck `type? name = value`
+    const props = [];
+    const propRe = /^\s*(?:custom\s+|uniform\s+)?([\w\[\]]+\s+)?(\w+(?::\w+)*)\s*=\s*([^\n]+?)\s*$/gm;
+    let pm;
+    while ((pm = propRe.exec(cleaned)) !== null) {
+      if (pm[2] === 'def' || pm[2] === 'over') continue;
+      props.push({ type: (pm[1] || '').trim(), name: pm[2], value: pm[3].trim() });
+    }
+    return props;
+  }
+  ranges.forEach((p, i) => {
+    p.children = [];
+    p.props = leafProps(p.open, p.close);
+    let parentIdx = -1;
+    for (let j = 0; j < ranges.length; j++) {
+      if (j === i) continue;
+      const q = ranges[j];
+      if (q.open >= 0 && q.close > p.idx && q.open < p.idx) {
+        if (parentIdx < 0 || ranges[parentIdx].open < q.open) parentIdx = j;
+      }
+    }
+    p.parent = parentIdx;
+  });
+  ranges.forEach((p, i) => {
+    if (p.parent >= 0) ranges[p.parent].children.push(i);
+  });
+  stage.prims = ranges;
+  stage.roots = ranges.map((p, i) => p.parent < 0 ? i : -1).filter(i => i >= 0);
+  return stage;
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
+}
+
+function renderTree(stage) {
+  function nodeHtml(idx) {
+    const p = stage.prims[idx];
+    const head = `<span class="type">${escapeHtml(p.type)}</span> <span class="name">"${escapeHtml(p.name)}"</span>`;
+    const props = (p.props || []).slice(0, 12).map(pp =>
+      `<div class="leaf">${escapeHtml(pp.type || '')} <b>${escapeHtml(pp.name)}</b> = ${escapeHtml(pp.value).slice(0, 120)}</div>`
+    ).join('');
+    const more = (p.props.length > 12) ? `<div class="leaf">… +${p.props.length - 12} more attrs</div>` : '';
+    const kids = (p.children || []).map(c => nodeHtml(c)).join('');
+    if (kids || props) {
+      return `<details open><summary>${head}</summary>${props}${more}${kids}</details>`;
+    }
+    return `<div>${head}</div>`;
+  }
+  return stage.roots.map(i => nodeHtml(i)).join('');
+}
+
+function renderStage(stage, sizeBytes) {
+  const totalPrims = stage.prims.length;
+  const types = {};
+  for (const p of stage.prims) types[p.type] = (types[p.type] || 0) + 1;
+  const typesStr = Object.entries(types).sort((a,b) => b[1]-a[1])
+    .map(([t,n]) => `${t}×${n}`).join(', ');
+  document.getElementById('summary').innerHTML =
+    `<b>USD ${stage.version || '?'}</b> · ${(sizeBytes/1024).toFixed(2)} KB · ` +
+    `${totalPrims} prims (${typesStr || 'n/a'})`;
+
+  const meta = Object.entries(stage.metadata);
+  if (meta.length) {
+    document.getElementById('metabody').innerHTML = meta.map(([k,v]) =>
+      `<div><code>${escapeHtml(k)}</code> = <code>${escapeHtml(v)}</code></div>`).join('');
+    document.getElementById('metapanel').style.display = '';
+  }
+  if (totalPrims) {
+    document.getElementById('tree').innerHTML = renderTree(stage);
+    document.getElementById('treepanel').style.display = '';
+  }
+}
+
+if (!file) {
+  fail('No ?file= query param.');
+} else {
+  fetch(file)
+    .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+    .then(text => {
+      const code = document.getElementById('code');
+      code.textContent = text;
+      if (window.Prism) Prism.highlightElement(code);
+      renderStage(parseUsda(text), new Blob([text]).size);
+    })
+    .catch(err => fail('Failed to load:\n' + err));
+}
+</script>
+</body>
+</html>

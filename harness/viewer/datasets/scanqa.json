@@ -1,0 +1,38 @@
+[
+  {
+    "name": "scanqa",
+    "label": "ScanQA",
+    "modality": "3D point cloud + RGB-D",
+    "task_type": "open-ended QA",
+    "source": "github.com/ATR-DBI/ScanQA",
+    "answer_kind": "string",
+    "availability": "data_partial",
+    "unavailable_reason": "ScanNet 3D scenes are TOS-gated; QA loaded but scenes need separate request",
+    "status": "partial-data",
+    "splits": {
+      "test_w_obj": {
+        "rows": 4976,
+        "jsonl": "/out_samples/scanqa/test_w_obj.jsonl",
+        "first_qid": "scanqa-test_w_obj-000000"
+      },
+      "test_wo_obj": {
+        "rows": 6149,
+        "jsonl": "/out_samples/scanqa/test_wo_obj.jsonl",
+        "first_qid": "scanqa-test_wo_obj-000000"
+      },
+      "train": {
+        "rows": 25563,
+        "jsonl": "/out_samples/scanqa/train.jsonl",
+        "first_qid": "scanqa-train-000000"
+      },
+      "val": {
+        "rows": 4675,
+        "jsonl": "/out_samples/scanqa/val.jsonl",
+        "first_qid": "scanqa-val-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 41363
+  }
+]

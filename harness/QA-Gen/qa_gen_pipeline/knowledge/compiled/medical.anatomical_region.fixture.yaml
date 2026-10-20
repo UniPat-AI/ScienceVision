@@ -1,0 +1,26 @@
+schema_version: 1
+kind: qagen_subdomain_knowledge_fixture
+id: medical.anatomical_region
+fixture:
+  local_only: true
+  purpose: blocked_coverage_example
+  production_approval: false
+  approval_receipt: null
+fixture_payload:
+  id: medical.anatomical_region
+  domain: medical
+  subdomain: anatomical_region
+  state: blocked
+  blocked_reasons:
+    - no_repaired_expert_reviewed_medical_seed
+  local_fixture_seed_refs:
+    - fixture-seed-medical-001
+  allowed_truth_modes:
+    - expert_visual_judgment
+  required_viewer_operations:
+    - inspect
+  forbidden_shortcuts:
+    - raw_asset_metadata
+    - asset_file_read
+  production_approval: false
+fixture_digest: sha256:9913a2dcf45cdf3e9ccec1ff0c75149f81e3c6029858d6a5710a2fd16c1d6bc3

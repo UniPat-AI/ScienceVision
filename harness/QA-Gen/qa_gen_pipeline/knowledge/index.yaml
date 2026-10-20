@@ -1,0 +1,40 @@
+schema_version: 1
+kind: qagen_knowledge_index
+mode: local_fixture_only
+production_approval: false
+
+# A compiler may resolve these records only when its profile explicitly allows
+# local fixture locks. A production profile must reject every entry here.
+entries:
+  - leaf_id: biology.docking_pose_plausibility
+    reference: fixture-subdomain-knowledge:biology.docking_pose_plausibility@sha256:337f51b1f8960a8bdb077e47d5b4169e100465320a828abb6770facc6c7ecdac
+    path: compiled/biology.docking_pose_plausibility.fixture.yaml
+    digest: sha256:337f51b1f8960a8bdb077e47d5b4169e100465320a828abb6770facc6c7ecdac
+    state: fixture_compile_eligible
+    local_fixture: true
+    production_eligible: false
+    approval_receipt: null
+  - leaf_id: chemistry.stereochemistry_chirality
+    reference: fixture-subdomain-knowledge:chemistry.stereochemistry_chirality@sha256:280fb03b4a33ff5b07c3e208461122fc990a4044e6e4f9fb1b0ef84b2f0eb809
+    path: compiled/chemistry.stereochemistry_chirality.fixture.yaml
+    digest: sha256:280fb03b4a33ff5b07c3e208461122fc990a4044e6e4f9fb1b0ef84b2f0eb809
+    state: fixture_compile_eligible
+    local_fixture: true
+    production_eligible: false
+    approval_receipt: null
+  - leaf_id: medical.anatomical_region
+    reference: fixture-subdomain-knowledge:medical.anatomical_region@sha256:9913a2dcf45cdf3e9ccec1ff0c75149f81e3c6029858d6a5710a2fd16c1d6bc3
+    path: compiled/medical.anatomical_region.fixture.yaml
+    digest: sha256:9913a2dcf45cdf3e9ccec1ff0c75149f81e3c6029858d6a5710a2fd16c1d6bc3
+    state: fixture_blocked
+    local_fixture: true
+    production_eligible: false
+    approval_receipt: null
+  - leaf_id: medical.volumetric_target_geometry
+    reference: fixture-subdomain-knowledge:medical.volumetric_target_geometry@sha256:7a88d367b46bc06f011837c1d0102ef5af85b2500129aa921c0e9ed5d22c0b68
+    path: compiled/medical.volumetric_target_geometry.fixture.yaml
+    digest: sha256:7a88d367b46bc06f011837c1d0102ef5af85b2500129aa921c0e9ed5d22c0b68
+    state: fixture_blocked
+    local_fixture: true
+    production_eligible: false
+    approval_receipt: null

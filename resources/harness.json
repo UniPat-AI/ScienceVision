@@ -1,24 +1,26 @@
 {
   "schema_version": "sciencevision.harness_reference.v1",
-  "verified_at": "2026-10-16T01:20:00+00:00",
-  "repository": "UniPat-AI/BabyVision-v2",
-  "url": "https://github.com/UniPat-AI/BabyVision-v2",
-  "branch": "eval-baseline",
-  "commit": "b47f13ac5abb54b9e287ff3131ae7e29771ec53e",
-  "license": "MIT",
+  "verified_at": "2026-10-20T15:20:00+00:00",
+  "repository": "UniPat-AI/ScienceVision",
+  "url": "https://github.com/UniPat-AI/ScienceVision",
+  "branch": "main",
+  "commit": "6fd95252e81fb153432add0f2400d9ee1eea6697",
+  "subtree": "harness",
+  "working_directory": "harness",
+  "source_repository": "UniPat-AI/BabyVision-v2",
+  "source_branch": "eval-baseline",
+  "source_commit": "6fd95252e81fb153432add0f2400d9ee1eea6697",
+  "reported_results_commit": "b47f13ac5abb54b9e287ff3131ae7e29771ec53e",
+  "license": "Apache-2.0",
   "source_license_at_pinned_revision": "Apache-2.0",
   "private": true,
   "canonical_repository": "UniPat-AI/ScienceVision",
-  "canonical_repository_status": "vendored in this repository",
+  "canonical_repository_status": "vendored under harness/",
   "vendored_in": "UniPat-AI/ScienceVision",
   "vendored_subtrees": [
-    "scripts/harbor",
-    "harbor_adapters",
-    "sci3d_bench",
-    "sci3d_agent",
-    "scorer_bundle"
+    "harness"
   ],
-  "vendored_license": "MIT",
+  "vendored_license": "Apache-2.0",
   "entrypoints": {
     "matrix": "scripts.harbor.run_end2end",
     "task_builder": "scripts.harbor.qa_gen_to_tasks",
@@ -48,7 +50,7 @@
     "status": "export_required_not_end_to_end_validated",
     "index_is_runnable_input": false
   },
-  "revision_note": "The harbor drivers, adapters and scorer comparators were developed across two private lines that have diverged: the Science-Vision monorepo carries them under scripts/harbor/, harbor_adapters/ and sci3d_bench/scorers/, while the eval-baseline line of BabyVision-v2 carries the continuous September-October work and the isolated scorer_bundle. The commit above pins the line the reported results were produced on, and at that revision the source declares Apache-2.0. That revision is vendored here under the MIT license; later scorer fixes from either line are not included.",
+  "revision_note": "The complete eval-baseline branch is vendored under harness/ at source commit 6fd95252e81fb153432add0f2400d9ee1eea6697 and retains the upstream Apache-2.0 license (harness/LICENSE). The reported results were produced on b47f13ac5abb54b9e287ff3131ae7e29771ec53e, which is recorded above as reported_results_commit. No second checkout is required to run the harness.",
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."
 }

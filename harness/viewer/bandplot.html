@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Band / Spectrum plot — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<style>
+  #plot { position: fixed; top: 49px; left: 0; right: 0; bottom: 0; }
+  #info { position: fixed; top: 60px; right: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; max-width: 360px; z-index: 5; }
+  #info b { color: var(--domain-topo); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Bandplot</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">Topological photonics · TSV → Plotly line / scatter</div>
+</header>
+<div id="plot"></div>
+<div id="info"><b id="stats">loading…</b></div>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+function fail(msg) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">' + msg + '</div>');
+}
+
+function isNumericRow(cells) {
+  // A "numeric" row is one where at least the first cell parses as a float
+  // (per-cell parsing tolerates "--" placeholders by leaving them as NaN).
+  if (!cells.length) return false;
+  const x = Number(cells[0]);
+  return Number.isFinite(x);
+}
+
+function parseTSV(text) {
+  const rows = text.split(/\r?\n/).map(l => l.split('\t'));
+  // Skip leading blank lines
+  while (rows.length && rows[0].every(c => c.trim() === '')) rows.shift();
+
+  // Find first numeric row → everything before it is header
+  let firstData = -1;
+  for (let i = 0; i < rows.length; i++) {
+    if (isNumericRow(rows[i])) { firstData = i; break; }
+  }
+  if (firstData < 0) throw new Error('No numeric data rows found');
+
+  const headerRows = rows.slice(0, firstData);
+  const dataRows = rows.slice(firstData).filter(r => r.length > 1 && isNumericRow(r));
+
+  const nCols = Math.max(...dataRows.map(r => r.length));
+  // Column labels — use last header row that has non-empty entries, fallback to "col N"
+  let labels = new Array(nCols).fill('').map((_, j) => `col ${j}`);
+  for (let h = headerRows.length - 1; h >= 0; h--) {
+    const row = headerRows[h];
+    if (row.some(c => c.trim() !== '')) {
+      for (let j = 0; j < nCols; j++) {
+        if (row[j] && row[j].trim() !== '') labels[j] = row[j].trim();
+      }
+      break;
+    }
+  }
+  // Convert data to columns
+  const cols = Array.from({ length: nCols }, () => []);
+  for (const r of dataRows) {
+    for (let j = 0; j < nCols; j++) {
+      const v = j < r.length ? Number(r[j]) : NaN;
+      cols[j].push(Number.isFinite(v) ? v : null);
+    }
+  }
+  return { labels, cols, nRows: dataRows.length, headerLines: headerRows.length };
+}
+
+function plot({ labels, cols }) {
+  const xLabel = labels[0] || 'x';
+  const traces = [];
+  for (let j = 1; j < cols.length; j++) {
+    // Skip columns that are entirely null (e.g. trailing pads in band_d1_*.dat)
+    if (cols[j].every(v => v === null)) continue;
+    traces.push({
+      x: cols[0],
+      y: cols[j],
+      type: 'scattergl',  // GL renderer for large band-structure files
+      mode: 'lines',
+      name: labels[j] || `col ${j}`,
+      line: { width: 1.5 },
+      connectgaps: false,
+    });
+  }
+  const layout = {
+    paper_bgcolor: '#0d1117', plot_bgcolor: '#0d1117',
+    font: { color: '#c9d1d9', family: 'ui-monospace, monospace', size: 11 },
+    margin: { l: 60, r: 20, t: 30, b: 50 },
+    xaxis: { title: xLabel, gridcolor: '#21262d', zerolinecolor: '#30363d', color: '#c9d1d9' },
+    yaxis: { title: 'y', gridcolor: '#21262d', zerolinecolor: '#30363d', color: '#c9d1d9' },
+    legend: { bgcolor: 'rgba(13,17,23,0.7)', bordercolor: '#30363d', borderwidth: 1 },
+    hovermode: 'x unified',
+  };
+  Plotly.newPlot('plot', traces, layout, { responsive: true, displaylogo: false });
+  return traces.length;
+}
+
+if (!file) {
+  fail('No ?file= query param.');
+} else {
+  fetch(file)
+    .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+    .then(text => {
+      const parsed = parseTSV(text);
+      const nTraces = plot(parsed);
+      document.getElementById('stats').textContent =
+        `${parsed.nRows} rows · ${nTraces} traces · ${parsed.headerLines} header lines · x = "${parsed.labels[0] || 'col 0'}"`;
+    })
+    .catch(err => fail('Failed to load / parse:\n' + err));
+}
+</script>
+</body>
+</html>

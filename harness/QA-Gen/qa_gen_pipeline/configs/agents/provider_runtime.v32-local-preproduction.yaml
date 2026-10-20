@@ -1,0 +1,51 @@
+schema_version: 1
+kind: qagen_provider_runtime
+enabled: true
+endpoint_env: QAGEN_UNIV_BASE_URL
+endpoint_approval_path_env: QAGEN_UNIV_ENDPOINT_APPROVAL_PATH
+credential_env: QAGEN_UNIV_API_KEY
+production_eligible: false
+request:
+  timeout_seconds: 30
+  max_attempts: 3
+  initial_backoff_seconds: 0.25
+decision:
+  id: v32-bcm522-local-preproduction-20260827
+  decision: approved_for_local_pilot
+  decided_by: user_explicit_generation_authorization
+  decided_at: "2026-08-27"
+  scope: V32 BCM522 local preproduction generation for biology.molecular_collision_check, biology.docking_pose_plausibility, chemistry.steric_accessibility, chemistry.conformation_analysis, and medical.volumetric_target_geometry; release and production use remain disabled
+providers:
+  anthropic:
+    enabled: true
+    model: claude-opus-5
+    path: /v1/messages
+    wire_protocol: anthropic_messages
+    thinking: not_applicable
+    output_protocol: json_schema_object
+    usage_accounting: provider_cost_or_reservation_upper_bound
+    multimodal:
+      supports_image_input: false
+      supports_data_url: false
+  deepseek:
+    enabled: true
+    model: deepseek-v4-pro
+    path: /v1/chat/completions
+    wire_protocol: openai_chat_completions
+    thinking: disabled
+    output_protocol: json_schema_object
+    usage_accounting: provider_cost_or_reservation_upper_bound
+    multimodal:
+      supports_image_input: false
+      supports_data_url: false
+  openai:
+    enabled: true
+    model: gpt-5.6-sol
+    path: /v1/chat/completions
+    wire_protocol: openai_chat_completions
+    thinking: not_applicable
+    output_protocol: json_schema_object
+    usage_accounting: provider_cost_or_reservation_upper_bound
+    multimodal:
+      supports_image_input: false
+      supports_data_url: false

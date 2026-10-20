@@ -1,0 +1,21 @@
+[
+  {
+    "name": "astrollava",
+    "label": "AstroLLaVA",
+    "modality": "astronomy image VQA",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/UniverseTBD/AstroLLaVA_convos",
+    "answer_kind": "string",
+    "status": "ready",
+    "splits": {
+      "train": {
+        "rows": 5517,
+        "jsonl": "/out_samples/astrollava/train.jsonl",
+        "first_qid": "astrollava-train-00-000000"
+      }
+    },
+    "skipped": {},
+    "pool_size": 4570,
+    "total_rows": 5517
+  }
+]

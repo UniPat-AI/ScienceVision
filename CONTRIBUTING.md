@@ -1,6 +1,6 @@
 # Contributing
 
-Open an issue or pull request in this repository for documentation, resource references, performance-format changes, or evaluation implementation changes. The harness is being consolidated into this repository; until that lands, note in the pull request which development line the change belongs to.
+Open an issue or pull request in this repository for documentation, resource references, performance-format changes, or evaluation implementation changes in `harness/`.
 
 For a resource update, record its immutable revision, verification date, verification scope, visibility, and migration status. Preserve the previous source until a replacement has been checked. Keep dataset licensing separate from the repository license.
 

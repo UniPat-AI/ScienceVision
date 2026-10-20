@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>3D Assets — BabyVision-v2</title>
+<link rel="stylesheet" href="shared/style.css">
+<style>
+  /* Chemistry has no domain-color token in style.css; add one locally. */
+  section.domain.chem h2 { color: #db61a2; }
+  /* Architecture likewise has no token; add one locally. */
+  section.domain.arch h2 { color: #58a6ff; }
+  .domain-jump { display:flex; flex-wrap:wrap; gap:8px; margin:0 0 24px; }
+  .domain-jump a {
+    display:inline-flex; align-items:center; gap:8px;
+    border:1px solid var(--border); border-radius:999px;
+    padding:6px 14px; font-size:13px; color:inherit;
+  }
+  .domain-jump a:hover { border-color:var(--accent); text-decoration:none; }
+  .domain-jump a .dot { width:8px; height:8px; border-radius:50%; }
+  .domain-jump a .n { color:var(--fg-dim); font-size:12px; }
+  section.domain { margin-top:32px; scroll-margin-top:64px; }
+  section.domain h2 { font-size:16px; margin:0 0 4px; }
+  section.domain .domain-sub { color:var(--fg-dim); font-size:12px; margin:0 0 14px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <a href="index.html" class="home-link" style="color:inherit;text-decoration:none">
+      <strong id="brand">BabyVision-v2</strong>
+    </a>
+    <span style="color:var(--fg-dim);margin-left:8px;font-size:12px">/ 3D Assets</span>
+  </div>
+  <div class="topbar-right">
+    <nav class="bv2-globalnav" aria-label="Global">
+      <a href="index.html">Home</a>
+      <a href="docs.html">Doc</a>
+      <a href="assets.html" aria-current="page" class="is-active">Domain 3D Assets</a>
+      <a href="qagen.html">QA Tasks</a>
+      <a href="leaderboard.html">Leaderboard</a>
+      <a href="/sv-annotate/">Expert</a>
+    </nav>
+    <div class="meta" id="counts">loading…</div>
+  </div>
+</header>
+<main style="padding:24px;max-width:1400px;margin:0 auto">
+  <h1 style="font-size:24px;margin:0 0 8px">3D Assets</h1>
+  <p style="color:var(--fg-dim);margin:0 0 24px;max-width:820px">
+    Browse the 3D assets indexed by BabyVision-v2 across professional domains.
+    Each asset opens in a domain-specific in-browser renderer
+    (Mol* · Niivue · Three.js · OCCT best-effort · USD).
+    Biology is split into <strong>proteins &amp; nucleic acids</strong> and
+    <strong>chemistry (small molecules)</strong>.
+  </p>
+  <nav class="domain-jump" id="domain-jump" aria-label="Jump to domain"></nav>
+  <div id="domains"></div>
+  <p id="asset-empty" class="empty" hidden>No asset index data available yet.</p>
+</main>
+<script src="shared/manifest.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+  function enc(s) { return encodeURIComponent(s); }
+
+  // Assets whose underlying data file is unavailable at the source and cannot
+  // be migrated (upstream 404). Excluded from the listing so no card links to a
+  // renderer that would only error out.
+  const UNAVAILABLE = new Set([
+    '/crawl_data/medical/m3d_samples/derived/hippo_001_m3d.nii.gz'
+  ]);
+
+  // Domain definitions. `biology.json` is the single source for both bio and
+  // chemistry; each is selected by a path-prefix classifier.
+  const isBio  = (p) => /\/(rcsb_pdb_mmcif|rcsb_pdb_extras|alphafolddb)\//.test(p);
+  const isChem = (p) => /\/(pubchem_sdf_3d|small_molecules_derived)\//.test(p);
+
+  const DOMAINS = [
+    { id:'bio',  cls:'bio',  color:'#f78166', label:'Biology · Proteins & Nucleic Acids',
+      sub:'RCSB PDB (mmCIF / PDB / BinaryCIF) + AlphaFold predictions · Mol*',
+      src:'assets/biology.json', filter:isBio },
+    { id:'chem', cls:'chem', color:'#db61a2', label:'Chemistry · Small Molecules',
+      sub:'PubChem 3D conformers + derived formats (SDF / MOL / MOL2 / XYZ) · Mol*',
+      src:'assets/biology.json', filter:isChem },
+    { id:'med',  cls:'med',  color:'#56d364', label:'Medical · CT / MRI Volumes',
+      sub:'NIfTI volumes with label overlays · Niivue',
+      src:'assets/medical.json', filter:() => true },
+    { id:'ind',  cls:'ind',  color:'#c79aff', label:'Industrial · CAD & Mesh',
+      sub:'STEP / IGES (OCCT) · glTF / STL / OBJ / PLY (Three.js) · USD',
+      src:'assets/industrial.json', filter:() => true },
+    { id:'arch', cls:'arch', color:'#58a6ff', label:'Architecture · BIM & Infrastructure',
+      sub:'IFC/BIM models (glTF · Three.js) + bridge LiDAR point clouds with per-point structural classification (LAS · Three.js)',
+      src:'assets/architecture.json', filter:() => true },
+  ];
+
+  // Build the renderer URL for an asset. Manifest paths are absolute
+  // (/crawl_data/...) and resolve directly under the repo-root docroot.
+  function viewerURL(a) {
+    const f = a.path;
+    switch (a.viewer) {
+      case 'molstar': return '/molstar.html?file=' + enc(f) + '&type=' + enc(a.format || 'mmcif');
+      case 'niivue': {
+        let u = '/niivue.html?file=' + enc(f);
+        if (a.overlay) u += '&overlay=' + enc(a.overlay);
+        return u;
+      }
+      case 'occt': return '/occt.html?file=' + enc(f);
+      case 'pointcloud': {
+        let u = '/pointcloud.html?file=' + enc(f);
+        if (a.classes) u += '&classes=' + enc(a.classes);
+        return u;
+      }
+      case 'arch-model': {
+        // Split view: orthographic drawings (left) + interactive 3D (right).
+        let u = '/arch-model.html?file=' + enc(f) + '&name=' + enc(a.name);
+        if (a.plan) u += '&plan=' + enc(a.plan);
+        if (a.elev_front) u += '&elev_front=' + enc(a.elev_front);
+        if (a.elev_side) u += '&elev_side=' + enc(a.elev_side);
+        return u;
+      }
+      case 'gltf': return '/gltf.html?file=' + enc(f);
+      case 'usdz': return '/usdz.html?file=' + enc(f);
+      case 'usda': return '/usda.html?file=' + enc(f);
+      case 'html': return f;  // self-contained standalone demo page (opens directly)
+      default: return null;
+    }
+  }
+
+  // Distinct SVG signature per renderer type (ported from the source viewer).
+  function thumbGlyph(viewer, color) {
+    const C = color || '#8b949e';
+    switch (viewer) {
+      case 'molstar':
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <line x1="20" y1="32" x2="44" y2="32" stroke="${C}" stroke-width="1.5"/>
+          <line x1="32" y1="20" x2="32" y2="44" stroke="${C}" stroke-width="1.5"/>
+          <line x1="22" y1="22" x2="42" y2="42" stroke="${C}" stroke-width="1.2" stroke-opacity="0.4"/>
+          <line x1="22" y1="42" x2="42" y2="22" stroke="${C}" stroke-width="1.2" stroke-opacity="0.4"/>
+          <circle cx="32" cy="32" r="5" fill="${C}"/>
+          <circle cx="20" cy="32" r="3" fill="${C}" opacity="0.75"/>
+          <circle cx="44" cy="32" r="3" fill="${C}" opacity="0.75"/>
+          <circle cx="32" cy="20" r="3" fill="${C}" opacity="0.75"/>
+          <circle cx="32" cy="44" r="3" fill="${C}" opacity="0.75"/></svg>`;
+      case 'niivue':
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="44" height="44" stroke="${C}" fill="none" stroke-width="1.5"/>
+          <line x1="10" y1="32" x2="54" y2="32" stroke="${C}" stroke-width="1.2"/>
+          <line x1="32" y1="10" x2="32" y2="54" stroke="${C}" stroke-width="1.2"/>
+          <rect x="32" y="32" width="22" height="22" fill="${C}" opacity="0.18"/></svg>`;
+      case 'occt':
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="14" width="48" height="36" rx="2" stroke="${C}" fill="none" stroke-width="1.5"/>
+          <circle cx="20" cy="32" r="5" stroke="${C}" fill="none" stroke-width="1.2"/>
+          <circle cx="44" cy="32" r="5" stroke="${C}" fill="none" stroke-width="1.2"/>
+          <line x1="8" y1="22" x2="56" y2="22" stroke="${C}" stroke-width="0.8" stroke-opacity="0.5"/>
+          <line x1="8" y1="42" x2="56" y2="42" stroke="${C}" stroke-width="0.8" stroke-opacity="0.5"/></svg>`;
+      case 'pointcloud': // LiDAR point cloud — scattered points with axes
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 32 10 L 32 54 M 12 44 L 52 44" stroke="${C}" stroke-width="0.8" stroke-opacity="0.4"/>
+          <circle cx="24" cy="30" r="1.8" fill="${C}"/><circle cx="34" cy="24" r="1.8" fill="${C}"/>
+          <circle cx="42" cy="32" r="1.8" fill="${C}"/><circle cx="28" cy="38" r="1.8" fill="${C}"/>
+          <circle cx="38" cy="40" r="1.8" fill="${C}"/><circle cx="20" cy="40" r="1.8" fill="${C}" opacity="0.7"/>
+          <circle cx="46" cy="26" r="1.8" fill="${C}" opacity="0.7"/><circle cx="30" cy="18" r="1.8" fill="${C}" opacity="0.7"/>
+          <circle cx="32" cy="32" r="1.8" fill="${C}"/><circle cx="24" cy="46" r="1.8" fill="${C}" opacity="0.55"/>
+          <circle cx="44" cy="46" r="1.8" fill="${C}" opacity="0.55"/></svg>`;
+      case 'arch-model': // drawing ↔ 3D: blueprint sheet paired with a cube
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <rect x="8" y="12" width="24" height="40" rx="1.5" stroke="${C}" fill="${C}" fill-opacity="0.06" stroke-width="1.5"/>
+          <path d="M12 20 H28 M12 26 H24 M12 40 H28 M12 46 H20" stroke="${C}" stroke-width="1" stroke-opacity="0.6"/>
+          <rect x="14" y="30" width="9" height="7" stroke="${C}" fill="none" stroke-width="0.9"/>
+          <path d="M 46 16 L 58 23 L 58 39 L 46 46 L 34 39 L 34 23 Z" stroke="${C}" fill="${C}" fill-opacity="0.10" stroke-width="1.4"/>
+          <path d="M 46 16 L 46 31 M 46 31 L 34 23 M 46 31 L 58 23" stroke="${C}" stroke-width="1"/></svg>`;
+      case 'html': // interactive standalone demo — interlocking gears
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="25" cy="30" r="10" stroke="${C}" fill="none" stroke-width="1.5"/>
+          <circle cx="25" cy="30" r="3.5" fill="${C}"/>
+          <circle cx="44" cy="38" r="7" stroke="${C}" fill="none" stroke-width="1.5"/>
+          <circle cx="44" cy="38" r="2.5" fill="${C}"/>
+          <path d="M25 18 L25 14 M25 46 L25 42 M13 30 L9 30 M41 30 L37 30" stroke="${C}" stroke-width="1.5"/>
+          <path d="M44 29 L44 26 M44 50 L44 47 M53 38 L56 38 M35 38 L32 38" stroke="${C}" stroke-width="1.5"/></svg>`;
+      default: // gltf / usdz / usda — isometric cube
+        return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 32 8 L 54 20 L 54 44 L 32 56 L 10 44 L 10 20 Z" stroke="${C}" fill="${C}" fill-opacity="0.08" stroke-width="1.5"/>
+          <path d="M 32 8 L 32 32 M 32 32 L 10 20 M 32 32 L 54 20" stroke="${C}" stroke-width="1.2"/></svg>`;
+    }
+  }
+
+  function cardHTML(a, color) {
+    const href = viewerURL(a);
+    const thumb = '<div class="thumb">' + thumbGlyph(a.viewer, color) + '</div>';
+    const body =
+      '<div class="name">' + esc(a.name) + '</div>' +
+      '<div class="meta"><span>' + esc(a.viewer) + '</span>' +
+      '<span class="badge">' + esc(a.format || '') + '</span></div>';
+    if (href) {
+      return '<a class="card" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+             thumb + body + '</a>';
+    }
+    return '<div class="card">' + thumb + body + '</div>';
+  }
+
+  function renderDomain(def, assets) {
+    const items = assets.filter((a) => def.filter(a.path) && !UNAVAILABLE.has(a.path));
+    if (!items.length) return { count: 0, html: '' };
+    const cards = items.map((a) => cardHTML(a, def.color)).join('\n');
+    const html =
+      '<section class="domain ' + def.cls + '" id="sec-' + def.id + '">' +
+      '<h2>' + esc(def.label) + '</h2>' +
+      '<p class="domain-sub">' + esc(def.sub) + '</p>' +
+      '<div class="cards">' + cards + '</div></section>';
+    return { count: items.length, html };
+  }
+
+  function renderJump(results) {
+    const nav = $('domain-jump');
+    nav.innerHTML = results.filter((r) => r.count).map((r) =>
+      '<a href="#sec-' + r.def.id + '">' +
+      '<span class="dot" style="background:' + r.def.color + '"></span>' +
+      esc(r.def.label.split(' · ')[0]) +
+      ' <span class="n">' + r.count + '</span></a>'
+    ).join('');
+  }
+
+  function boot(m) {
+    // Fetch each unique source once, then classify per domain.
+    const uniqueSrc = [...new Set(DOMAINS.map((d) => d.src))];
+    const cache = {};
+    Promise.all(uniqueSrc.map((s) =>
+      fetch(s, { cache: 'no-cache' })
+        .then((r) => { if (!r.ok) throw new Error('HTTP ' + r.status + ' ' + s); return r.json(); })
+        .then((j) => { cache[s] = Array.isArray(j) ? j : (j.assets || []); })
+        .catch((e) => { cache[s] = { __error: e.message }; })
+    )).then(() => {
+      const root = $('domains');
+      const results = [];
+      let total = 0;
+      for (const def of DOMAINS) {
+        const data = cache[def.src];
+        if (data && data.__error) {
+          results.push({ def, count: 0,
+            html: '<section class="domain ' + def.cls + '" id="sec-' + def.id + '">' +
+                  '<h2>' + esc(def.label) + '</h2>' +
+                  '<div class="error-box">Failed to load ' + esc(def.src) + ': ' + esc(data.__error) + '</div></section>' });
+          continue;
+        }
+        const r = renderDomain(def, data || []);
+        total += r.count;
+        results.push({ def, count: r.count, html: r.html });
+      }
+      root.innerHTML = results.map((r) => r.html).join('\n');
+      renderJump(results);
+      $('counts').textContent = total + ' assets · ' + results.filter((r) => r.count).length +
+        ' domains · ' + m.brand + ' v' + m.version;
+      if (!total) $('asset-empty').hidden = false;
+    });
+  }
+
+  window.ManifestReady.then(boot).catch(() => {
+    // manifest.js already surfaces a banner; still try to render with defaults.
+    boot({ brand: 'BabyVision-v2', version: '?' });
+  });
+})();
+</script>
+</body>
+</html>

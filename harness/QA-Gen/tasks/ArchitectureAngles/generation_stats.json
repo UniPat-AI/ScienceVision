@@ -1,0 +1,31 @@
+{
+    "run_dir": "QA-Gen/tasks/ArchitectureAngles/_gt",
+    "task_counts": {
+        "generated_total": 28,
+        "kept_total": 28,
+        "filtered_total": 0,
+        "kept_ratio": 1.0,
+        "filtered_ratio": 0.0,
+        "decision_counts": {
+            "accept": 28
+        },
+        "critique_severity_counts": {}
+    },
+    "token_usage": {
+        "usage_records_found": 0,
+        "input_tokens_total": 0,
+        "output_tokens_total": 0,
+        "total_tokens_total": 0,
+        "input_tokens_avg_per_generated_task": 0.0,
+        "output_tokens_avg_per_generated_task": 0.0,
+        "total_tokens_avg_per_generated_task": 0.0
+    },
+    "cost": {
+        "cost_usd_total": 0,
+        "cost_usd_avg_per_generated_task": 0.0,
+        "cost_basis": "computed_gt_no_llm_generation",
+        "input_price_per_mtok": null,
+        "output_price_per_mtok": null,
+        "total_price_per_mtok": null
+    }
+}

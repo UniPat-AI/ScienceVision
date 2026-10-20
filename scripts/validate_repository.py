@@ -153,7 +153,10 @@ def validate_references() -> None:
 
 def validate_links() -> None:
     for path in ROOT.rglob("*.md"):
-        if any(part.startswith(".") for part in path.relative_to(ROOT).parts[:-1]):
+        relative = path.relative_to(ROOT)
+        if relative.parts[0] == "harness":
+            continue
+        if any(part.startswith(".") for part in relative.parts[:-1]):
             continue
         text = path.read_text()
         require(sum(line.startswith("```") for line in text.splitlines()) % 2 == 0,

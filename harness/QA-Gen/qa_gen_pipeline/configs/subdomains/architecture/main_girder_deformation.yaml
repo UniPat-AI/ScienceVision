@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.main_girder_deformation
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [architecture.multi_epoch_deformation]
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.registered_multi_epoch_geometry, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [multi_epoch_deformation_comparison]
+seed:
+  query: {domain: architecture, subdomain: main_girder_deformation, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, registered_epochs, stated_coordinate_frame, stated_units]
+viewer:
+  required_operations: [inspect, rotate, overlay_compare, measure_distance]
+answer:
+  allowed_truth_modes: [expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, registration_evidence, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: doxcnLieODts3bgDLf2POCwsHIf, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: registered epochs and approved knowledge are missing."}

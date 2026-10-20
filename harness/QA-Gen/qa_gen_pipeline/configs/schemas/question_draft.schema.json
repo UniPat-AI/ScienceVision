@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/question_draft.schema.json",
+  "description": "Editorial-only author draft for a deterministic measurement-replay candidate composer. It cannot carry truth, answer, viewer-session, provenance, or control-plane fields.",
+  "type": "object",
+  "required": [
+    "artifact_kind",
+    "scientific_context",
+    "object_reference",
+    "question_wording",
+    "reasoning_focus",
+    "state_transition"
+  ],
+  "properties": {
+    "artifact_kind": {"const": "v32_question_draft"},
+    "scientific_context": {"type": "string", "minLength": 1, "maxLength": 800},
+    "object_reference": {"type": "string", "minLength": 1, "maxLength": 500},
+    "question_wording": {"type": "string", "minLength": 1, "maxLength": 1200},
+    "reasoning_focus": {"type": "string", "minLength": 1, "maxLength": 500},
+    "state_transition": {"type": "null"}
+  },
+  "additionalProperties": false
+}

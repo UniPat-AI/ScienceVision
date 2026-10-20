@@ -1,0 +1,23 @@
+[
+  {
+    "name": "spiqa",
+    "label": "SPIQA",
+    "modality": "scientific paper figs + tables",
+    "task_type": "open-ended QA",
+    "source": "huggingface.co/datasets/google/spiqa",
+    "answer_kind": "string",
+    "availability": "out_of_scope",
+    "unavailable_reason": "Paper figures + tables — outside Sci3D 3D/medical/CAD scope",
+    "status": "disabled",
+    "splits": {
+      "testA": {
+        "rows": 666,
+        "jsonl": "/out_samples/spiqa/testA.jsonl",
+        "first_qid": "spiqa-testA-000-00"
+      }
+    },
+    "skipped": {},
+    "pool_size": 666,
+    "total_rows": 666
+  }
+]

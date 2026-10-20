@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>MPB Scheme spec — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="stylesheet" href="/viewer/shared/vendor/prismjs/1.29.0/themes/prism-tomorrow.css">
+<style>
+  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  pre { background: #161b22 !important; border: 1px solid #30363d; border-radius: 6px; padding: 16px; overflow: auto; font-size: 13px; line-height: 1.5; }
+  .summary { color: var(--fg-dim); margin-bottom: 12px; font-size: 12px; }
+  .summary b { color: var(--domain-topo); }
+  .keypoints { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 12px; }
+  .keypoints h3 { margin: 0 0 6px; font-size: 13px; color: var(--domain-topo); }
+  .keypoints code { background: #0d1117; padding: 1px 6px; border-radius: 3px; }
+  .kp-row { color: var(--fg-dim); margin: 2px 0; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>MPB ctl</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">MIT Photonic Bands · Scheme spec</div>
+</header>
+<main>
+  <div class="summary" id="summary">loading…</div>
+  <div class="keypoints" id="keypoints" style="display:none">
+    <h3>Parsed key parameters</h3>
+    <div id="kp-body"></div>
+  </div>
+  <pre><code class="language-scheme" id="code">…</code></pre>
+</main>
+<script src="/viewer/shared/vendor/prismjs/1.29.0/components/prism-core.min.js"></script>
+<script src="/viewer/shared/vendor/prismjs/1.29.0/components/prism-scheme.min.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+function fail(msg) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">' + msg + '</div>');
+}
+
+// Extract a few common MPB parameters using lightweight regex on the Scheme source.
+// We don't actually evaluate Scheme — just surface the values an MPB user reads first.
+function summarizeCtl(text) {
+  const lines = text.split(/\r?\n/);
+  const nonComment = lines.filter(l => !l.trim().startsWith(';'));
+  const body = nonComment.join('\n');
+
+  function findParam(name) {
+    // matches  (set! name <value>)  or  (define-param name <value> ...)
+    const re = new RegExp(`\\((?:set!|define-param)\\s+${name}\\s+([^)]*)\\)`, 'i');
+    const m = body.match(re);
+    return m ? m[1].trim() : null;
+  }
+  function findSetParam(name) {
+    const re = new RegExp(`\\(set-param!\\s+${name}\\s+([^)]*)\\)`, 'i');
+    const m = body.match(re);
+    return m ? m[1].trim() : null;
+  }
+
+  const keys = [
+    ['resolution', findSetParam('resolution')],
+    ['num-bands', findSetParam('num-bands')],
+    ['mesh-size', findSetParam('mesh-size')],
+    ['eps (dielectric ε)', findParam('eps')],
+    ['r (sphere radius)', findParam('r')],
+  ];
+  // Count k-points
+  const kpMatch = body.match(/k-points\s+\([^)]*interpolate\s+(\d+)/);
+  const interp = kpMatch ? Number(kpMatch[1]) : null;
+  // Count vector3 entries inside k-points form (very rough)
+  const v3 = (body.match(/vector3/g) || []).length;
+  // Count geometry primitives
+  const spheres = (body.match(/\bmake\s+sphere\b/g) || []).length;
+  const cylinders = (body.match(/\bmake\s+cylinder\b/g) || []).length;
+  const blocks = (body.match(/\bmake\s+block\b/g) || []).length;
+
+  return {
+    lines: lines.length,
+    commentLines: lines.length - nonComment.length,
+    keys,
+    interp,
+    v3,
+    primitives: { sphere: spheres, cylinder: cylinders, block: blocks },
+  };
+}
+
+function renderSummary(s, sizeBytes) {
+  document.getElementById('summary').innerHTML =
+    `<b>${s.lines} lines</b> (${s.commentLines} comments) · ${(sizeBytes / 1024).toFixed(1)} KB · ` +
+    `${s.v3} <code>vector3</code> entries · ${s.primitives.sphere} spheres / ${s.primitives.cylinder} cylinders / ${s.primitives.block} blocks`;
+  const body = document.getElementById('kp-body');
+  body.innerHTML = '';
+  for (const [k, v] of s.keys) {
+    if (v == null) continue;
+    body.innerHTML += `<div class="kp-row"><code>${k}</code> = <code>${v}</code></div>`;
+  }
+  if (s.interp != null) {
+    body.innerHTML += `<div class="kp-row"><code>k-points</code> = interpolate <code>${s.interp}</code> between high-symmetry points</div>`;
+  }
+  if (body.innerHTML) document.getElementById('keypoints').style.display = '';
+}
+
+if (!file) {
+  fail('No ?file= query param.');
+} else {
+  fetch(file)
+    .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+    .then(text => {
+      const code = document.getElementById('code');
+      code.textContent = text;
+      // Prism uses class "language-scheme" already set on the element
+      if (window.Prism) Prism.highlightElement(code);
+      renderSummary(summarizeCtl(text), new Blob([text]).size);
+    })
+    .catch(err => fail('Failed to load:\n' + err));
+}
+</script>
+</body>
+</html>

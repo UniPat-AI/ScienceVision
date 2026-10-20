@@ -1,0 +1,17 @@
+[
+  {
+    "name": "mmsci",
+    "label": "MMSci",
+    "modality": "Nature Communications figures",
+    "task_type": "MCQ",
+    "source": "github.com/Leezekun/MMSci",
+    "answer_kind": "mcq",
+    "availability": "out_of_scope",
+    "unavailable_reason": "Nature Communications 2D paper figures — outside Sci3D 3D/medical/CAD scope",
+    "status": "disabled",
+    "splits": {},
+    "skipped": {},
+    "pool_size": 0,
+    "total_rows": 0
+  }
+]

@@ -1,0 +1,257 @@
+{
+  "version": "molstar.v2",
+  "viewer": "molstar",
+  "tools": [
+    {
+      "name": "viewer_get_state",
+      "description": "Return the current Mol* semantic camera, loaded structures, and symmetry preset.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "viewer_reset",
+      "description": "Rebuild the default structure hierarchy and restore the initial Mol* camera and visibility.",
+      "visibility": "internal",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_orbit",
+      "description": "Look at the structure from an absolute world azimuth and elevation, in degrees.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "azimuth_deg": {"type": "number", "minimum": -180, "maximum": 180},
+          "elevation_deg": {"type": "number", "minimum": -89, "maximum": 89}
+        },
+        "required": ["azimuth_deg", "elevation_deg"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_zoom",
+      "description": "Set the Mol* camera distance as an absolute multiple of the distance that just fits the visible structure. Greater than 1 is closer.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {"zoom": {"type": "number", "minimum": 0.125, "maximum": 32}},
+        "required": ["zoom"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "viewer_pan",
+      "description": "Offset the Mol* look-at point from the visible-sphere centre, along camera-right and camera-up, as fractions of the visible radius. pan_right > 0 moves the look-at toward screen-right, so the structure slides left.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "pan_right": {"type": "number", "minimum": -2, "maximum": 2},
+          "pan_up": {"type": "number", "minimum": -2, "maximum": 2}
+        },
+        "required": ["pan_right", "pan_up"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure",
+      "description": "Start an atom-bound distance, angle, or dihedral measurement and record the completed result.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "kind": {"type": "string", "enum": ["distance", "angle", "dihedral"]},
+          "commit": {"type": "boolean"},
+          "atoms": {"type": "array"},
+          "value": {"type": "string"}
+        },
+        "required": ["kind"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_clear_measurements",
+      "description": "Clear every Mol* distance, angle, and dihedral annotation.",
+      "visibility": "public",
+      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": false}
+    },
+    {
+      "name": "sv3d_switch_structure",
+      "description": "Show exactly one loaded structure and hide the others.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "structure_id": {"type": "string"},
+          "index": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_symmetry",
+      "description": "Apply a Mol* trajectory preset: the deposited model (every crystallographic copy), the biological assembly (Assembly 1), crystal contacts, the unit cell, or a super cell.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "preset": {
+            "type": "string",
+            "enum": ["model", "bio_assembly", "crystal_contacts", "unit_cell", "super_cell"]
+          }
+        },
+        "required": ["preset"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_camera",
+      "description": "Restore a semantic Mol* camera. Internal utility used to snap the view back to a recorded trajectory head; never an expert action and never recorded.",
+      "visibility": "internal",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "camera": {
+            "type": "object",
+            "properties": {
+              "azimuth_deg": {"type": "number", "minimum": -180, "maximum": 180},
+              "elevation_deg": {"type": "number", "minimum": -89, "maximum": 89},
+              "zoom": {"type": "number", "minimum": 0.125, "maximum": 32},
+              "pan_right": {"type": "number", "minimum": -2, "maximum": 2},
+              "pan_up": {"type": "number", "minimum": -2, "maximum": 2}
+            },
+            "required": ["azimuth_deg", "elevation_deg", "zoom"],
+            "additionalProperties": false
+          }
+        },
+        "required": ["camera"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_component_visibility",
+      "description": "Show or hide Mol* auto-preset components (water, ligand, polymer, ion, carbohydrate). Omitted keys stay unchanged.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "water": {"type": "boolean"},
+          "ligand": {"type": "boolean"},
+          "polymer": {"type": "boolean"},
+          "ion": {"type": "boolean"},
+          "carbohydrate": {"type": "boolean"}
+        },
+        "additionalProperties": false,
+        "minProperties": 1
+      }
+    },
+    {
+      "name": "sv3d_set_representation",
+      "description": "Set the Mol* representation of an auto-preset component class (polymer, ligand, carbohydrate), every component, or one picked residue overlay. Restyle carbohydrate to ball-and-stick to expose the atoms its SNFG symbol hides.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target": {"type": "string", "enum": ["polymer", "ligand", "carbohydrate", "all", "residue"]},
+          "style": {"type": "string", "enum": ["cartoon", "ball-and-stick", "spacefill", "carbohydrate-symbol"]},
+          "chain_id": {"type": "string"},
+          "seq_id": {"type": "integer"},
+          "comp_id": {"type": "string"},
+          "icode": {"type": "string"},
+          "commit": {"type": "boolean"}
+        },
+        "required": ["target", "style"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_clash",
+      "description": "Scan model-0 occupied heavy NonPolymer vs Polymer atoms for the maximum van der Waals overlap, excluding direct _struct_conn pairs.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_get_unit_cell",
+      "description": "Read the crystallographic unit-cell lengths, angles, volume, and Hermann-Mauguin space group from the loaded CIF.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_measure_atoms",
+      "description": "Measure the distance between two atoms identified by chain, residue number, and atom name.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chain_a": {"type": "string"},
+          "seq_id_a": {"type": "integer"},
+          "comp_id_a": {"type": "string"},
+          "atom_id_a": {"type": "string"},
+          "icode_a": {"type": "string"},
+          "chain_b": {"type": "string"},
+          "seq_id_b": {"type": "integer"},
+          "comp_id_b": {"type": "string"},
+          "atom_id_b": {"type": "string"},
+          "icode_b": {"type": "string"}
+        },
+        "required": ["chain_a", "seq_id_a", "atom_id_a", "chain_b", "seq_id_b", "atom_id_b"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_chain_visibility",
+      "description": "Show one polymer chain (with its ligands, waters, ions and covalently attached glycans) and hide the rest, or show all chains again.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "only": {"type": "string"}
+        },
+        "required": ["only"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_focus_residue",
+      "description": "Focus one residue by chain and sequence id: draws the residue, its surrounding environment and their non-covalent interactions, then aims the camera at it. Replaces any previous focus.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "chain_id": {"type": "string"},
+          "seq_id": {"type": "integer"},
+          "icode": {"type": "string"}
+        },
+        "required": ["chain_id", "seq_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "sv3d_set_atom_labels",
+      "description": "Show or hide screen-space serial-number labels on atoms identified by _atom_site.id or XYZ line numbers.",
+      "visibility": "public",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "visible": {"type": "boolean"},
+          "atom_ids": {
+            "type": "array",
+            "items": {"type": "integer", "minimum": 1},
+            "minItems": 1,
+            "maxItems": 16
+          }
+        },
+        "required": ["visible"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

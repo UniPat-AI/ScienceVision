@@ -1,0 +1,266 @@
+{
+  "set_name": "scale-v1-sample50",
+  "seed": 20260804,
+  "per_domain": 50,
+  "stratify_by": "task_family",
+  "domains": {
+    "medical": {
+      "population": 839,
+      "sampled": 50,
+      "families": {
+        "sv-medi-med_ct_lesion": {
+          "population": 579,
+          "sampled": 35
+        },
+        "sv-medi-med_mri_anatomy": {
+          "population": 260,
+          "sampled": 15
+        }
+      },
+      "v_class": {
+        "V1": 35,
+        "V6": 15
+      },
+      "answer_kind": {
+        "categorical": 35,
+        "structured": 15
+      },
+      "source": "/home/matianyi/Science-Vision/QA-Gen/tasks/scale-v1-medical/ScienceVision_scale-v1-medical_final_tasks.jsonl"
+    },
+    "biology": {
+      "population": 327,
+      "sampled": 50,
+      "families": {
+        "sv-biol-bio_collision_check": {
+          "population": 131,
+          "sampled": 20
+        },
+        "sv-biol-bio_docking_plausibility": {
+          "population": 131,
+          "sampled": 20
+        },
+        "sv-biol-bio_multi_structure_compare": {
+          "population": 65,
+          "sampled": 10
+        }
+      },
+      "v_class": {
+        "V2": 20,
+        "V3": 20,
+        "V4": 10
+      },
+      "answer_kind": {
+        "binary": 20,
+        "structured": 20,
+        "relation": 10
+      },
+      "source": "/home/matianyi/Science-Vision/QA-Gen/tasks/scale-v1-biology/ScienceVision_scale-v1-biology_final_tasks.jsonl"
+    },
+    "chemistry": {
+      "population": 401,
+      "sampled": 50,
+      "families": {
+        "sv-chem-chem_binding_geometry": {
+          "population": 131,
+          "sampled": 16
+        },
+        "sv-chem-chem_conformation": {
+          "population": 120,
+          "sampled": 15
+        },
+        "sv-chem-chem_crystallography": {
+          "population": 150,
+          "sampled": 19
+        }
+      },
+      "v_class": {
+        "V3": 16,
+        "V6": 34
+      },
+      "answer_kind": {
+        "structured": 35,
+        "categorical": 15
+      },
+      "source": "/home/matianyi/Science-Vision/QA-Gen/tasks/scale-v1-chemistry/ScienceVision_scale-v1-chemistry_final_tasks.jsonl"
+    }
+  },
+  "total": 150,
+  "task_ids": [
+    "sv-medi-med_ct_lesion-0008",
+    "sv-medi-med_ct_lesion-0015",
+    "sv-medi-med_ct_lesion-0028",
+    "sv-medi-med_ct_lesion-0063",
+    "sv-medi-med_ct_lesion-0083",
+    "sv-medi-med_ct_lesion-0084",
+    "sv-medi-med_ct_lesion-0086",
+    "sv-medi-med_ct_lesion-0087",
+    "sv-medi-med_ct_lesion-0091",
+    "sv-medi-med_ct_lesion-0097",
+    "sv-medi-med_ct_lesion-0098",
+    "sv-medi-med_ct_lesion-0103",
+    "sv-medi-med_ct_lesion-0123",
+    "sv-medi-med_ct_lesion-0141",
+    "sv-medi-med_ct_lesion-0195",
+    "sv-medi-med_ct_lesion-0207",
+    "sv-medi-med_ct_lesion-0223",
+    "sv-medi-med_ct_lesion-0259",
+    "sv-medi-med_ct_lesion-0263",
+    "sv-medi-med_ct_lesion-0268",
+    "sv-medi-med_ct_lesion-0284",
+    "sv-medi-med_ct_lesion-0301",
+    "sv-medi-med_ct_lesion-0330",
+    "sv-medi-med_ct_lesion-0340",
+    "sv-medi-med_ct_lesion-0346",
+    "sv-medi-med_ct_lesion-0350",
+    "sv-medi-med_ct_lesion-0370",
+    "sv-medi-med_ct_lesion-0375",
+    "sv-medi-med_ct_lesion-0398",
+    "sv-medi-med_ct_lesion-0439",
+    "sv-medi-med_ct_lesion-0500",
+    "sv-medi-med_ct_lesion-0502",
+    "sv-medi-med_ct_lesion-0524",
+    "sv-medi-med_ct_lesion-0525",
+    "sv-medi-med_ct_lesion-0570",
+    "sv-medi-med_mri_anatomy-0000",
+    "sv-medi-med_mri_anatomy-0003",
+    "sv-medi-med_mri_anatomy-0025",
+    "sv-medi-med_mri_anatomy-0059",
+    "sv-medi-med_mri_anatomy-0061",
+    "sv-medi-med_mri_anatomy-0075",
+    "sv-medi-med_mri_anatomy-0100",
+    "sv-medi-med_mri_anatomy-0155",
+    "sv-medi-med_mri_anatomy-0156",
+    "sv-medi-med_mri_anatomy-0166",
+    "sv-medi-med_mri_anatomy-0170",
+    "sv-medi-med_mri_anatomy-0196",
+    "sv-medi-med_mri_anatomy-0211",
+    "sv-medi-med_mri_anatomy-0222",
+    "sv-medi-med_mri_anatomy-0235",
+    "sv-biol-bio_collision_check-0011",
+    "sv-biol-bio_collision_check-0019",
+    "sv-biol-bio_collision_check-0021",
+    "sv-biol-bio_collision_check-0023",
+    "sv-biol-bio_collision_check-0027",
+    "sv-biol-bio_collision_check-0028",
+    "sv-biol-bio_collision_check-0044",
+    "sv-biol-bio_collision_check-0046",
+    "sv-biol-bio_collision_check-0052",
+    "sv-biol-bio_collision_check-0053",
+    "sv-biol-bio_collision_check-0064",
+    "sv-biol-bio_collision_check-0065",
+    "sv-biol-bio_collision_check-0067",
+    "sv-biol-bio_collision_check-0075",
+    "sv-biol-bio_collision_check-0087",
+    "sv-biol-bio_collision_check-0093",
+    "sv-biol-bio_collision_check-0108",
+    "sv-biol-bio_collision_check-0111",
+    "sv-biol-bio_collision_check-0126",
+    "sv-biol-bio_collision_check-0129",
+    "sv-biol-bio_docking_plausibility-0003",
+    "sv-biol-bio_docking_plausibility-0010",
+    "sv-biol-bio_docking_plausibility-0030",
+    "sv-biol-bio_docking_plausibility-0048",
+    "sv-biol-bio_docking_plausibility-0049",
+    "sv-biol-bio_docking_plausibility-0051",
+    "sv-biol-bio_docking_plausibility-0063",
+    "sv-biol-bio_docking_plausibility-0064",
+    "sv-biol-bio_docking_plausibility-0066",
+    "sv-biol-bio_docking_plausibility-0074",
+    "sv-biol-bio_docking_plausibility-0077",
+    "sv-biol-bio_docking_plausibility-0087",
+    "sv-biol-bio_docking_plausibility-0089",
+    "sv-biol-bio_docking_plausibility-0092",
+    "sv-biol-bio_docking_plausibility-0093",
+    "sv-biol-bio_docking_plausibility-0101",
+    "sv-biol-bio_docking_plausibility-0120",
+    "sv-biol-bio_docking_plausibility-0121",
+    "sv-biol-bio_docking_plausibility-0125",
+    "sv-biol-bio_docking_plausibility-0130",
+    "sv-biol-bio_multi_structure_compare-0002",
+    "sv-biol-bio_multi_structure_compare-0007",
+    "sv-biol-bio_multi_structure_compare-0022",
+    "sv-biol-bio_multi_structure_compare-0024",
+    "sv-biol-bio_multi_structure_compare-0027",
+    "sv-biol-bio_multi_structure_compare-0034",
+    "sv-biol-bio_multi_structure_compare-0044",
+    "sv-biol-bio_multi_structure_compare-0054",
+    "sv-biol-bio_multi_structure_compare-0055",
+    "sv-biol-bio_multi_structure_compare-0057",
+    "sv-chem-chem_binding_geometry-0017",
+    "sv-chem-chem_binding_geometry-0025",
+    "sv-chem-chem_binding_geometry-0029",
+    "sv-chem-chem_binding_geometry-0044",
+    "sv-chem-chem_binding_geometry-0049",
+    "sv-chem-chem_binding_geometry-0062",
+    "sv-chem-chem_binding_geometry-0064",
+    "sv-chem-chem_binding_geometry-0077",
+    "sv-chem-chem_binding_geometry-0080",
+    "sv-chem-chem_binding_geometry-0082",
+    "sv-chem-chem_binding_geometry-0087",
+    "sv-chem-chem_binding_geometry-0097",
+    "sv-chem-chem_binding_geometry-0109",
+    "sv-chem-chem_binding_geometry-0114",
+    "sv-chem-chem_binding_geometry-0116",
+    "sv-chem-chem_binding_geometry-0120",
+    "sv-chem-chem_conformation-0004",
+    "sv-chem-chem_conformation-0006",
+    "sv-chem-chem_conformation-0013",
+    "sv-chem-chem_conformation-0017",
+    "sv-chem-chem_conformation-0023",
+    "sv-chem-chem_conformation-0035",
+    "sv-chem-chem_conformation-0036",
+    "sv-chem-chem_conformation-0046",
+    "sv-chem-chem_conformation-0048",
+    "sv-chem-chem_conformation-0051",
+    "sv-chem-chem_conformation-0082",
+    "sv-chem-chem_conformation-0084",
+    "sv-chem-chem_conformation-0088",
+    "sv-chem-chem_conformation-0104",
+    "sv-chem-chem_conformation-0114",
+    "sv-chem-chem_crystallography-0014",
+    "sv-chem-chem_crystallography-0016",
+    "sv-chem-chem_crystallography-0027",
+    "sv-chem-chem_crystallography-0033",
+    "sv-chem-chem_crystallography-0038",
+    "sv-chem-chem_crystallography-0078",
+    "sv-chem-chem_crystallography-0096",
+    "sv-chem-chem_crystallography-0098",
+    "sv-chem-chem_crystallography-0106",
+    "sv-chem-chem_crystallography-0107",
+    "sv-chem-chem_crystallography-0108",
+    "sv-chem-chem_crystallography-0112",
+    "sv-chem-chem_crystallography-0117",
+    "sv-chem-chem_crystallography-0130",
+    "sv-chem-chem_crystallography-0131",
+    "sv-chem-chem_crystallography-0132",
+    "sv-chem-chem_crystallography-0137",
+    "sv-chem-chem_crystallography-0140",
+    "sv-chem-chem_crystallography-0146"
+  ],
+  "verified_trees": {
+    "jobs-scale-v1/tasks-cc": {
+      "missing": [],
+      "ok": true
+    },
+    "jobs-scale-v1/tasks-ccmcp": {
+      "missing": [],
+      "ok": true
+    },
+    "jobs-scale-v1/tasks-cc2d-1": {
+      "missing": [],
+      "ok": true
+    },
+    "jobs-scale-v1/tasks-cc2d-3": {
+      "missing": [],
+      "ok": true
+    },
+    "jobs-scale-v1/tasks-cc2d-6": {
+      "missing": [],
+      "ok": true
+    },
+    "jobs-scale-v1/tasks-cc2d-12": {
+      "missing": [],
+      "ok": true
+    }
+  }
+}

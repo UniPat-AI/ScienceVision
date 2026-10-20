@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/subdomain_knowledge.schema.json",
+  "type": "object",
+  "required": ["schema_version", "kind", "id", "fixture", "fixture_payload", "fixture_digest"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_subdomain_knowledge_fixture"},
+    "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*\\.[a-z0-9_]+$"},
+    "fixture": {
+      "type": "object",
+      "required": ["local_only", "production_approval"],
+      "properties": {
+        "local_only": {"const": true},
+        "production_approval": {"const": false}
+      }
+    },
+    "fixture_payload": {"type": "object"},
+    "fixture_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+  },
+  "additionalProperties": false
+}

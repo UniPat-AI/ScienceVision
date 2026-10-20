@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: architecture.stair_ramp_spatial_validity
+domain: architecture
+status: conditional
+production_status: not_approved
+readiness: {config: config_ready, generation: blocked, release: blocked}
+legacy_aliases: [architecture.stair_ramp_feasibility]
+blocked_reasons: [catalog_prerequisites_incomplete]
+required_inputs:
+  - {id: seed.verified_positive, state: missing}
+  - {id: asset.stair_ramp_geometry_and_rules, state: missing}
+  - {id: viewer.leaf_capability_evidence, state: unverified}
+  - {id: knowledge.approved_snapshot, state: missing}
+visual_skills: [circulation_geometry_validation]
+seed:
+  query: {domain: architecture, subdomain: stair_ramp_spatial_validity, required_status: verified}
+asset:
+  required_conditions: [anonymous_scene, stated_scale, applicable_rule_thresholds]
+viewer:
+  required_operations: [inspect, rotate, measure_distance]
+answer:
+  allowed_truth_modes: [expert_visual_judgment, viewer_native_measurement]
+evidence:
+  required: [viewer_trace, native_measurement_trace]
+knowledge:
+  source_refs:
+    - {source_id: expert-knowledge-master, source_revision: 298, section_id: K2dIdLCLKolNXkxvVlXcpTPzn8d, coverage: source_only}
+  locked_refs: []
+release: {eligible: false, reason: "Catalog-only: geometry, rule thresholds, and approved knowledge are missing."}

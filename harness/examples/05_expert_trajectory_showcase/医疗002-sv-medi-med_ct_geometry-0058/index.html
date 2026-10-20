@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ScienceVision · 专家轨迹展示</title>
+<style>
+  :root { --bg:#f6f5f1; --ink:#1d1d1b; --mute:#6b6b66; --line:#e2e0d8; --card:#fff; --acc:#0e6b5c; --acc2:#d9f0ea; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.6 -apple-system,"PingFang SC","Helvetica Neue",Arial,sans-serif; }
+  header { padding:18px 24px 10px; border-bottom:1px solid var(--line); background:var(--card); display:flex; align-items:flex-start; gap:16px; }
+  header > div { flex:1; }
+  h1 { margin:0 0 6px; font-size:20px; font-weight:600; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; }
+  .chip { font-size:12px; padding:2px 10px; border-radius:999px; background:var(--acc2); color:var(--acc); }
+  .chip.g { background:#eee; color:#444; }
+  main { display:grid; grid-template-columns:380px 1fr; gap:18px; padding:18px 24px; max-width:1560px; margin:0 auto; }
+  .col { display:flex; flex-direction:column; gap:14px; min-width:0; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .card h3 { margin:0 0 8px; font-size:12px; letter-spacing:.08em; color:var(--mute); text-transform:uppercase; }
+  .q { white-space:pre-wrap; font-size:13.5px; }
+  details summary { cursor:pointer; color:var(--mute); font-size:12px; margin-top:8px; }
+  pre.code { background:#f1efe8; border-radius:6px; padding:8px 10px; margin:6px 0 0; font:12.5px/1.5 ui-monospace,Menlo,monospace; white-space:pre-wrap; }
+  .answer { font:600 20px/1.3 ui-monospace,Menlo,monospace; color:var(--acc); white-space:pre-wrap; }
+  .stage { position:relative; background:#fbfaf7; border:1px solid var(--line); border-radius:10px; overflow:hidden; height:64vh; min-height:440px; display:flex; align-items:center; justify-content:center; }
+  .stage img { max-height:100%; max-width:100%; object-fit:contain; }
+  .stage .empty { color:var(--mute); }
+  .counter { position:absolute; top:12px; left:12px; background:rgba(29,29,27,.85); color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; }
+  .navbtn { position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:50%; border:1px solid var(--line); background:rgba(255,255,255,.92); font-size:20px; cursor:pointer; }
+  .navbtn.l { left:12px; } .navbtn.r { right:12px; }
+  .caption { display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:start; }
+  .tool { font:12.5px ui-monospace,Menlo,monospace; background:#1d1d1b; color:#ffd166; padding:4px 10px; border-radius:6px; white-space:nowrap; }
+  .gloss { font-weight:600; }
+  .note { color:#333; margin-top:4px; }
+  .note::before { content:"专家说明 · "; color:var(--mute); font-size:12px; }
+  .res { color:var(--acc); margin-top:2px; font-size:13px; }
+  .meta { color:var(--mute); font-size:12px; margin-top:4px; }
+  .strip { display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:8px; }
+  .thumb { border:2px solid transparent; border-radius:8px; overflow:hidden; background:#fff; cursor:pointer; aspect-ratio:4/3; position:relative; }
+  .thumb img { width:100%; height:100%; object-fit:cover; }
+  .thumb.on { border-color:var(--acc); }
+  .thumb i { position:absolute; left:6px; top:6px; background:rgba(0,0,0,.7); color:#fff; font-size:11px; padding:1px 6px; border-radius:4px; font-style:normal; }
+  .ctrl { display:flex; gap:10px; align-items:center; color:var(--mute); font-size:12.5px; }
+  .ctrl button { border:1px solid var(--line); background:#fff; padding:5px 12px; border-radius:6px; cursor:pointer; }
+  .ctrl button.on { background:var(--acc); color:#fff; border-color:var(--acc); }
+  .foot { padding:6px 24px 26px; color:var(--mute); font-size:12px; max-width:1560px; margin:0 auto; }
+  .sv-lang-toggle { position:fixed; right:16px; top:14px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1 id="title"></h1>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+<main>
+  <div class="col">
+    <div class="card"><h3>题目</h3><div class="q" id="q"></div><details><summary>English</summary><div class="q" id="qen"></div></details></div>
+    <div class="card"><h3>题目打开时的初始状态（第 0 帧）</h3><div class="meta" id="initnote"></div><details><summary>initial_state JSON</summary><pre class="code" id="initjson"></pre></details></div>
+    <div class="card"><h3>专家推理过程（reasoning）</h3><div class="q" id="reasoning"></div></div>
+    <div class="card"><h3>最终答案 · 答案质检通过</h3><div class="answer" id="answer"></div><div class="meta" id="approved"></div></div>
+  </div>
+  <div class="col">
+    <div class="stage">
+      <div class="counter" id="counter"></div>
+      <button class="navbtn l" id="prev">‹</button>
+      <img id="big" alt="">
+      <div class="empty" id="empty" hidden>该步没有截图</div>
+      <button class="navbtn r" id="next">›</button>
+    </div>
+    <div class="card caption">
+      <div class="tool" id="tool"></div>
+      <div><div class="gloss" id="gloss"></div><div class="res" id="res"></div><div class="note" id="note"></div><div class="meta" id="time"></div></div>
+    </div>
+    <div class="strip" id="strip"></div>
+    <div class="ctrl">
+      <button id="auto">▶ 自动播放（3 秒/步）</button>
+      <span>键盘 ← → 翻页 · 点击缩略图跳转</span>
+    </div>
+  </div>
+</main>
+<div class="foot" id="foot"></div>
+<script src="lib/i18n.js"></script>
+<script src="lib/qc-action-label.js"></script>
+<script src="data.js"></script>
+<script>
+  const D = window.SV_CASE, S = D.trajectory.operations; let i = 0, timer = null;
+  const tc = D.task_context, m = D.meta;
+  const toolZh = n => (window.SVI18n ? SVI18n.translateViewer('tool', n) : n);
+  const fmtRel = sec => `${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,'0')}`;
+  const t0 = Date.parse(S[0].timing.started_at);
+  const secs = D.showcase.duration_seconds;
+  document.title = `${D.task_id} · ScienceVision`;
+  document.getElementById('title').textContent = `${D.task_id} · ${tc.domain_label} / ${m.sub_domain_label}`;
+  document.getElementById('chips').innerHTML = [
+    [`查看器 ${tc.viewer_label}`, 0], [`素材 ${tc.assets.map(a=>a.name).join(' + ')}`, 0],
+    [`专家 ${m.expert_id}`, 1], [`${D.trajectory.operation_count} 步操作 · ${D.showcase.screenshots.length} 帧截图`, 1], [`用时 ${Math.floor(secs/60)} 分 ${Math.round(secs%60)} 秒`, 1]
+  ].map(([t,g])=>`<span class="chip ${g?'g':''}">${t}</span>`).join('');
+  document.getElementById('q').textContent = D.question.zh;
+  document.getElementById('qen').textContent = D.question.en || '—';
+  document.getElementById('reasoning').textContent = D.answer.reasoning || '（专家未填写）';
+  const ot = D.original_task || {};
+  const init = D.trajectory.initial_state || {};
+  const initBits = [];
+  if (ot.title_zh || ot.title_en) initBits.push(`标题：${ot.title_zh || ''}${ot.title_en ? ` / ${ot.title_en}` : ''}`);
+  if (init.camera) initBits.push(`相机：方位 ${init.camera.azimuth_deg ?? '-'}° · 俯仰 ${init.camera.elevation_deg ?? '-'}° · 缩放 ${init.camera.zoom ?? '-'}×`);
+  if (init.view) initBits.push(`视图：${init.view}`);
+  if (Array.isArray(init.components)) initBits.push(`可见组分：${init.components.filter(c=>c.visible).map(c=>c.label).join('、') || '无'}`);
+  if (Array.isArray(init.structures)) initBits.push(`结构：${init.structures.map(s=>`${s.label}（${s.element_count} 原子）`).join('、')}`);
+  if (Array.isArray(init.layers)) initBits.push(`图层：${init.layers.length} 个`);
+  initBits.push('平台未记录第 0 帧截图；第一张截图是初始画面经第一步操作后的样子。');
+  document.getElementById('initnote').innerHTML = initBits.map(b=>`<div>${b}</div>`).join('');
+  document.getElementById('initjson').textContent = JSON.stringify(init, null, 2);
+  document.getElementById('answer').textContent = D.answer.answer;
+  document.getElementById('approved').textContent = `答案质检通过 ${m.approved_at}${D.answer.validation?.status ? ` · 专家对题目的判定 ${D.answer.validation.status}` : ''}`;
+  document.getElementById('foot').textContent = `数据来源：生产库封存轨迹 ${D.trajectory.draft_id}（sealed sha256 ${D.trajectory.sealed_manifest_sha256.slice(0,12)}…）· 仅含最终提交并通过的有效血统 · 3D 素材未随包。`;
+  const strip = document.getElementById('strip');
+  const F0 = D.showcase.initial_frame;
+  if (F0 && F0.file) {
+    const d=document.createElement('div'); d.className='thumb'; d.innerHTML=`<img src="${F0.file}"><i>0 · 重建</i>`; d.onclick=()=>go(-1); strip.appendChild(d);
+    const bits = document.getElementById('initnote'); bits.innerHTML = bits.innerHTML.replace('平台未记录第 0 帧截图；第一张截图是初始画面经第一步操作后的样子。', `平台未记录第 0 帧截图；下方步号 0 的画面为同一引擎<b>重建</b>（相机校验：${F0.state_check.verdict}）。`);
+  }
+  S.forEach((op,k)=>{ const d=document.createElement('div'); d.className='thumb';
+    const f = op.keyframe && op.keyframe.screenshot_file;
+    d.innerHTML = (f ? `<img src="${f}">` : `<div style="padding:30px 0;text-align:center;color:#999;font-size:12px">无截图</div>`) + `<i>${op.operation_seq}</i>`;
+    d.onclick=()=>go(k); strip.appendChild(d); });
+  const lo = F0 && F0.file ? -1 : 0;
+  function go(k){ if(k<lo) k=S.length-1; if(k>=S.length) k=lo; i=k;
+    const thumbs=[...strip.children]; thumbs.forEach((c,j)=>c.classList.toggle('on', j===(i-lo)));
+    if(i<0){ document.getElementById('big').src=F0.file; document.getElementById('big').hidden=false; document.getElementById('empty').hidden=true;
+      document.getElementById('counter').textContent=`第 0 帧 · 题目刚打开时 · 重建图`;
+      document.getElementById('tool').textContent='viewer_reset() → initial_state';
+      document.getElementById('gloss').textContent='初始状态（尚未操作）';
+      document.getElementById('res').textContent = F0.alignment_applied && F0.alignment_applied.length ? `重建时为对齐记录的相机执行了 ${F0.alignment_applied.map(a=>`${a.tool}(${JSON.stringify(a.input)})`).join('、')}` : '';
+      document.getElementById('note').textContent=''; document.getElementById('note').hidden=true;
+      document.getElementById('time').textContent=`重建图，非专家原始截图 · 相机校验 ${F0.state_check.verdict} · 画幅 ${F0.canvas.width}×${F0.canvas.height}`;
+      return; }
+    document.getElementById('note').hidden=false;
+    const op=S[i]; const f = op.keyframe && op.keyframe.screenshot_file;
+    document.getElementById('big').src = f || ''; document.getElementById('big').hidden = !f; document.getElementById('empty').hidden = !!f;
+    document.getElementById('counter').textContent=`第 ${i+1} / ${S.length} 步 · 步号 ${op.operation_seq}`;
+    document.getElementById('tool').textContent=`${op.function.name}(${JSON.stringify(op.replay_input)})`.slice(0,120);
+    const gl = window.SVFormatQcAction ? SVFormatQcAction(op.function.name, op.replay_input, op.result) : toolZh(op.function.name);
+    document.getElementById('gloss').textContent = gl;
+    document.getElementById('res').textContent = op.result && op.result.expert_summary ? `结果 · ${op.result.expert_summary}` : '';
+    document.getElementById('note').textContent = (op.keyframe && op.keyframe.expert_note) || '（无）';
+    const rel = (Date.parse(op.timing.started_at) - t0)/1000;
+    document.getElementById('time').textContent=`记录时刻 ${op.timing.started_at.replace('T',' ').slice(0,19)} UTC · 距首步 +${fmtRel(rel)}`; }
+  document.getElementById('prev').onclick=()=>go(i-1); document.getElementById('next').onclick=()=>go(i+1);
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')go(i-1); if(e.key==='ArrowRight')go(i+1); });
+  const auto=document.getElementById('auto');
+  auto.onclick=()=>{ if(timer){clearInterval(timer);timer=null;auto.classList.remove('on');auto.textContent='▶ 自动播放（3 秒/步）';} else {timer=setInterval(()=>go(i+1),3000);auto.classList.add('on');auto.textContent='⏸ 停止';} };
+  go(lo);
+</script>
+</body>
+</html>

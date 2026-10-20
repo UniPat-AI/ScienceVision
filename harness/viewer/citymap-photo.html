@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>City map (Photorealistic) — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<!-- CesiumJS 1.142.0 via jsdelivr CDN. ~5.5 MB first load, then browser-cached.
+     Cesium loads its Workers/Assets/Widgets relative to Cesium.js URL, so the
+     CDN base is implicit and we don't override window.CESIUM_BASE_URL. -->
+<link href="https://cdn.jsdelivr.net/npm/cesium@1.142.0/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/cesium@1.142.0/Build/Cesium/Cesium.js"></script>
+<style>
+  html, body { overflow: hidden; height: 100%; }
+  #cesiumContainer {
+    width: 100vw; height: calc(100vh - 49px); position: fixed; top: 49px; left: 0;
+    touch-action: none; background: #0b0e13;
+  }
+  /* Hide Cesium credit container's default white background; we want dark theme */
+  .cesium-widget-credits {
+    background: rgba(13,17,23,0.85) !important;
+    color: var(--fg-dim) !important;
+    padding: 4px 8px !important;
+    border-radius: 3px !important;
+    font: 10px ui-monospace, monospace !important;
+  }
+  .cesium-widget-credits a { color: var(--accent) !important; }
+  .cesium-credit-imageContainer img { filter: brightness(0.9); }
+
+  .city-panel {
+    position: fixed; top: 60px; left: 12px; z-index: 10;
+    background: rgba(13,17,23,0.92); border: 1px solid var(--border);
+    padding: 10px 14px; border-radius: 4px; color: var(--fg);
+    font: 12px/1.5 -apple-system, system-ui, sans-serif;
+    max-width: 280px; backdrop-filter: blur(4px);
+  }
+  .city-panel strong { color: var(--accent); font-size: 13px; }
+  .city-panel .meta { color: var(--fg-dim); display: block; margin-top: 4px; }
+  .city-panel .controls { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .city-panel .controls button {
+    background: var(--bg2); color: var(--fg); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 3px; font: 11px ui-monospace, monospace; cursor: pointer;
+  }
+  .city-panel .controls button:hover { border-color: var(--accent); }
+  .city-panel .controls a {
+    background: var(--bg2); color: var(--fg); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 3px; font: 11px ui-monospace, monospace;
+    text-decoration: none; cursor: pointer;
+  }
+
+  /* API key entry modal */
+  .key-modal-backdrop {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .key-modal {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+    padding: 24px 28px; max-width: 540px; color: var(--fg);
+    font: 13px/1.6 -apple-system, system-ui, sans-serif;
+  }
+  .key-modal h3 { margin: 0 0 12px; color: var(--accent); font-size: 16px; }
+  .key-modal p { margin: 8px 0; color: var(--fg-dim); }
+  .key-modal .steps { background: var(--bg); border: 1px solid var(--border); padding: 12px 16px; border-radius: 4px; margin: 12px 0; }
+  .key-modal .steps ol { margin: 0; padding-left: 18px; }
+  .key-modal .steps li { margin: 4px 0; }
+  .key-modal .steps code, .key-modal p code {
+    background: var(--bg); padding: 1px 5px; border-radius: 3px; color: var(--accent);
+    font-size: 11px;
+  }
+  .key-modal input {
+    width: 100%; box-sizing: border-box;
+    background: var(--bg); color: var(--fg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 8px 10px; font: 12px ui-monospace, monospace;
+    margin-top: 8px;
+  }
+  .key-modal input:focus { outline: none; border-color: var(--accent); }
+  .key-modal .actions { margin-top: 14px; display: flex; gap: 8px; justify-content: flex-end; }
+  .key-modal button {
+    background: var(--accent); color: var(--bg); border: none; border-radius: 4px;
+    padding: 7px 18px; font: 12px ui-monospace, monospace; cursor: pointer; font-weight: 600;
+  }
+  .key-modal button.secondary { background: var(--bg2); color: var(--fg); border: 1px solid var(--border); }
+  .key-modal button:hover { opacity: 0.9; }
+  .key-modal .note { font-size: 11px; color: var(--fg-dim); margin-top: 10px; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>City Map · Photorealistic</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">Google 3D Tiles · CesiumJS · OSM annotation overlay</div>
+</header>
+<div id="cesiumContainer"></div>
+
+<div class="city-panel" id="info">
+  <strong id="city-name">Manhattan, NYC</strong>
+  <span class="meta" id="city-stats">Google Photorealistic 3D Tiles · LoD3 textured · global coverage</span>
+  <span class="meta" id="city-status" style="color:#8b949e">initializing…</span>
+  <div class="controls">
+    <button id="btn-reset">Reset view</button>
+    <button id="btn-clear-key" title="Forget the API key from browser localStorage">Clear key</button>
+    <a href="/viewer/citymap.html?city=manhattan" title="Switch to OSM building extrusion (no key required)">← OSM mode</a>
+  </div>
+</div>
+
+<!-- API key modal (shown only when no key in localStorage / URL) -->
+<div class="key-modal-backdrop" id="key-modal-backdrop" style="display:none">
+  <div class="key-modal">
+    <h3>Google Maps Tiles API key required</h3>
+    <p>Photorealistic 3D Tiles are served by Google. You need a <strong>free</strong> key (50,000 requests/month).</p>
+    <div class="steps">
+      <strong>Setup (one time):</strong>
+      <ol>
+        <li>Open <a href="https://console.cloud.google.com/apis/library" target="_blank" rel="noopener">Google Cloud Console → APIs &amp; Services → Library</a></li>
+        <li>Search "<code>Map Tiles API</code>" → click <strong>Enable</strong></li>
+        <li>Go to <strong>Credentials</strong> → <strong>Create credentials</strong> → API key</li>
+        <li>Restrict the key to "<code>Map Tiles API</code>" only (recommended)</li>
+        <li>Paste the key below ↓</li>
+      </ol>
+    </div>
+    <input id="key-input" type="text" placeholder="AIzaSy…" spellcheck="false" autocomplete="off"/>
+    <div class="actions">
+      <button class="secondary" onclick="location.href='/viewer/citymap.html?city=manhattan'">Use OSM instead</button>
+      <button id="key-save">Save &amp; load</button>
+    </div>
+    <p class="note">Key is stored in your browser's <code>localStorage</code> only. It is sent directly to Google by your browser (never proxied through this server). Clear it any time via the "Clear key" button in the info panel.</p>
+  </div>
+</div>
+
+<script>
+  // ---- City presets ----
+  const CITIES = {
+    manhattan: {
+      name: 'Manhattan, NYC',
+      // Cesium uses (lng, lat, height_m_above_ellipsoid)
+      camera: { lng: -73.9857, lat: 40.7400, height: 1200, heading: 0, pitch: -25 },
+      neighborhoods: '/crawl_data/geography/osm_pilot/manhattan_neighborhoods.geojson',
+      landmarks: '/crawl_data/geography/osm_pilot/manhattan_landmarks.geojson',
+    },
+  };
+  const params = new URLSearchParams(location.search);
+  const cityKey = params.get('city') || 'manhattan';
+  const cfg = CITIES[cityKey];
+  document.getElementById('city-name').textContent = cfg.name;
+  document.getElementById('filename').textContent = cfg.name;
+
+  // ---- API key flow ----
+  const KEY_STORE = 'google_maps_tiles_api_key';
+  function getApiKey() {
+    const fromUrl = params.get('key');
+    if (fromUrl) {
+      // Persist for next time, then strip from URL so it doesn't end up in
+      // browser history / referrer headers.
+      localStorage.setItem(KEY_STORE, fromUrl);
+      const cleanUrl = location.pathname + (cityKey ? `?city=${encodeURIComponent(cityKey)}` : '');
+      history.replaceState(null, '', cleanUrl + location.hash);
+      return fromUrl;
+    }
+    return localStorage.getItem(KEY_STORE);
+  }
+
+  const setStatus = (msg, kind) => {
+    const el = document.getElementById('city-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = kind === 'err' ? '#f85149'
+                   : kind === 'warn' ? '#ffd166'
+                   : kind === 'ok' ? '#3fb950'
+                   : '#8b949e';
+  };
+
+  document.getElementById('btn-clear-key').onclick = () => {
+    localStorage.removeItem(KEY_STORE);
+    location.reload();
+  };
+
+  let apiKey = getApiKey();
+
+  if (!apiKey) {
+    // Show modal
+    document.getElementById('key-modal-backdrop').style.display = 'flex';
+    document.getElementById('key-input').focus();
+    document.getElementById('key-save').onclick = () => {
+      const k = document.getElementById('key-input').value.trim();
+      if (!k) return;
+      localStorage.setItem(KEY_STORE, k);
+      location.reload();
+    };
+    document.getElementById('key-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('key-save').click();
+    });
+  } else {
+    initMap(apiKey).catch((e) => {
+      console.error('initMap failed', e);
+      setStatus(`init error: ${String(e).slice(0, 80)}`, 'err');
+    });
+  }
+
+  async function initMap(key) {
+    setStatus('starting Cesium…');
+
+    // Disable default Cesium Ion world imagery / terrain — we use Google
+    // Photorealistic 3D Tiles as the entire scene. Without disabling the
+    // default token check, Cesium prints a console warning every frame.
+    Cesium.Ion.defaultAccessToken = '';
+
+    const viewer = new Cesium.Viewer('cesiumContainer', {
+      timeline: false,
+      animation: false,
+      baseLayerPicker: false,
+      geocoder: false,
+      homeButton: false,
+      sceneModePicker: false,
+      navigationHelpButton: false,
+      fullscreenButton: false,
+      infoBox: false,
+      selectionIndicator: false,
+      // Skip default Bing/Cesium-Ion world imagery to avoid that empty-token
+      // 401. The Google 3D Tiles will cover the visible scene fully.
+      baseLayer: false,
+      // Reduce default-globe visibility — let 3D Tiles be the geometry source.
+      globe: new Cesium.Globe(Cesium.Ellipsoid.WGS84),
+    });
+    viewer.scene.globe.show = false;
+    viewer.scene.skyAtmosphere.show = false;
+    viewer.scene.backgroundColor = Cesium.Color.fromCssColorString('#0b0e13');
+
+    setStatus('loading Google Photorealistic 3D Tiles…');
+
+    try {
+      const tileset = await Cesium.Cesium3DTileset.fromUrl(
+        `https://tile.googleapis.com/v1/3dtiles/root.json?key=${encodeURIComponent(key)}`,
+        { showCreditsOnScreen: true }
+      );
+      viewer.scene.primitives.add(tileset);
+      setStatus('3D Tiles loaded ✓', 'ok');
+    } catch (e) {
+      const msg = String(e.message || e);
+      let hint = '';
+      if (/401|403/i.test(msg))  hint = ' (key invalid or Map Tiles API not enabled)';
+      else if (/429/i.test(msg)) hint = ' (quota exceeded — 50k/month free)';
+      setStatus(`tiles failed: ${msg.slice(0, 80)}${hint}`, 'err');
+      throw e;
+    }
+
+    // Fly to Manhattan
+    const c = cfg.camera;
+    viewer.camera.flyTo({
+      destination: Cesium.Cartesian3.fromDegrees(c.lng, c.lat, c.height),
+      orientation: {
+        heading: Cesium.Math.toRadians(c.heading),
+        pitch: Cesium.Math.toRadians(c.pitch),
+        roll: 0.0,
+      },
+      duration: 1.8,
+    });
+
+    document.getElementById('btn-reset').onclick = () => {
+      viewer.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(c.lng, c.lat, c.height),
+        orientation: {
+          heading: Cesium.Math.toRadians(c.heading),
+          pitch: Cesium.Math.toRadians(c.pitch),
+        },
+        duration: 1.5,
+      });
+    };
+
+    // ---- Overlay OSM annotations ----
+    await loadNeighborhoodLabels(viewer, cfg.neighborhoods);
+    await loadLandmarks(viewer, cfg.landmarks);
+  }
+
+  async function loadNeighborhoodLabels(viewer, url) {
+    try {
+      const data = await fetch(url, { cache: 'force-cache' }).then((r) => r.ok ? r.json() : null);
+      if (!data) return;
+      data.features.forEach((f) => {
+        const [lng, lat] = f.geometry.coordinates;
+        viewer.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(lng, lat, 350),
+          label: {
+            text: f.properties.name,
+            font: 'bold 15px -apple-system, sans-serif',
+            fillColor: Cesium.Color.fromCssColorString('#ffd166'),
+            outlineColor: Cesium.Color.fromCssColorString('#0d1117'),
+            outlineWidth: 3,
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            heightReference: Cesium.HeightReference.NONE,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            scaleByDistance: new Cesium.NearFarScalar(800, 1.1, 8000, 0.55),
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          },
+        });
+      });
+      console.log(`[citymap-photo] loaded ${data.features.length} neighborhood labels`);
+    } catch (e) {
+      console.warn('neighborhoods overlay missing', e);
+    }
+  }
+
+  // Category → Cesium color (mirrors viewer/citymap.html landmark palette)
+  const CAT_COLOR = {
+    museum:      '#79c0ff', attraction:  '#ffd166', observatory: '#56d364',
+    viewpoint:   '#56d364', historic:    '#d2a8ff', arts:        '#f78166',
+    university:  '#79c0ff', worship:     '#8b949e', civic:       '#79c0ff',
+    park:        '#3fb950', station:     '#a5d6ff', infra:       '#ffa657',
+    airport:     '#ffd866', stadium:     '#ed7d31',
+  };
+
+  async function loadLandmarks(viewer, url) {
+    try {
+      const data = await fetch(url, { cache: 'force-cache' }).then((r) => r.ok ? r.json() : null);
+      if (!data) return;
+      data.features.forEach((f) => {
+        const [lng, lat] = f.geometry.coordinates;
+        const p = f.properties;
+        const col = CAT_COLOR[p.category] || '#c9d1d9';
+        // Tier-1 (minz 12) and tier-2 (minz 13) landmarks get larger, always-visible
+        // icons; tier-3 (minz 14+) only appear when zoomed in (NearFar scale).
+        const isTier1 = (p.minz || 14) <= 12;
+        const isTier2 = (p.minz || 14) === 13;
+        viewer.entities.add({
+          position: Cesium.Cartesian3.fromDegrees(lng, lat, 80),
+          label: {
+            text: `${p.icon}  ${p.name}`,
+            font: `${isTier1 ? 'bold ' : ''}${isTier1 ? 13 : (isTier2 ? 12 : 11)}px -apple-system, sans-serif`,
+            fillColor: Cesium.Color.fromCssColorString(col),
+            outlineColor: Cesium.Color.fromCssColorString('#0d1117'),
+            outlineWidth: 2,
+            style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+            heightReference: Cesium.HeightReference.NONE,
+            verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+            scaleByDistance: new Cesium.NearFarScalar(
+              isTier1 ? 1200 : (isTier2 ? 700 : 350), 1.0,
+              isTier1 ? 6000 : (isTier2 ? 3500 : 1500), 0.0
+            ),
+            distanceDisplayCondition: new Cesium.DistanceDisplayCondition(
+              0, isTier1 ? 7000 : (isTier2 ? 4000 : 1800)
+            ),
+            disableDepthTestDistance: Number.POSITIVE_INFINITY,
+          },
+        });
+      });
+      console.log(`[citymap-photo] loaded ${data.features.length} landmark labels`);
+    } catch (e) {
+      console.warn('landmarks overlay missing', e);
+    }
+  }
+</script>
+</body>
+</html>

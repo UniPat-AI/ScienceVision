@@ -1,0 +1,55 @@
+{
+  "generated_at": "2026-05-28T18:29:11",
+  "domains": {
+    "biology": {
+      "count": 51,
+      "sha": "2fbe3e04",
+      "url": "/viewer/assets/biology.json?v=2fbe3e04"
+    },
+    "medical": {
+      "count": 18,
+      "sha": "46bb3be2",
+      "url": "/viewer/assets/medical.json?v=46bb3be2"
+    },
+    "industrial": {
+      "count": 14,
+      "sha": "8c28e0ea",
+      "url": "/viewer/assets/industrial.json?v=8c28e0ea"
+    },
+    "robotics": {
+      "count": 3,
+      "sha": "b7e293d0",
+      "url": "/viewer/assets/robotics.json?v=b7e293d0"
+    },
+    "pointcloud": {
+      "count": 2,
+      "sha": "509ed039",
+      "url": "/viewer/assets/pointcloud.json?v=509ed039"
+    },
+    "topological_photonics": {
+      "count": 7,
+      "sha": "73a50aac",
+      "url": "/viewer/assets/topological_photonics.json?v=73a50aac"
+    },
+    "photonics": {
+      "count": 9,
+      "sha": "95da53eb",
+      "url": "/viewer/assets/photonics.json?v=95da53eb"
+    },
+    "astronomy": {
+      "count": 3,
+      "sha": "9d2ca63f",
+      "url": "/viewer/assets/astronomy.json?v=9d2ca63f"
+    },
+    "simulation": {
+      "count": 33,
+      "sha": "d54ea6af",
+      "url": "/viewer/assets/simulation.json?v=d54ea6af"
+    },
+    "geography": {
+      "count": 2,
+      "sha": "5759e926",
+      "url": "/viewer/assets/geography.json?v=5759e926"
+    }
+  }
+}

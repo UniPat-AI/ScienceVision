@@ -1,0 +1,4 @@
+schema_version,expert_id,name,domains
+sciencevision.experts_csv.v1,expert_bio_001,Dr. Chen,biology
+sciencevision.experts_csv.v1,expert_med_001,Dr. Lin,medical;biology
+sciencevision.experts_csv.v1,expert_chem_001,Dr. Rao,chemistry

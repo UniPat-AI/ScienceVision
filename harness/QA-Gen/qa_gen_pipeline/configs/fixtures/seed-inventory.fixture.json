@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_seed_inventory_fixture",
+  "fixture": {
+    "local_only": true,
+    "production_eligible": false
+  },
+  "fixture_payload": {
+    "records": [
+      {
+        "opaque_seed_ref": "fixture-seed-biology-001",
+        "domain": "biology",
+        "subdomain": "docking_pose_plausibility",
+        "status": "fixture_verified",
+        "production_approval": false
+      },
+      {
+        "opaque_seed_ref": "fixture-seed-chemistry-001",
+        "domain": "chemistry",
+        "subdomain": "stereochemistry_chirality",
+        "status": "fixture_verified",
+        "production_approval": false
+      },
+      {
+        "opaque_seed_ref": "fixture-seed-medical-001",
+        "domain": "medical",
+        "subdomain": "anatomical_region",
+        "status": "fixture_blocked",
+        "production_approval": false
+      }
+    ]
+  },
+  "fixture_payload_digest": "sha256:8d54773301679be57a45fdd27415e77ecfee837b9ee22acd171e1422361f14be"
+}

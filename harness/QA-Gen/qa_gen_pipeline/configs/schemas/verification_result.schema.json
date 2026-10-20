@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen://schemas/verification-result/v1",
+  "type": "object",
+  "required": [
+    "artifact_kind",
+    "candidate_digest",
+    "evidence_digest",
+    "outcome",
+    "checks",
+    "rubric_scores",
+    "rubric_lock_digest",
+    "work_item_id",
+    "state_transition"
+  ],
+  "properties": {
+    "artifact_kind": {
+      "enum": ["verification_result", "fixture_verification_result"]
+    },
+    "candidate_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "evidence_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "outcome": {
+      "enum": ["pass", "fail"]
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "outcome"],
+        "properties": {
+          "name": {"type": "string", "minLength": 1},
+          "outcome": {"enum": ["pass", "fail"]},
+          "details": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "rubric_scores": {
+      "type": "object",
+      "required": ["authenticity", "correctness", "three_d_relevance"],
+      "properties": {
+        "authenticity": {"$ref": "#/definitions/score"},
+        "correctness": {"$ref": "#/definitions/score"},
+        "three_d_relevance": {"$ref": "#/definitions/score"}
+      },
+      "additionalProperties": false
+    },
+    "rubric_lock_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "work_item_id": {"type": "string", "minLength": 1},
+    "attested_evidence": {
+      "type": "object",
+      "required": ["handoff_digest", "receipt_digests"],
+      "properties": {
+        "handoff_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "receipt_digests": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+        }
+      },
+      "additionalProperties": false
+    },
+    "state_transition": {"type": "null"}
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "score": {
+      "type": "object",
+      "required": ["score", "maximum"],
+      "properties": {
+        "score": {"type": "integer", "minimum": 0},
+        "maximum": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    }
+  }
+}

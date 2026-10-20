@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/provider_endpoint_approval.schema.json",
+  "description": "External local-pilot approval binding one credentialed HTTPS endpoint to one checked-in provider runtime contract.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "kind",
+    "id",
+    "status",
+    "decision",
+    "endpoint",
+    "credential_env",
+    "runtime_config_digest",
+    "scope",
+    "decided_by",
+    "decided_at",
+    "production_eligible"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "kind": {"const": "qagen_provider_endpoint_approval"},
+    "id": {"type": "string", "minLength": 1},
+    "status": {"const": "approved"},
+    "decision": {"const": "allow_credentialed_https_endpoint"},
+    "endpoint": {"type": "string", "pattern": "^https://[^/?#]+/?$"},
+    "credential_env": {"const": "QAGEN_UNIV_API_KEY"},
+    "runtime_config_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "scope": {"type": "string", "minLength": 1},
+    "decided_by": {"type": "string", "minLength": 1},
+    "decided_at": {"type": "string", "minLength": 1},
+    "production_eligible": {"const": false}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,359 @@
+[
+  {
+    "name": "1A3N",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1A3N.cif",
+    "size": 553912,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1A8O",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1A8O.cif",
+    "size": 115491,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1AKI",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1AKI.cif",
+    "size": 156047,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1BL8",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1BL8.cif",
+    "size": 330009,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1BNA",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1BNA.cif",
+    "size": 100712,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1EHZ",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1EHZ.cif",
+    "size": 254359,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1F88",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1F88.cif",
+    "size": 586683,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1HVR",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1HVR.cif",
+    "size": 233902,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1IGT",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1IGT.cif",
+    "size": 1352044,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1L2Y",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1L2Y.cif",
+    "size": 1027604,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1LYZ",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1LYZ.cif",
+    "size": 245475,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1MBN",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1MBN.cif",
+    "size": 185683,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1RBP",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/1RBP.cif",
+    "size": 208543,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "2RH1",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/2RH1.cif",
+    "size": 468375,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "3PQR",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/3PQR.cif",
+    "size": 374218,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "4AKE",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/4AKE.cif",
+    "size": 381852,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "4EY7",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/4EY7.cif",
+    "size": 959527,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "4HHB",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/4HHB.cif",
+    "size": 764822,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "5IRE",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/5IRE.cif",
+    "size": 1302925,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "6LU7",
+    "path": "/crawl_data/biology/rcsb_pdb_mmcif/6LU7.cif",
+    "size": 326399,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "1MBN (PDB)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/1MBN.pdb",
+    "size": 147258,
+    "viewer": "molstar",
+    "format": "pdb"
+  },
+  {
+    "name": "2RH1 (PDB)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/2RH1.pdb",
+    "size": 376488,
+    "viewer": "molstar",
+    "format": "pdb"
+  },
+  {
+    "name": "4HHB (PDB)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/4HHB.pdb",
+    "size": 473769,
+    "viewer": "molstar",
+    "format": "pdb"
+  },
+  {
+    "name": "1MBN (BinaryCIF)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/1MBN.bcif",
+    "size": 226860,
+    "viewer": "molstar",
+    "format": "bcif"
+  },
+  {
+    "name": "2RH1 (BinaryCIF)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/2RH1.bcif",
+    "size": 383925,
+    "viewer": "molstar",
+    "format": "bcif"
+  },
+  {
+    "name": "4HHB (BinaryCIF)",
+    "path": "/crawl_data/biology/rcsb_pdb_extras/4HHB.bcif",
+    "size": 530943,
+    "viewer": "molstar",
+    "format": "bcif"
+  },
+  {
+    "name": "AF-P00533 (AlphaFold)",
+    "path": "/crawl_data/biology/alphafolddb/AF-P00533-egfr_human.cif",
+    "size": 1127973,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "AF-P01308 (AlphaFold)",
+    "path": "/crawl_data/biology/alphafolddb/AF-P01308-insulin_human.cif",
+    "size": 109462,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "AF-P02100 (AlphaFold)",
+    "path": "/crawl_data/biology/alphafolddb/AF-P02100-hemoglobin_beta_human.cif",
+    "size": 144728,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "AF-P04637 (AlphaFold)",
+    "path": "/crawl_data/biology/alphafolddb/AF-P04637-tp53_human.cif",
+    "size": 363485,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "AF-P69905 (AlphaFold)",
+    "path": "/crawl_data/biology/alphafolddb/AF-P69905-hemoglobin_alpha_human.cif",
+    "size": 137559,
+    "viewer": "molstar",
+    "format": "mmcif"
+  },
+  {
+    "name": "acetaminophen",
+    "path": "/crawl_data/biology/pubchem_sdf_3d/1983_acetaminophen.sdf",
+    "size": 3632,
+    "viewer": "molstar",
+    "format": "sdf"
+  },
+  {
+    "name": "aspirin",
+    "path": "/crawl_data/biology/pubchem_sdf_3d/2244_aspirin.sdf",
+    "size": 4055,
+    "viewer": "molstar",
+    "format": "sdf"
+  },
+  {
+    "name": "caffeine",
+    "path": "/crawl_data/biology/pubchem_sdf_3d/2519_caffeine.sdf",
+    "size": 3950,
+    "viewer": "molstar",
+    "format": "sdf"
+  },
+  {
+    "name": "ibuprofen",
+    "path": "/crawl_data/biology/pubchem_sdf_3d/3672_ibuprofen.sdf",
+    "size": 5794,
+    "viewer": "molstar",
+    "format": "sdf"
+  },
+  {
+    "name": "penicillin_g",
+    "path": "/crawl_data/biology/pubchem_sdf_3d/5904_penicillin_g.sdf",
+    "size": 6473,
+    "viewer": "molstar",
+    "format": "sdf"
+  },
+  {
+    "name": "acetaminophen (MOL)",
+    "path": "/crawl_data/biology/small_molecules_derived/1983_acetaminophen.mol",
+    "size": 1941,
+    "viewer": "molstar",
+    "format": "mol"
+  },
+  {
+    "name": "aspirin (MOL)",
+    "path": "/crawl_data/biology/small_molecules_derived/2244_aspirin.mol",
+    "size": 2027,
+    "viewer": "molstar",
+    "format": "mol"
+  },
+  {
+    "name": "caffeine (MOL)",
+    "path": "/crawl_data/biology/small_molecules_derived/2519_caffeine.mol",
+    "size": 2326,
+    "viewer": "molstar",
+    "format": "mol"
+  },
+  {
+    "name": "ibuprofen (MOL)",
+    "path": "/crawl_data/biology/small_molecules_derived/3672_ibuprofen.mol",
+    "size": 3133,
+    "viewer": "molstar",
+    "format": "mol"
+  },
+  {
+    "name": "penicillin_g (MOL)",
+    "path": "/crawl_data/biology/small_molecules_derived/5904_penicillin_g.mol",
+    "size": 3916,
+    "viewer": "molstar",
+    "format": "mol"
+  },
+  {
+    "name": "acetaminophen (MOL2)",
+    "path": "/crawl_data/biology/small_molecules_derived/1983_acetaminophen.mol2",
+    "size": 2013,
+    "viewer": "molstar",
+    "format": "mol2"
+  },
+  {
+    "name": "aspirin (MOL2)",
+    "path": "/crawl_data/biology/small_molecules_derived/2244_aspirin.mol2",
+    "size": 2102,
+    "viewer": "molstar",
+    "format": "mol2"
+  },
+  {
+    "name": "caffeine (MOL2)",
+    "path": "/crawl_data/biology/small_molecules_derived/2519_caffeine.mol2",
+    "size": 2409,
+    "viewer": "molstar",
+    "format": "mol2"
+  },
+  {
+    "name": "ibuprofen (MOL2)",
+    "path": "/crawl_data/biology/small_molecules_derived/3672_ibuprofen.mol2",
+    "size": 3244,
+    "viewer": "molstar",
+    "format": "mol2"
+  },
+  {
+    "name": "penicillin_g (MOL2)",
+    "path": "/crawl_data/biology/small_molecules_derived/5904_penicillin_g.mol2",
+    "size": 4049,
+    "viewer": "molstar",
+    "format": "mol2"
+  },
+  {
+    "name": "acetaminophen (XYZ)",
+    "path": "/crawl_data/biology/small_molecules_derived/1983_acetaminophen.xyz",
+    "size": 1018,
+    "viewer": "molstar",
+    "format": "xyz"
+  },
+  {
+    "name": "aspirin (XYZ)",
+    "path": "/crawl_data/biology/small_molecules_derived/2244_aspirin.xyz",
+    "size": 1060,
+    "viewer": "molstar",
+    "format": "xyz"
+  },
+  {
+    "name": "caffeine (XYZ)",
+    "path": "/crawl_data/biology/small_molecules_derived/2519_caffeine.xyz",
+    "size": 1205,
+    "viewer": "molstar",
+    "format": "xyz"
+  },
+  {
+    "name": "ibuprofen (XYZ)",
+    "path": "/crawl_data/biology/small_molecules_derived/3672_ibuprofen.xyz",
+    "size": 1638,
+    "viewer": "molstar",
+    "format": "xyz"
+  },
+  {
+    "name": "penicillin_g (XYZ)",
+    "path": "/crawl_data/biology/small_molecules_derived/5904_penicillin_g.xyz",
+    "size": 2025,
+    "viewer": "molstar",
+    "format": "xyz"
+  }
+]

@@ -1,0 +1,34 @@
+{
+  "claude-sonnet-4-6": {
+    "n_total": 100,
+    "n_ok": 100,
+    "n_error": 0,
+    "n_parse_fail": 1,
+    "n_with_any_box": 99,
+    "mean_soft_dice": 0.015598796430057328,
+    "median_soft_dice": 0.0,
+    "mean_binary_dice": 0.015598796430057328,
+    "median_binary_dice": 0.0,
+    "seg_token_hit_rate": 0.99,
+    "mean_rouge_l": 0.24753970159608707,
+    "mean_latency_ms": 23725.393227519817,
+    "total_prompt_tokens": 123270,
+    "total_completion_tokens": 22575
+  },
+  "gemini-3.1-pro-preview": {
+    "n_total": 100,
+    "n_ok": 92,
+    "n_error": 8,
+    "n_parse_fail": 0,
+    "n_with_any_box": 87,
+    "mean_soft_dice": 0.019736965162890672,
+    "median_soft_dice": 0.0,
+    "mean_binary_dice": 0.019736965162890672,
+    "median_binary_dice": 0.0,
+    "seg_token_hit_rate": 0.9782608695652174,
+    "mean_rouge_l": 0.34605862570232016,
+    "mean_latency_ms": 38989.63590080182,
+    "total_prompt_tokens": 737673,
+    "total_completion_tokens": 261441
+  }
+}

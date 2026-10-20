@@ -1,0 +1,46 @@
+schema_version: 1
+kind: qagen_run_profile
+id: bio_chem_release
+mode: production_release
+
+domains:
+  - biology
+  - chemistry
+enabled_leaves:
+  - biology.docking_pose_plausibility
+  - chemistry.stereochemistry_chirality
+blocked_leaves:
+  - biology.molecular_collision_check
+  - biology.bio_multi_structure_compare
+  - chemistry.conformation_analysis
+  - chemistry.steric_accessibility
+  - chemistry.coordination_chemistry
+  - chemistry.crystallography_packing
+  - chemistry.reactive_conformation
+
+inputs:
+  registry_mode: workspace_registry
+  base: ../base.yaml
+  seed_index: .qagen/private/catalog/current.json
+  asset_manifest: ../sources/asset_manifest.yaml
+  viewer_definitions: ../sources/viewer_definitions.yaml
+  rubric: ../rubric.yaml
+  knowledge_index: knowledge/index.yaml
+  domain_configs:
+    - ../domains/biology.yaml
+    - ../domains/chemistry.yaml
+  leaf_configs:
+    - ../subdomains/biology/docking_pose_plausibility.yaml
+    - ../subdomains/chemistry/stereochemistry_chirality.yaml
+
+fixture_policy:
+  allow_local_fixture_compile: false
+  require_local_fixture_digest_match: false
+  require_production_approval: true
+  production_eligible: false
+
+release:
+  enabled: false
+  blocked_reasons:
+    - "No production-approved knowledge lock is present in this repository skeleton."
+    - "No verified controlled viewer receipt is present in this repository skeleton."

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>City map viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<!-- self-hosted maplibre + pmtiles (synced via jsdelivr 2026-06-04; project
+     memory: "viewer 绝对路径从仓库根服务" pattern — same as niivue/molstar). -->
+<link href="/viewer/shared/vendor/maplibre-gl/4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<script src="/viewer/shared/vendor/maplibre-gl/4.7.1/dist/maplibre-gl.js"></script>
+<script src="/viewer/shared/vendor/pmtiles/3.2.0/dist/pmtiles.js"></script>
+<style>
+  /* Map container + viewport hygiene: body overflow hidden keeps the
+     browser from interpreting a drag as a page scroll; touch-action
+     none on the map div is required for trackpad / touch drag-pan to
+     reach maplibre instead of being eaten by the OS scroll gesture. */
+  html, body { overflow: hidden; height: 100%; }
+  #map { width: 100vw; height: calc(100vh - 49px); position: fixed; top: 49px; left: 0; touch-action: none; }
+  .maplibregl-canvas { outline: none; cursor: grab; }
+  .maplibregl-canvas:active { cursor: grabbing; }
+
+  .city-panel {
+    position: fixed; top: 60px; left: 12px; z-index: 10;
+    background: rgba(13,17,23,0.92); border: 1px solid var(--border);
+    padding: 10px 14px; border-radius: 4px; color: var(--fg);
+    font: 12px/1.5 -apple-system, system-ui, sans-serif;
+    max-width: 280px; backdrop-filter: blur(4px);
+  }
+  .city-panel strong { color: var(--accent); font-size: 13px; }
+  .city-panel .meta { color: var(--fg-dim); display: block; margin-top: 4px; }
+  .city-panel .controls { margin-top: 8px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .city-panel .controls button {
+    background: var(--bg2); color: var(--fg); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 3px; font: 11px ui-monospace, monospace; cursor: pointer;
+  }
+  .city-panel .controls button:hover { border-color: var(--accent); }
+  .city-panel .controls button.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+
+  .legend {
+    position: fixed; bottom: 28px; left: 12px; z-index: 10;
+    background: rgba(13,17,23,0.92); border: 1px solid var(--border);
+    padding: 8px 12px; border-radius: 4px; color: var(--fg);
+    font: 11px/1.6 ui-monospace, monospace;
+  }
+  .legend .swatch { display: inline-block; width: 12px; height: 12px; vertical-align: middle; margin-right: 4px; border-radius: 2px; }
+  .legend .row { margin-right: 12px; display: inline-block; }
+
+  .maplibregl-popup-content {
+    background: var(--bg2) !important; color: var(--fg) !important;
+    border: 1px solid var(--border); border-radius: 4px;
+    font: 12px/1.5 -apple-system, system-ui, sans-serif;
+  }
+  .maplibregl-popup-tip { border-top-color: var(--bg2) !important; }
+  .maplibregl-popup-content .pop-name { color: var(--accent); font-weight: 600; display: block; margin-bottom: 4px; }
+  .maplibregl-popup-content .pop-meta { color: var(--fg-dim); font-size: 11px; }
+
+  /* maplibre attribution dark-theme tweak */
+  .maplibregl-ctrl-attrib { background: rgba(13,17,23,0.85) !important; color: var(--fg-dim) !important; }
+  .maplibregl-ctrl-attrib a { color: var(--accent) !important; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>City Map</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">OSM building extrusion · Maplibre GL JS · PMTiles</div>
+</header>
+<div id="map"></div>
+
+<div class="city-panel" id="info">
+  <strong id="city-name">Loading…</strong>
+  <span class="meta" id="city-stats"></span>
+  <span class="meta" id="city-bbox"></span>
+  <span class="meta" id="city-status" style="color:#8b949e"></span>
+  <div class="controls">
+    <button id="btn-2d">2D</button>
+    <button id="btn-3d" class="active">3D</button>
+    <button id="btn-reset">Reset view</button>
+    <a id="btn-photo" href="" title="Switch to Google Photorealistic 3D Tiles (requires Map Tiles API key)">📷 Photo →</a>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="row"><span class="swatch" style="background:#1f6feb"></span>0–50 m</span>
+  <span class="row"><span class="swatch" style="background:#d2a8ff"></span>50–150 m</span>
+  <span class="row"><span class="swatch" style="background:#f85149"></span>&gt;150 m</span>
+  <span class="row" style="color:var(--fg-dim)">click building for details</span>
+</div>
+
+<script>
+  // ---- City presets (extend this object to add new cities) ----
+  const CITIES = {
+    manhattan: {
+      name: 'Manhattan, NYC',
+      center: [-73.9857, 40.7484],  // Empire State Building area
+      zoom: 14.2,
+      bearing: -17.6,
+      bbox: [-74.020, 40.700, -73.960, 40.760],
+      pmtiles: '/crawl_data/geography/osm_pilot/manhattan.pmtiles',
+      pmtilesParts: '/crawl_data/geography/osm_pilot/manhattan_parts.pmtiles',
+      neighborhoods: '/crawl_data/geography/osm_pilot/manhattan_neighborhoods.geojson',
+      landmarks: '/crawl_data/geography/osm_pilot/manhattan_landmarks.geojson',
+      stats: '21,993 buildings + 11,439 LoD2 parts · 47 districts + 962 landmarks · 7.1 MB pmtiles · z12–z16',
+    },
+  };
+
+  const params = new URLSearchParams(location.search);
+  const cityKey = params.get('city') || 'manhattan';
+  const cfg = CITIES[cityKey];
+
+  if (!cfg) {
+    document.body.insertAdjacentHTML('beforeend',
+      `<div class="error-box" style="padding:24px;color:#f85149">Unknown city: ${cityKey}. Known: ${Object.keys(CITIES).join(', ')}.</div>`);
+    throw new Error('unknown city');
+  }
+
+  document.getElementById('filename').textContent = cfg.name;
+  document.getElementById('city-name').textContent = cfg.name;
+  document.getElementById('city-stats').textContent = cfg.stats;
+  document.getElementById('city-bbox').textContent =
+    `bbox: ${cfg.bbox[0]}, ${cfg.bbox[1]} → ${cfg.bbox[2]}, ${cfg.bbox[3]}`;
+  document.getElementById('btn-photo').href = `/viewer/citymap-photo.html?city=${encodeURIComponent(cityKey)}`;
+
+  // PMTiles protocol registration (required before constructing the Map)
+  const pmtilesProtocol = new pmtiles.Protocol();
+  maplibregl.addProtocol('pmtiles', pmtilesProtocol.tile.bind(pmtilesProtocol));
+
+  // Height fallback chain — matches recommendation in the pilot README §3:
+  // 94% direct numeric height, 1% building:levels only, 5% neither (→ 6m default)
+  const HEIGHT_EXPR = [
+    'coalesce',
+    ['to-number', ['get', 'height'], 0],
+    ['*', ['to-number', ['get', 'building:levels'], 0], 3],
+    6
+  ];
+
+  const map = new maplibregl.Map({
+    container: 'map',
+    style: {
+      version: 8,
+      // Self-hosted glyphs (Noto Sans Regular + Bold, range 0-255 ASCII +
+      // 256-511 Latin Extended). Synced from demotiles.maplibre.org on
+      // 2026-06-04 to avoid remote dependency for label rendering.
+      glyphs: '/viewer/shared/vendor/maplibre-glyphs/{fontstack}/{range}.pbf',
+      sources: {},
+      // No raster basemap — tile.openstreetmap.org is unreliable from some
+      // networks (75s timeouts observed). The 3D building extrusion + the
+      // neighborhood label overlay carry the figure; the "ground" is a
+      // simple dark fill so the buildings read as the primary content.
+      layers: [
+        { id: 'background', type: 'background', paint: { 'background-color': '#0b0e13' } },
+      ],
+    },
+    center: cfg.center,
+    zoom: cfg.zoom,
+    pitch: 60,
+    bearing: cfg.bearing,
+    minZoom: 11,
+    maxZoom: 18,
+    hash: 'mapview',  // sync camera to URL fragment (#mapview=z/lat/lng/bearing/pitch)
+  });
+
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
+  map.addControl(new maplibregl.ScaleControl({ unit: 'metric' }), 'bottom-right');
+
+  // Defensive: maplibre enables all drag handlers by default but a
+  // subtle init-order issue or third-party extension can leave them
+  // off. Re-enable explicitly so drag-to-pan / right-click-to-rotate
+  // are guaranteed to work after the map is constructed.
+  map.dragPan.enable();
+  map.dragRotate.enable();
+  map.scrollZoom.enable();
+  map.boxZoom.enable();
+  map.touchZoomRotate.enable();
+  map.keyboard.enable();
+  map.doubleClickZoom.enable();
+
+  // Visible status indicator (the user/dev shouldn't have to open
+  // DevTools to see whether pmtiles loaded — surface it in the panel).
+  const setStatus = (msg, kind /* 'ok'|'warn'|'err' */) => {
+    const el = document.getElementById('city-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.color = kind === 'err' ? '#f85149'
+                   : kind === 'warn' ? '#ffd166'
+                   : kind === 'ok' ? '#3fb950'
+                   : '#8b949e';
+  };
+  setStatus('loading pmtiles…');
+
+  // Surface map errors (pmtiles fetch failures, glyph 404s, etc.)
+  map.on('error', (e) => {
+    const msg = (e && e.error && e.error.message) || String(e);
+    console.error('[citymap] map error:', e);
+    setStatus(`map error: ${msg.slice(0, 80)}`, 'err');
+  });
+
+  map.on('load', async () => {
+    setStatus('map loaded, adding buildings…');
+    // 1) Buildings via PMTiles
+    map.addSource('buildings', {
+      type: 'vector',
+      url: `pmtiles://${cfg.pmtiles}`,
+      attribution: '© OpenStreetMap contributors',
+    });
+
+    // Confirm the pmtiles source actually loaded (tile fetch succeeded)
+    map.on('sourcedata', (e) => {
+      if (e.sourceId === 'buildings' && e.isSourceLoaded) {
+        setStatus('buildings loaded ✓', 'ok');
+      }
+    });
+
+    map.addLayer({
+      id: '3d-buildings',
+      source: 'buildings',
+      'source-layer': 'building',
+      type: 'fill-extrusion',
+      minzoom: 12,
+      paint: {
+        'fill-extrusion-color': [
+          'interpolate', ['linear'], HEIGHT_EXPR,
+          0, '#1f6feb',
+          25, '#3fb950',
+          75, '#d2a8ff',
+          150, '#f85149',
+          300, '#ffa657',
+        ],
+        'fill-extrusion-height': HEIGHT_EXPR,
+        'fill-extrusion-base': 0,
+        'fill-extrusion-opacity': 0.88,
+      },
+    });
+
+    // 1b) Building PARTS — OSM `building:part` decomposition gives the
+    // stepped silhouette (Empire State setbacks, Chrysler crown, 30 Rock
+    // tiers, World Trade tower terraces). 11,439 parts in this bbox,
+    // 25% of which have `min_height` (= floating above ground).
+    // Rendered ON TOP of the simple `3d-buildings` mass; parts have
+    // 100% opacity and dominate visually where they exist. Where no
+    // building:part is present, the parent box still shows through.
+    if (cfg.pmtilesParts) {
+      map.addSource('building-parts', {
+        type: 'vector',
+        url: `pmtiles://${cfg.pmtilesParts}`,
+        attribution: '© OpenStreetMap contributors',
+      });
+      const PART_HEIGHT = ['coalesce',
+        ['to-number', ['get', 'height'], 0],
+        ['*', ['to-number', ['get', 'building:levels'], 0], 3],
+        6
+      ];
+      const PART_BASE = ['coalesce',
+        ['to-number', ['get', 'min_height'], 0],
+        ['*', ['to-number', ['get', 'building:min_level'], 0], 3],
+        0
+      ];
+      map.addLayer({
+        id: '3d-building-parts',
+        source: 'building-parts',
+        'source-layer': 'building_part',
+        type: 'fill-extrusion',
+        minzoom: 12,
+        paint: {
+          'fill-extrusion-color': [
+            'interpolate', ['linear'], PART_HEIGHT,
+            0, '#1f6feb',
+            25, '#3fb950',
+            75, '#d2a8ff',
+            150, '#f85149',
+            300, '#ffa657',
+          ],
+          'fill-extrusion-height': PART_HEIGHT,
+          'fill-extrusion-base': PART_BASE,
+          'fill-extrusion-opacity': 0.96,  // higher than the parent mass so parts win z-fights
+        },
+      });
+    }
+
+    // 2) Building name labels (landmark filter: now height > 60m AND has
+    // name — was 100m; lowered to surface more mid-rise landmarks like
+    // Flatiron Building, Stonewall Inn area, etc.).
+    map.addLayer({
+      id: 'building-labels',
+      source: 'buildings',
+      'source-layer': 'building',
+      type: 'symbol',
+      minzoom: 14,
+      filter: ['all',
+        ['has', 'name'],
+        ['>', ['to-number', ['get', 'height'], 0], 60],
+      ],
+      layout: {
+        'text-field': ['get', 'name'],
+        'text-size': ['interpolate', ['linear'], ['zoom'], 14, 10, 16, 13],
+        'text-allow-overlap': false,
+        'text-anchor': 'center',
+        'text-font': ['Noto Sans Regular'],
+        'symbol-sort-key': ['*', -1, HEIGHT_EXPR],
+      },
+      paint: {
+        'text-color': '#fffaf0',
+        'text-halo-color': '#0d1117',
+        'text-halo-width': 1.5,
+      },
+    });
+
+    // 3) Neighborhood / district labels (fetched separately)
+    try {
+      const r = await fetch(cfg.neighborhoods, { cache: 'force-cache' });
+      if (r.ok) {
+        const geojson = await r.json();
+        map.addSource('neighborhoods', { type: 'geojson', data: geojson });
+        map.addLayer({
+          id: 'neighborhood-labels',
+          source: 'neighborhoods',
+          type: 'symbol',
+          minzoom: 11,
+          maxzoom: 16,
+          layout: {
+            'text-field': ['get', 'name'],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 11, 11, 14, 16, 16, 19],
+            'text-letter-spacing': 0.12,
+            'text-allow-overlap': false,
+            'text-font': ['Noto Sans Bold'],
+            'text-max-width': 8,
+          },
+          paint: {
+            'text-color': '#ffd166',
+            'text-halo-color': '#0d1117',
+            'text-halo-width': 2,
+          },
+        });
+      } else {
+        console.warn('neighborhoods overlay http', r.status);
+      }
+    } catch (e) {
+      console.warn('neighborhoods overlay missing', e);
+    }
+
+    // 3b) Curated POI landmarks (museum / attraction / theatre / historic
+    // monument / park / station / etc.). Filter by `minz` per feature so
+    // tier-1 landmarks (museums, attractions, observatories) show from
+    // z12, mid-tier from z13, and dense low-distinctness POIs (parks /
+    // worship / civic) only from z14+.
+    let landmarkCount = 0;
+    try {
+      const r = await fetch(cfg.landmarks, { cache: 'force-cache' });
+      if (r.ok) {
+        const geojson = await r.json();
+        landmarkCount = geojson.features.length;
+        map.addSource('landmarks', { type: 'geojson', data: geojson });
+        // Layer A: icon glyph (small, always at current zoom if minz reached)
+        map.addLayer({
+          id: 'landmark-icons',
+          source: 'landmarks',
+          type: 'symbol',
+          minzoom: 12,
+          filter: ['>=', ['zoom'], ['get', 'minz']],
+          layout: {
+            'text-field': ['get', 'icon'],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 12, 11, 16, 16],
+            'text-allow-overlap': true,
+            'text-ignore-placement': true,
+            'text-font': ['Noto Sans Regular'],
+          },
+          paint: {
+            'text-color': [
+              'match', ['get', 'category'],
+              'museum',      '#79c0ff',
+              'attraction',  '#ffd166',
+              'observatory', '#56d364',
+              'viewpoint',   '#56d364',
+              'historic',    '#d2a8ff',
+              'arts',        '#f78166',
+              'university',  '#79c0ff',
+              'worship',     '#8b949e',
+              'civic',       '#79c0ff',
+              'park',        '#3fb950',
+              'station',     '#a5d6ff',
+              'infra',       '#ffa657',
+              'airport',     '#ffd866',
+              'stadium',     '#ed7d31',
+              '#c9d1d9'
+            ],
+            'text-halo-color': '#0d1117',
+            'text-halo-width': 1.5,
+          },
+        });
+        // Layer B: name label below icon — denser, kicks in z14+ for most,
+        // z13 for tier-1 categories
+        map.addLayer({
+          id: 'landmark-labels',
+          source: 'landmarks',
+          type: 'symbol',
+          minzoom: 13,
+          filter: ['>=', ['zoom'], ['+', ['get', 'minz'], 1]],
+          layout: {
+            'text-field': ['get', 'name'],
+            'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 12],
+            'text-offset': [0, 0.9],
+            'text-anchor': 'top',
+            'text-allow-overlap': false,
+            'text-max-width': 8,
+            'text-font': ['Noto Sans Regular'],
+            'symbol-sort-key': ['get', 'minz'],
+          },
+          paint: {
+            'text-color': '#c9d1d9',
+            'text-halo-color': '#0d1117',
+            'text-halo-width': 1.5,
+          },
+        });
+      } else {
+        console.warn('landmarks overlay http', r.status);
+      }
+    } catch (e) {
+      console.warn('landmarks overlay missing', e);
+    }
+
+    // Final stats line in the info panel (after both overlays are tried)
+    const nh = map.getSource('neighborhoods');
+    const nhCount = nh && nh._data ? nh._data.features.length : 0;
+    document.getElementById('city-stats').textContent =
+      `${cfg.stats} · ${nhCount} 地段 · ${landmarkCount} landmarks`;
+
+    // 4) Click popup — building details
+    map.on('click', '3d-buildings', (e) => {
+      const f = e.features[0];
+      if (!f) return;
+      const p = f.properties || {};
+      const name = p.name || p['name:en'] || '(unnamed building)';
+      const addr = [p['addr:housenumber'], p['addr:street']].filter(Boolean).join(' ');
+      const heightStr = p.height != null
+        ? `${parseFloat(p.height).toFixed(1)} m`
+        : (p['building:levels'] ? `~${parseFloat(p['building:levels']) * 3} m (${p['building:levels']} levels)` : '? m');
+      const html = `
+        <span class="pop-name">${name}</span>
+        ${addr ? `<div class="pop-meta">${addr}</div>` : ''}
+        <div class="pop-meta">Height: ${heightStr}</div>
+        <div class="pop-meta">Type: ${p.building || 'building'}${p['building:use'] ? ` · ${p['building:use']}` : ''}</div>
+        ${p.start_date ? `<div class="pop-meta">Built: ${p.start_date}</div>` : ''}
+        ${p.wikipedia ? `<div class="pop-meta"><a href="https://en.wikipedia.org/wiki/${encodeURIComponent(p.wikipedia.replace(/^en:/, ''))}" target="_blank" rel="noopener">Wikipedia ↗</a></div>` : ''}
+      `;
+      new maplibregl.Popup({ closeButton: true, maxWidth: '260px' })
+        .setLngLat(e.lngLat)
+        .setHTML(html)
+        .addTo(map);
+    });
+    map.on('mouseenter', '3d-buildings', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', '3d-buildings', () => map.getCanvas().style.cursor = '');
+
+    // Neighborhood click → fly-to
+    map.on('click', 'neighborhood-labels', (e) => {
+      const f = e.features[0];
+      if (!f) return;
+      map.flyTo({ center: f.geometry.coordinates, zoom: 15.5, pitch: 60, speed: 0.9 });
+    });
+    map.on('mouseenter', 'neighborhood-labels', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'neighborhood-labels', () => map.getCanvas().style.cursor = '');
+
+    // Landmark icon / label click → popup with category + Wikipedia link
+    const landmarkClick = (e) => {
+      const f = e.features[0];
+      if (!f) return;
+      const p = f.properties || {};
+      const wiki = p.wikipedia ? `<div class="pop-meta"><a href="https://en.wikipedia.org/wiki/${encodeURIComponent(p.wikipedia.replace(/^en:/, ''))}" target="_blank" rel="noopener">Wikipedia ↗</a></div>` : '';
+      new maplibregl.Popup({ closeButton: true, maxWidth: '240px' })
+        .setLngLat(f.geometry.coordinates)
+        .setHTML(`<span class="pop-name">${p.icon} ${p.name}</span><div class="pop-meta">category: ${p.category}</div>${wiki}`)
+        .addTo(map);
+    };
+    map.on('click', 'landmark-icons', landmarkClick);
+    map.on('click', 'landmark-labels', landmarkClick);
+    map.on('mouseenter', 'landmark-icons', () => map.getCanvas().style.cursor = 'pointer');
+    map.on('mouseleave', 'landmark-icons', () => map.getCanvas().style.cursor = '');
+  });
+
+  // ---- Controls ----
+  document.getElementById('btn-2d').onclick = () => {
+    map.easeTo({ pitch: 0, bearing: 0, duration: 600 });
+    document.getElementById('btn-2d').classList.add('active');
+    document.getElementById('btn-3d').classList.remove('active');
+  };
+  document.getElementById('btn-3d').onclick = () => {
+    map.easeTo({ pitch: 60, bearing: cfg.bearing, duration: 600 });
+    document.getElementById('btn-3d').classList.add('active');
+    document.getElementById('btn-2d').classList.remove('active');
+  };
+  document.getElementById('btn-reset').onclick = () => {
+    map.flyTo({ center: cfg.center, zoom: cfg.zoom, pitch: 60, bearing: cfg.bearing, speed: 1.2 });
+    document.getElementById('btn-3d').classList.add('active');
+    document.getElementById('btn-2d').classList.remove('active');
+  };
+</script>
+</body>
+</html>

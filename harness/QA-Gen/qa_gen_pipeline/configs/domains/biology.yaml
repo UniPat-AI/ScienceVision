@@ -1,0 +1,30 @@
+schema_version: 1
+kind: qagen_domain_config
+id: biology
+domain_status: sample_config_available
+catalog_leaves:
+  - biology.docking_pose_plausibility
+  - biology.molecular_collision_check
+  - biology.bio_multi_structure_compare
+
+policy:
+  allowed_viewer_operations:
+    - inspect
+    - isolate
+    - rotate
+    - render
+    - overlay_compare
+    - measure_distance
+  forbidden_capabilities:
+    - network
+    - asset_file_read
+    - raw_asset_metadata
+    - raw_asset_read
+    - arbitrary_compute
+    - unrestricted_compute
+
+viewer_defaults:
+  required_capabilities:
+    - anonymous_scene
+    - controlled_session_request
+    - stated_coordinate_frame

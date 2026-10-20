@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ScienceVision reviewer</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/vendor/molstar/molstar.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <header>
+      <p class="eyebrow">LOCAL REVIEW</p>
+      <h1>ScienceVision</h1>
+      <p id="status" class="status">Loading staged tasks</p>
+    </header>
+    <nav id="task-list" aria-label="Staged tasks"></nav>
+  </aside>
+  <main>
+    <header class="task-header">
+      <div>
+        <p id="task-id" class="eyebrow"></p>
+        <h2 id="task-title">Select a task</h2>
+      </div>
+      <div id="operations" class="operations" aria-label="Approved viewer operations"></div>
+    </header>
+    <section id="prompt" class="prompt" hidden></section>
+    <section id="viewer-shell" class="viewer-shell" aria-live="polite">
+      <div id="viewer-empty">Select a staged task to open its controlled scene.</div>
+      <div id="molstar-viewer" hidden></div>
+      <canvas id="niivue-viewer" hidden></canvas>
+    </section>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>

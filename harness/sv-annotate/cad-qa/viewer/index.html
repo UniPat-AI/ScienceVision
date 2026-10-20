@@ -1,0 +1,24 @@
+<!-- tools/cad_qa_pack/viewer/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CAD + QA Viewer</title>
+<link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+  <aside id="list">
+    <a href="/sv-annotate/" style="display:inline-block;margin-bottom:8px;color:#1c6fff;text-decoration:none;font-size:13px;">&larr; Annotation Platform</a>
+    <h1>CAD Parts</h1><ul id="model-list"></ul></aside>
+  <main id="stage">
+    <!-- 3D pane reuses the site's proven mesh viewer (/viewer/gltf.html) in an
+         iframe. It renders in the user's Chrome standalone, so it renders here too.
+         Drag = rotate, scroll = zoom, right-drag = pan. -->
+    <iframe id="v3d" title="3D preview"></iframe>
+    <div id="v3d-overlay">← 请选择左侧零件</div>
+  </main>
+  <aside id="qa"><h2>Questions</h2><div id="qa-body">Select a part.</div></aside>
+  <script type="module" src="main.js"></script>
+</body>
+</html>

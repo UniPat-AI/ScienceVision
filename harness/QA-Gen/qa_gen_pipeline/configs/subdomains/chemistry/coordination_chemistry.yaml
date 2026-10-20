@@ -1,0 +1,53 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: chemistry.coordination_chemistry
+domain: chemistry
+status: conditional
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: blocked
+  release: blocked
+blocked_reasons:
+  - catalog_prerequisites_incomplete
+required_inputs:
+  - id: seed.verified_positive
+    state: missing
+  - id: asset.anonymous_scene
+    state: missing
+  - id: viewer.leaf_capability_evidence
+    state: unverified
+  - id: knowledge.approved_snapshot
+    state: missing
+
+visual_skills:
+  - coordination_geometry_assessment
+seed:
+  query:
+    domain: chemistry
+    subdomain: coordination_chemistry
+    required_status: verified
+asset:
+  required_conditions:
+    - anonymous_scene
+viewer:
+  required_operations:
+    - inspect
+    - rotate
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+evidence:
+  required:
+    - viewer_trace
+    - visual_annotation
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      section_id: doxcn9KvGi11qTEUyNKROTgfKlb
+      coverage: source_only
+  locked_refs: []
+release:
+  eligible: false
+  reason: "Cataloged from the target taxonomy; prerequisites are not yet locked."

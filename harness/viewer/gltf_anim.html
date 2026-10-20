@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Genesis sim animation — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/GLTFLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/environments/RoomEnvironment.js">
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #ctrl {
+    position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%);
+    background: rgba(13,17,23,0.9); padding: 10px 14px; border-radius: 8px;
+    border: 1px solid #30363d; display: flex; gap: 12px; align-items: center;
+    font: 12px ui-monospace, monospace; color: #c9d1d9; z-index: 10;
+  }
+  #ctrl button {
+    background: #21262d; color: #c9d1d9; border: 1px solid #30363d;
+    border-radius: 4px; padding: 4px 12px; cursor: pointer; font: inherit;
+  }
+  #ctrl button:hover { background: #30363d; }
+  #seek { width: 320px; }
+  #tlabel { min-width: 86px; text-align: right; color: #8b949e; }
+  .error-box {
+    position: fixed; top: 60px; left: 12px; background: #3d1418; color: #ffb3b3;
+    border: 1px solid #6e2530; padding: 10px 14px; border-radius: 4px;
+    font: 12px ui-monospace, monospace; white-space: pre-wrap; z-index: 20;
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>Sim Animation</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">glTF morph animation · drag = rotate · scroll = zoom</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="ctrl">
+  <button id="play">⏸ Pause</button>
+  <input id="seek" type="range" min="0" max="1000" value="0" />
+  <span id="tlabel">0.00 / 0.00s</span>
+  <button id="loop">↻ Loop: on</button>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+document.getElementById('filename').textContent = file ? file.split('/').pop() : '(no file)';
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // clamp DPR (issue 70)
+canvas.getBoundingClientRect();
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x444455, 1.2));
+
+const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.01, 1000);
+const controls = new OrbitControls(camera, renderer.domElement);
+
+let mixer = null, action = null, clip = null;
+const clock = new THREE.Clock();
+
+function onErr(err) {
+  document.body.insertAdjacentHTML('beforeend',
+    '<div class="error-box">Failed to load:\n' + (err?.message || err) + '</div>');
+}
+
+function fit(obj) {
+  const box = new THREE.Box3().setFromObject(obj);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  const r = Math.max(size.x, size.y, size.z) * 0.5 || 1;
+  const dist = r / Math.sin((camera.fov * Math.PI / 180) / 2) * 1.4;
+  camera.up.set(0, 1, 0);
+  const dir = new THREE.Vector3(0.6, 0.45, 1.0).normalize();
+  camera.position.copy(center).add(dir.multiplyScalar(dist));
+  camera.near = r * 0.001; camera.far = r * 100; camera.updateProjectionMatrix();
+  controls.target.copy(center); controls.update();
+}
+
+if (!file) {
+  onErr('No ?file= query param.');
+} else {
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(file, (gltf) => {
+    const root = gltf.scene;
+    // 点云 (Points) 给个可见的点大小
+    root.traverse(o => {
+      if (o.isPoints) {
+        o.material = new THREE.PointsMaterial({
+          size: 0.02, sizeAttenuation: true,
+          vertexColors: !!o.geometry.getAttribute('color'),
+          color: o.geometry.getAttribute('color') ? 0xffffff : 0x88bbff,
+        });
+      }
+    });
+    scene.add(root);
+    fit(root);
+
+    if (gltf.animations && gltf.animations.length) {
+      mixer = new THREE.AnimationMixer(root);
+      clip = gltf.animations[0];
+      action = mixer.clipAction(clip);
+      action.play();
+      setupControls();
+    } else {
+      onErr('GLB 内没有动画 (animations 为空)。');
+    }
+  }, undefined, onErr);
+}
+
+// ── 播放控制 ──
+let playing = true, looping = true;
+const playBtn = document.getElementById('play');
+const loopBtn = document.getElementById('loop');
+const seek = document.getElementById('seek');
+const tlabel = document.getElementById('tlabel');
+
+function setupControls() {
+  playBtn.onclick = () => {
+    playing = !playing;
+    action.paused = !playing;
+    playBtn.textContent = playing ? '⏸ Pause' : '▶ Play';
+  };
+  loopBtn.onclick = () => {
+    looping = !looping;
+    action.loop = looping ? THREE.LoopRepeat : THREE.LoopOnce;
+    action.clampWhenFinished = !looping;
+    loopBtn.textContent = '↻ Loop: ' + (looping ? 'on' : 'off');
+    if (looping) { action.reset(); action.play(); playing = true; playBtn.textContent = '⏸ Pause'; }
+  };
+  seek.oninput = () => {
+    const t = (seek.value / 1000) * clip.duration;
+    action.time = t;
+    mixer.update(0);
+  };
+}
+
+renderer.setAnimationLoop(() => {
+  const dt = clock.getDelta();
+  if (mixer && playing) mixer.update(dt);
+  if (clip && action) {
+    const t = action.time % clip.duration;
+    if (!seek.matches(':active')) seek.value = (t / clip.duration) * 1000;
+    tlabel.textContent = t.toFixed(2) + ' / ' + clip.duration.toFixed(2) + 's';
+  }
+  controls.update();
+  renderer.render(scene, camera);
+});
+
+window.addEventListener('resize', () => {
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,77 @@
+schema_version: 1
+kind: qagen_subdomain_config
+id: medical.anatomical_region
+domain: medical
+status: blocked
+production_status: not_approved
+readiness:
+  config: config_ready
+  generation: blocked
+  release: blocked
+blocked_reasons:
+  - medical_domain_release_blocked
+  - no_repaired_expert_reviewed_seed
+  - knowledge_fixture_not_approved
+  - m3d_refseg_semantic_annotation_source_missing
+required_inputs:
+  - id: seed.repaired_expert_verified
+    state: missing
+  - id: knowledge.approved_snapshot
+    state: missing
+  - id: review.production_approval
+    state: blocked
+  - id: semantic_gt.m3d_refseg_doctor_annotation
+    state: missing
+
+visual_skills:
+  - anatomical_region_identification
+question_type_policy:
+  allowed_question_family_kinds:
+    - property_identification
+    - attribute_classification
+    - paired_comparison
+  medical_modes:
+    - semantic_interpretation_no_overlay
+  measurement_default_allowed: false
+asset_facets:
+  tracked_dimensions: [body_region, organ_system, anatomy, pathology, modality, dataset]
+  coverage_dedupe_key: [dataset, normalized_asset_facets, question_kernel]
+  family_diversity_required: true
+  label_identity_policy: preserve
+semantic_gt:
+  source_id: m3d_refseg_doctor_annotation
+  source_status: missing
+  solver_projection:
+    primary_image: true
+    excluded_artifacts: [segmentation, mask, overlay]
+seed:
+  query:
+    domain: medical
+    subdomain: anatomical_region
+    required_status: verified
+  locked_ref: fixture-seed-inventory@sha256:8d54773301679be57a45fdd27415e77ecfee837b9ee22acd171e1422361f14be
+asset:
+  locked_ref: fixture-asset-manifest@sha256:bc75ca471e483b6a09b8f69df1b76d7f7f004bac0f2a89fe734482015857e020
+  required_conditions:
+    - anonymous_scene
+viewer:
+  locked_ref: fixture-viewer-definition@sha256:9c73378950b3a20f99fef89d380e859553579ac04276bac77fb67b468d7445c3
+  required_operations:
+    - inspect
+answer:
+  allowed_truth_modes:
+    - expert_visual_judgment
+evidence:
+  required:
+    - viewer_trace
+    - visual_annotation
+knowledge:
+  source_refs:
+    - source_id: expert-knowledge-master
+      source_revision: 298
+      coverage: source_only
+  locked_refs:
+    - fixture-subdomain-knowledge:medical.anatomical_region@sha256:9913a2dcf45cdf3e9ccec1ff0c75149f81e3c6029858d6a5710a2fd16c1d6bc3
+release:
+  eligible: false
+  reason: "Medical is explicitly blocked for the MVP."

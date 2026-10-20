@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Niivue — Expert Annotation</title>
+<link rel="stylesheet" href="/sv-annotate/viewer/shared/style.css">
+<script src="/sv-annotate/viewer/shared/neg-banner.js" defer></script>
+<script src="/sv-annotate/viewer/shared/capture/annotate-shell.js" type="module"></script>
+<link rel="preload" as="script" href="/viewer/shared/vendor/@niivue/niivue/0.45.0/dist/niivue.umd.js">
+<style>
+  #gl { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #view-toggle { position: fixed; top: 60px; right: 12px; background: rgba(13,17,23,0.9); padding: 6px; border-radius: 4px; border: 1px solid #30363d; display: flex; gap: 4px; z-index: 10; }
+  #view-toggle button { background: #161b22; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 10px; border-radius: 3px; font: 11px ui-monospace, monospace; cursor: pointer; }
+  #view-toggle button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/sv-annotate/">← Shell</a><strong>Niivue</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">NIfTI · MPR / 3D volume render</div>
+</header>
+<canvas id="gl"></canvas>
+<div id="view-toggle">
+  <button data-mode="render" class="active">3D</button>
+  <button data-mode="multiplanar">MPR</button>
+  <button data-mode="axial">Axial</button>
+</div>
+<script src="/viewer/shared/vendor/@niivue/niivue/0.45.0/dist/niivue.umd.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const file = params.get('file');
+  const overlay = params.get('overlay');
+  document.getElementById('filename').textContent = file ? file.split('/').pop() + (overlay ? ' + label' : '') : '(no file)';
+  if (!file) {
+    document.body.insertAdjacentHTML('beforeend', '<div class="error-box">No ?file= query param.</div>');
+  } else {
+    const SLICE = { axial: 0, coronal: 1, sagittal: 2, multiplanar: 3, render: 4 };
+    const nv = new niivue.Niivue({
+      backColor: [0.05, 0.06, 0.09, 1],
+      sliceType: SLICE.render,
+      isColorbar: true,
+      isOrientCube: true,
+      isNearestInterpolation: false,
+    });
+    nv.attachTo('gl');
+    // Expose for the capture shell BEFORE volumes load so the 30s poll resolves.
+    if (params.get('annotate')) window.__sv_viewer = nv;
+    const volumes = [{ url: file, opacity: 1.0 }];
+    if (overlay) volumes.push({ url: overlay, opacity: 0.5, colormap: 'red' });
+    nv.loadVolumes(volumes).catch(err => {
+      document.body.insertAdjacentHTML('beforeend', '<div class="error-box">Failed to load:\n' + err + '</div>');
+    });
+    const toggle = document.getElementById('view-toggle');
+    toggle.addEventListener('click', e => {
+      const btn = e.target.closest('button[data-mode]'); if (!btn) return;
+      nv.setSliceType(SLICE[btn.dataset.mode]);
+      for (const b of toggle.querySelectorAll('button')) b.classList.toggle('active', b === btn);
+    });
+  }
+</script>
+</body>
+</html>

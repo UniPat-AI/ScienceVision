@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "qagen/selection_batch_manifest.schema.json",
+  "description": "Body contract for a private vNext batch manifest compiled from attested selection source slots.",
+  "type": "object",
+  "required": [
+    "source_selection",
+    "taxonomy_mapping",
+    "total",
+    "mapping_coverage",
+    "generation_eligible",
+    "generation_blockers",
+    "rows"
+  ],
+  "properties": {
+    "source_selection": {
+      "type": "object",
+      "required": ["selection_id_sha256", "selection_file_sha256", "import_digest"],
+      "properties": {
+        "selection_id_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "selection_file_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "import_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    },
+    "taxonomy_mapping": {
+      "type": "object",
+      "required": ["id", "content_digest", "generation_strategy_policy_digest", "reviewer", "reviewed_at"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "content_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "generation_strategy_policy_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "reviewer": {"type": "string", "minLength": 1},
+        "reviewed_at": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "total": {"type": "integer", "minimum": 1},
+    "mapping_coverage": {
+      "type": "object",
+      "required": ["source_leaf_count", "mapped_leaf_count", "unmapped_source_leaves"],
+      "properties": {
+        "source_leaf_count": {"type": "integer", "minimum": 1},
+        "mapped_leaf_count": {"type": "integer", "minimum": 0},
+        "unmapped_source_leaves": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "generation_eligible": {"const": false},
+    "generation_blockers": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "rows": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "slot_ref",
+          "question_id",
+          "task_id",
+          "source_leaf",
+          "target_leaf",
+          "mapping_status",
+          "access_track",
+          "generation_strategy",
+          "viewer_hint",
+          "assets",
+          "generation_status"
+        ],
+        "properties": {
+          "slot_ref": {"type": "object"},
+          "question_id": {"type": "string", "minLength": 1},
+          "task_id": {"type": "string", "minLength": 1},
+          "source_leaf": {"type": "string", "minLength": 1},
+          "target_leaf": {"type": ["string", "null"]},
+          "mapping_status": {"enum": ["mapped", "unmapped", "target_config_missing"]},
+          "access_track": {
+            "type": "object",
+            "required": ["source", "effective", "conversion"],
+            "properties": {
+              "source": {"enum": ["raw_compute", "viewer_measurement"]},
+              "effective": {"enum": ["raw_compute", "viewer_measurement"]},
+              "conversion": {"const": "preserved"}
+            },
+            "additionalProperties": false
+          },
+          "generation_strategy": {"enum": ["preserve_intent", "reauthor_on_asset"]},
+          "viewer_hint": {"type": "object"},
+          "assets": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["role", "path", "bytes", "sha256"],
+              "properties": {
+                "role": {"enum": ["primary", "mask"]},
+                "path": {"type": "string", "minLength": 1},
+                "bytes": {"type": "integer", "minimum": 1},
+                "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "mask_selection": {"const": "label_index"},
+                "mask_id": {"type": "integer", "minimum": 0}
+              },
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {"properties": {"role": {"const": "mask"}}, "required": ["role"]},
+                  "then": {"required": ["mask_selection", "mask_id"]}
+                },
+                {
+                  "if": {"properties": {"mask_selection": {"const": "label_index"}}, "required": ["mask_selection"]},
+                  "then": {"properties": {"mask_id": {"type": "integer"}}}
+                }
+              ]
+            }
+          },
+          "generation_status": {"type": "string", "minLength": 1},
+          "target_leaf_config": {
+            "type": "object",
+            "required": ["path", "content_sha256"],
+            "properties": {
+              "path": {"type": "string", "minLength": 1},
+              "content_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

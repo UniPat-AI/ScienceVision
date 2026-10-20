@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "name": "extract_segment",
+  "description": "Crop a 3D image volume to the bounding box of a target label in a mask.",
+  "domain": "medical",
+  "parameters": [
+    {
+      "name": "image_path",
+      "type": "string",
+      "required": true,
+      "description": "NIfTI volume to be cropped."
+    },
+    {
+      "name": "mask_path",
+      "type": "string",
+      "required": true,
+      "description": "NIfTI label mask in the same voxel grid as image_path."
+    },
+    {
+      "name": "label",
+      "type": "integer",
+      "required": true,
+      "description": "Voxel value identifying the structure of interest."
+    },
+    {
+      "name": "padding_voxels",
+      "type": "integer",
+      "required": false,
+      "description": "Number of voxels of padding on each side. Defaults to 4."
+    }
+  ],
+  "returns": {
+    "type": "object",
+    "fields": [
+      {"name": "cropped_path", "type": "string", "description": "Path to the cropped NIfTI written under the agent's scratch dir."},
+      {"name": "bbox_voxels", "type": "array<integer>", "description": "Bounding box as [xmin, ymin, zmin, xmax, ymax, zmax] inclusive."}
+    ]
+  },
+  "source": "sci3d_agent/tools/medical/extract_segment.py"
+}

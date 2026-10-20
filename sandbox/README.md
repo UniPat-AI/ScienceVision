@@ -13,7 +13,7 @@ extraction difference, not sampling noise.
 
 | Input | What it must contain |
 |---|---|
-| Repository | this checkout, installed with `pip install -e ".[harbor]"` (Python 3.12) |
+| Repository | this checkout, installed from `harness/` with `pip install -e ".[harbor]"` (Python 3.12) |
 | Dataset | a ScienceVision package: `<domain>/<task_id>/assets/...` and `normalized.json` |
 | Contracts | one JSONL record per task, from `sandbox/export_contracts.py` |
 | Archived jobs | Harbor job directories holding `*/<task>/agent/trajectory.json` and `verifier/sci3d_scores.json` |
@@ -51,6 +51,34 @@ python -m sandbox.export_contracts \
   --task-ids /path/to/task_ids.txt \
   --output contracts.jsonl
 ```
+
+## Contract sets are per run root
+
+The Codex and Claude Code archives for the same 205 tasks do **not** share one
+contract set. Six tasks differ in `ground_truth` or `answer_schema` between the
+two run roots; a tree built from the Claude Code contracts scores the Codex
+answers differently on those tasks. Export and build one tree per run root:
+
+| Arm | Contract file | Tasks |
+|---|---|---:|
+| Codex | `contracts-codex.jsonl` | 184 + 5 swap-ins |
+| Claude Code | `contracts.jsonl` | 205 + 32 + 13 |
+
+The six divergent tasks:
+
+```text
+sv-biol-molstar_chain_intersection-0007
+sv-biol-molstar_ligand_occlusion-0006
+sv-chem-chem_conformation-0002
+sv-chem-chem_conformation-0028
+sv-chem-chem_conformation-0050
+sv-medi-med_ct_geometry-0014
+```
+
+Replaying the Codex arm against the Claude Code contracts turns
+`sv-biol-molstar_chain_intersection-0007` from the recorded `0.0` into `1.0`;
+using the Codex contract restores `0.0`. The published release should ship one
+contract per task, which is what the re-baseline below produces.
 
 ## Measured result
 

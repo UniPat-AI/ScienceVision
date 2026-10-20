@@ -1,0 +1,9 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "task.schema.json",
+  "description": "Selector schema. Validate author-private candidates and solver-safe exports against their dedicated schemas.",
+  "oneOf": [
+    {"$ref": "candidate.schema.json"},
+    {"$ref": "export_task.schema.json"}
+  ]
+}

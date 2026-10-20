@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>CAD-native (SolidWorks) — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+  main.cad-native { max-width: 720px; margin: 0 auto; padding: 24px; }
+  .hero { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 20px; }
+  .hero h1 { margin: 0 0 6px; font-size: 22px; color: var(--domain-ind); word-break: break-all; }
+  .hero .sub { color: #8b949e; font-size: 13px; }
+  .badge-row { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { background: #1f2937; border: 1px solid #30363d; padding: 3px 8px; border-radius: 3px;
+           font: 11px ui-monospace, monospace; color: #c9d1d9; }
+  .badge.warn { background: #4a2f00; border-color: #ffa657; color: #ffd166; }
+  .status-block { margin-top: 18px; padding: 14px; border-radius: 4px;
+                  background: rgba(255, 122, 95, 0.08); border: 1px solid #ffa657; }
+  .status-block strong { color: #ffd166; }
+  .status-block p { color: #c9d1d9; margin: 8px 0 0; font-size: 13px; line-height: 1.5; }
+  .expected { margin-top: 14px; font: 12px ui-monospace, monospace; color: #8b949e; word-break: break-all; }
+  .expected code { background: #161b22; padding: 2px 6px; border-radius: 3px; border: 1px solid #30363d; color: #c9d1d9; }
+  .actions { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn { padding: 8px 16px; border-radius: 4px; border: 1px solid #30363d; cursor: pointer;
+         font: 12px ui-monospace, monospace; text-decoration: none; color: #c9d1d9; background: #161b22; }
+  .btn.primary { background: #1f6feb; border-color: #1f6feb; color: white; }
+  .btn:hover { filter: brightness(1.1); }
+  #check-result { margin-top: 10px; font: 12px ui-monospace, monospace; color: #8b949e; min-height: 18px; }
+  #check-result.fail { color: #f85149; }
+  #check-result.ok   { color: #56d364; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>CAD-native</strong>
+    <span id="filename" class="meta"></span></div>
+  <div class="meta">awaiting STEP conversion</div>
+</header>
+
+<main class="cad-native">
+  <div class="hero">
+    <h1 id="title">(loading)</h1>
+    <div class="sub" id="subtitle"></div>
+    <div class="badge-row">
+      <span class="badge" id="badge-format">format: ?</span>
+      <span class="badge" id="badge-size">size: ?</span>
+      <span class="badge warn">status: needs conversion</span>
+    </div>
+  </div>
+
+  <div class="status-block">
+    <strong>⚠ Cannot be rendered in the browser.</strong>
+    <p>
+      <code>.SLDPRT</code> / <code>.SLDASM</code> are SolidWorks-native closed binaries.
+      No open-source toolchain reads them. To make this card render in 3D, drop one of:
+    </p>
+    <ul style="color:#c9d1d9; font-size:13px; line-height:1.6; margin:8px 0 0; padding-left: 18px;">
+      <li><code>.step</code> — BREP precision (SolidWorks Desktop, Onshape, CAD Exchanger).
+        Routes to OCCT viewer.</li>
+      <li><code>.glb</code> — lossy mesh, free path
+        (<a href="https://fabconvert.com/convert/sldprt-to-glb"
+            target="_blank" rel="noopener" style="color:#79c0ff;">fabconvert.com → GLB</a>,
+        then <code>tools/cad_native/import_meshes.py</code>).
+        Routes to glTF viewer.</li>
+    </ul>
+    <p>
+      Once either file lands at its expected path and
+      <code>tools/build_cad_native_manifest.py</code> reruns, this card auto-promotes.
+    </p>
+  </div>
+
+  <div class="expected">
+    Expected STEP path: <code id="step-path">…</code>
+    <button class="btn" id="copy-step" type="button" style="margin-left:6px;">copy</button>
+  </div>
+  <div class="expected" id="mesh-row" style="display:none;">
+    Expected MESH path: <code id="mesh-path">…</code>
+    <button class="btn" id="copy-mesh" type="button" style="margin-left:6px;">copy</button>
+  </div>
+
+  <div class="actions">
+    <a class="btn primary" id="download-link" href="#" download>↓ Download original</a>
+    <button class="btn" id="check-avail" type="button">Check conversion availability</button>
+  </div>
+  <div id="check-result"></div>
+</main>
+
+<script>
+const params = new URLSearchParams(location.search);
+const file = params.get('file');      // SLDPRT URL
+const step = params.get('step');      // expected STEP URL
+const mesh = params.get('mesh');      // expected GLB URL (optional, v2+)
+const name = params.get('name') || (file ? file.split('/').pop() : '(no name)');
+
+const titleEl = document.getElementById('title');
+const subEl = document.getElementById('subtitle');
+const badgeFmt = document.getElementById('badge-format');
+const badgeSize = document.getElementById('badge-size');
+const stepPathEl = document.getElementById('step-path');
+const meshPathEl = document.getElementById('mesh-path');
+const meshRowEl = document.getElementById('mesh-row');
+const downloadEl = document.getElementById('download-link');
+const filenameEl = document.getElementById('filename');
+const resultEl = document.getElementById('check-result');
+
+if (!file) {
+  titleEl.textContent = '(no file specified)';
+  resultEl.className = 'fail';
+  resultEl.textContent = 'error: missing ?file= query param';
+} else {
+  const fname = file.split('/').pop();
+  const ext = (fname.split('.').pop() || '').toLowerCase();
+  titleEl.textContent = decodeURIComponent(name);
+  filenameEl.textContent = fname;
+  subEl.textContent = decodeURIComponent(file);
+  badgeFmt.textContent = 'format: .' + ext;
+  stepPathEl.textContent = step ? decodeURIComponent(step) : '(unknown)';
+  if (mesh) {
+    meshPathEl.textContent = decodeURIComponent(mesh);
+    meshRowEl.style.display = '';
+  }
+  downloadEl.href = file;
+
+  // Fetch HEAD on the SLDPRT itself to get the size (avoids us having to
+  // pass it through the URL).
+  fetch(file, { method: 'HEAD' }).then(r => {
+    const len = r.headers.get('content-length');
+    if (len) {
+      const n = parseInt(len, 10);
+      const human = n < 1024 ? n + ' B'
+                  : n < 1024*1024 ? (n/1024).toFixed(1) + ' KB'
+                                  : (n/1024/1024).toFixed(1) + ' MB';
+      badgeSize.textContent = 'size: ' + human;
+    }
+  }).catch(() => {});
+}
+
+function copyTo(btnId, value) {
+  document.getElementById(btnId).addEventListener('click', () => {
+    if (!value) return;
+    navigator.clipboard.writeText(decodeURIComponent(value)).then(() => {
+      const el = document.getElementById(btnId);
+      const orig = el.textContent;
+      el.textContent = 'copied';
+      setTimeout(() => { el.textContent = orig; }, 1200);
+    });
+  });
+}
+copyTo('copy-step', step);
+copyTo('copy-mesh', mesh);
+
+document.getElementById('check-avail').addEventListener('click', async () => {
+  resultEl.className = '';
+  resultEl.textContent = 'checking …';
+  // STEP wins when both exist (BREP precision over tessellation).
+  // Probe STEP first, then GLB.
+  async function probe(url) {
+    try {
+      const r = await fetch(url, { method: 'HEAD' });
+      return r.ok;
+    } catch { return false; }
+  }
+  if (step && await probe(step)) {
+    resultEl.className = 'ok';
+    resultEl.textContent = 'STEP present — opening occt viewer …';
+    setTimeout(() => { location.href = '/viewer/occt.html?file=' + step; }, 500);
+    return;
+  }
+  if (mesh && await probe(mesh)) {
+    resultEl.className = 'ok';
+    resultEl.textContent = 'GLB present — opening glTF viewer …';
+    setTimeout(() => { location.href = '/viewer/gltf.html?file=' + mesh; }, 500);
+    return;
+  }
+  resultEl.className = 'fail';
+  resultEl.textContent =
+      mesh ? 'neither STEP nor GLB present yet — rerun the manifest after conversion.'
+           : 'STEP not present yet.';
+});
+</script>
+</body>
+</html>

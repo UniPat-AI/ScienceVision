@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-03T00:00:00+00:00",
+  "sets": [
+    {
+      "name": "Genesis_VP_Hard",
+      "dir": "QA-Gen/tasks/Genesis_VP_Hard",
+      "kept_total": 2,
+      "generated_total": 2,
+      "kept_ratio": 1.0,
+      "tokens_total": 0,
+      "cost_usd_total": 0.0,
+      "has_review_md": true,
+      "has_coverage_md": true,
+      "tasks_jsonl": "QA-Gen/tasks/Genesis_VP_Hard/ScienceVision_Genesis_VP_Hard_final_tasks.jsonl"
+    },
+    {
+      "name": "MedicalKAxisPilot",
+      "dir": "QA-Gen/tasks/MedicalKAxisPilot",
+      "kept_total": 4,
+      "generated_total": 4,
+      "kept_ratio": 1.0,
+      "tokens_total": 0,
+      "cost_usd_total": 0.0,
+      "has_review_md": true,
+      "has_coverage_md": true,
+      "tasks_jsonl": "QA-Gen/tasks/MedicalKAxisPilot/ScienceVision_MedicalKAxisPilot_final_tasks.jsonl"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+# Caddyfile.https.example — switch from HTTP-only to HTTPS in one step.
+#
+# When you are ready to go HTTPS:
+#   1. Get a hostname pointed at this server's public IP (47.84.143.121).
+#      - Real domain (preferred): set an A record at your registrar.
+#      - No domain on hand: use a free dynamic DNS host, e.g.
+#          https://www.duckdns.org/      (gives you  <name>.duckdns.org)
+#          https://www.no-ip.com/        (gives you  <name>.hopto.org etc.)
+#          https://dash.cloudflare.com/  (a Cloudflare-hosted free subdomain)
+#        Any of these works with Let's Encrypt HTTP-01 -- Caddy doesn't care
+#        whether the hostname is "real" or DDNS, only that A/AAAA resolves
+#        and port 80 is reachable from the public internet.
+#   2. Copy this file into place:
+#        sudo cp deploy/Caddyfile.https.example /etc/caddy/Caddyfile
+#        sudoedit /etc/caddy/Caddyfile      # replace babyvision-v2.unipatai.com with yours
+#        ./scripts/viewer reload
+#   3. On first request, Caddy obtains a Let's Encrypt cert via ACME HTTP-01,
+#      then serves HTTPS on 443 and 301-redirects HTTP on 80 -> HTTPS.
+#      No certbot, no cron job, no manual renewal.
+#
+# Already covered by Caddy's defaults when you use a domain form (no need
+# to spell them out):
+#   - HSTS header on responses
+#   - HTTP/2, HTTP/3 (QUIC) on 443
+#   - Modern TLS only (1.2 + 1.3)
+#   - 80 -> 443 redirect
+#   - cert auto-renewal ~30 days before expiry
+#
+# This config mirrors the HTTP Caddyfile structurally so the security model,
+# document root, redirect, and logging behave identically. See deploy/README.md
+# for the rationale on each of those choices.
+
+{
+	# Loopback-bound admin endpoint -- required for `caddy reload`.
+	# DO NOT set `admin off`; that disables reload and forces a full
+	# restart on every config change.
+	admin localhost:2019
+
+	# Optional: email used by Let's Encrypt for expiry warnings.
+	# email you@example.com
+}
+
+# Replace babyvision-v2.unipatai.com with your real hostname (e.g. babyvision.example.com,
+# or babyvision.duckdns.org).
+babyvision-v2.unipatai.com {
+	root * /home/matianyi/BabyVision-v2
+
+	# Hide secrets, VCS internals, and the deploy bundle (which carries
+	# the sudoers fragment). MUST be kept in sync with the HTTP Caddyfile
+	# -- switching to HTTPS without this would re-expose .env, .git/, and
+	# /deploy/* over 443.
+	@hidden path_regexp ^/(\.|deploy($|/))
+
+	encode gzip zstd
+
+	# These handles are ordered and mutually exclusive. Keep the authenticated
+	# proxy branch ahead of the static fallback so try_files and public-cache
+	# policy never reach /sv-annotate.
+	@sv_annotate path /sv-annotate /sv-annotate/*
+	handle @hidden {
+		respond 404
+	}
+	handle @sv_annotate {
+		header Cache-Control "private, no-store"
+		reverse_proxy 127.0.0.1:4174
+	}
+	handle {
+		# Naked / -> viewer/index.html (URL stays /).
+		@bare path /
+		rewrite @bare /viewer/
+
+		# Try the root first (siblings like /docs/, /data/, /crawl_data/ live
+		# there), then fall back to /viewer/<path> so viewer pages' relative
+		# refs resolve and clean URLs (/assets.html, /shared/style.css) work.
+		try_files {path} /viewer{path}
+
+		# Public download site -- assets are versioned in vendor paths and
+		# stable in crawl_data/, so a 1h public cache is safe. This static branch
+		# cannot match /sv-annotate.
+		header Cache-Control "public, max-age=3600"
+
+		file_server {
+			precompressed zstd gzip
+		}
+	}
+
+	log {
+		output file /var/log/caddy/babyvision-viewer.log {
+			roll_size 50MiB
+			roll_keep 5
+		}
+		format console
+	}
+}

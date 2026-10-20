@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_viewer_definition_fixture",
+  "fixture": {
+    "local_only": true,
+    "production_eligible": false
+  },
+  "fixture_payload": {
+    "viewer_id": "molstar-chirality-host-v1",
+    "adapter_id": "molstar-chirality-host-v1",
+    "capabilities": [
+      "anonymous_scene",
+      "controlled_session_request",
+      "rotate",
+      "render"
+    ],
+    "forbidden_capabilities": [
+      "network",
+      "asset_file_read",
+      "raw_asset_metadata",
+      "raw_asset_read",
+      "arbitrary_compute",
+      "unrestricted_compute"
+    ],
+    "session_scope_mode": "attested_local_chirality_host_only"
+  },
+  "fixture_payload_digest": "sha256:b487b742c6b7eb6444240c663e06ed9cb2a5ec6edb498343382f718139e91cb0"
+}

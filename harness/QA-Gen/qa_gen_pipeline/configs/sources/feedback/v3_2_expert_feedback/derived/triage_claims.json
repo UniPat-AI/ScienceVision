@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "kind": "qagen_feedback_triage_claims",
+  "source_snapshot": "v3_2_expert_feedback",
+  "claim_status": "derived_policy_candidate_not_runtime_enforcement",
+  "claims": [
+    {
+      "id": "medical.clinical_semantic_relevance_required",
+      "scope": ["medical"],
+      "status": "proposed_for_config_and_review_enforcement",
+      "evidence": [
+        {"type": "feishu_row", "sheet_id": "WKRDN6", "row": 2},
+        {"type": "feishu_row", "sheet_id": "WKRDN6", "row": 7},
+        {"type": "local_html_review", "content_digest": "sha256:74739d6d9bf97246c2315e73365263306e51fdfe5ca737b95bb55bb944bf7e3a", "locator": "standfirst; intent_id · ground_truth.type; taxonomy · mask_text"}
+      ],
+      "policy": "A medical candidate must require image-grounded clinical or anatomical reasoning. A question whose answer remains unchanged when CT/MRI content is removed and only a supplied mask remains is not eligible for medical generation.",
+      "boundary": "This does not declare any existing medical asset eligible or create a diagnosis ground truth."
+    },
+    {
+      "id": "medical.no_procedural_tool_language_or_metadata_shortcut",
+      "scope": ["medical"],
+      "status": "proposed_for_prompt_and_verifier_enforcement",
+      "evidence": [
+        {"type": "feishu_row", "sheet_id": "WKRDN6", "row": 2, "field": "截图"},
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28"}
+      ],
+      "policy": "The solver-facing question must not tell the solver to use a named tool, select an overlay, inspect a mask label, read a bounding box, use an axis index, or use FOV/voxel metadata. The verifier must reject those shortcuts and require a natural-language scientific or clinical question surface.",
+      "boundary": "A controlled viewer may expose an allowed interaction, but its implementation steps and internal identifiers are not task content."
+    },
+    {
+      "id": "cross_domain.viewer_observability_fail_closed",
+      "scope": ["biology", "chemistry", "medical"],
+      "status": "proposed_for_config_and_verifier_enforcement",
+      "evidence": [
+        {"type": "feishu_row", "sheet_id": "038b9e", "rows": [2, 3, 4, 9, 10, 11, 12, 13, 20, 21, 22, 23, 24]},
+        {"type": "feishu_row", "sheet_id": "pTsWAG", "rows": [2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 17, 18, 19]},
+        {"type": "feishu_row", "sheet_id": "WKRDN6", "row": 2}
+      ],
+      "policy": "A task can only request an observation, identifier, relation, threshold judgment, or measurement that the published controlled viewer makes observable under the locked session. Missing xyz, centroid, bbox, PCA, vdW, atom identity, residue numbering, or definition evidence blocks the family rather than moving author-side computation to the solver.",
+      "boundary": "Author-side calculation can only cross-check a separately approved truth; it never makes an invisible solver-side feature answerable."
+    },
+    {
+      "id": "cross_domain.question_truth_contract_consistency",
+      "scope": ["biology", "chemistry", "medical"],
+      "status": "proposed_for_contract_validation",
+      "evidence": [
+        {"type": "feishu_row", "sheet_id": "pTsWAG", "rows": [2, 19]},
+        {"type": "feishu_row", "sheet_id": "038b9e", "rows": [10, 21, 24]}
+      ],
+      "policy": "Prompt wording, answer mode, required evidence, identifier mapping, definitions, and reference truth must be checked as one locked contract. Redundant task framing, an unavailable identifier, or a signed-versus-absolute measurement mismatch is a verifier failure.",
+      "boundary": "This rule does not itself decide scientific correctness; domain evidence remains required."
+    },
+    {
+      "id": "cross_domain.measurement_is_minority_property_attribute_comparison_is_primary",
+      "scope": ["biology", "chemistry", "medical"],
+      "status": "direct_user_direction_pending_profile_quota_and_family_implementation",
+      "evidence": [
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28", "summary": "measurement saturation; property/attribute/comparison should be primary"},
+        {"type": "local_html_review", "content_digest": "sha256:74739d6d9bf97246c2315e73365263306e51fdfe5ca737b95bb55bb944bf7e3a", "locator": "11 种题型，没有一种是医学"}
+      ],
+      "policy": "Measurement is a minority, explicitly budgeted question family. Each domain coverage plan must prioritize asset-grounded property, attribute, and comparison families, and report the family mix before generation.",
+      "boundary": "No numerical quota is invented here. A profile owner must approve the exact allocation after asset and evidence inventory."
+    },
+    {
+      "id": "cross_domain.agents_must_not_create_ground_truth",
+      "scope": ["biology", "chemistry", "medical"],
+      "status": "direct_user_direction_pending_contract_enforcement",
+      "evidence": [
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28", "summary": "agent不能单独创造GT"},
+        {"type": "local_html_review", "content_digest": "sha256:74739d6d9bf97246c2315e73365263306e51fdfe5ca737b95bb55bb944bf7e3a", "locator": "三条处置路线; 核查方法与范围"}
+      ],
+      "policy": "An agent may draft a question, locate an approved evidence item, or format an approved truth. It must not invent a label, diagnosis, relation, threshold, or reference answer. Every truth claim needs a locked provenance record and, where required, an expert approval before it enters a candidate contract.",
+      "boundary": "A deterministic measurement receipt is evidence only when the corresponding viewer-visible operation and approved truth mode are already locked."
+    },
+    {
+      "id": "medical.subdomain_is_question_type_asset_facets_are_independent",
+      "scope": ["medical"],
+      "status": "direct_user_direction_pending_asset_schema_and_planner_enforcement",
+      "evidence": [
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28", "summary": "subdomain=question type；asset facets独立"}
+      ],
+      "policy": "Medical question type is selected independently from asset facets. Modality, anatomy, dataset, target class, study/series, timepoint, label identity, and finding facets are coverage dimensions, not substitutes for a question family.",
+      "boundary": "This does not authorize a new asset taxonomy without an approved schema and inventory."
+    },
+    {
+      "id": "medical.semantic_gt_visibility_and_label_identity",
+      "scope": ["medical"],
+      "status": "direct_user_direction_pending_medical_policy_enforcement",
+      "evidence": [
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28", "summary": "doctor description semantic GT; no mask/overlay; preserve Task04 label identities"}
+      ],
+      "policy": "The doctor description is semantic GT for finding, location, and impression only at its recorded granularity. A solver never receives a segmentation mask or overlay. MSD Task04 hippocampus label 1 anterior and label 2 posterior preserve separate identity and must not be merged.",
+      "boundary": "No diagnosis or organ is inferred beyond an immutable source label."
+    },
+    {
+      "id": "medical.localize_then_measure_hidden_reference_and_deduplicated_coverage",
+      "scope": ["medical"],
+      "status": "direct_user_direction_pending_measurement_protocol_and_coverage_enforcement",
+      "evidence": [
+        {"type": "current_thread_user_direction", "received_at": "2026-08-28", "summary": "hidden-mask reference with tolerance; prevent same-dataset/same-kernel pseudo-diversity"}
+      ],
+      "policy": "A localize-then-measure task uses a hidden mask only as a reference after the target is located in the unmasked image, and scores a calibrated tolerance rather than exact voxel geometry. Coverage deduplicates repeated dataset, facet, and question-kernel combinations so repeated near-identical items do not count as independent breadth.",
+      "boundary": "This does not make a masked geometry task medically eligible."
+    }
+  ],
+  "domain_family_guidance": [
+    {
+      "domain": "biology",
+      "priority_families": [
+        "docking-pose plausibility attribute judgment",
+        "local interaction or collision property judgment",
+        "multi-structure or state comparison"
+      ],
+      "measurement_role": "minority supporting evidence only; never a substitute for molecular property or relational judgment",
+      "candidate_ground_truth_provenance_types": [
+        "expert structural annotation",
+        "curated structure record with explicit viewer identifier mapping",
+        "approved viewer-native measurement receipt as supporting evidence"
+      ]
+    },
+    {
+      "domain": "chemistry",
+      "priority_families": [
+        "stereochemical or conformer class attribute",
+        "coordination or steric-accessibility property",
+        "conformer, site, or geometry comparison"
+      ],
+      "measurement_role": "minority supporting evidence only; a distance or angle is not sufficient domain content by itself",
+      "candidate_ground_truth_provenance_types": [
+        "curated molecular stereochemistry or conformer record",
+        "expert chemistry annotation",
+        "approved viewer-native measurement receipt with a locked definition"
+      ]
+    },
+    {
+      "domain": "medical",
+      "priority_families": [
+        "anatomical structure or region attribute",
+        "imaging feature or morphology property",
+        "approved paired-study or region comparison"
+      ],
+      "measurement_role": "minority and only after the image-grounded clinical/anatomical target is independently established",
+      "candidate_ground_truth_provenance_types": [
+        "radiologist annotation or report tied to the study",
+        "approved clinical or anatomical label tied to the visible image evidence",
+        "expert review decision with a locked evidence packet"
+      ],
+      "prohibited_ground_truth_shortcut": "A supplied segmentation mask alone cannot create diagnostic or clinical ground truth."
+    }
+  ],
+  "implementation_boundary": "This file is source-derived planning guidance. It does not enable a leaf, change a coverage quota, or approve a ground-truth provenance without a separately reviewed config and knowledge snapshot."
+}

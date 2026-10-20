@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>URDF / SDF viewer — Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<script src="/viewer/shared/neg-banner.js" defer></script>
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/OBJLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/STLLoader.js">
+<style>
+  #scene { width: 100vw; height: calc(100vh - 49px); display: block; position: fixed; top: 49px; left: 0; }
+  #info { position: fixed; bottom: 12px; left: 12px; background: rgba(13,17,23,0.85); padding: 8px 12px; border-radius: 4px; border: 1px solid #30363d; font: 11px ui-monospace, monospace; color: #8b949e; max-width: 360px; }
+  #info b { color: var(--domain-rob); }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div><a class="back" href="/viewer/">← Shell</a><strong>URDF/SDF</strong> <span id="filename" class="meta"></span></div>
+  <div class="meta">Kinematic tree · primitives + axis triads</div>
+</header>
+<canvas id="scene"></canvas>
+<div id="info">drag = rotate · scroll = zoom · <b id="stats">parsing…</b></div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { attachCutaway } from '/viewer/shared/cutaway.js';
+
+const params = new URLSearchParams(location.search);
+const file = params.get('file');
+const format = (params.get('format') || 'urdf').toLowerCase();
+document.getElementById('filename').textContent = file ? file.split('/').pop() + '  ·  fmt=' + format : '(no file)';
+
+// Resolve <mesh filename="..."> relative to the URDF file URL, then load via
+// the right three.js loader. URDFs sometimes prefix paths with `package://`
+// (ROS convention) — we strip that, since the bundled samples are flat.
+const objLoader = new OBJLoader();
+const stlLoader = new STLLoader();
+const meshCache = new Map();  // url -> Promise<THREE.Object3D>
+let meshLoadStats = { requested: 0, loaded: 0, failed: 0 };
+
+function meshUrl(urdfFile, ref) {
+  let p = ref.replace(/^package:\/\/[^/]+\//, '');
+  return new URL(p, new URL(urdfFile, location.origin)).href;
+}
+
+function loadMesh(url, materialColor) {
+  if (meshCache.has(url)) return meshCache.get(url);
+  meshLoadStats.requested++;
+  const lower = url.toLowerCase();
+  const promise = (async () => {
+    if (lower.endsWith('.obj')) {
+      const root = await objLoader.loadAsync(url);
+      // OBJLoader returns a Group of Meshes; tint them with the link color
+      // if they have no per-vertex material.
+      root.traverse(o => {
+        if (o.isMesh) {
+          o.material = new THREE.MeshStandardMaterial({
+            color: materialColor, metalness: 0.1, roughness: 0.7,
+          });
+        }
+      });
+      return root;
+    }
+    if (lower.endsWith('.stl')) {
+      const geom = await stlLoader.loadAsync(url);
+      const mat = new THREE.MeshStandardMaterial({
+        color: materialColor, metalness: 0.1, roughness: 0.7,
+      });
+      return new THREE.Mesh(geom, mat);
+    }
+    throw new Error('Unsupported mesh extension: ' + url);
+  })().then(obj => {
+    meshLoadStats.loaded++;
+    return obj;
+  }).catch(err => {
+    meshLoadStats.failed++;
+    console.warn('mesh load failed:', url, err);
+    return null;
+  });
+  meshCache.set(url, promise);
+  return promise;
+}
+
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0d1117);
+scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const dir = new THREE.DirectionalLight(0xffffff, 0.7);
+dir.position.set(2, 3, 4);
+scene.add(dir);
+scene.add(new THREE.GridHelper(2, 20, 0x30363d, 0x21262d));
+
+const camera = new THREE.PerspectiveCamera(45, canvas.clientWidth / canvas.clientHeight, 0.001, 1000);
+camera.position.set(1.5, 1.2, 1.5);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+
+const cutaway = attachCutaway({ THREE, renderer, scene });
+
+function parseFloats(s, fallback) {
+  if (!s) return fallback.slice();
+  return s.trim().split(/\s+/).map(Number);
+}
+
+// URDF: <origin xyz="x y z" rpy="r p y"/> ; SDF: <pose>x y z r p y</pose>
+function urdfOrigin(el) {
+  const o = el?.getElementsByTagName('origin')[0];
+  const xyz = parseFloats(o?.getAttribute('xyz'), [0, 0, 0]);
+  const rpy = parseFloats(o?.getAttribute('rpy'), [0, 0, 0]);
+  return { xyz, rpy };
+}
+function sdfPose(el) {
+  const p = el?.getElementsByTagName('pose')[0];
+  const v = parseFloats(p?.textContent, [0, 0, 0, 0, 0, 0]);
+  return { xyz: [v[0], v[1], v[2]], rpy: [v[3] || 0, v[4] || 0, v[5] || 0] };
+}
+
+function applyTransform(obj, { xyz, rpy }) {
+  obj.position.set(xyz[0], xyz[1], xyz[2]);
+  obj.rotation.set(rpy[0], rpy[1], rpy[2]);
+}
+
+const layerColors = [0xff7b72, 0x79c0ff, 0xffa657, 0x56d364, 0xd2a8ff, 0xf78166];
+function colorFor(i) { return layerColors[i % layerColors.length]; }
+
+function primitiveGeometry(geomEl, isSdf) {
+  const box = geomEl.getElementsByTagName('box')[0];
+  if (box) {
+    const sz = isSdf
+      ? parseFloats(box.getElementsByTagName('size')[0]?.textContent, [0.1, 0.1, 0.1])
+      : parseFloats(box.getAttribute('size'), [0.1, 0.1, 0.1]);
+    return new THREE.BoxGeometry(sz[0], sz[1], sz[2]);
+  }
+  const cyl = geomEl.getElementsByTagName('cylinder')[0];
+  if (cyl) {
+    const r = isSdf
+      ? Number(cyl.getElementsByTagName('radius')[0]?.textContent) || 0.05
+      : Number(cyl.getAttribute('radius')) || 0.05;
+    const l = isSdf
+      ? Number(cyl.getElementsByTagName('length')[0]?.textContent) || 0.1
+      : Number(cyl.getAttribute('length')) || 0.1;
+    const g = new THREE.CylinderGeometry(r, r, l, 24);
+    g.rotateX(Math.PI / 2);  // URDF/SDF cylinder is along +Z, three.js default is +Y
+    return g;
+  }
+  const sph = geomEl.getElementsByTagName('sphere')[0];
+  if (sph) {
+    const r = isSdf
+      ? Number(sph.getElementsByTagName('radius')[0]?.textContent) || 0.05
+      : Number(sph.getAttribute('radius')) || 0.05;
+    return new THREE.SphereGeometry(r, 16, 12);
+  }
+  // mesh handled separately (async load); the caller checks for <mesh> too
+  return null;
+}
+
+function meshRef(geomEl) {
+  const m = geomEl.getElementsByTagName('mesh')[0];
+  return m ? m.getAttribute('filename') : null;
+}
+
+function meshPlaceholder() {
+  const g = new THREE.BoxGeometry(0.04, 0.04, 0.04);
+  const m = new THREE.MeshBasicMaterial({ color: 0x8b949e, wireframe: true });
+  return new THREE.Mesh(g, m);
+}
+
+function jointAxisIndicator() {
+  return new THREE.AxesHelper(0.08);
+}
+
+function buildUrdf(doc, urdfFile) {
+  // Build link map and joint list
+  const links = {};
+  for (const el of doc.getElementsByTagName('link')) {
+    links[el.getAttribute('name')] = el;
+  }
+  const joints = [];
+  for (const el of doc.getElementsByTagName('joint')) {
+    joints.push({
+      name: el.getAttribute('name'),
+      type: el.getAttribute('type'),
+      parent: el.getElementsByTagName('parent')[0]?.getAttribute('link'),
+      child: el.getElementsByTagName('child')[0]?.getAttribute('link'),
+      origin: urdfOrigin(el),
+    });
+  }
+  // Identify root link (never a child)
+  const isChild = new Set(joints.map(j => j.child));
+  const rootNames = Object.keys(links).filter(n => !isChild.has(n));
+
+  const group = new THREE.Group();
+  let linkCount = 0, jointCount = 0, primCount = 0, meshCount = 0;
+  const meshPromises = [];  // resolved after every <mesh> loader finishes (or fails)
+
+  function attachLink(linkName, parentObj, colorIdx) {
+    const linkEl = links[linkName];
+    if (!linkEl) return;
+    const linkGroup = new THREE.Group();
+    linkGroup.name = linkName;
+    parentObj.add(linkGroup);
+    linkGroup.add(jointAxisIndicator());
+
+    for (const visual of linkEl.getElementsByTagName('visual')) {
+      const origin = urdfOrigin(visual);
+      const geomEl = visual.getElementsByTagName('geometry')[0];
+      if (!geomEl) continue;
+      const geom = primitiveGeometry(geomEl, false);
+      if (geom) {
+        const mat = new THREE.MeshStandardMaterial({ color: colorFor(colorIdx), metalness: 0.1, roughness: 0.7 });
+        const mesh = new THREE.Mesh(geom, mat);
+        applyTransform(mesh, origin);
+        linkGroup.add(mesh);
+        primCount++;
+        continue;
+      }
+      const ref = meshRef(geomEl);
+      if (ref) {
+        meshCount++;
+        // Drop a placeholder immediately so the scene auto-fits even before
+        // meshes arrive; swap it out when the loader resolves.
+        const ph = meshPlaceholder();
+        applyTransform(ph, origin);
+        linkGroup.add(ph);
+        const url = meshUrl(urdfFile, ref);
+        const color = colorFor(colorIdx);
+        meshPromises.push(loadMesh(url, color).then(obj => {
+          if (!obj) return;  // failed: keep the placeholder
+          // Clone so multiple links can share the cached load result.
+          const inst = obj.clone(true);
+          applyTransform(inst, origin);
+          linkGroup.remove(ph);
+          linkGroup.add(inst);
+        }));
+      }
+    }
+    linkCount++;
+
+    for (const j of joints.filter(jj => jj.parent === linkName)) {
+      jointCount++;
+      const childGroup = new THREE.Group();
+      childGroup.name = 'joint:' + j.name;
+      applyTransform(childGroup, j.origin);
+      linkGroup.add(childGroup);
+      attachLink(j.child, childGroup, colorIdx + 1);
+    }
+  }
+  for (const r of rootNames) attachLink(r, group, 0);
+
+  return {
+    group,
+    stats: { links: linkCount, joints: jointCount, primitives: primCount, meshes: meshCount },
+    ready: Promise.all(meshPromises),
+  };
+}
+
+function buildSdf(doc) {
+  // SDF: walk world > model > link > visual > geometry
+  const group = new THREE.Group();
+  let linkCount = 0, primCount = 0;
+  for (const model of doc.getElementsByTagName('model')) {
+    const modelGroup = new THREE.Group();
+    modelGroup.name = 'model:' + model.getAttribute('name');
+    applyTransform(modelGroup, sdfPose(model));
+    group.add(modelGroup);
+    let idx = 0;
+    for (const link of model.getElementsByTagName('link')) {
+      const linkGroup = new THREE.Group();
+      linkGroup.name = 'link:' + link.getAttribute('name');
+      applyTransform(linkGroup, sdfPose(link));
+      linkGroup.add(jointAxisIndicator());
+      modelGroup.add(linkGroup);
+      linkCount++;
+      for (const visual of link.getElementsByTagName('visual')) {
+        const geomEl = visual.getElementsByTagName('geometry')[0];
+        if (!geomEl) continue;
+        const geom = primitiveGeometry(geomEl, true);
+        if (!geom) continue;
+        const mat = new THREE.MeshStandardMaterial({ color: colorFor(idx), metalness: 0.1, roughness: 0.7 });
+        const mesh = new THREE.Mesh(geom, mat);
+        applyTransform(mesh, sdfPose(visual));
+        linkGroup.add(mesh);
+        primCount++;
+        idx++;
+      }
+    }
+  }
+  return { group, stats: { links: linkCount, joints: 0, primitives: primCount, meshes: 0 }, ready: Promise.resolve() };
+}
+
+function fail(msg) {
+  document.body.insertAdjacentHTML('beforeend', '<div class="error-box">' + msg + '</div>');
+}
+
+if (!file) {
+  fail('No ?file= query param.');
+} else {
+  fetch(file)
+    .then(r => r.ok ? r.text() : Promise.reject('HTTP ' + r.status))
+    .then(text => {
+      const doc = new DOMParser().parseFromString(text, 'application/xml');
+      if (doc.getElementsByTagName('parsererror').length) throw new Error('XML parse error');
+      const isUrdf = doc.documentElement.tagName === 'robot' || format === 'urdf';
+      const built = isUrdf ? buildUrdf(doc, file) : buildSdf(doc);
+      scene.add(built.group);
+      cutaway.setRoot(built.group);
+
+      const fitCamera = () => {
+        const box = new THREE.Box3().setFromObject(built.group);
+        const size = box.getSize(new THREE.Vector3()).length() || 1;
+        const center = box.getCenter(new THREE.Vector3());
+        controls.target.copy(center);
+        camera.position.copy(center.clone().add(new THREE.Vector3(size * 0.8, size * 0.6, size * 0.8)));
+        camera.near = size / 1000; camera.far = size * 100; camera.updateProjectionMatrix();
+        controls.update();
+      };
+      fitCamera();  // initial fit so primitives/placeholders are visible immediately
+
+      const s = built.stats;
+      const renderStats = () => {
+        const tail = s.meshes
+          ? ` · meshes ${meshLoadStats.loaded}/${s.meshes}` +
+            (meshLoadStats.failed ? ` (${meshLoadStats.failed} failed)` : '')
+          : '';
+        document.getElementById('stats').textContent =
+          `${isUrdf ? 'URDF' : 'SDF'} · ${s.links} links · ${s.joints} joints · ${s.primitives} prims${tail}`;
+      };
+      renderStats();
+
+      built.ready.then(() => {
+        if (s.meshes > 0) fitCamera();  // refit once real meshes change the bounding box
+        cutaway.refresh();               // re-scan now that async meshes are in place
+        renderStats();
+      });
+    })
+    .catch(err => fail('Failed to load / parse:\n' + err));
+}
+
+window.addEventListener('resize', () => {
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight, false);
+  camera.aspect = canvas.clientWidth / canvas.clientHeight;
+  camera.updateProjectionMatrix();
+});
+
+renderer.setAnimationLoop(() => { controls.update(); renderer.render(scene, camera); });
+</script>
+</body>
+</html>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>3D-Grounded QA · Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<style>
+.m3d-controls {
+  display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  padding: 12px 16px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 6px;
+  margin-bottom: 20px;
+}
+.m3d-controls label {
+  color: var(--fg-dim); font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.m3d-controls select, .m3d-controls button {
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 10px; font: inherit;
+}
+.m3d-controls input[type="search"] {
+  background: var(--bg); color: var(--fg);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 6px 10px; font: inherit;
+  min-width: 240px;
+}
+.m3d-card--target {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+.m3d-controls .m3d-spacer { flex: 1; }
+.m3d-controls .m3d-meta {
+  color: var(--fg-dim); font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.m3d-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 6px;
+  margin-bottom: 16px; padding: 14px;
+}
+.m3d-card h3 { margin: 0 0 6px 0; font-size: 14px; }
+.m3d-card .m3d-meta-row {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--fg-dim); font-size: 11px; margin-bottom: 8px;
+}
+.m3d-card .m3d-q { margin: 8px 0 4px 0; }
+.m3d-card .m3d-a { color: var(--accent); }
+/* Q/A chip mirrors .m3d-mask-chip styling so the Q+A block reads as a
+   single grounded annotation, with the same accent stripe on the left.
+   When the answer is unavailable (upstream test splits have no GT) we
+   render a muted placeholder line so the space looks intentional
+   rather than truncated. */
+.m3d-qa-chip {
+  margin: 8px 0 12px 0;
+  padding: 6px 10px 8px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--fg);
+}
+.m3d-qa-chip .m3d-qa-row { margin: 2px 0; }
+.m3d-qa-chip .m3d-qa-label {
+  color: var(--fg-dim);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 6px;
+}
+.m3d-qa-chip .m3d-qa-row.answer .m3d-qa-text { color: var(--accent); }
+.m3d-qa-chip .m3d-qa-row.no-answer .m3d-qa-text {
+  color: var(--fg-dim); font-style: italic;
+}
+.m3d-card .m3d-asset-slot {
+  margin-top: 12px; min-height: 40px;
+  border: 1px dashed var(--border); border-radius: 4px;
+  padding: 8px; font-size: 12px; color: var(--fg-dim);
+}
+.error-box { color: #c44; padding: 8px; }
+.m3d-mask-chip {
+  margin: 8px 0 12px 0;
+  padding: 6px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--fg-dim);
+}
+.m3d-mask-chip strong { color: var(--accent); }
+.m3d-mask-chip em { color: var(--fg); font-style: normal; }
+
+.m3d-pane-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.m3d-pane { display: flex; flex-direction: column; gap: 4px; }
+.m3d-pane-label {
+  font-size: 11px;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.m3d-pane iframe {
+  width: 100%;
+  height: 560px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.m3d-asset-link { margin-top: 6px; font-size: 11px; }
+
+@media (max-width: 700px) {
+  .m3d-pane-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a href="/viewer/index.html" class="topbar-home">← Science Vision</a>
+  <h1>3D-Grounded QA</h1>
+</header>
+
+<main class="container">
+  <div class="m3d-controls">
+    <label for="m3d-dataset">Dataset</label>
+    <select id="m3d-dataset"></select>
+
+    <label for="m3d-page">Page</label>
+    <select id="m3d-page"></select>
+
+    <label for="m3d-search">Search</label>
+    <input id="m3d-search" type="search" placeholder="qid / scene / question / answer">
+
+    <span class="m3d-spacer"></span>
+    <span id="m3d-meta" class="m3d-meta">loading…</span>
+  </div>
+
+  <div id="m3d-list"></div>
+</main>
+
+<script type="module">
+const PAGE_SIZE = 25;
+
+// Per docs/ViewerPerformanceOptimization.md §2.1, each card mounts a child
+// iframe (gltf.html / niivue.html) whose WebGL context counts against the
+// per-page browser cap of ~16. Without an upper bound, scrolling through a
+// 25-card page silently destroys the earliest contexts (black canvases,
+// "Context Lost" errors). MAX_LIVE caps simultaneously-mounted iframes
+// well below the browser limit; the IntersectionObserver wired below
+// activates iframes as they enter the viewport and tears them down when
+// they leave or get evicted to make room. 8 leaves headroom for the
+// browser's own GL contexts and other tabs.
+const MAX_LIVE = 8;
+
+const state = {
+  index: null,
+  dataset: null,
+  records: [],     // full records of current dataset
+  filtered: [],    // records after search filter (== records when empty)
+  page: 0,
+  search: '',
+  targetQid: null, // when set, render with highlight + scroll into view
+  // datasetCache: name → {records: […]}. Memoizes loadDataset() so flipping
+  // between scanqa/sqa3d/m3d-refseg in the dropdown doesn't re-fetch the
+  // 3.5MB JSON each time. JSON is per-process, so no eviction needed —
+  // the three matched datasets together are well under 10MB.
+  datasetCache: Object.create(null),
+};
+
+const els = {
+  dataset: document.getElementById('m3d-dataset'),
+  page: document.getElementById('m3d-page'),
+  search: document.getElementById('m3d-search'),
+  meta: document.getElementById('m3d-meta'),
+  list: document.getElementById('m3d-list'),
+};
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+async function loadIndex() {
+  const resp = await fetch('/datasets/_matched/index.json');
+  if (!resp.ok) throw new Error(`fetch index: HTTP ${resp.status}`);
+  return resp.json();
+}
+
+async function loadDataset(name) {
+  // Cache the full JSON in-memory so that switching between datasets
+  // in the dropdown (scanqa ↔ sqa3d ↔ m3d-refseg) reuses what was
+  // already fetched. Each matched JSON is 1–4 MB; without this cache a
+  // user toggling between datasets to compare results re-downloads the
+  // same payload every time. See docs/ViewerPerformanceOptimization.md §2.2.
+  if (state.datasetCache[name]) return state.datasetCache[name];
+  const entry = state.index.files.find(f => f.dataset === name);
+  if (!entry) throw new Error(`unknown dataset: ${name}`);
+  const resp = await fetch('/' + entry.path_repo);
+  if (!resp.ok) throw new Error(`fetch ${entry.path_repo}: HTTP ${resp.status}`);
+  const data = await resp.json();
+  state.datasetCache[name] = data;
+  return data;
+}
+
+function renderDatasetOptions() {
+  els.dataset.innerHTML = state.index.files
+    .map(f => `<option value="${esc(f.dataset)}">${esc(f.dataset)} (${f.count})</option>`)
+    .join('');
+}
+
+function applySearch() {
+  const q = state.search.trim().toLowerCase();
+  if (!q) { state.filtered = state.records; return; }
+  state.filtered = state.records.filter(r =>
+    (r.qid || '').toLowerCase().includes(q) ||
+    (r.scene_or_case_id || '').toLowerCase().includes(q) ||
+    (r.question || '').toLowerCase().includes(q) ||
+    String(r.answer || '').toLowerCase().includes(q)
+  );
+}
+
+function renderPageOptions() {
+  const pages = Math.max(1, Math.ceil(state.filtered.length / PAGE_SIZE));
+  if (state.page >= pages) state.page = 0;
+  els.page.innerHTML = Array.from({length: pages},
+    (_, i) => `<option value="${i}">${i + 1} / ${pages}</option>`).join('');
+  els.page.value = String(state.page);
+}
+
+function _doRenderList() {
+  const start = state.page * PAGE_SIZE;
+  const slice = state.filtered.slice(start, start + PAGE_SIZE);
+  const total = state.filtered.length;
+  const fullTotal = state.records.length;
+  if (!slice.length) {
+    els.meta.textContent = state.search
+      ? `0 matches for "${state.search}" (of ${fullTotal})`
+      : '0 of 0';
+  } else if (state.search) {
+    els.meta.textContent = `showing ${start + 1}–${start + slice.length} of ${total} match (of ${fullTotal} total)`;
+  } else {
+    els.meta.textContent = `showing ${start + 1}–${start + slice.length} of ${total}`;
+  }
+  els.list.innerHTML = slice.map(rec => {
+    // Q/A chip: present if either is meaningful. Test splits routinely
+    // ship without ground-truth answers (held-out benchmark) so an
+    // explicit placeholder is clearer than a missing line.
+    const hasQ = !!rec.question;
+    const hasA = !!rec.answer;
+    const isTestSplit = typeof rec.split === 'string' && rec.split.startsWith('test');
+    let qaChip = '';
+    if (hasQ || hasA) {
+      const qRow = hasQ
+        ? `<div class="m3d-qa-row question"><span class="m3d-qa-label">Q</span><span class="m3d-qa-text">${esc(rec.question)}</span></div>`
+        : '';
+      let aRow = '';
+      if (hasA) {
+        aRow = `<div class="m3d-qa-row answer"><span class="m3d-qa-label">A</span><span class="m3d-qa-text">${esc(rec.answer)}</span></div>`;
+      } else if (hasQ && isTestSplit) {
+        aRow = `<div class="m3d-qa-row no-answer"><span class="m3d-qa-label">A</span><span class="m3d-qa-text">— (held-out test split, no ground truth)</span></div>`;
+      }
+      qaChip = `<div class="m3d-qa-chip">${qRow}${aRow}</div>`;
+    }
+    const isTarget = state.targetQid && rec.qid === state.targetQid;
+    return `
+    <div class="m3d-card${isTarget ? ' m3d-card--target' : ''}" data-qid="${esc(rec.qid)}">
+      <h3>${esc(rec.scene_or_case_id)} <small>(${esc(rec.asset_kind)})</small></h3>
+      <div class="m3d-meta-row">${esc(rec.dataset)} · ${esc(rec.split)} · qid=${esc(rec.qid)}</div>
+      ${qaChip}
+      ${(() => {
+        // Mask chip: present whenever extra.mask_text is set. The
+        // header text adapts to whether a specific mask_id was singled
+        // out (m3d-refseg picks one mask per question) or the chip
+        // describes a multi-class legend (m3d-seg-0005: 4 channels at
+        // once, no single mask_id).
+        const e = rec.extra || {};
+        if (!e.mask_text) return '';
+        const idPresent = e.mask_id !== undefined && e.mask_id !== null && e.mask_id !== '';
+        const header = idPresent
+          ? `Mask #${esc(e.mask_id)}${e.mask_label_count ? ` of ${esc(e.mask_label_count)}` : ''}`
+          : (e.mask_label_count ? `Mask · ${esc(e.mask_label_count)}` : 'Mask');
+        return `<div class="m3d-mask-chip"><strong>${header}</strong> · <em>${esc(e.mask_text)}</em></div>`;
+      })()}
+      <div class="m3d-asset-slot"
+           data-asset-kind="${esc(rec.asset_kind)}"
+           data-url="${esc(rec.url_viewer)}"
+           data-mask-url="${esc(rec.extra && rec.extra.mask_url_viewer ? rec.extra.mask_url_viewer : '')}">
+        <a href="${esc(rec.url_viewer)}" target="_blank" rel="noopener">${esc(rec.path_repo)}</a>
+      </div>
+    </div>`;
+  }).join('');
+  if (state.targetQid) {
+    const card = els.list.querySelector(`.m3d-card[data-qid="${CSS.escape(state.targetQid)}"]`);
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+let renderList = _doRenderList;
+
+// ── URL state sync (shareable deep links) ───────────────────────────────────
+// ?dataset=&q=&qid=&page= round-trips state so a teammate can paste the URL
+// and land on the exact record. `qid` is the strongest pin: it overrides
+// `page` on initial load (we recompute which page the qid sits on).
+function parseUrl() {
+  const sp = new URLSearchParams(window.location.search);
+  const pageStr = sp.get('page');
+  return {
+    dataset: sp.get('dataset') || null,
+    qid: sp.get('qid') || null,
+    q: sp.get('q') || '',
+    page: pageStr !== null ? Number(pageStr) : null,
+  };
+}
+
+function updateUrl() {
+  const sp = new URLSearchParams();
+  if (state.dataset) sp.set('dataset', state.dataset);
+  if (state.search) sp.set('q', state.search);
+  if (state.targetQid) sp.set('qid', state.targetQid);
+  if (state.page > 0) sp.set('page', String(state.page));
+  const qs = sp.toString();
+  window.history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : ''));
+}
+
+function findPageOfQid(qid) {
+  const idx = state.filtered.findIndex(r => r.qid === qid);
+  return idx === -1 ? -1 : Math.floor(idx / PAGE_SIZE);
+}
+
+async function loadCurrentDataset({ honorTargetQid }) {
+  try {
+    state.records = (await loadDataset(state.dataset)).records;
+    applySearch();
+    if (honorTargetQid && state.targetQid) {
+      const p = findPageOfQid(state.targetQid);
+      if (p >= 0) state.page = p;
+    }
+    renderPageOptions();
+    renderList();
+    updateUrl();
+  } catch (e) {
+    els.list.innerHTML = `<div class="error-box">${esc(e.message)}</div>`;
+  }
+}
+
+(async () => {
+  try {
+    state.index = await loadIndex();
+    if (!state.index.files.length) {
+      els.list.innerHTML = `<div class="error-box">_matched/index.json has no files</div>`;
+      return;
+    }
+    renderDatasetOptions();
+
+    const urlState = parseUrl();
+    const datasets = state.index.files.map(f => f.dataset);
+    state.dataset = (urlState.dataset && datasets.includes(urlState.dataset)) ? urlState.dataset : datasets[0];
+    state.search = urlState.q || '';
+    state.targetQid = urlState.qid || null;
+    state.page = (urlState.page !== null && urlState.page >= 0) ? urlState.page : 0;
+
+    els.dataset.value = state.dataset;
+    els.search.value = state.search;
+
+    await loadCurrentDataset({ honorTargetQid: true });
+  } catch (e) {
+    els.list.innerHTML = `<div class="error-box">Failed to load /datasets/_matched/index.json: ${esc(e.message)}</div>`;
+  }
+})();
+
+els.dataset.addEventListener('change', () => {
+  state.dataset = els.dataset.value;
+  state.targetQid = null;  // qid is meaningless across datasets
+  state.search = '';
+  els.search.value = '';
+  state.page = 0;
+  loadCurrentDataset({ honorTargetQid: false });
+});
+els.page.addEventListener('change', () => {
+  state.page = Number(els.page.value);
+  renderList();
+  updateUrl();
+});
+els.search.addEventListener('input', () => {
+  state.search = els.search.value;
+  state.targetQid = null;  // user is exploring; clear the deep-link pin
+  state.page = 0;
+  applySearch();
+  renderPageOptions();
+  renderList();
+  updateUrl();
+});
+
+// ── Lazy-loaded asset previews ──────────────────────────────────────────────
+// gltf.html handles .ply via PLYLoader; niivue.html handles .nii.gz; npy needs
+// preprocessing and isn't previewable inline. All three viewers read ?file=.
+//
+// BUILD_TAG used to be `Date.now()` — a fresh value on every page load,
+// which forced the browser to refetch gltf.html / niivue.html / their
+// CDN-loaded Three.js + Niivue modules every time match3d.html opened.
+// Switching to a session-stable value (data-build-tag override or '1')
+// lets HTTP caching kick in for the iframe shell and its imports while
+// still letting an operator force a hard-refresh by editing
+// data-build-tag. See docs/ViewerPerformanceOptimization.md §2.3.
+const BUILD_TAG = document.documentElement.dataset.buildTag || '1';
+const ASSET_VIEWERS = {
+  mesh:  url => `/viewer/gltf.html?file=${encodeURIComponent(url)}&v=${BUILD_TAG}`,
+  ply:   url => `/viewer/gltf.html?file=${encodeURIComponent(url)}&v=${BUILD_TAG}`,
+  nifti: url => `/viewer/niivue.html?file=${encodeURIComponent(url)}&v=${BUILD_TAG}`,
+};
+
+// ── iframe lifecycle (WebGL-context budget) ────────────────────────────────
+// activeSlots holds the slots that currently own a mounted iframe. Bound by
+// MAX_LIVE — when a slot enters the viewport and the budget is full, the
+// slot whose card center is farthest from the viewport center is evicted
+// first (still-visible-but-furthest slots get to keep their iframes).
+// Eviction sets src='about:blank' before removing the iframe, which is the
+// reliable way to force the WebGL context to be reclaimed in Chromium.
+// See docs/ViewerPerformanceOptimization.md §2.1.
+const activeSlots = new Set();
+
+function slotInnerHTML(kind, url, maskUrl) {
+  if (kind === 'nifti' && maskUrl) {
+    const leftSrc  = `/viewer/niivue.html?file=${encodeURIComponent(url)}&v=${BUILD_TAG}`;
+    const rightSrc = `/viewer/niivue.html?file=${encodeURIComponent(url)}&overlay=${encodeURIComponent(maskUrl)}&v=${BUILD_TAG}`;
+    return `
+      <div class="m3d-pane-grid">
+        <div class="m3d-pane">
+          <div class="m3d-pane-label">Original CT</div>
+          <iframe src="${leftSrc}" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+        <div class="m3d-pane">
+          <div class="m3d-pane-label">CT + mask overlay</div>
+          <iframe src="${rightSrc}" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        </div>
+      </div>
+      <div class="m3d-asset-link"><a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+    `;
+  }
+  const builder = ASSET_VIEWERS[kind];
+  if (!builder) return '';
+  return `
+    <iframe src="${builder(url)}"
+      style="width:100%; height:560px; border:1px solid var(--border); border-radius:4px;"
+      loading="lazy" referrerpolicy="no-referrer"></iframe>
+    <div style="margin-top:6px"><a href="${url}" target="_blank" rel="noopener">${url}</a></div>
+  `;
+}
+
+function fallbackLink(url, pathRepo) {
+  return `<a href="${url}" target="_blank" rel="noopener">${pathRepo || url}</a>`;
+}
+
+function mountSlot(slot) {
+  const kind = slot.dataset.assetKind;
+  const url = slot.dataset.url;
+  const maskUrl = slot.dataset.maskUrl;
+  const html = slotInnerHTML(kind, url, maskUrl);
+  if (!html) {
+    // Unsupported kind (e.g. npy_volume) — fall back to plain link, mark as
+    // mounted so we don't re-evaluate, but don't count toward MAX_LIVE.
+    slot.dataset.mounted = '1';
+    return false;
+  }
+  slot.innerHTML = html;
+  slot.dataset.mounted = '1';
+  return true;
+}
+
+function unmountSlot(slot) {
+  // Set src='about:blank' on every iframe before removing — this is what
+  // actually frees the WebGL context inside the iframe. Just removing the
+  // <iframe> from the DOM doesn't always unwind the GL state in time and
+  // we've seen ghost contexts persist across scroll events.
+  for (const ifr of slot.querySelectorAll('iframe')) {
+    try { ifr.src = 'about:blank'; } catch { /* sandbox edge cases */ }
+  }
+  const url = slot.dataset.url;
+  const pathRepo = slot.dataset.pathRepo || url;
+  // Restore the lightweight placeholder link so the user can still see the
+  // file path and click through to the standalone viewer.
+  slot.innerHTML = fallbackLink(url, pathRepo);
+  slot.dataset.mounted = '';
+}
+
+function distanceFromViewportCenter(el) {
+  const rect = el.getBoundingClientRect();
+  const cardCy = (rect.top + rect.bottom) / 2;
+  const viewCy = window.innerHeight / 2;
+  return Math.abs(cardCy - viewCy);
+}
+
+function evictFarthest() {
+  let farthest = null;
+  let farthestDist = -1;
+  for (const s of activeSlots) {
+    const d = distanceFromViewportCenter(s);
+    if (d > farthestDist) { farthestDist = d; farthest = s; }
+  }
+  if (farthest) {
+    unmountSlot(farthest);
+    activeSlots.delete(farthest);
+  }
+}
+
+function activateSlot(slot) {
+  if (slot.dataset.mounted === '1') return;
+  if (activeSlots.size >= MAX_LIVE) evictFarthest();
+  if (mountSlot(slot)) activeSlots.add(slot);
+}
+
+function deactivateSlot(slot) {
+  if (slot.dataset.mounted !== '1') return;
+  unmountSlot(slot);
+  activeSlots.delete(slot);
+}
+
+// Dual-direction observer: enter → activateSlot, leave → deactivateSlot.
+// rootMargin '400px 0px' means slots are activated 400px before they
+// physically enter the viewport (so the iframe finishes loading by the
+// time the user scrolls to it) and deactivated 400px after they leave
+// (so a brief over-scroll doesn't tear down a viewer the user might
+// still want).
+const slotObserver = new IntersectionObserver(entries => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) activateSlot(entry.target);
+    else deactivateSlot(entry.target);
+  }
+}, { rootMargin: '400px 0px' });
+
+// Wrap renderList so that after every render, all .m3d-asset-slot elements
+// are observed AND the previous batch's mounted iframes are released. The
+// observer alone won't fire `leave` for slots whose host card was just
+// removed from the DOM — they're orphaned and never get IntersectionEntry
+// events, so we explicitly tear them down here.
+const _origRenderList = renderList;
+renderList = function () {
+  for (const slot of activeSlots) unmountSlot(slot);
+  activeSlots.clear();
+  _origRenderList();
+  document.querySelectorAll('.m3d-asset-slot').forEach(slot => {
+    // Capture path_repo on the slot so unmount can restore the placeholder
+    // link without re-querying the record list.
+    if (!slot.dataset.pathRepo) {
+      const a = slot.querySelector('a');
+      if (a) slot.dataset.pathRepo = a.textContent;
+    }
+    slotObserver.observe(slot);
+  });
+};
+</script>
+</body>
+</html>

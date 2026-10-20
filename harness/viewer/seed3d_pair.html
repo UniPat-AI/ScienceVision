@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Seed3D 2D ↔ 3D pair · Science Vision</title>
+<link rel="stylesheet" href="/viewer/shared/style.css">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/build/three.module.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/loaders/GLTFLoader.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/controls/OrbitControls.js">
+<link rel="modulepreload" href="/viewer/shared/vendor/three/0.160.0/examples/jsm/environments/RoomEnvironment.js">
+<script src="shared/manifest.js"></script>
+</head>
+<body class="synth-pair">
+<header class="topbar">
+  <div>
+    <a class="back" href="/viewer/">← Shell</a>
+    <strong>Synthetic Negative</strong>
+    <span class="meta" id="sample-name">(loading…)</span>
+    <span class="sample-switcher" id="sample-switcher"></span>
+  </div>
+  <div class="meta" id="generator-tag">Doubao Seed3D 2.0</div>
+</header>
+
+<div class="pair-shell">
+  <div class="pair-hero">
+    <h1 id="hero-title">Seed3D 2.0 image-to-3D pilot</h1>
+    <div class="pilot-line" id="hero-pilot-line"></div>
+    <div class="findings" id="hero-findings"></div>
+  </div>
+
+  <div class="pair-2d">
+    <div class="pair-pane-label">2D INPUT · the image fed to Seed3D</div>
+    <img id="img-2d" alt="2D input">
+  </div>
+
+  <div class="pair-3d">
+    <div class="pair-pane-label is-3d">3D OUTPUT · drag to rotate · scroll to zoom</div>
+    <canvas id="scene" style="width:100%;height:100%;display:block"></canvas>
+  </div>
+
+  <div class="pair-bottom">
+    <h2 id="issues-heading">AI critique · issues by pane</h2>
+    <div class="issues-grid">
+      <div class="issues-col col-2d">
+        <h3>Issues for the 2D source <span class="pane-tag">applies_to=2d</span></h3>
+        <div id="issues-2d"></div>
+      </div>
+      <div class="issues-col col-3d">
+        <h3>Issues for the 3D output <span class="pane-tag">applies_to=3d</span></h3>
+        <div id="issues-3d"></div>
+      </div>
+    </div>
+
+    <details class="diagnostics" id="diagnostics" open>
+      <summary id="diagnostics-summary">Diagnostic renders (evidence)</summary>
+      <div class="diagnostics-grid" id="diagnostics-grid"></div>
+    </details>
+  </div>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "/viewer/shared/vendor/three/0.160.0/build/three.module.js",
+    "three/addons/": "/viewer/shared/vendor/three/0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const params = new URLSearchParams(location.search);
+const requestedKey = params.get('sample');
+
+// ── three.js scene (only built after we know which sample to load) ─────
+let renderer, scene, camera, controls;
+function initThree(canvas) {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5)); // clamp DPR (issue 70)
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0d1117);
+
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  // aspect set to 1 here is a placeholder; syncSize() corrects it on the
+  // first frame and on every layout change (e.g. when the issues panel
+  // grows after JSON load, or when the user resizes the window).
+  camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
+  camera.position.set(0.6, 0.5, 1.2);
+
+  controls = new OrbitControls(camera, canvas);
+  controls.enableDamping = true;
+
+  const KEY = new THREE.DirectionalLight(0xffffff, 1.2);
+  KEY.position.set(2, 3, 2);
+  scene.add(KEY);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+  function syncSize() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (w === 0 || h === 0) return;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  // Initial sync after layout settles, then keep watching the canvas box.
+  requestAnimationFrame(syncSize);
+  new ResizeObserver(syncSize).observe(canvas);
+
+  function tick() {
+    requestAnimationFrame(tick);
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  tick();
+}
+
+function loadGlb(file) {
+  new GLTFLoader().setMeshoptDecoder(MeshoptDecoder).load(file, g => {
+    const obj = g.scene;
+    const box = new THREE.Box3().setFromObject(obj);
+    const size = box.getSize(new THREE.Vector3()).length() || 1.0;
+    const center = box.getCenter(new THREE.Vector3());
+    obj.position.sub(center);
+    obj.scale.setScalar(1.0 / size);
+    scene.add(obj);
+    camera.position.set(0.6, 0.5, 1.2);
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }, undefined, err => {
+    document.querySelector('.pair-3d').insertAdjacentHTML('beforeend',
+      `<div class="error-box" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);max-width:80%">Failed to load GLB:\n${err?.message || err}</div>`);
+  });
+}
+
+// ── data load + render ────────────────────────────────────────────────
+function el(id) { return document.getElementById(id); }
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+
+function renderIssues(containerId, issues, paneLabel) {
+  const c = el(containerId);
+  if (!issues.length) {
+    c.innerHTML = `<div class="issues-empty">No AI critique recorded for the ${paneLabel} side of this sample (status = not_critiqued).</div>`;
+    return;
+  }
+  for (const it of issues) {
+    const div = document.createElement('div');
+    div.className = `issue-item sev-${it.severity || 'low'}`;
+    div.innerHTML = `
+      <div class="issue-title">
+        <span class="sev-tag">${(it.severity || '?').toUpperCase()}</span>
+        <span>${escapeHtml(it.title)}</span>
+        <span style="color:var(--fg-dim);font-size:10px;margin-left:auto">${escapeHtml(it.type)}</span>
+      </div>
+      <div class="issue-body">${escapeHtml(it.body)}</div>
+      ${it.suggested_fix ? `<div class="issue-fix">${escapeHtml(it.suggested_fix)}</div>` : ''}`;
+    c.appendChild(div);
+  }
+}
+
+function renderDiagnostics(renders) {
+  const grid = el('diagnostics-grid');
+  if (!renders.length) {
+    el('diagnostics').style.display = 'none';
+    return;
+  }
+  el('diagnostics-summary').textContent =
+    `Diagnostic renders (${renders.length}) — evidence behind the verdict`;
+  for (const r of renders) {
+    const item = document.createElement('div');
+    item.className = 'diag-item';
+    item.innerHTML = `
+      <a href="${r.path}" target="_blank">
+        <img src="${r.path}" alt="${escapeHtml(r.kind)}" loading="lazy">
+      </a>
+      <div class="diag-caption">
+        <span class="diag-kind">${escapeHtml(r.kind || 'render')}</span>
+        ${escapeHtml(r.caption || '')}
+      </div>`;
+    grid.appendChild(item);
+  }
+}
+
+function renderHero(pilot, sample) {
+  el('hero-title').textContent = `${sample.name} — ${sample.category}`;
+  const v = pilot.pilot?.verdict || {};
+  el('hero-pilot-line').innerHTML =
+    `<b>Pilot ${escapeHtml(pilot.pilot_id)}</b> · ` +
+    `verdict <span style="color:var(--domain-neg);font-weight:600">${escapeHtml((v.code || '').toUpperCase())}</span> ` +
+    `— ${escapeHtml(v.summary || '')} ` +
+    `<span style="color:var(--fg-dim)">(reviewer: ${escapeHtml(v.reviewer_model || '?')})</span>`;
+  const findings = pilot.pilot?.cross_sample_findings || [];
+  el('hero-findings').innerHTML = findings.map(f =>
+    `<span class="finding" title="${escapeHtml(f.body)}"><b>${escapeHtml(f.title)}</b></span>`
+  ).join('');
+}
+
+function renderSwitcher(samples, currentKey) {
+  const sw = el('sample-switcher');
+  sw.innerHTML = '';
+  for (const s of samples) {
+    const a = document.createElement('a');
+    a.href = `?sample=${encodeURIComponent(s.key)}`;
+    a.textContent = s.key;
+    if (s.key === currentKey) a.className = 'active';
+    sw.appendChild(a);
+  }
+}
+
+window.ManifestReady.then(() => {
+  function siblingDataUrl(filename) {
+    const base = window.Manifest.urls.data.assets_index;
+    return base.replace(/[^/]+$/, filename);
+  }
+
+  fetch(siblingDataUrl('synthetic_negative_assets.json'))
+    .then(r => r.json())
+    .then(data => {
+      const pilot = data.pilots[0];
+      const samples = pilot.samples;
+      let sample = samples.find(s => s.key === requestedKey);
+      if (!sample) sample = samples[0];
+
+      el('sample-name').textContent = sample.name;
+      el('generator-tag').textContent =
+        `${pilot.generator?.model || 'Seed3D'} · ${pilot.generator?.run_date || ''}`;
+
+      renderSwitcher(samples, sample.key);
+      renderHero(pilot, sample);
+
+      el('img-2d').src = sample.source_2d.path;
+      el('img-2d').alt = sample.source_2d.caption_short || sample.name;
+
+      initThree(el('scene'));
+      loadGlb(sample.output_3d.glb_path);
+
+      const issues = sample.ai_critique?.issues || [];
+      renderIssues('issues-2d', issues.filter(i => i.applies_to === '2d'), '2D');
+      renderIssues('issues-3d', issues.filter(i => i.applies_to === '3d'), '3D');
+
+      el('issues-heading').textContent =
+        `AI critique · ${issues.length} issue(s)` +
+        (sample.ai_critique?.source ? ` · source: ${sample.ai_critique.source}` : '') +
+        (sample.ai_critique?.status === 'not_critiqued' ? ' · not yet critiqued' : '');
+
+      renderDiagnostics(sample.evidence_renders || []);
+    })
+    .catch(e => {
+      document.body.insertAdjacentHTML('beforeend',
+        `<div class="error-box" style="position:fixed;top:60px;left:50%;transform:translateX(-50%);max-width:600px">Failed to load synthetic_negative_assets.json: ${e}</div>`);
+    });
+});
+</script>
+</body>
+</html>
