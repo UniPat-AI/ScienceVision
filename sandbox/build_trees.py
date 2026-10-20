@@ -92,12 +92,21 @@ def _record(
 ) -> dict[str, Any]:
     domain = str(contract.get("domain") or "")
     task_id = str(contract["task_id"])
-    assets = [
-        _resolve_asset(asset, domain=domain, task_id=task_id, dataset_root=dataset_root)
-        for asset in contract.get("assets") or []
-        if isinstance(asset, dict)
-    ]
-    if not assets:
+    resolved: list[dict[str, Any]] = []
+    missing: list[str] = []
+    for index, asset in enumerate(contract.get("assets") or []):
+        if not isinstance(asset, dict):
+            continue
+        required = asset.get("role") == "primary" or index == 0
+        try:
+            resolved.append(
+                _resolve_asset(asset, domain=domain, task_id=task_id, dataset_root=dataset_root)
+            )
+        except FileNotFoundError:
+            if required:
+                raise
+            missing.append(PurePosixPath(str(asset.get("repo_path") or "")).name)
+    if not resolved:
         raise ValueError(f"{task_id}: contract has no assets")
 
     instruction = str(contract.get("instruction") or "")
@@ -115,8 +124,9 @@ def _record(
         "instruction": instruction,
         "ground_truth": ground_truth,
         "scorer": scorer,
-        "assets": assets,
-        "asset": assets[0],
+        "assets": resolved,
+        "asset": resolved[0],
+        "missing_assets": missing,
         "tool_policy": contract.get("tool_policy") or {"allowed_tools": [], "forbidden_tools": []},
     }
 
@@ -142,6 +152,7 @@ def main(argv: list[str] | None = None) -> int:
         contracts = contracts[: args.limit]
 
     built: list[str] = []
+    missing_assets: list[dict[str, Any]] = []
     for contract in contracts:
         record = _record(
             contract,
@@ -149,6 +160,10 @@ def main(argv: list[str] | None = None) -> int:
             instruction_source=args.instruction_source,
             gold_source=args.gold_source,
         )
+        if record.get("missing_assets"):
+            missing_assets.append(
+                {"task_id": record["task_id"], "assets": record["missing_assets"]}
+            )
         task = qa_record_to_task(record, asset_root=args.dataset_root)
         build_one(task, out_dir, containerized=True, agent_env=agent_env)
         built.append(task["task_id"])
@@ -161,6 +176,7 @@ def main(argv: list[str] | None = None) -> int:
                 "harness": args.harness,
                 "agent_env": agent_env,
                 "tasks": len(built),
+                "missing_supporting_assets": missing_assets,
                 "dir": str(out_dir),
             }
         )
