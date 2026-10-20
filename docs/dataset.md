@@ -48,6 +48,9 @@ task_ids.txt                 all 250 task ids, one per line
   trajectory.jsonl           the recorded expert session
 ```
 
+The published package names the change ledger `CHANGES.md` and the id list `task_ids.txt`. A
+historical snapshot may carry older filenames with the same content.
+
 **Read the question and answer from `normalized.json`.** Task-specific files vary across the
 corpus, and only `normalized.json` is present for every task. It carries `task_id`, `set`,
 `domain`, `sub_domain`, `direction`, `question`, `answer`, `answer_fields`, `answer_match`,

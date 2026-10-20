@@ -30,6 +30,7 @@
     "index": "index.jsonl",
     "change_ledger": "CHANGES.md",
     "task_ids": "task_ids.txt",
+    "layout_note": "The published package uses these names; a historical snapshot may carry older filenames with the same content.",
     "task": "<domain>/<task_id>/",
     "question": "<domain>/<task_id>/question.md",
     "question_answer_normalized": "<domain>/<task_id>/normalized.json",
