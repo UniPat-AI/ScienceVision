@@ -11,7 +11,7 @@
   "source_branch": "eval-baseline",
   "source_commit": "6fd95252e81fb153432add0f2400d9ee1eea6697",
   "reported_results_commit": "b47f13ac5abb54b9e287ff3131ae7e29771ec53e",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "source_license_at_pinned_revision": "Apache-2.0",
   "private": true,
   "canonical_repository": "UniPat-AI/ScienceVision",
@@ -20,7 +20,7 @@
   "vendored_subtrees": [
     "harness"
   ],
-  "vendored_license": "Apache-2.0",
+  "vendored_license": "MIT",
   "entrypoints": {
     "matrix": "scripts.harbor.run_end2end",
     "task_builder": "scripts.harbor.qa_gen_to_tasks",
@@ -50,7 +50,7 @@
     "status": "export_required_not_end_to_end_validated",
     "index_is_runnable_input": false
   },
-  "revision_note": "The complete eval-baseline branch is vendored under harness/ at source commit 6fd95252e81fb153432add0f2400d9ee1eea6697 and retains the upstream Apache-2.0 license (harness/LICENSE). The reported results were produced on b47f13ac5abb54b9e287ff3131ae7e29771ec53e, which is recorded above as reported_results_commit. No second checkout is required to run the harness.",
+  "revision_note": "The complete eval-baseline branch is vendored under harness/ at source commit 6fd95252e81fb153432add0f2400d9ee1eea6697. UniPat-authored code in that subtree is distributed under the MIT License (harness/LICENSE); the upstream branch as published was Apache-2.0, which source_license_at_pinned_revision records. The reported results were produced on b47f13ac5abb54b9e287ff3131ae7e29771ec53e, which is recorded above as reported_results_commit. No second checkout is required to run the harness.",
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."
 }

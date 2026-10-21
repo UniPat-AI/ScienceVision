@@ -12,7 +12,12 @@ Third-party components bundled in this repository or in its container images kee
 own licenses and attributions.
 
 The evaluation harness under `harness/` is a vendored copy of the `eval-baseline` branch of
-`UniPat-AI/BabyVision-v2` at commit 6fd95252e81fb153432add0f2400d9ee1eea6697. It retains its
-upstream Apache License 2.0; see `harness/LICENSE` and `LICENSES/Apache-2.0.txt`. The MIT
-license above applies to the rest of this repository and does not override the licenses of
-the vendored subtree or its third-party contents.
+`UniPat-AI/BabyVision-v2` at commit 6fd95252e81fb153432add0f2400d9ee1eea6697. UniPat AI holds
+the copyright to that branch and distributes the UniPat-authored code in it under the MIT
+License (`harness/LICENSE`), the same terms as the rest of this repository. The upstream
+branch, as published, remains available under Apache License 2.0.
+
+Vendored third-party code inside `harness/` keeps its own license. Three.js is MIT. The Draco
+and Basis Universal decoders under
+`harness/viewer/shared/vendor/three/0.160.0/examples/jsm/libs/` are Apache License 2.0; that
+license text is in `LICENSES/Apache-2.0.txt`.
