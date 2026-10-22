@@ -61,6 +61,32 @@ Run a real matrix only with approved task records, a model configuration, and va
 credentials. `--dry-run` still builds task directories and renders views; it does not call
 models or launch Harbor jobs.
 
+## Codex runs
+
+The Codex rows were produced with the adapter in [`scripts/agents/`](../scripts/agents/),
+not with Harbor's built-in `codex` agent. The adapter only installs the provider block that
+points Codex at the gateway; the CLI, effort and timeouts below are what the reported runs
+used, read from their receipts.
+
+| Item | Value |
+|---|---|
+| Codex CLI | `0.159.3` |
+| Harbor | `0.20.0` |
+| Agent adapter | `sciencevision_codex:ScienceVisionUniAPICodex`, sha256 `2859af086445f97fcfb328c0fa4a64aa221d8e9cfb69e8e769fecfb9818abdd4` |
+| Provider block | `uniapi-sciencevision`, `wire_api = "responses"`, env key `UNIAPI_KEY_SCIENCEVISION` |
+| `reasoning_effort` | `max`, passed as `--ak reasoning_effort=max` |
+| Turn limit | none; `codex exec` runs until the model stops or the trial times out |
+| Task timeouts | agent `900 s`, verifier `900 s`, build `600 s`, each with a `4.0` multiplier |
+| Retries | `--max-retries 3` |
+| Concurrency | `9` for a 250-task arm |
+| Agent image, `cc` | `ghcr.io/unipat-ai/sciencevision-codex@sha256:43b4bf787e205762368aee65588b7a24bac748f267488769152209632efba04c` |
+| Agent image, `ccmcp` | `ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:97ddcbb6bb312176bae8a44f6564f65b6f83fdf381ba6136240bcf10c7e52e8e` |
+| MCP registration | `--mcp-config harness/scripts/harbor/templates/claude_code_mcp.mcp.json`, `ccmcp` only |
+
+Harbor's default effort is `high`; a run that does not pass `--ak reasoning_effort=max` is
+a different agent setting. The multiplier applies to the timeouts already in each
+`task.toml`, so it raises ceilings rather than shortening them.
+
 ## Task contract
 
 The dataset and the harness use different formats. `normalized.json` carries a question and an
