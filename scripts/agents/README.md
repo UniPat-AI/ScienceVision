@@ -16,15 +16,17 @@ run receipt and do not compare the result to rows produced with this one.
 
 ## Stage a run
 
-The adapter reads `config.toml` from the directory it lives in and refuses to start when
-the provider block does not select `uniapi-sciencevision`, name `UNIAPI_KEY_SCIENCEVISION`,
-use `wire_api = "responses"`, or end `base_url` in `/v1`.
+The adapter reads `config.toml` from the directory it lives in and refuses to start when the
+provider block does not select the provider it names, read the env key it names, use
+`wire_api = "responses"`, or end `base_url` in `/v1`. The block is deployment state and is not
+shipped with the repository: build it in the run directory from the adapter's `_PROVIDER_NAME`,
+`_KEY_NAME` and `_build_register_skills_command`.
 
 ```bash
 STAGE=/path/to/run/auth/codex
 mkdir -p "$STAGE"
 cp scripts/agents/sciencevision_codex.py "$STAGE/"
-cp scripts/agents/config.toml.example "$STAGE/config.toml"   # then set base_url
+# write "$STAGE/config.toml" with the provider block the adapter validates
 chmod 600 "$STAGE/config.toml"
 ```
 
