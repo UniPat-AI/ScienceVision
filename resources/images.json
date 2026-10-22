@@ -158,16 +158,16 @@
     },
     {
       "role": "reference scorer",
-      "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20261021-h20",
-      "canonical_manifest_digest": "sha256:baf0f6d38e77094680e0fd80ea784c25888d74a439d5a9f2be39077bec05e359",
-      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-scorer@sha256:baf0f6d38e77094680e0fd80ea784c25888d74a439d5a9f2be39077bec05e359",
-      "config_digest": "sha256:41e445a1abb0de6e71fc96013f2279a3d8e908dd09a6d1040ae5f97bacb1d8cb",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20261022-h20",
+      "canonical_manifest_digest": "sha256:3d65bfa161e93e87c788125e318252f8d65667de89be9333d38d9c652664aeb1",
+      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-scorer@sha256:3d65bfa161e93e87c788125e318252f8d65667de89be9333d38d9c652664aeb1",
+      "config_digest": "sha256:2e1e831e190669e8821ff085c05e0f319132c30476c1afb8737b58065d3cfddc",
       "rootfs_diff_id_count": 10,
       "platform": "linux/amd64",
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
       "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
-      "usage": "Grades the comparators and accepted spellings the ScienceVision package declares. Built from harness/scorer_bundle at 2026-10-21, scorer manifest sha256 9376a39213e4e398e2f5d2c3a7d2fe7b6fbb9f7f9daaf85285880eaf0301a28c."
+      "usage": "Grades the comparators and accepted spellings the ScienceVision package declares. Built from harness/scorer_bundle at 273e32d, scorer manifest sha256 b32b1fa1e87ddcf86d8ea3b21eda37f31655e4cca4ef418a5c7170d3e0764f22."
     },
     {
       "role": "experimental oracle MCP Claude Code",
