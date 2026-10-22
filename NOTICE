@@ -5,8 +5,9 @@ Documentation, schemas, utility scripts, and the evaluation implementation in th
 repository are distributed under the MIT License. See LICENSE.
 
 The repository license does not license the dataset, third-party assets, model services,
-or all software inside container images. Their own terms apply. The selected ScienceVision
-dataset snapshot does not declare a dataset license.
+or all software inside container images. Their own terms apply. The published dataset
+package declares the MIT license for itself in its card, `MANIFEST.json`, and `LICENSE`;
+that is the package's own declaration, separate from this repository's license.
 
 Third-party components bundled in this repository or in its container images keep their
 own licenses and attributions.

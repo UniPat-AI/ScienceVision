@@ -6,9 +6,9 @@
   "description": "Synthetic format example. Invented task IDs and model results; no model run was performed. Resource revisions are illustrative real references.",
   "dataset": {
     "repository": "UnipatAI/ScienceVision",
-    "revision_name": "f100c5b5a81b395673618054e6ee7894ec3b2417",
-    "commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
-    "index_sha256": "f02ae32169ec2bb081cdfe149f88a6abb15ec3bedd875a99eb23cb46ec8ed69d"
+    "revision_name": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
+    "commit": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
+    "index_sha256": "d7a52e611b3e36a05ecf961904163206b4993a87aeaceedc9b1702b9e4709f4e"
   },
   "harness": {
     "repository": "UniPat-AI/BabyVision-v2",

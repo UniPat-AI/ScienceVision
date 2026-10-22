@@ -6,7 +6,7 @@ assets, rendered views, expert answers, and recorded trajectories they were sele
 
 ## Download
 
-The dataset is gated. Authenticate with an account that has been granted access, then download
+The dataset repository is private. Authenticate with an account that can read it, then download
 a fixed revision rather than a branch. Branches move; the numbers elsewhere in this repository
 are tied to one revision.
 
@@ -20,94 +20,93 @@ hf download UnipatAI/ScienceVision \
 
 `<commit>` is the revision recorded in [`resources/dataset.json`](../resources/dataset.json),
 which also carries the file count, total logical bytes, and the index hash. That file pins the
-snapshot this repository verified; read it rather than trusting a branch name.
+package this repository verified; read it rather than trusting a branch name.
 
-For a metadata-only look before committing to the full download, fetch the index and this
-release's own change ledger:
+For a metadata-only look before committing to the full download, fetch the manifest and the task
+index:
 
 ```bash
-hf download UnipatAI/ScienceVision README.md index.jsonl CHANGES.md \
+hf download UnipatAI/ScienceVision MANIFEST.json data/tasks.jsonl \
   --type dataset --revision <commit> --local-dir data/sciencevision
 ```
 
 ## Layout
 
 ```text
-index.jsonl                  one row per task: selection metadata and archived outcomes
-CHANGES.md                   the change ledger for this release
-task_ids.txt                 all 250 task ids, one per line
+data/tasks.jsonl             one row per task: question, answer fields, asset list, ids
+MANIFEST.json                package name, creation date, counts, index/schema/readme hashes
+CHECKSUMS.sha256             per-file checksums for the uploaded package
+KNOWN_ISSUES.md              declared view and screenshot gaps
+ID_MAP.csv                   task id to public id map
+harbor/                      build_tasks.py, manifests.jsonl, templates: package to task tree
+verifier/scoring/            per-task rubric blocks; 54 tasks declare one
+oracles/<task_id>/solution/  reference solution: oracle.py, solution.sh, plan, notes
 <domain>/<task_id>/
   question.md                the question sheet a human reads
   answer.json                the expert ground truth, with its answer schema
   normalized.json            the common question and answer record
-  _meta.json
+  task_and_trajectory.json   question, gold and the expert's steps
+  _meta.json                 domain, sub-domain, step and asset counts
   allow_mcp.json             the delivery-side tool policy
   assets/                    source geometry and volumes
-  images/                    expert imagery
+  images/                    expert step screenshots
   views/ , views-aligned/    rendered 2D-capture sets
-  trajectory.jsonl           the recorded expert session
 ```
 
-The published package names the change ledger `CHANGES.md` and the id list `task_ids.txt`. A
-historical snapshot may carry older filenames with the same content.
+**Read the question and answer from `normalized.json`.** It carries `task_id`, `public_id`,
+`domain`, `sub_domain`, `direction`, `question`, `answer`, and `answer_fields`. `answer_fields`
+is not on every task, so consumers must not require it.
 
-**Read the question and answer from `normalized.json`.** Task-specific files vary across the
-corpus, and only `normalized.json` is present for every task. It carries `task_id`, `set`,
-`domain`, `sub_domain`, `direction`, `question`, `answer`, `answer_fields`, `answer_match`,
-`answer_source`, and `repairs`. `answer_fields` is not on every task, so consumers must not
-require it.
+`answer.json` holds the ground truth in the form the scorer reads: a `shape` declaring the field
+list and kind, and the `answer` object itself. The scorer compares the answer field by field.
+See [the scoring standard](evaluation.md#scoring-standard).
 
-`answer.json` holds the ground truth in the form the scorer reads: a `shape` declaring the
-field list and kind, and the `answer` object itself. The scorer compares the answer field by
-field. See [the scoring standard](evaluation.md#scoring-standard).
+`data/tasks.jsonl` is the index: one row per task with `task_id`, `public_id`, `domain`,
+`sub_domain`, `direction`, `question`, `answer_fields`, `answer_json`, `asset_count`, `assets`,
+`n_steps`, `task_dir`, and `oracle_dir`. **The index alone is not a runnable harness input**: it
+does not carry the asset roles, docker context, or the full scoring contract. `harbor/` is what
+turns the package into Harbor task directories:
 
-`index.jsonl` records how each task was selected and how it scored in the archived runs that
-selected it. Its identifiers `cc` and `ccmcp` label the two 3D access settings; retain them in
-file paths and field names. Its schema is
-[`dataset-index.schema.json`](../schemas/dataset-index.schema.json). **The index is not a
-runnable harness input**: it does not carry the asset manifest or the scoring contract the
-harness needs.
+```bash
+python harbor/build_tasks.py --out /tmp/sciencevision-harbor --route cc-mcp --limit 3
+```
 
 ## What this release is
 
-This revision replaces **13 tasks** of the previous 250-question set: eight architecture and five
-medical. Every swap keeps the same `sub_domain`, so all 22 buckets and all five domain counts are
-unchanged. The other 237 tasks are byte-identical to the previous set. The reasons and the full
-change ledger are in `CHANGES.md` in the dataset itself.
+The current set replaces **13 tasks** of the previous 250-question set: eight architecture and
+five medical. Every swap keeps the same `sub_domain`, so all 22 buckets and all five domain counts
+are unchanged. `KNOWN_ISSUES.md` carries the declared gaps for the tasks that ship.
 
-Each `index.jsonl` row records its own provenance in `source`: a task either carries over from
-an earlier measurement or was swapped in at a later one. A row naming a `swapped_in_for` value
-carries the id of the task it replaced. The `set` and `source` values are historical
-measurement-batch labels; they are not release names.
+## Scoring
+
+Every task's gold scores itself under its contract. Where a task declares its own rubric — lesion
+regions graded by membership, decision fields graded without the prose beside them, accepted
+spellings — it is `verifier/scoring/<task_id>.json`; the other tasks use the default deterministic
+rubric. A scorer that implements those comparators is required: see
+[containers.md](containers.md#scorer-versions) for the reference scorer and its digest.
 
 ## Known limitations
 
-These are the dataset's own declared gaps. They are reproduced here because they change what a
-reader may conclude from a score.
-
-1. **No per-task run telemetry** ships in the package. Agent trajectories stay with the run
-   roots.
-2. **The medical swap-ins are single-rep.** Their three-rep run had not completed when this
-   snapshot was assembled.
-3. **Architecture mixes two batches.** The 13 outgoing tasks carry earlier measurements, so
-   per-task comparisons hold within a batch, not across batches.
-4. **Some golds are prose or identifier strings graded verbatim.** The scorer-side widening
-   that addresses two of those families is implemented but not deployed in this snapshot.
+1. **Some 2D views are dark or small.** 13 tasks have low-contrast captures, 2 a small subject,
+   2 expert screenshots are blank, and 1 task's record skips a screenshot. The images ship as
+   delivered.
+2. **Expert trajectories are records, not scripts.** Step numbers follow the expert record, so
+   they may skip; the oracle solution is the reproducible path.
+3. **Per-task comparisons hold within a measurement batch.** The leaderboard mixes carried-over
+   and re-run cells; a row is not evidence that its neighbours were measured the same week.
 
 ## Interpretation and data terms
 
-The dataset card documents mixed source runs, revised scoring contracts, and tasks whose answers
-depend on viewer camera state. A delivery-side `allow_mcp.json` is a policy declaration; it does
-not prove that any historical run enforced it. Reproducing a result requires the actual run
-configuration and a compatible task and scoring contract.
+A delivery-side `allow_mcp.json` is a policy declaration; it does not prove that any historical
+run enforced it. Reproducing a result requires the actual run configuration and a compatible task
+and scoring contract.
 
-The source declares **no license**. The MIT license on this repository covers its documentation,
-schemas, utility scripts, and evaluation implementation; it does not grant rights to the dataset
-or to third-party assets inside it.
+The package declares the **MIT license** for the dataset in its card, `MANIFEST.json`, and
+`LICENSE`. The MIT license on this repository covers its documentation, schemas, utility scripts,
+and evaluation implementation; it does not grant rights to third-party assets inside the package.
 
 ## Version record
 
 [`resources/dataset.json`](../resources/dataset.json) records the repository, the immutable
-commit, the inventory, the verification scope, and the canonical home the release is expected to
-move to. A dataset update requires a new recorded revision and a compatibility review; it must
-not silently change this release's task set.
+commit, the inventory, and the verification scope. A dataset update requires a new recorded
+revision and a compatibility review; it must not silently change this release's task set.

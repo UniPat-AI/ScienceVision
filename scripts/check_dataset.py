@@ -14,10 +14,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def check(snapshot: Path, *, index_only: bool = False) -> dict:
     reference = json.loads((ROOT / "resources/dataset.json").read_text())
-    raw = (snapshot / "index.jsonl").read_bytes()
+    index_path = reference["layout"]["index"]
+    raw = (snapshot / index_path).read_bytes()
     actual = hashlib.sha256(raw).hexdigest()
     if actual != reference["index_sha256"]:
-        raise ValueError("index.jsonl hash differs from the pinned ScienceVision snapshot")
+        raise ValueError(f"{index_path} hash differs from the pinned ScienceVision package")
     rows = [json.loads(line) for line in raw.splitlines() if line.strip()]
     if len(rows) != reference["task_count"]:
         raise ValueError("task count differs from the release reference")

@@ -1,20 +1,20 @@
 {
   "schema_version": "sciencevision.dataset_reference.v1",
-  "verified_at": "2026-10-16T01:20:00+00:00",
-  "status": "release_snapshot_selected",
+  "verified_at": "2026-10-22T08:44:51+00:00",
+  "status": "published_release_pinned",
   "published_name": "ScienceVision",
   "source": {
-    "repository": null,
-    "url": null,
+    "repository": "UnipatAI/ScienceVision",
+    "url": "https://huggingface.co/datasets/UnipatAI/ScienceVision",
     "revision_type": "commit",
-    "revision_name": "f100c5b5a81b395673618054e6ee7894ec3b2417",
-    "commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
+    "revision_name": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
+    "commit": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
     "private": true,
     "gated": false,
-    "snapshot_note": "The snapshot was staged privately before the canonical repository existed. The commit and the content hashes below are the immutable identifiers; the staging repository name is not part of the release."
+    "snapshot_note": "The canonical dataset repository now exists; this record pins the package as uploaded. Its MANIFEST names the package ScienceVision, version 1.0, created 2026-10-20; the upload landed 2026-10-21."
   },
   "canonical_repository": "UnipatAI/ScienceVision",
-  "canonical_repository_status": "planned_home; the snapshot above is the version this record verifies",
+  "canonical_repository_status": "published; this record pins the uploaded package",
   "task_count": 250,
   "domain_counts": {
     "architecture": 50,
@@ -23,82 +23,74 @@
     "mechanical-cad": 50,
     "medical": 50
   },
-  "file_count": 17791,
-  "logical_file_bytes": 9444410857,
-  "index_sha256": "f02ae32169ec2bb081cdfe149f88a6abb15ec3bedd875a99eb23cb46ec8ed69d",
+  "file_count": 19301,
+  "logical_file_bytes": 9418292586,
+  "index_sha256": "d7a52e611b3e36a05ecf961904163206b4993a87aeaceedc9b1702b9e4709f4e",
   "layout": {
-    "index": "index.jsonl",
-    "change_ledger": "CHANGES.md",
-    "task_ids": "task_ids.txt",
-    "layout_note": "The published package uses these names; a historical snapshot may carry older filenames with the same content.",
+    "index": "data/tasks.jsonl",
+    "manifest": "MANIFEST.json",
+    "checksums": "CHECKSUMS.sha256",
+    "known_issues": "KNOWN_ISSUES.md",
+    "id_map": "ID_MAP.csv",
     "task": "<domain>/<task_id>/",
     "question": "<domain>/<task_id>/question.md",
     "question_answer_normalized": "<domain>/<task_id>/normalized.json",
     "expert_answer": "<domain>/<task_id>/answer.json",
+    "task_and_trajectory": "<domain>/<task_id>/task_and_trajectory.json",
     "assets": "<domain>/<task_id>/assets/",
     "rendered_views": "<domain>/<task_id>/views/, <domain>/<task_id>/views-aligned/",
     "imagery": "<domain>/<task_id>/images/",
-    "trajectory": "<domain>/<task_id>/trajectory.jsonl"
+    "oracle": "oracles/<task_id>/solution/",
+    "scorer_block": "verifier/scoring/<task_id>.json",
+    "harbor_builder": "harbor/build_tasks.py, harbor/manifests.jsonl, harbor/templates/"
   },
   "record_fields": {
     "normalized.json": [
       "task_id",
+      "public_id",
       "set",
       "domain",
       "sub_domain",
       "direction",
       "question",
       "answer",
-      "answer_fields",
-      "answer_match",
-      "answer_source",
-      "repairs"
+      "answer_fields"
     ],
-    "index.jsonl": [
+    "data/tasks.jsonl": [
       "task_id",
+      "public_id",
       "domain",
       "sub_domain",
       "direction",
-      "proposed_sub_domain",
-      "set",
-      "source_run",
-      "class",
-      "reward_cc",
-      "reward_ccmcp",
-      "native_calls_cc",
-      "native_calls_ccmcp",
-      "mcp_steps_ccmcp",
-      "traj_len",
-      "views",
-      "views_aligned",
-      "runs_cc",
-      "runs_ccmcp",
-      "exc_cc",
-      "exc_ccmcp",
-      "source"
+      "question",
+      "answer_fields",
+      "answer_json",
+      "asset_count",
+      "assets",
+      "n_steps",
+      "task_dir",
+      "oracle_dir"
     ]
   },
   "license": {
-    "status": "unspecified_in_source",
-    "dataset_card_license": null,
-    "license_file": null,
+    "status": "declared_in_package",
+    "dataset_card_license": "MIT",
+    "license_file": "LICENSE",
     "repository_code_license_applies": false
   },
   "verification": {
     "file_inventory_and_total_bytes": true,
     "index_rows_and_hash": true,
-    "served_files_byte_identical_to_build_staging": true,
+    "served_files_byte_identical_to_build_staging": false,
     "task_counts": 250,
     "full_asset_payload_checksums": false,
     "full_harness_reproduction": false
   },
   "known_limitations": [
-    "This revision replaces 13 tasks of the previous set; per-task comparisons hold within a measurement batch, not across batches.",
-    "The 13 incoming medical tasks are a single-rep pilot; their three-rep run was still in flight when this snapshot was assembled.",
-    "The 13 outgoing architecture tasks carry earlier measurements, so architecture rows in index.jsonl mix two batches.",
-    "Some golds are prose or identifier strings graded verbatim; the scorer-side widening for two of those families is implemented but not deployed in this snapshot.",
-    "index.jsonl records selection metadata and archived outcomes, not a runnable harness input.",
-    "The source card declares no license."
+    "Per-task comparisons hold within a measurement batch, not across batches; the leaderboard mixes carried-over and re-run segments.",
+    "The tasks index records selection metadata and answers, not a runnable harness input; harbor/ is what turns the package into task directories.",
+    "Every package gold has been scored against its own contract by the reference scorer, but no full agent rollout has been re-run from this pin.",
+    "The package card and MANIFEST declare the MIT license for the dataset; that declaration is newer than the snapshot this record previously pinned."
   ],
-  "canonical_repository_note": "This record pins the snapshot it verified. The dataset is expected to move to the canonical repository above; a move requires a new revision here rather than a silent rewrite."
+  "canonical_repository_note": "This record pins the uploaded package by commit. A later upload requires a new revision here rather than a silent rewrite of the pin."
 }

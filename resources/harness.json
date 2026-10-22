@@ -46,8 +46,8 @@
     "extent_voxel_tolerance_v1"
   ],
   "dataset_compatibility": {
-    "dataset_commit": "f100c5b5a81b395673618054e6ee7894ec3b2417",
-    "status": "export_required_not_end_to_end_validated",
+    "dataset_commit": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
+    "status": "task_builder_shipped_not_end_to_end_validated",
     "index_is_runnable_input": false
   },
   "revision_note": "The complete eval-baseline branch is vendored under harness/ at source commit 6fd95252e81fb153432add0f2400d9ee1eea6697. UniPat-authored code in that subtree is distributed under the MIT License (harness/LICENSE); the upstream branch as published was Apache-2.0, which source_license_at_pinned_revision records. The reported results were produced on b47f13ac5abb54b9e287ff3131ae7e29771ec53e, which is recorded above as reported_results_commit. No second checkout is required to run the harness.",
