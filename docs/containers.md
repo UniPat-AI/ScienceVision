@@ -49,11 +49,12 @@ in [evaluation.md](evaluation.md#evaluation-settings).
 
 | Version | Use |
 |---|---|
+| `server-20261021-h20` | Reference scorer. Grades the comparators and accepted spellings the 250-task package declares |
 | `server-20260930-h20` | Default of the pinned evaluation harness |
 | `server-20261005-h20` | Later platform-package scorer; select it when a prepared task package specifies it |
 | `server-20260928b-h20` | Historical release retained for earlier task contracts |
 
-The three have different config digests, so **a newer date is not evidence that rescoring will
+The four have different config digests, so **a newer date is not evidence that rescoring will
 preserve a result**. Choose the scorer the run contract names and record its digest. A scorer
 self-test that feeds ground truth back in is not a model benchmark result.
 

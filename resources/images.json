@@ -157,6 +157,19 @@
       "usage": "Later platform-package scorer; not a drop-in replacement for historical scoring."
     },
     {
+      "role": "reference scorer",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20261021-h20",
+      "canonical_manifest_digest": "sha256:baf0f6d38e77094680e0fd80ea784c25888d74a439d5a9f2be39077bec05e359",
+      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-scorer@sha256:baf0f6d38e77094680e0fd80ea784c25888d74a439d5a9f2be39077bec05e359",
+      "config_digest": "sha256:41e445a1abb0de6e71fc96013f2279a3d8e908dd09a6d1040ae5f97bacb1d8cb",
+      "rootfs_diff_id_count": 10,
+      "platform": "linux/amd64",
+      "visibility": "private",
+      "linked_repository": "UniPat-AI/ScienceVision",
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
+      "usage": "Grades the comparators and accepted spellings the ScienceVision package declares. Built from harness/scorer_bundle at 2026-10-21, scorer manifest sha256 9376a39213e4e398e2f5d2c3a7d2fe7b6fbb9f7f9daaf85285880eaf0301a28c."
+    },
+    {
       "role": "experimental oracle MCP Claude Code",
       "canonical": "ghcr.io/unipat-ai/sciencevision-claude-code-mcp:mcpfix-20261006-h20",
       "canonical_manifest_digest": "sha256:ce4394ed1555b822176f188e8d682b90bf6e04acbe426722a2d3289dc45a1436",
