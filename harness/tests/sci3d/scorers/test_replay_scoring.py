@@ -296,7 +296,9 @@ def test_f1_a_numeric_string_still_compares_exactly_not_within_a_band(tmp_path):
     assert new["new_score"] == 0.0
 
 
-def test_f3_a_choice_letter_is_accepted_for_the_full_option_text(tmp_path):
+def test_f3_a_choice_letter_is_not_derived_from_the_option_text(tmp_path):
+    # A leading letter is ambiguous ("D. rotates ..." vs "E. coli O157:H7"), so
+    # it is authored in ``accepted`` rather than derived; F3 must not fire.
     gt = {"answer": "D. rotates counter-clockwise by 90 degrees"}
     run = write_run(
         tmp_path,
@@ -306,10 +308,7 @@ def test_f3_a_choice_letter_is_accepted_for_the_full_option_text(tmp_path):
         answer='{"answer": "D"}',
     )
     new = replay_one(run_dir=run, ground_truth=gt, task_id="t1", arm="cc", rules="new")
-    old = replay_one(run_dir=run, ground_truth=gt, task_id="t1", arm="cc", rules="old")
-    assert old["new_score"] == 0.0
-    assert new["new_score"] == pytest.approx(1.0)
-    assert new["new_verdicts"][0]["rule"] == "F3"
+    assert new["new_score"] == pytest.approx(0.0)
 
 
 def test_f2_a_prose_explanation_field_leaves_the_rubric(tmp_path):

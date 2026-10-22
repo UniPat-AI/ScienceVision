@@ -31,6 +31,15 @@ SCORER_ALIASES = frozenset(
         GENERIC_SCORER_NAME,
         "deterministic_answer_v2_1",
         "answer_score",
+        # Deployment-only widening. The v9 tree builder writes `exact_match`
+        # into every task.toml; `tolerance_match` and `expert_rubric` appear in
+        # older trees. Without them the registry resolves no scorer at all and
+        # the trial is scored `evaluation_eligible: false` with no
+        # `answer_score` -- a silent zero. Added by
+        # `meta/make_deployment_scorer.py`; never in the release contract.
+        "exact_match",
+        "tolerance_match",
+        "expert_rubric",
     }
 )
 RUBRIC_VERSION = "sciencevision.deterministic_structured.v2.1"
@@ -312,18 +321,93 @@ def _compare_exact(predicted: Any, expected: Any, _: dict) -> bool:
     return type(predicted) is type(expected) and predicted == expected
 
 
-def _compare_string(predicted: Any, expected: Any, _: dict) -> bool:
+def _compare_string(predicted: Any, expected: Any, item: dict) -> bool:
     left = _canonical_string(predicted)
     right = _canonical_string(expected)
-    return left is not None and left == right
+    if left is not None and left == right:
+        return True
+    # `accepted` is the author saying "this field is one identifier and these
+    # are the other spellings of it". It widens string comparison only, so a
+    # numeric field carrying a list here still goes through its own comparator.
+    if left is None:
+        return False
+    for alternative in item.get("accepted") or ():
+        if _canonical_string(alternative) == left:
+            return True
+    return False
+
+
+# A building code cited in prose. Every model paraphrases the sentence and one
+# answered in Chinese, so the words can never be compared; the (standard,
+# clause) pair inside them can, and that pair does not depend on the language.
+# A standard number is one to five digits: JGJ and CJJ number codes from 1
+# (``JGJ 3-2010``, ``JGJ 100-2015``), GB in the tens of thousands; a local
+# standard may be recommended (``DB11/T``).
+_STANDARD_RE = re.compile(
+    r"\b(GB\s*/?\s*T?|JGJ|CJJ|DB\s*\d{2}(?:\s*/\s*T)?)\s*(\d{1,5})(?:\s*[-—–]\s*(\d{4}))?",
+    re.IGNORECASE,
+)
+_CLAUSE_RE = re.compile(
+    r"(?:article|clause|第)\s*(\d+(?:\.\d+)+)\s*条?"
+    r"(?:\s*[（(]\s*(\d+)\s*[)）]"
+    r"|\s*第\s*(\d+)\s*[款项段]"
+    r"|\s*,?\s*(?:paragraph|para)\s*(\d+))?",
+    re.IGNORECASE,
+)
+# ``GB50243-2016 6.2.2``: a dotted number written straight after the standard
+# is its clause. Read only at the standard's end, and only with three levels
+# (chapter.section.article), so an edition year such as ``(2018 Edition)`` or
+# a load such as ``12.5 kN/m2`` is never taken for one.
+_BARE_CLAUSE_RE = re.compile(r"\s*[,，]?\s*(\d+\.\d+\.\d+(?:\.\d+)*)")
+
+
+def _canonical_standard(match: re.Match[str]) -> tuple[str, str | None]:
+    """``(code, year)``: ``("GB50243", "2016")``; the year may be absent."""
+    prefix = re.sub(r"[^A-Za-z0-9]", "", match.group(1)).upper()
+    return f"{prefix}{match.group(2)}", match.group(3)
+
+
+def _cited_clause(value: Any) -> tuple[str, str | None, str, str | None] | None:
+    """``(standard, year, clause, sub)`` when the text cites one, else ``None``."""
+    if not isinstance(value, str):
+        return None
+    standard = _STANDARD_RE.search(value)
+    if standard is None:
+        return None
+    code, year = _canonical_standard(standard)
+    clause = _CLAUSE_RE.search(value)
+    if clause is not None:
+        sub = next((group for group in clause.groups()[1:] if group is not None), None)
+        return code, year, clause.group(1), sub
+    bare = _BARE_CLAUSE_RE.match(value, standard.end())
+    if bare is not None:
+        return code, year, bare.group(1), None
+    return None
+
+
+def _compare_cited_clause(predicted: Any, expected: Any, item: dict) -> bool:
+    """Additive: only fires when *both* sides cite a code, else as before.
+
+    A gold that names no sub-clause does not constrain one -- the answer that
+    prompted this cites the article and adds the paragraph, which is more
+    precise, not wrong. The edition year works the same way: an answer that
+    omits it cites the same code; two different years are two editions.
+    """
+    left = _cited_clause(predicted)
+    right = _cited_clause(expected)
+    if left is None or right is None:
+        return _compare_string(predicted, expected, item)
+    standard, year, clause, sub = left
+    gold_standard, gold_year, gold_clause, gold_sub = right
+    if standard != gold_standard or clause != gold_clause:
+        return False
+    if year is not None and gold_year is not None and year != gold_year:
+        return False
+    return gold_sub is None or sub == gold_sub
 
 
 #: A trailing annotation such as ``"cylindrical (rotation plus translation)"``.
 _TRAILING_PARENTHETICAL = re.compile(r"\s*\([^()]*\)\s*$")
-
-#: A multiple-choice option such as ``"D. rotates counter-clockwise by 90
-#: degrees"``, where the letter alone is the answer the question asks for.
-_LEADING_CHOICE = re.compile(r"^([A-Za-z])[.)]\s+\S")
 
 _CONTAINS_WHITESPACE = re.compile(r"\s")
 
@@ -332,11 +416,12 @@ def derive_aliases(value: str) -> list[str]:
     """Mechanically-derived alternative forms for a controlled-vocabulary value.
 
     Deliberately narrow. An alias asserts that a *different* answer is also
-    correct, which is a claim about the task, not a formatting detail. Only
-    two shapes qualify: a choice whose letter is followed by the rest of the
-    option text, and a value whose trailing annotation can be dropped -- and
+    correct, which is a claim about the task, not a formatting detail. One
+    shape qualifies: a value whose trailing annotation can be dropped -- and
     dropping that annotation is a formatting reduction only when what remains
-    is a single token. `"cylindrical (rotation plus translation)"` is one value
+    is a single token. A leading letter is NOT derived: "D. rotates ..." may be
+    option D, but "E. coli O157:H7" is a species, and the gold alone cannot
+    tell them apart; a real choice letter is authored in ``accepted``. `"cylindrical (rotation plus translation)"` is one value
     written two ways; `"O-H...O hydrogen bonds (C-H...O secondary)"` is a
     proposition, and an agent that omits the secondary interaction has said
     something less, so the sentence-length remainder is left alone.
@@ -345,9 +430,6 @@ def derive_aliases(value: str) -> list[str]:
     stripped = _TRAILING_PARENTHETICAL.sub("", value).strip()
     if stripped and stripped != value and not _CONTAINS_WHITESPACE.search(stripped):
         out.append(stripped)
-    match = _LEADING_CHOICE.match(value)
-    if match:
-        out.append(match.group(1))
     return out
 
 
@@ -370,14 +452,19 @@ def _compare_boolean(predicted: Any, expected: Any, _: dict) -> bool:
 
 
 def _compare_integer(predicted: Any, expected: Any, _: dict) -> bool:
-    if isinstance(predicted, bool) or isinstance(expected, bool):
+    # A count written as a string is the same count: a template that shows
+    # ``""`` puts every answer in quotes. Only a string that is wholly an
+    # integer qualifies, so ``"500 mm"`` and ``"500.5"`` still fail.
+    left = _numeric_literal(predicted) if isinstance(predicted, str) else predicted
+    right = _numeric_literal(expected) if isinstance(expected, str) else expected
+    if isinstance(left, bool) or isinstance(right, bool):
         return False
-    return isinstance(predicted, int) and isinstance(expected, int) and predicted == expected
+    return isinstance(left, int) and isinstance(right, int) and left == right
 
 
 def _compare_abs_tolerance(predicted: Any, expected: Any, item: dict) -> bool:
-    left = _number(predicted)
-    right = _number(expected)
+    left = _measure(predicted)
+    right = _measure(expected)
     tolerance = _number(item.get("tolerance"))
     return (
         left is not None
@@ -438,8 +525,8 @@ def _compare_vector_tolerance(predicted: Any, expected: Any, item: dict) -> bool
             if not _compare_vector_tolerance(left_raw, right_raw, nested):
                 return False
             continue
-        left = _number(left_raw)
-        right = _number(right_raw)
+        left = _measure(left_raw)
+        right = _measure(right_raw)
         if left is None or right is None or not _within_tolerance(left, right, tolerance):
             return False
     return True
@@ -690,11 +777,52 @@ def _compare_voxel_member_of_set(predicted: Any, expected: Any, item: dict) -> b
     return bool((packed[index >> 3] >> (index & 7)) & 1)
 
 
+#: A leaf has no derived band, so a banded comparator reads it at zero width.
+_BANDED_LEAF = frozenset({"circular_tolerance", "vector_abs_tolerance"})
+
+
+def _compare_leaf(name: str, predicted: Any, expected: Any) -> bool:
+    if isinstance(expected, dict):
+        return _compare_object_leafwise(predicted, expected, {})
+    # Monotone against the `exact` this replaced: the old whole-object `==`
+    # let 14000 equal 14000.0 and True equal 1 inside an object, so a leaf
+    # that compares equal that way still passes whatever its comparator says.
+    if predicted == expected:
+        return True
+    comparator, _ = _default_comparator(name, expected, {})
+    if comparator == "vector_abs_tolerance" and not _all_numeric_leaves(expected):
+        return False
+    leaf = {"tolerance": 0.0} if comparator in _BANDED_LEAF else {}
+    return _COMPARATORS[comparator](predicted, expected, leaf)
+
+
+def _compare_object_leafwise(predicted: Any, expected: Any, _: dict) -> bool:
+    """Every non-null leaf of the gold object passes its own comparator.
+
+    One field, one verdict: the object passes only when all of its graded
+    leaves do, so a leaf the question dictates (a unit) never pays for a wrong
+    measurement beside it. A ``null`` gold leaf is a value nobody recorded and
+    is not graded; extra keys in the answer are ignored, missing ones fail. An
+    object with no graded leaf at all keeps exact equality: no evidence is not
+    a pass.
+    """
+    if not isinstance(expected, dict) or not isinstance(predicted, dict):
+        return False
+    graded = [(key, gold) for key, gold in expected.items() if gold is not None]
+    if not graded:
+        return _compare_exact(predicted, expected, {})
+    for key, gold in graded:
+        if key not in predicted or not _compare_leaf(str(key), predicted[key], gold):
+            return False
+    return True
+
+
 _COMPARATORS: dict[str, Callable[[Any, Any, dict], bool]] = {
     "exact": _compare_exact,
     "canonical_string_equal": _compare_string,
     "canonical_string_in_set": _compare_string_in_set,
     "canonical_enum_equal": _compare_string,
+    "cited_clause_equal": _compare_cited_clause,
     "boolean_equal": _compare_boolean,
     "integer_equal": _compare_integer,
     "numeric_literal_equal": _compare_numeric_literal,
@@ -709,6 +837,7 @@ _COMPARATORS: dict[str, Callable[[Any, Any, dict], bool]] = {
     "canonical_set_equal": _compare_set_equal,
     "ordered_string_vector_equal": _compare_ordered_string_vector,
     "voxel_member_of_set": _compare_voxel_member_of_set,
+    "object_leafwise": _compare_object_leafwise,
 }
 
 
@@ -767,6 +896,35 @@ def _tolerance_for(field: str, config: dict) -> float | list[float] | None:
     return None
 
 
+# Fields whose gold is a sentence citing a building code. Named here rather
+# than inferred: the sentence is what the question asks for, but the code and
+# clause inside it are the only part that is stable across answers.
+CITED_CLAUSE_FIELDS = frozenset({"cited_clause"})
+
+#: Comparators an authored `accepted` list widens.
+_ACCEPTS_SPELLINGS = frozenset({"canonical_string_equal", "canonical_string_in_set", "cited_clause_equal"})
+
+
+def _accepted_for(field: str, config: dict) -> list[str]:
+    """The other spellings the author allows for this field, if any.
+
+    Same shape as `_tolerance_for`, including the prefix fallback, so a config
+    that already grades `contact_x` under `x` can widen it the same way.
+    """
+    accepted = config.get("accepted")
+    if not isinstance(accepted, dict):
+        return []
+    candidates = [field]
+    for prefix in ("contact_", "clash_"):
+        if field.startswith(prefix):
+            candidates.append(field[len(prefix):])
+    for candidate in candidates:
+        value = accepted.get(candidate)
+        if isinstance(value, (list, tuple)) and value:
+            return [str(entry) for entry in value]
+    return []
+
+
 def _numeric_literal(value: Any) -> int | float | None:
     """The number a string is entirely made of, or None.
 
@@ -790,9 +948,25 @@ def _numeric_literal(value: Any) -> int | float | None:
     return number
 
 
+def _measure(value: Any) -> float | None:
+    """A number, or a string that is wholly one, as a float; else None."""
+    if isinstance(value, str):
+        literal = _numeric_literal(value)
+        return None if literal is None else float(literal)
+    return _number(value)
+
+
+def _is_boolean_literal(value: Any) -> bool:
+    """``"true"`` / ``"false"`` stored as text. ``"yes"``/``"no"`` stay words:
+    they are answer vocabulary, graded as strings."""
+    return isinstance(value, str) and value.strip().casefold() in {"true", "false"}
+
+
 def _default_comparator(field: str, expected: Any, config: dict) -> tuple[str, Any]:
     name = field.casefold()
     tolerance = _tolerance_for(field, config)
+    if name in CITED_CLAUSE_FIELDS and isinstance(expected, str):
+        return "cited_clause_equal", None
     if isinstance(expected, (list, tuple)) and name in SET_EQUAL_FIELDS:
         # Consulted before the scalar name heuristics: some of these names
         # would otherwise match a scalar branch (``residue_numbers`` matches
@@ -808,6 +982,15 @@ def _default_comparator(field: str, expected: Any, config: dict) -> tuple[str, A
         # The string-range form of ``extent_vox``. The numeric triplet form is
         # a voxel measurement and keeps the tolerance machinery below.
         return "ordered_string_vector_equal", None
+    if isinstance(expected, dict) and _canonical_atom_object(expected) is not None:
+        # An atom record is an identity whatever the field is called (`ion`).
+        return "canonical_atom_id_equal", None
+    if isinstance(expected, dict) and "atom" not in name:
+        # An object is graded leaf by leaf, as one field. Ahead of the name
+        # heuristics: the identity canonicalisers parse strings, so an object
+        # named ``*_structure_*`` sent to one failed whatever was answered. An
+        # atom record keeps its own identity comparator below.
+        return "object_leafwise", None
     # A number is never a name. ``structure_interference_count`` and
     # ``n_residues_within`` merely contain "structure" and "residue", and these
     # comparators do not decide equality: they canonicalise the value into a key
@@ -837,7 +1020,12 @@ def _default_comparator(field: str, expected: Any, config: dict) -> tuple[str, A
         return "vector_abs_tolerance", tolerance
     if tolerance is not None:
         return "abs_tolerance", tolerance
-    if isinstance(expected, bool) or name.startswith("has_") or name.startswith("crosses_"):
+    if (
+        isinstance(expected, bool)
+        or _is_boolean_literal(expected)
+        or name.startswith("has_")
+        or name.startswith("crosses_")
+    ):
         return "boolean_equal", None
     if isinstance(expected, int) and not isinstance(expected, bool):
         return "integer_equal", None
@@ -889,6 +1077,10 @@ def _is_prose(value: Any) -> bool:
     )
 
 
+def _grades_as_citation(field: str, value: Any) -> bool:
+    return field.casefold() in CITED_CLAUSE_FIELDS and _cited_clause(value) is not None
+
+
 def select_report_only(ground_truth: dict, declared: list) -> set[str]:
     """Which fields leave the rubric, refusing to empty it.
 
@@ -903,11 +1095,17 @@ def select_report_only(ground_truth: dict, declared: list) -> set[str]:
     is what says whether the field is an explanation or a one-word enum the
     agent must actually choose; a name-only rule drops the enum and the task
     loses a real item.
+
+    A ``cited_clause`` that cites a clause is not an explanation: its
+    (standard, clause) pair is graded by ``cited_clause_equal``, so it stays
+    unless the author declares it report-only. One that cites nothing is
+    prose like any other and leaves.
     """
     candidates = {
         field for field, value in ground_truth.items()
         if (field.casefold() in EXPLANATION_FIELDS or field in declared)
         and _is_prose(value)
+        and (field in declared or not _grades_as_citation(field, value))
     }
     if not candidates:
         return set()
@@ -1040,12 +1238,21 @@ def _compile_rubric(
         errors.append("invalid_required_gate")
 
     explicit = config.get("rubric")
-    accepted_map = config.get("accepted")
-    accepted_map = accepted_map if isinstance(accepted_map, dict) else {}
     if isinstance(explicit, list):
         items = [dict(item) for item in explicit if isinstance(item, dict)]
         if len(items) != len(explicit):
             errors.append("invalid_rubric_item_type")
+        # Authored spellings are the author's, wherever the items came from;
+        # an item that declares its own list keeps it.
+        for item in items:
+            comparator = str(item.get("comparator", ""))
+            if "accepted" in item or comparator not in _ACCEPTS_SPELLINGS:
+                continue
+            authored = _accepted_for(str(item.get("gt_path") or item.get("id") or ""), config)
+            if authored:
+                item["accepted"] = authored
+                if comparator == "canonical_string_equal":
+                    item["comparator"] = "canonical_string_in_set"
     elif explicit is None:
         items = []
         for field, expected in ground_truth.items():
@@ -1069,14 +1276,18 @@ def _compile_rubric(
             # comparison would fail every agent that answered the number. It
             # also keeps this pass off a field that has its own canonicaliser,
             # and off any non-string ground truth, which ``derive_aliases``
-            # (a string parser) cannot take.
+            # (a string parser) cannot take. Authored spellings come first and
+            # keep `_accepted_for`'s prefix fallback; a cited clause carries
+            # them for its string fallback.
+            authored = _accepted_for(field, config)
             if comparator == "canonical_string_equal":
-                declared = accepted_map.get(field)
-                aliases = list(declared) if isinstance(declared, (list, tuple)) else []
+                aliases = list(authored)
                 aliases += [a for a in derive_aliases(expected) if a not in aliases]
                 if aliases:
                     item["accepted"] = aliases
                     item["comparator"] = "canonical_string_in_set"
+            elif comparator == "cited_clause_equal" and authored:
+                item["accepted"] = authored
             items.append(item)
     else:
         items = []

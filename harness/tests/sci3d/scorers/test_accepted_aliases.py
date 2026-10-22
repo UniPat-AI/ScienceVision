@@ -18,7 +18,10 @@ from sci3d_bench.scorers.deterministic_answer import (
         ("cylindrical (rotation plus translation)", ["cylindrical"]),
         ("revolute (rotation only)", ["revolute"]),
         ("M1c (peritoneal metastasis)", ["M1c"]),
-        ("D. rotates counter-clockwise by 90 degrees", ["D"]),
+        ("D. rotates counter-clockwise by 90 degrees", []),
+        # A leading letter may be an option label or part of the answer itself
+        # ("E. coli O157:H7"); the gold alone cannot tell them apart, so a real
+        # choice letter is authored in ``accepted`` rather than derived.
         ("protein_cleft_or_pocket", []),
         ("Article 4.2.10 of JGJ 100-2015", []),
         # A sentence is a proposition, not a formatting variant: dropping the
