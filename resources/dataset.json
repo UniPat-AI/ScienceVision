@@ -1,17 +1,17 @@
 {
   "schema_version": "sciencevision.dataset_reference.v1",
-  "verified_at": "2026-10-29T16:40:00+00:00",
+  "verified_at": "2026-10-29T17:05:00+00:00",
   "status": "published_release_pinned",
   "published_name": "ScienceVision",
   "source": {
     "repository": "UnipatAI/ScienceVision",
     "url": "https://huggingface.co/datasets/UnipatAI/ScienceVision",
     "revision_type": "commit",
-    "revision_name": "a1cd8c2486a17aed8e58fc3bd84c697dcfdcfae3",
-    "commit": "a1cd8c2486a17aed8e58fc3bd84c697dcfdcfae3",
+    "revision_name": "a63a513da98ca34d7efba3c547255c8be54effb1",
+    "commit": "a63a513da98ca34d7efba3c547255c8be54effb1",
     "private": true,
     "gated": false,
-    "snapshot_note": "The canonical dataset repository now exists; this record pins the package as uploaded. Its MANIFEST names the package ScienceVision, version 1.0, created 2026-10-20; the upload landed 2026-10-21. The 2026-10-29 uploads changed the card, the citation and oracle comment text and repaired the integrity manifest, which had drifted from the served files; data/tasks.jsonl and the asset payload are unchanged, so the index hash still applies."
+    "snapshot_note": "The canonical dataset repository now exists; this record pins the package as uploaded. Its MANIFEST names the package ScienceVision, version 1.0, created 2026-10-20; the upload landed 2026-10-21. The 2026-10-29 uploads added the release-blog links to the card and the citation, repaired the integrity manifest against the served files, and reconciled the build tree to the served bytes; data/tasks.jsonl and the asset payload are unchanged, so the index hash still applies."
   },
   "canonical_repository": "UnipatAI/ScienceVision",
   "canonical_repository_status": "published; this record pins the uploaded package",
@@ -24,7 +24,7 @@
     "medical": 50
   },
   "file_count": 19301,
-  "logical_file_bytes": 9418292556,
+  "logical_file_bytes": 9418292906,
   "index_sha256": "d7a52e611b3e36a05ecf961904163206b4993a87aeaceedc9b1702b9e4709f4e",
   "layout": {
     "index": "data/tasks.jsonl",
