@@ -35,13 +35,13 @@ Large data and evaluation histories are not duplicated in Git.
 
 ## Release status
 
-This repository is private. The dataset is private and gated. The GHCR packages are private.
+This repository is private. The dataset repository is private. The GHCR packages are private.
 
 Before public release, the following must be settled. Each is a link that a reader outside the
 organisation cannot follow today:
 
-1. **The dataset must be reachable** at its canonical repository, and its license stated. The
-   source card currently declares none.
+1. **The dataset must be reachable** at its canonical repository. The package card,
+   `MANIFEST.json`, and `LICENSE` declare MIT.
 2. **The harness is vendored under `harness/`.** The whole `eval-baseline` branch is present
    at source commit `6fd95252e81fb153432add0f2400d9ee1eea6697`; the reported results were
    produced on `b47f13ac5abb54b9e287ff3131ae7e29771ec53e`. Both revisions are recorded in

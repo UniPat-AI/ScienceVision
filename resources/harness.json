@@ -46,7 +46,7 @@
     "extent_voxel_tolerance_v1"
   ],
   "dataset_compatibility": {
-    "dataset_commit": "bb27be96c10c8629ce2395b55a98b80e8bfb9c72",
+    "dataset_commit": "a1cd8c2486a17aed8e58fc3bd84c697dcfdcfae3",
     "status": "task_builder_shipped_not_end_to_end_validated",
     "index_is_runnable_input": false
   },

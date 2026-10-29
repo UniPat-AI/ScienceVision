@@ -1,6 +1,13 @@
 <div align="center">
   <img src="assets/banner.png" alt="ScienceVision" width="90%" />
-  <h1>ScienceVision: A Benchmark for Observing and Reasoning over Scientific 3D Data</h1>
+  <h1>ScienceVision: Can AI Observe and Reason Like a Scientist?</h1>
+  <p>
+    <a href="https://unipat.ai/blog/ScienceVision">Blog</a>
+    &nbsp;·&nbsp;
+    <a href="https://huggingface.co/datasets/UnipatAI/ScienceVision">Dataset</a>
+    &nbsp;·&nbsp;
+    <span>Paper (coming soon)</span>
+  </p>
 </div>
 
 ScienceVision is a benchmark for **observing and reasoning over scientific 3D data**: 250
@@ -27,9 +34,26 @@ never as a score of zero. See [the scoring standard](docs/evaluation.md#scoring-
 
 ## 1. Dataset
 
-**ScienceVision** holds 250 tasks, 50 per domain, with source assets, rendered views, expert answers
-and the recorded expert sessions they were selected on. It is gated: authenticate with an account
-that has been granted access.
+**ScienceVision** holds 250 tasks, 50 per domain, with source assets, rendered views, expert
+answers and the recorded expert sessions they were selected on. Tasks are grouped into 22
+sub-domains and 30 direction labels; 143 ask for a single answer field and 107 for two or more.
+
+| Domain | Tasks | Sub-domains | `assets/` files |
+|---|---:|---:|---:|
+| Architecture | 50 | 4 | 57 |
+| Biology | 50 | 5 | 50 |
+| Chemistry | 50 | 5 | 50 |
+| Mechanical CAD | 50 | 4 | 110 |
+| Medical imaging | 50 | 4 | 58 |
+| **Total** | **250** | **22** | **325** |
+
+Every task is a self-contained directory: `question.md`, `answer.json`, `normalized.json`,
+`task_and_trajectory.json`, its `assets/`, and the rendered `views/` and `views-aligned/`. Every
+task also ships a reference solution under `oracles/<task_id>/solution/`, and 54 tasks declare a
+task-specific rubric in `verifier/scoring/`.
+
+The dataset repository is private. Download requires a Hugging Face account that has been granted
+access.
 
 ```bash
 hf auth login
@@ -46,16 +70,17 @@ are tied to that snapshot.
 Read the question and answer from `<domain>/<task_id>/normalized.json`. It is the one record
 every task has. `answer.json` carries the expert ground truth in the form the scorer reads.
 
-This revision replaces 13 tasks of the previous 250-question set, keeping every sub-domain count
-unchanged. The [dataset guide](docs/dataset.md) covers the layout, the records, and the four
-declared limitations. Read them before quoting a score: two of them change what a per-task
-comparison means.
+The release was checked task by task: every gold scores itself under its contract, every oracle
+reaches 1.0, and 2,405 of the 2,406 recorded expert steps carry their screenshot. The 250
+questions were written and reviewed by 66 experts across the five disciplines, 482.98 recorded
+hours in all. The [dataset guide](docs/dataset.md) covers the layout, the records, and the
+declared limitations. Read them before quoting a score: they change what a per-task comparison
+means.
 
 ## 2. Model comparison
 
 Twelve models over the same 250 questions under three access settings. Mean `answer_score` on
-`[0, 1]`, ineligible trials counted zero; the two 3D settings average three runs per question,
-the six-view setting is a single run.
+`[0, 1]`, ineligible trials counted zero; every setting averages three runs per question.
 
 ![Mean answer score under cc-3d and cc-mcp](assets/leaderboard-cc3d-vs-ccmcp.png)
 
@@ -64,26 +89,26 @@ tools: change views, isolate structures, inspect slices, measure geometry.*
 
 | # | Model | `cc-3d` | `cc-mcp` | `cc-2d-6` |
 |--:|---|---:|---:|---:|
-| 1 | GPT-6 Astra | 0.4403 | 0.4396 | 0.1789 |
-| 2 | GPT-6.1 Sol | 0.4074 | 0.4292 | 0.1406 |
-| 3 | Claude Fable 5.1 | 0.3860 | 0.3900 | 0.2174 |
-| 4 | Claude Opus 5.5 | 0.3771 | 0.3627 | 0.1783 |
-| 5 | Gemini 4 Argon | 0.3565 | 0.3625 | 0.1006 |
-| 6 | Qwen3.8 Max 0902 | 0.3199 | 0.3099 | 0.1947 |
-| 7 | Qwen3.8 Flash | 0.2895 | 0.2968 | 0.1913 |
-| 8 | Kimi K3 | 0.2834 | 0.2693 | 0.1653 |
-| 9 | GLM-5.3 Flash | 0.2206 | 0.2283 | 0.1179 |
-| 10 | DeepSeek V4 Flash | 0.2231 | 0.2211 | 0.1054 |
-| 11 | Doubao Seed Evolving | 0.1928 | 0.1984 | 0.0887 |
-| 12 | Hunyuan-4 Preview | 0.1283 | 0.1426 | 0.0673 |
+| 1 | GPT-6 Astra | 0.5291 | 0.5282 | 0.2498 |
+| 2 | GPT-6.1 Sol | 0.4893 | 0.5110 | 0.2044 |
+| 3 | Claude Fable 5.1 | 0.4619 | 0.4631 | 0.2965 |
+| 4 | Claude Opus 5.5 | 0.4539 | 0.4343 | 0.2383 |
+| 5 | Gemini 4 Argon | 0.4278 | 0.4321 | 0.1462 |
+| 6 | Qwen3.8 Max 0902 | 0.3830 | 0.3736 | 0.2450 |
+| 7 | Qwen3.8 Flash | 0.3616 | 0.3681 | 0.2468 |
+| 8 | Kimi K3 | 0.3609 | 0.3369 | 0.2148 |
+| 9 | GLM-5.3 Flash | 0.2846 | 0.2858 | 0.1521 |
+| 10 | DeepSeek V4 Flash | 0.2652 | 0.2678 | 0.1661 |
+| 11 | Doubao Seed Evolving | 0.2435 | 0.2527 | 0.1102 |
+| 12 | Hunyuan-4 Preview | 0.1598 | 0.1738 | 0.0824 |
 
-Under both 3D settings the five closed-source models place ahead of every open-source model. No
-model reaches 0.60, so nothing is saturated. The six-view setting orders differently: Claude
-Fable 5.1 leads it.
+Under both 3D settings the five closed-source models place ahead of every open-source model. The
+best overall mean is 0.53 and the highest single discipline cell is 0.65, so nothing is
+saturated. The six-view setting orders differently: Claude Fable 5.1 leads it.
 
 ![Mean answer score under cc-2d-6](assets/leaderboard-cc2d6.png)
 
-*Six rendered views, a single run. Evidence has to come from the supplied images.*
+*Six rendered views, three runs. Evidence has to come from the supplied images.*
 
 ![Per-domain mean@3 under cc-3d](assets/leaderboard-per-domain.png)
 
@@ -91,8 +116,9 @@ Fable 5.1 leads it.
 compares models within a discipline, not disciplines with each other.*
 
 **Two things to know before quoting any of this.** The comparison is a *splice*: each model's row
-joins a carried-over segment with a re-run segment, and those segments did not come from one
-harness. And Gemini 4 Argon covers two runs rather than three. The
+joins a carried-over segment with a re-run segment, and six models take their re-run segment from
+a separate evaluation service. Gemini 4 Argon's carried-over segment has two runs rather than
+three, and three of Hunyuan-4's six-view questions have two. The
 [comparison notes](docs/leaderboard.md) record the segment sources, the question-set provenance,
 and the version drift in full, and state the resulting limit plainly: *equal coverage does not
 establish a controlled comparison*.
@@ -174,10 +200,11 @@ The project has a paper; its citation will be published here and on the
 results by the setting and scorer version you used rather than by a single headline number. The
 [comparison notes](docs/leaderboard.md) explain why that matters here.
 
-Documentation, schemas, utility scripts, and the evaluation implementation in this repository are
-**MIT** ([LICENSE](LICENSE)). That license does **not** cover the dataset or the third-party
-assets inside it: the dataset declares no license of its own. Container contents keep their own.
-See [NOTICE](NOTICE) and the [dataset guide](docs/dataset.md#interpretation-and-data-terms).
+The dataset package declares **MIT** in its card, `MANIFEST.json`, and `LICENSE`; that
+declaration does not grant rights to the third-party assets inside it. Documentation, schemas,
+utility scripts, and the evaluation implementation in this repository are **MIT** as well
+([LICENSE](LICENSE)). Container contents keep their own. See [NOTICE](NOTICE) and the
+[dataset guide](docs/dataset.md#interpretation-and-data-terms).
 
 Contributions are described in [CONTRIBUTING.md](CONTRIBUTING.md). The
 [project overview](docs/project.md) records what is still required before this release can be

@@ -73,9 +73,10 @@ python harbor/build_tasks.py --out /tmp/sciencevision-harbor --route cc-mcp --li
 
 ## What this release is
 
-The current set replaces **13 tasks** of the previous 250-question set: eight architecture and
-five medical. Every swap keeps the same `sub_domain`, so all 22 buckets and all five domain counts
-are unchanged. `KNOWN_ISSUES.md` carries the declared gaps for the tasks that ship.
+The 250 tasks are grouped into **22 sub-domains** and **30 `direction` labels**, and every answer
+is one JSON object: 143 tasks ask for a single field, 107 for two or more. The five domain counts
+are equal, which does not imply uniform coverage of task types within a domain.
+`KNOWN_ISSUES.md` carries the declared gaps for the tasks that ship.
 
 ## Scoring
 
