@@ -1,5 +1,9 @@
 # BabyVision-v2
 
+> **Vendored harness.** This subtree is the `eval-baseline` harness copied into
+> `UniPat-AI/ScienceVision`. Start at the [repository README](../README.md); the
+> pages below describe the upstream BabyVision-v2 tree this copy came from.
+
 [English](README.md) · [简体中文](README.zh-CN.md)
 
 > **Evaluating 3D-grounded visual reasoning in professional domains.**

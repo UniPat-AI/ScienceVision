@@ -32,12 +32,15 @@ partner = [
 ]
 mcp = [
     "mcp>=0.9",
+    "fastmcp>=0.5",
     "anthropic>=0.34",
     "gemmi>=0.7,<0.8",
 ]
 harbor = [
     "harbor @ git+https://github.com/harbor-framework/harbor@v0.20.0",
     "gemmi>=0.7,<0.8",
+    "nibabel>=5.0",
+    "scikit-image>=0.22",
 ]
 viewer = [
     "fastapi>=0.110",

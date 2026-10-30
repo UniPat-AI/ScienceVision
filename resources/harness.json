@@ -51,6 +51,11 @@
     "index_is_runnable_input": false
   },
   "revision_note": "The complete eval-baseline branch is vendored under harness/ at source commit 6fd95252e81fb153432add0f2400d9ee1eea6697. UniPat-authored code in that subtree is distributed under the MIT License (harness/LICENSE); the upstream branch as published was Apache-2.0, which source_license_at_pinned_revision records. The reported results were produced on b47f13ac5abb54b9e287ff3131ae7e29771ec53e, which is recorded above as reported_results_commit. No second checkout is required to run the harness.",
+  "local_modifications": [
+    "harness/README.md carries a vendored-harness pointer to the repository README.",
+    "harness/_dev_serve.py serves its own directory instead of a hard-coded checkout path.",
+    "harness/pyproject.toml adds nibabel and scikit-image to the harbor extra and fastmcp to the mcp extra, so the documented install command satisfies the import chain."
+  ],
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."
 }

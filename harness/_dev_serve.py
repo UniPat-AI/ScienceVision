@@ -1,19 +1,18 @@
-"""Minimal http server for BabyVision-v2 viewer dev.
+"""Minimal http server for the ScienceVision viewer.
 
-- Serves the BV2 repo root on 127.0.0.1:8765
+- Serves this directory on 127.0.0.1:8080
 - Returns 404 for any path containing a dot-file segment (.env, .git, .pytest_cache, etc.)
 - Suppresses directory listings (returns 404 if no index.html in that dir)
 
 Use:
-    python3 /home/matianyi/BabyVision-v2/_dev_serve.py
-Then open: http://127.0.0.1:8765/viewer/
+    python3 _dev_serve.py
+Then open: http://127.0.0.1:8080/viewer/
 """
 import http.server
-import os
 import socketserver
 from pathlib import Path
 
-ROOT = Path("/home/matianyi/BabyVision-v2").resolve()
+ROOT = Path(__file__).resolve().parent
 PORT = 8080
 
 class SafeHandler(http.server.SimpleHTTPRequestHandler):
