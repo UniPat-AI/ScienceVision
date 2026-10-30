@@ -1,6 +1,6 @@
 {
   "schema_version": "sciencevision.paper_reference.v1",
-  "verified_at": "2026-10-30T05:31:00+00:00",
+  "verified_at": "2026-10-30T06:30:00+00:00",
   "title": "ScienceVision: Can AI Observe and Reason Like a Scientist?",
   "authors": [
     "UniPat AI",
@@ -9,9 +9,9 @@
   "path": "paper/sciencevision.pdf",
   "status": "placeholder",
   "arxiv": null,
-  "pages": 31,
-  "built_at": "2026-10-30T06:27:15+01:00",
-  "bytes": 1724602,
-  "sha256": "669ea1bbba291cd559d637abb2e4f1c067fb39c2f6f7b89c395fedeba6ad443b",
+  "pages": 29,
+  "built_at": "2026-10-30T07:27:24+01:00",
+  "bytes": 1407201,
+  "sha256": "2026aef0ac556c1e02b59a8fc67968460d760f9d9c32ba1774cdbb3d79904d21",
   "note": "Working build committed as the placeholder until the arXiv version is posted. The path is stable across rebuilds; this record is what CI hashes against."
 }

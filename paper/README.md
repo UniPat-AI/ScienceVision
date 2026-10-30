@@ -11,10 +11,10 @@ the path. GitHub renders the PDF in the browser and offers a download.
 |---|---|
 | Status | `placeholder` — a working build, not the camera-ready |
 | arXiv | not posted; [`resources/paper.json`](../resources/paper.json) records `"arxiv": null` |
-| Pages | 31 |
-| Built | 2026-10-30T06:27:15+01:00 (pdfTeX-1.40.29) |
-| Size | 1,724,602 bytes |
-| SHA-256 | `669ea1bbba291cd559d637abb2e4f1c067fb39c2f6f7b89c395fedeba6ad443b` |
+| Pages | 29 |
+| Built | 2026-10-30T07:27:24+01:00 (XeLaTeX / xdvipdfmx 0.1) |
+| Size | 1,407,201 bytes |
+| SHA-256 | `2026aef0ac556c1e02b59a8fc67968460d760f9d9c32ba1774cdbb3d79904d21` |
 
 Open [`sciencevision.pdf`](sciencevision.pdf), or the Paper badge at the top of the README. Nothing
 here is generated at build time: what is committed is what a reader downloads.
