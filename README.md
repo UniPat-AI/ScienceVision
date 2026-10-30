@@ -1,83 +1,78 @@
 <div align="center">
-  <img src="assets/banner.png" alt="ScienceVision" width="90%" />
+  <img src="assets/banner.png" alt="ScienceVision" width="100%" />
+
   <h1>ScienceVision: Can AI Observe and Reason Like a Scientist?</h1>
+
   <p>
-    <a href="https://unipat.ai/blog/ScienceVision">Blog</a>
-    &nbsp;·&nbsp;
-    <a href="https://huggingface.co/datasets/UnipatAI/ScienceVision">Dataset</a>
-    &nbsp;·&nbsp;
-    <span>Paper (coming soon)</span>
+    <a href="https://unipat.ai/blog/ScienceVision"><img alt="Blog" src="https://img.shields.io/badge/Blog-4285F4?style=for-the-badge&logo=google-chrome&logoColor=white"></a>
+    <a href="https://unipat.ai/blog/ScienceVision#leaderboard"><img alt="Leaderboard" src="https://img.shields.io/badge/Leaderboard-4285F4?style=for-the-badge&logo=google-chrome&logoColor=green"></a>
+    <a href="https://huggingface.co/datasets/UnipatAI/ScienceVision"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-4285F4?style=for-the-badge&logo=huggingface&logoColor=yellow"></a>
+    <a href="https://github.com/UniPat-AI/ScienceVision"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-24292F?style=for-the-badge&logo=github&logoColor=white"></a>
+    <img alt="Paper coming soon" src="https://img.shields.io/badge/Paper-coming%20soon-red?style=for-the-badge&logo=arxiv&logoColor=white">
   </p>
 </div>
 
-ScienceVision is a benchmark for **observing and reasoning over scientific 3D data**: 250
-expert-authored questions, 50 each in architecture, biology, chemistry, mechanical CAD, and
-medical imaging.
+> A benchmark for observing and reasoning over scientific 3D data.
 
-Each task hands an agent a question and a 3D source: a building model, a protein, a CT volume, a
-CAD assembly, or a crystal. The agent must return a measurement, an identification, or a
-comparison. What the benchmark varies is **where the evidence comes from**: the source artifact
-and code execution; an inspection tool that changes views, isolates structures and measures
-geometry; or a fixed set of rendered images.
+**ScienceVision** asks whether a model can do what a scientist does with a 3D object: look at it,
+change the view, isolate a structure, measure a distance, and answer. The release holds **250
+expert-authored questions** — 50 each in architecture, biology, chemistry, mechanical CAD, and
+medical imaging — over buildings, proteins, crystals, CAD assemblies, and CT volumes.
 
-Answers are graded by a **deterministic scorer, not a judge model**, field by field against a
-declared contract. A task whose scoring contract is missing or invalid is reported as *blocked*,
-never as a score of zero. See [the scoring standard](docs/evaluation.md#scoring-standard).
+What the benchmark varies is **where the evidence comes from**: the source artifact and code
+execution, an inspection tool that orbits, isolates, slices and measures, or a fixed set of
+rendered views. Answers are graded **field by field by a deterministic scorer, not a judge
+model**. A task with a missing or invalid scoring contract is reported as *blocked*, never as a
+score of zero.
 
-| I want to | Start here |
-|---|---|
-| get the questions, assets and expert answers | [1. Dataset](#1-dataset) |
-| see how twelve models compare | [2. Model comparison](#2-model-comparison) |
-| run my own model through the same scorer | [3. Evaluation](#3-evaluation) |
-| pull an agent or scorer image | [4. Containers](#4-containers) |
-| cite or reuse this | [5. Citing and license](#5-citing-and-license) |
+Read the [blog post](https://unipat.ai/blog/ScienceVision) for the motivation and the figures, or
+take the [dataset](https://huggingface.co/datasets/UnipatAI/ScienceVision) directly.
 
-## 1. Dataset
+## The 3D viewer and Vision MCP
 
-**ScienceVision** holds 250 tasks, 50 per domain, with source assets, rendered views, expert
-answers and the recorded expert sessions they were selected on. Tasks are grouped into 22
-sub-domains and 30 direction labels; 143 ask for a single answer field and 107 for two or more.
+![Recorded expert sessions in the 3D viewer](assets/demo-viewer.png)
 
-| Domain | Tasks | Sub-domains | `assets/` files |
-|---|---:|---:|---:|
-| Architecture | 50 | 4 | 57 |
-| Biology | 50 | 5 | 50 |
-| Chemistry | 50 | 5 | 50 |
-| Mechanical CAD | 50 | 4 | 110 |
-| Medical imaging | 50 | 4 | 58 |
-| **Total** | **250** | **22** | **325** |
+*Recorded expert sessions, top left to bottom right: a building model with measured spans, a
+protein contact check, a CT volume with tri-planar measurements, and a CAD assembly. Every frame
+is the in-browser viewer that experts and agents operate.*
 
-Every task is a self-contained directory: `question.md`, `answer.json`, `normalized.json`,
-`task_and_trajectory.json`, its `assets/`, and the rendered `views/` and `views-aligned/`. Every
-task also ships a reference solution under `oracles/<task_id>/solution/`, and 54 tasks declare a
-task-specific rubric in `verifier/scoring/`.
+### 3D viewer
 
-The dataset repository is private. Download requires a Hugging Face account that has been granted
-access.
+Every source asset opens in a browser viewer, without a build step or a plugin: **35 renderer
+pages** covering meshes (Three.js), molecules (Mol*, reading mmCIF/PDB/SDF), volumes (NiiVue,
+NIfTI/NRRD), CAD (OpenCascade, STEP/IGES), USD, point clouds, URDF and scenes. The viewer is not
+a screenshot gallery: it reports camera state, measurements and selection state, which is what
+lets an agent act on what it sees. The [blog](https://unipat.ai/blog/ScienceVision#inspect)
+embeds five live samples you can orbit in place.
 
 ```bash
-hf auth login
-hf download UnipatAI/ScienceVision \
-  --type dataset \
-  --revision <commit> \
-  --local-dir data/sciencevision
+cd harness
+python3 _dev_serve.py
+# open http://127.0.0.1:8080/viewer/ and start at "Domain 3D Assets"
 ```
 
-Download a **fixed revision, not a branch**. `<commit>` and the inventory that goes with it are
-recorded in [`resources/dataset.json`](resources/dataset.json); the numbers in this repository
-are tied to that snapshot.
+The checkout ships demo assets; the full corpus comes from the dataset package. Per-domain
+manifests live in `harness/viewer/assets/`, and the page index in `harness/viewer/assets.index.json`.
 
-Read the question and answer from `<domain>/<task_id>/normalized.json`. It is the one record
-every task has. `answer.json` carries the expert ground truth in the form the scorer reads.
+### Vision MCP
 
-The release was checked task by task: every gold scores itself under its contract, every oracle
-reaches 1.0, and 2,405 of the 2,406 recorded expert steps carry their screenshot. The 250
-questions were written and reviewed by 66 experts across the five disciplines, 482.98 recorded
-hours in all. The [dataset guide](docs/dataset.md) covers the layout, the records, and the
-declared limitations. Read them before quoting a score: they change what a per-task comparison
-means.
+The same scene is exposed to agents as an MCP server: **58 tools**, of which **19 `sv3d_*` tools**
+act on the live 3D scene — open and close a scene, orbit, dolly, pan, set a view, render, slice,
+clip, set a crosshair, segment, measure and annotate. Each task contract declares the subset an
+agent may call, so the tool surface and the grading contract stay aligned.
 
-## 2. Model comparison
+```bash
+pip install -e "harness[mcp]"
+python -m sci3d_agent.mcp.server --surface   # tool catalog, counts and sha256
+python -m sci3d_agent.mcp.server             # stdio server
+```
+
+The two MCP settings differ in what else the agent may see: **3D + Scaffold + Vision MCP** keeps
+the source artifact and code execution, while **3D + Vision MCP** withholds the source and leaves
+only the tools. A package name is a deployment layout, not an access setting; the
+[container guide](docs/containers.md) keeps the two apart.
+
+## Leaderboard
 
 Twelve models over the same 250 questions under three access settings. Mean `answer_score` on
 `[0, 1]`, ineligible trials counted zero; every setting averages three runs per question.
@@ -123,7 +118,55 @@ three, and three of Hunyuan-4's six-view questions have two. The
 and the version drift in full, and state the resulting limit plainly: *equal coverage does not
 establish a controlled comparison*.
 
-## 3. Evaluation
+## Dataset
+
+**ScienceVision** holds 250 tasks, 50 per domain, with source assets, rendered views, expert
+answers and the recorded expert sessions they were selected on. Tasks are grouped into 22
+sub-domains and 30 direction labels; 143 ask for a single answer field and 107 for two or more.
+The 250 questions were written and reviewed by 66 experts across the five disciplines, 482.98
+recorded hours in all.
+
+| Domain | Tasks | Sub-domains | `assets/` files |
+|---|---:|---:|---:|
+| Architecture | 50 | 4 | 57 |
+| Biology | 50 | 5 | 50 |
+| Chemistry | 50 | 5 | 50 |
+| Mechanical CAD | 50 | 4 | 110 |
+| Medical imaging | 50 | 4 | 58 |
+| **Total** | **250** | **22** | **325** |
+
+Every task is a self-contained directory: `question.md`, `answer.json`, `normalized.json`,
+`task_and_trajectory.json`, its `assets/`, and the rendered `views/` and `views-aligned/`. Every
+task also ships a reference solution under `oracles/<task_id>/solution/`, and 54 tasks declare a
+task-specific rubric in `verifier/scoring/`.
+
+![How the 250 questions were built](assets/pipeline.png)
+
+*Construction is automated up to a candidate bundle (01–03); experts then review, inspect, answer
+and certify (04–06). Every gold scores itself under its contract, every oracle reaches 1.0, and
+2,405 of the 2,406 recorded expert steps carry their screenshot.*
+
+The dataset repository is private. Download requires a Hugging Face account that has been granted
+access.
+
+```bash
+hf auth login
+hf download UnipatAI/ScienceVision \
+  --type dataset \
+  --revision <commit> \
+  --local-dir data/sciencevision
+```
+
+Download a **fixed revision, not a branch**. `<commit>` and the inventory that goes with it are
+recorded in [`resources/dataset.json`](resources/dataset.json); the numbers in this repository
+are tied to that snapshot.
+
+Read the question and answer from `<domain>/<task_id>/normalized.json`. It is the one record
+every task has. `answer.json` carries the expert ground truth in the form the scorer reads. The
+[dataset guide](docs/dataset.md) covers the layout, the records, and the declared limitations.
+Read them before quoting a score: they change what a per-task comparison means.
+
+## Evaluation
 
 Seven access settings, of which the paper reports three:
 
@@ -135,10 +178,8 @@ Seven access settings, of which the paper reports three:
 | **2D + Scaffold ×1 / ×3 / ×6 / ×12** | That many fixed rendered views; no source artifacts | ×6 only |
 
 The entire evaluation harness is vendored under [`harness/`](harness/), a copy of the
-`eval-baseline` branch of `UniPat-AI/BabyVision-v2`. It installs from that directory. It
-needs Python 3.12 or later and a Docker-capable host. The `harbor` extra pins Harbor
-`v0.20.0`. A deterministic replay sandbox, including the dataset-to-tree builder and the
-archived-answer scorer, lives in [`sandbox/`](sandbox/README.md).
+`eval-baseline` branch of `UniPat-AI/BabyVision-v2`. It installs from that directory and needs
+Python 3.12 or later and a Docker-capable host. The `harbor` extra pins Harbor `v0.20.0`.
 
 ```bash
 cd harness
@@ -148,6 +189,10 @@ python -m pip install -e ".[harbor]"
 python -m scripts.harbor.run_end2end --help
 python -m scripts.harbor.qa_gen_to_tasks --help
 ```
+
+A deterministic replay sandbox lives in [`sandbox/`](sandbox/README.md). It builds Harbor task
+trees from a contract file and a dataset package, scores archived answers, and checks every gold
+against its own contract — no model calls, no sampling noise.
 
 ### Scoring standard
 
@@ -168,7 +213,22 @@ scorer cannot report as the pinned one. [The full standard](docs/evaluation.md#s
 lists every comparator, the three supported contracts, the task contract, and what a run receipt
 must record.
 
-## 4. Containers
+## Repository layout
+
+```text
+ScienceVision/
+├── harness/            vendored eval harness: Harbor routes, agents, MCP server, viewer, scorer
+├── sandbox/            deterministic replay: contract export, tree build, gold self-test
+├── resources/          pinned dataset, harness, and image references
+├── docs/               evaluation, dataset, leaderboard, containers, project notes
+├── schemas/            JSON schemas for the release records
+├── scripts/            repository validation and image verification
+└── assets/             figures used by this page
+```
+
+Large data and evaluation histories are not duplicated in Git.
+
+## Containers
 
 Images live under **`ghcr.io/unipat-ai`**. Pick the runtime that matches the route you are
 running; scoring always uses the scorer the task contract names.
@@ -189,11 +249,10 @@ docker pull ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:852f66cc924105c61e5
 docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
 ```
 
-A package name is a **deployment layout, not an access setting**. `-mcp` does not tell you
-whether source artifacts were withheld. The [container guide](docs/containers.md) has every
-version with its digest, the bundled-versus-external distinction, and the scorer versions.
+The [container guide](docs/containers.md) has every version with its digest, the
+bundled-versus-external distinction, and the scorer versions.
 
-## 5. Citing and license
+## Citation and license
 
 The project has a paper; its citation will be published here and on the
 [project page](https://unipat.ai/blog/ScienceVision) once settled. Until then, please describe
