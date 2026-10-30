@@ -8,7 +8,8 @@
     <a href="https://unipat.ai/blog/ScienceVision#leaderboard"><img alt="Leaderboard" src="https://img.shields.io/badge/Leaderboard-4285F4?style=for-the-badge&logo=google-chrome&logoColor=green"></a>
     <a href="https://huggingface.co/datasets/UnipatAI/ScienceVision"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-4285F4?style=for-the-badge&logo=huggingface&logoColor=yellow"></a>
     <a href="https://github.com/UniPat-AI/ScienceVision"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-24292F?style=for-the-badge&logo=github&logoColor=white"></a>
-    <img alt="Paper coming soon" src="https://img.shields.io/badge/Paper-coming%20soon-red?style=for-the-badge&logo=arxiv&logoColor=white">
+    <img alt="arXiv coming soon" src="https://img.shields.io/badge/arXiv-coming%20soon-red?style=for-the-badge&logo=arxiv&logoColor=white">
+    <a href="paper/sciencevision.pdf"><img alt="Paper PDF" src="https://img.shields.io/badge/Paper-PDF-4285F4?style=for-the-badge&logo=latex&logoColor=white"></a>
   </p>
 </div>
 
@@ -219,7 +220,8 @@ must record.
 ScienceVision/
 ├── harness/            vendored eval harness: Harbor routes, agents, MCP server, viewer, scorer
 ├── sandbox/            deterministic replay: contract export, tree build, gold self-test
-├── resources/          pinned dataset, harness, and image references
+├── paper/              the compiled paper PDF
+├── resources/          pinned dataset, harness, paper, and image references
 ├── docs/               evaluation, dataset, leaderboard, containers, project notes
 ├── schemas/            JSON schemas for the release records
 ├── scripts/            repository validation and image verification
@@ -254,7 +256,9 @@ bundled-versus-external distinction, and the scorer versions.
 
 ## Citation and license
 
-The project has a paper; its citation will be published here and on the
+The paper is readable as a [PDF](paper/sciencevision.pdf); that copy is a working build, and the
+[paper directory](paper/README.md) records its status and how a new build replaces it. The arXiv
+posting, citation, and BibTeX will be published here and on the
 [project page](https://unipat.ai/blog/ScienceVision) once settled. Until then, please describe
 results by the setting and scorer version you used rather than by a single headline number. The
 [comparison notes](docs/leaderboard.md) explain why that matters here.

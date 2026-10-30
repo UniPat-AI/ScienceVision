@@ -56,5 +56,6 @@ The dataset's declared limitations and the provenance notes in
 [leaderboard.md](leaderboard.md) are part of the release. Without them a reader cannot tell what
 a given score covers.
 
-The project has a paper. Its citation, author list, and published figures come from that paper;
-this repository records the release artifacts and the comparison those figures were drawn from.
+The project has a paper. Its citation, author list, and published figures come from the final
+version; the [current build](../paper/sciencevision.pdf) is a placeholder until the arXiv posting.
+This repository records the release artifacts and the comparison those figures were drawn from.

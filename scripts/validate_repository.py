@@ -142,6 +142,15 @@ def validate_references() -> None:
             "dataset revision selector differs from the pinned commit")
     require(harness["dataset_compatibility"]["dataset_commit"] == dataset["source"]["commit"],
             "harness dataset compatibility reference differs from the pinned commit")
+    paper = read_json(ROOT / "resources/paper.json")
+    require(paper["status"] in {"placeholder", "published"}, "unknown paper status")
+    require((paper["arxiv"] is not None) == (paper["status"] == "published"),
+            "paper status disagrees with the recorded arXiv identifier")
+    paper_path = ROOT / paper["path"]
+    require(paper_path.is_file(), f"missing paper PDF: {paper['path']}")
+    require(paper_path.stat().st_size == paper["bytes"], "paper byte count mismatch")
+    require(hashlib.sha256(paper_path.read_bytes()).hexdigest() == paper["sha256"],
+            "paper hash mismatch")
     references = set()
     for item in images["images"]:
         expected = item["canonical"].rsplit(":", 1)[0] + "@" + item["canonical_manifest_digest"]
