@@ -24,7 +24,7 @@ The harness needs an **agent image** for the route being run, and for the extern
 | Bundled MCP tools, Claude Code | [`sciencevision-claude-code-mcp`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) | `server-20261015-h20` |
 | MCP client, Claude Code | [`sciencevision-claude-code-mcp-client`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp-client) | `release-20261002-h20` |
 | External HTTP MCP worker | [`sciencevision-mcp-worker`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker) | `server-20260924-h20` |
-| Deterministic scorer | [`sciencevision-scorer`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer) | `server-20260930-h20` |
+| Deterministic scorer | [`sciencevision-scorer`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer) | `server-20261104-h20` |
 
 The naming is positional, not generational. For each agent engine, the name without a suffix is
 the raw-file runtime, `-2d` consumes rendered views, `-mcp` bundles the CLI together with an MCP
@@ -49,12 +49,13 @@ in [evaluation.md](evaluation.md#evaluation-settings).
 
 | Version | Use |
 |---|---|
-| `server-20261022-h20` | Reference scorer. Grades the comparators and accepted spellings the 250-task package declares |
-| `server-20260930-h20` | Default of the pinned evaluation harness |
+| `server-20261104-h20` | In-container scorer. Installs `harbor_adapters`, so the dataset's `harbor/templates/score.py` can import `harbor_adapters.sci3d._score_core`; the dataset's builder pins this digest |
+| `server-20261022-h20` | Host-side CLI reference scorer. Grades the comparators and accepted spellings, but is a `scorer_bundle` image without `harbor_adapters`; not the separate verifier image |
+| `server-20260930-h20` | Historical harness default; superseded for in-container scoring by `server-20261104-h20` |
 | `server-20261005-h20` | Later platform-package scorer; select it when a prepared task package specifies it |
 | `server-20260928b-h20` | Historical release retained for earlier task contracts |
 
-The four have different config digests, so **a newer date is not evidence that rescoring will
+These images have different config digests, so **a newer date is not evidence that rescoring will
 preserve a result**. Choose the scorer the run contract names and record its digest. A scorer
 self-test that feeds ground truth back in is not a model benchmark result.
 
@@ -67,7 +68,7 @@ addressing is what makes a run reproducible; a tag can be repointed.
 docker login ghcr.io
 docker pull ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:852f66cc924105c61e5efe6f85e0b5b389e01c416f7e6c8a09fbda0a225a1c98
 docker pull ghcr.io/unipat-ai/sciencevision-claude-code-mcp@sha256:74a05ae987097140b97ca976a406cf272866c9edbb6fa2313e897a25dab36df5
-docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
+docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:19e2058e6bf35724c6aa6c26355c8fd580e292fb199479d80c1c5fee1c8ce540
 ```
 
 Avoid `latest` for anything you intend to report. Package access is separate from repository

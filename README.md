@@ -248,7 +248,7 @@ be repointed.
 ```bash
 docker login ghcr.io
 docker pull ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:852f66cc924105c61e5efe6f85e0b5b389e01c416f7e6c8a09fbda0a225a1c98
-docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
+docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:19e2058e6bf35724c6aa6c26355c8fd580e292fb199479d80c1c5fee1c8ce540
 ```
 
 The [container guide](docs/containers.md) has every version with its digest, the
