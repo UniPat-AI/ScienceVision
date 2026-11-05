@@ -71,12 +71,12 @@ turns the package into Harbor task directories:
 python harbor/build_tasks.py --out /tmp/sciencevision-harbor --route cc-mcp --limit 3
 ```
 
-That builder stages a valid Harbor tree, but it does not fold in the per-field tolerances the
-reference scorer requires. Scored against the package's own ground truth, a tree built this way
-gives 200 of 250 golds at 1.0: 46 tasks return `invalid_task_contract` for a missing tolerance,
-and four grade partially on a contract normalization the builder does not apply.
-`sandbox/build_trees.py` and `scripts.harbor.qa_gen_to_tasks` apply the derivation in
-`harness/scripts/harbor/_tolerance_rules.py`; score only a tree built through them.
+That builder folds the per-field tolerances the reference scorer requires into every task, using
+the derivation in `harness/scripts/harbor/_tolerance_rules.py`. Scored against the package's own
+ground truth, a tree built this way gives **250 of 250 golds at 1.0**. If you build with an older
+package revision, apply the same derivation from `sandbox/build_trees.py` or
+`scripts.harbor.qa_gen_to_tasks`; a tree without tolerances returns `invalid_task_contract` for
+numeric fields instead of grading them.
 
 ## What this release is
 

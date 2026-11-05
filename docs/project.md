@@ -57,5 +57,5 @@ The dataset's declared limitations and the provenance notes in
 a given score covers.
 
 The project has a paper. Its citation, author list, and published figures come from the final
-version; the [current build](../paper/sciencevision.pdf) is a placeholder until the arXiv posting.
+version; the published paper is on [arXiv](https://arxiv.org/abs/2611.04087).
 This repository records the release artifacts and the comparison those figures were drawn from.

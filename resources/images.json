@@ -1,8 +1,8 @@
 {
   "schema_version": "sciencevision.image_inventory.v1",
-  "verified_at": "2026-10-16T01:08:15.049088+00:00",
+  "verified_at": "2026-11-04T07:35:00+00:00",
   "status": "private_canonical_packages_verified",
-  "verification": "Re-read from GHCR on 2026-10-16 by scripts/verify_images.py, which reads every manifest and its config blob and compares the recorded digests against what the registry serves. A manifest digest addresses one immutable artifact; the config digest identifies the image content, so equal config digests establish equal declared uncompressed rootfs layer identities and runtime configuration. The pass did not download layer payloads or run containers. The experimental oracle runtime is an archived local build rather than a registry release, and its provenance is recorded separately on its entry.",
+  "verification": "Re-read from GHCR on 2026-10-16 by scripts/verify_images.py, which reads every manifest and its config blob and compares the recorded digests against what the registry serves. A manifest digest addresses one immutable artifact; the config digest identifies the image content, so equal config digests establish equal declared uncompressed rootfs layer identities and runtime configuration. The pass did not download layer payloads or run containers. The experimental oracle runtime is an archived local build rather than a registry release, and its provenance is recorded separately on its entry. On 2026-11-04 the server-20261104-h20 in-container scorer was pushed to GHCR and verified: its manifest and config were read from the registry, and the image was started locally to import harbor_adapters.sci3d._score_core and run the 3-task gold smoke.",
   "images": [
     {
       "role": "raw-file Codex",
@@ -141,7 +141,7 @@
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
       "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
-      "usage": "Default of the pinned eval-baseline harness; also used by oracle validation."
+      "usage": "Historical harness default; superseded for in-container scoring by server-20261104-h20."
     },
     {
       "role": "platform package scorer",
@@ -167,7 +167,7 @@
       "visibility": "private",
       "linked_repository": "UniPat-AI/ScienceVision",
       "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
-      "usage": "Grades the comparators and accepted spellings the ScienceVision package declares. Built from harness/scorer_bundle at 273e32d, scorer manifest sha256 b32b1fa1e87ddcf86d8ea3b21eda37f31655e4cca4ef418a5c7170d3e0764f22."
+      "usage": "Host-side CLI gold self-test only. This is a scorer_bundle image: it contains scorer_cli.py and the deterministic scorers, but not harbor_adapters.sci3d._score_core, so it cannot serve as the separate verifier image that harbor/templates/score.py requires. Built from harness/scorer_bundle at 273e32d, scorer manifest sha256 b32b1fa1e87ddcf86d8ea3b21eda37f31655e4cca4ef418a5c7170d3e0764f22."
     },
     {
       "role": "experimental oracle MCP Claude Code",
@@ -231,6 +231,19 @@
       "config_digest": "sha256:45826f37cf1c8f8a01515f268278d95dc7661ad2c262cfa1096a81f44394cd4c",
       "rootfs_diff_id_count": 23,
       "platform": "linux/amd64"
+    },
+    {
+      "role": "in-container scorer",
+      "canonical": "ghcr.io/unipat-ai/sciencevision-scorer:server-20261104-h20",
+      "canonical_manifest_digest": "sha256:19e2058e6bf35724c6aa6c26355c8fd580e292fb199479d80c1c5fee1c8ce540",
+      "canonical_digest_reference": "ghcr.io/unipat-ai/sciencevision-scorer@sha256:19e2058e6bf35724c6aa6c26355c8fd580e292fb199479d80c1c5fee1c8ce540",
+      "config_digest": "sha256:c4abdb0f13cd57b4868123233490429ed6383b2396f8c916ce4623a08da24f81",
+      "rootfs_diff_id_count": 10,
+      "platform": "linux/amd64",
+      "visibility": "public",
+      "linked_repository": "UniPat-AI/ScienceVision",
+      "package_url": "https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer",
+      "usage": "Required by the dataset's harbor/templates/score.py: installs harbor_adapters.sci3d._score_core. Built from harness/scripts/harbor/templates/Dockerfile at f6b0929. Verified by importing the scoring core in the image and by a 3-task in-container gold smoke (3/3 at 1.0)."
     }
   ],
   "repository_linked_at": "2026-10-06",

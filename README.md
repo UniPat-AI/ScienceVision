@@ -8,8 +8,7 @@
     <a href="https://unipat.ai/blog/ScienceVision#leaderboard"><img alt="Leaderboard" src="https://img.shields.io/badge/Leaderboard-4285F4?style=for-the-badge&logo=google-chrome&logoColor=green"></a>
     <a href="https://huggingface.co/datasets/UnipatAI/ScienceVision"><img alt="Dataset" src="https://img.shields.io/badge/Dataset-4285F4?style=for-the-badge&logo=huggingface&logoColor=yellow"></a>
     <a href="https://github.com/UniPat-AI/ScienceVision"><img alt="GitHub" src="https://img.shields.io/badge/GitHub-24292F?style=for-the-badge&logo=github&logoColor=white"></a>
-    <img alt="arXiv coming soon" src="https://img.shields.io/badge/arXiv-coming%20soon-red?style=for-the-badge&logo=arxiv&logoColor=white">
-    <a href="paper/sciencevision.pdf"><img alt="Paper PDF" src="https://img.shields.io/badge/Paper-PDF-4285F4?style=for-the-badge&logo=latex&logoColor=white"></a>
+    <a href="https://arxiv.org/abs/2611.04087"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2611.04087-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white"></a>
   </p>
 </div>
 
@@ -220,7 +219,7 @@ must record.
 ScienceVision/
 ├── harness/            vendored eval harness: Harbor routes, agents, MCP server, viewer, scorer
 ├── sandbox/            deterministic replay: contract export, tree build, gold self-test
-├── paper/              the compiled paper PDF
+├── paper/              paper publication note (the PDF lives on arXiv)
 ├── resources/          pinned dataset, harness, paper, and image references
 ├── docs/               evaluation, dataset, leaderboard, containers, project notes
 ├── schemas/            JSON schemas for the release records
@@ -248,7 +247,7 @@ be repointed.
 ```bash
 docker login ghcr.io
 docker pull ghcr.io/unipat-ai/sciencevision-codex-mcp@sha256:852f66cc924105c61e5efe6f85e0b5b389e01c416f7e6c8a09fbda0a225a1c98
-docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:b2d62b237db316b4e668b146c1195bf52d77c6fd4215b915672c73849d0fbeb3
+docker pull ghcr.io/unipat-ai/sciencevision-scorer@sha256:19e2058e6bf35724c6aa6c26355c8fd580e292fb199479d80c1c5fee1c8ce540
 ```
 
 The [container guide](docs/containers.md) has every version with its digest, the
@@ -256,12 +255,10 @@ bundled-versus-external distinction, and the scorer versions.
 
 ## Citation and license
 
-The paper is readable as a [PDF](paper/sciencevision.pdf); that copy is a working build, and the
-[paper directory](paper/README.md) records its status and how a new build replaces it. The arXiv
-posting, citation, and BibTeX will be published here and on the
-[project page](https://unipat.ai/blog/ScienceVision) once settled. Until then, please describe
-results by the setting and scorer version you used rather than by a single headline number. The
-[comparison notes](docs/leaderboard.md) explain why that matters here.
+The paper is published on [arXiv](https://arxiv.org/abs/2611.04087). The repository no longer
+carries a compiled PDF; [`paper/README.md`](paper/README.md) records the publication status.
+Please describe results by the setting and scorer version you used rather than by a single
+headline number. The [comparison notes](docs/leaderboard.md) explain why that matters here.
 
 The dataset package declares **MIT** in its card, `MANIFEST.json`, and `LICENSE`; that
 declaration does not grant rights to the third-party assets inside it. Documentation, schemas,
