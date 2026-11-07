@@ -1,14 +1,27 @@
 {
   "schema_version": "sciencevision.paper_reference.v1",
-  "verified_at": "2026-11-04T07:45:00+00:00",
+  "verified_at": "2026-11-07T05:51:52+00:00",
   "title": "ScienceVision: Can AI Observe and Reason Like a Scientist?",
   "authors": [
-    "UniPat AI",
-    "Elorian AI"
+    "Tianyi Ma",
+    "Jing Gu",
+    "Haozhe Zhao",
+    "Liang Chen",
+    "Yunfan Zhang",
+    "Haijun Su",
+    "Jialong Wu",
+    "Le Xue",
+    "Arnav Das",
+    "Dustin Tran",
+    "Yinfei Yang",
+    "Andrew Dai",
+    "Kuan Li"
   ],
   "path": null,
   "status": "published",
   "arxiv": "2611.04087",
   "url": "https://arxiv.org/abs/2611.04087",
-  "note": "Published on arXiv; the repository no longer carries a compiled PDF. arXiv is the canonical copy."
+  "license": "CC BY-NC-ND 4.0",
+  "license_url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+  "note": "Published on arXiv; the repository no longer carries a compiled PDF. arXiv is the canonical copy. The paper's license is separate from the repository's MIT license."
 }
