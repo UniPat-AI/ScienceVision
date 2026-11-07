@@ -255,8 +255,26 @@ bundled-versus-external distinction, and the scorer versions.
 
 ## Citation and license
 
-The paper is published on [arXiv](https://arxiv.org/abs/2611.04087). The repository no longer
-carries a compiled PDF; [`paper/README.md`](paper/README.md) records the publication status.
+If you use ScienceVision, cite the paper. The published version is on
+[arXiv](https://arxiv.org/abs/2611.04087); the repository no longer carries a compiled PDF
+([`paper/README.md`](paper/README.md) records the publication status).
+
+```bibtex
+@misc{ma2026sciencevisionaiobservereason,
+      title={ScienceVision: Can AI Observe and Reason Like a Scientist?},
+      author={Tianyi Ma and Jing Gu and Haozhe Zhao and Liang Chen and Yunfan Zhang and Haijun Su and Jialong Wu and Le Xue and Arnav Das and Dustin Tran and Yinfei Yang and Andrew Dai and Kuan Li},
+      year={2026},
+      eprint={2611.04087},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2611.04087},
+}
+```
+
+The paper text is licensed **CC BY-NC-ND 4.0** on arXiv, which is separate from and narrower
+than the repository license: cite and quote the paper under those terms, and take the code
+under **MIT**. A license on this repository does not extend to the paper.
+
 Please describe results by the setting and scorer version you used rather than by a single
 headline number. The [comparison notes](docs/leaderboard.md) explain why that matters here.
 
