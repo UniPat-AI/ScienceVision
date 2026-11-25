@@ -35,16 +35,19 @@ def selected_tools(
 ) -> list[ToolSpec]:
     """Select the actual server surface; unknown families fail closed."""
     source = list(ALL_TOOLS if tools is None else tools)
+    from sci3d_agent.mcp.tools.vision3d.sequences import task_tools
     if not viewer_family:
-        return source
+        return task_tools(source)
     from sci3d_agent.mcp.parity.allowlist import advertised_tools_for_family
 
-    return list(advertised_tools_for_family(viewer_family, source))
+    selected = list(advertised_tools_for_family(viewer_family, source))
+    return task_tools(selected) if viewer_family == "niivue.v1" else selected
 
 
 def tool_schema_sha256(spec: ToolSpec) -> str:
-    """Fingerprint the strict schema the MCP server itself advertises."""
-    return _sha256(spec.input_schema)
+    """Fingerprint actual wire parameters, including the handler args wrapper."""
+    from .server import advertised_parameters
+    return _sha256(advertised_parameters(spec))
 
 
 def surface_payload(

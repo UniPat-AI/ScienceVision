@@ -1,8 +1,8 @@
 # Container images
 
-The canonical container namespace is **`ghcr.io/unipat-ai`**. Ten packages carry fifteen release
-versions and one archived experimental runtime: sixteen versions in total, all
-`linux/amd64`.
+The canonical container namespace is **`ghcr.io/unipat-ai`**. The inventory records
+current releases, retained historical versions, and explicitly archived experimental
+runtimes. All listed runtime releases target `linux/amd64`.
 
 [`resources/images.json`](../resources/images.json) records, for every version, the tag, the
 immutable GHCR manifest digest, the config digest, the platform, the package URL, and the
@@ -17,13 +17,13 @@ The harness needs an **agent image** for the route being run, and for the extern
 |---|---|---|
 | Raw task files, Codex | [`sciencevision-codex`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex) | `server-20260930-h20` |
 | Rendered views, Codex | [`sciencevision-codex-2d`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-2d) | `server-20260930-h20` |
-| Bundled MCP tools, Codex | [`sciencevision-codex-mcp`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp) | `server-20261014-h20` |
+| Bundled MCP tools, Codex | [`sciencevision-codex-mcp`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp) | `server-20261125-sequence-h20` |
 | MCP client, Codex | [`sciencevision-codex-mcp-client`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-codex-mcp-client) | `release-20260930-h20` |
 | Raw task files, Claude Code | [`sciencevision-claude-code`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code) | `server-20261002-h20` |
 | Rendered views, Claude Code | [`sciencevision-claude-code-2d`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-2d) | `server-20261002-h20` |
-| Bundled MCP tools, Claude Code | [`sciencevision-claude-code-mcp`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) | `server-20261015-h20` |
+| Bundled MCP tools, Claude Code | [`sciencevision-claude-code-mcp`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp) | `server-20261125-sequence-h20` |
 | MCP client, Claude Code | [`sciencevision-claude-code-mcp-client`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-claude-code-mcp-client) | `release-20261002-h20` |
-| External HTTP MCP worker | [`sciencevision-mcp-worker`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker) | `server-20260924-h20` |
+| External HTTP MCP worker | [`sciencevision-mcp-worker`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-mcp-worker) | `server-20261125-sequence-h20` |
 | Deterministic scorer | [`sciencevision-scorer`](https://github.com/orgs/UniPat-AI/packages/container/package/sciencevision-scorer) | `server-20261104-h20` |
 
 The naming is positional, not generational. For each agent engine, the name without a suffix is
@@ -31,6 +31,13 @@ the raw-file runtime, `-2d` consumes rendered views, `-mcp` bundles the CLI toge
 implementation, and `-mcp-client` connects a client-only wrapper to an external HTTP worker.
 
 ## Bundled or external
+
+The sequence-capable bundled Codex and Claude Code release is
+`server-20261125-sequence-h20`; exact pullable digests and verification are in
+[`resources/images.json`](../resources/images.json). These retain the previous
+73 tools and add `sv3d_switch_sequence`. Use the explicit bundled-stdio task
+generation described in [Medical sequence switching](medical-sequence-mcp.md).
+The older tags below remain reproducibility references and are not rewritten.
 
 There are two MCP layouts, and they are not interchangeable:
 

@@ -304,6 +304,8 @@ def _open_scene_handler(args: Mapping[str, Any]) -> Mapping[str, Any]:
             ttl=ttl,
         )
 
+        from .sequences import initialize_sequences
+        sess = initialize_sequences(sess)
         try:
             get_store().add(sess)
         except CapacityError as exc:
@@ -320,7 +322,7 @@ def _open_scene_handler(args: Mapping[str, Any]) -> Mapping[str, Any]:
                 for m in sess.masks_info
             ],
         }
-    except SVToolError as exc:
+    except (SVToolError, ValueError, OSError) as exc:
         return {"error": str(exc)}
 
 
@@ -364,6 +366,7 @@ def _get_state_handler(args: Mapping[str, Any]) -> Mapping[str, Any]:
         s = get_store().get(sid)
     except KeyError:
         return {"error": f"unknown session_id: {sid}"}
+    from .sequences import sequence_state
     ttl_left = max(0, int(s.ttl_seconds - (monotonic_now() - s.created_at)))
     return {
         "session_id": s.session_id,
@@ -401,6 +404,7 @@ def _get_state_handler(args: Mapping[str, Any]) -> Mapping[str, Any]:
             "clip_cap": s.opacity.clip_cap,
         },
         "ttl_remaining_s": ttl_left,
+        **sequence_state(s),
         "masks_info": [
             {
                 "mask_id": m.mask_id,

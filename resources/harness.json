@@ -56,7 +56,8 @@
   "local_modifications": [
     "harness/README.md carries a vendored-harness pointer to the repository README.",
     "harness/_dev_serve.py serves its own directory instead of a hard-coded checkout path.",
-    "harness/pyproject.toml adds nibabel and scikit-image to the harbor extra and fastmcp to the mcp extra, so the documented install command satisfies the import chain."
+    "harness/pyproject.toml adds nibabel and scikit-image to the harbor extra and fastmcp to the mcp extra, so the documented install command satisfies the import chain.",
+    "2026-11-25: add sv3d_switch_sequence from platform PR132 to Niivue eval sessions, medical mode, public task manifests and task-specific wire catalogs; add explicit --bundled-mcp-image staging while retaining the external-HTTP default. Source-plus-MCP bundled runtime overlays preserve the existing 73 tools and add one; the separate external worker retains its existing 58 tools and adds one. Existing benchmark results are not rerun or rescored."
   ],
   "upstream_validation_reference": "https://github.com/UniPat-AI/BabyVision-v2/pull/127",
   "validation_note": "The upstream pull request reports scorer self-consistency checks. They are not model benchmark results and were not rerun for this repository."

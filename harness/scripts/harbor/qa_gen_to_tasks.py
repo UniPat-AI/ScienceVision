@@ -255,7 +255,14 @@ def main() -> None:
         help="for --agent-env codex-2d: number of rendered views to "
         "stage (overrides per-record n_views)",
     )
+    ap.add_argument("--mcp-surface", type=Path, default=None,
+                    help="catalog JSON from the exact MCP image and viewer family")
+    ap.add_argument("--bundled-mcp-image", default=None,
+                    help="explicit bundled-stdio source-plus-MCP image; requires --mcp-surface")
     args = ap.parse_args()
+    mcp_catalog = json.loads(args.mcp_surface.read_text()) if args.mcp_surface is not None else None
+    if mcp_catalog is not None and not isinstance(mcp_catalog, dict):
+        ap.error("--mcp-surface must contain one JSON object")
 
     asset_root = args.asset_root if str(args.asset_root) else None
 
@@ -285,6 +292,8 @@ def main() -> None:
                     task, args.out,
                     containerized=args.containerized,
                     agent_env=args.agent_env,
+                    mcp_catalog=mcp_catalog,
+                    bundled_mcp_image=args.bundled_mcp_image,
                 )
             )
         except RenderVisibilityError as exc:

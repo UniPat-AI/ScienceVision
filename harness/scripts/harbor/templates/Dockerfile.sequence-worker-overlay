@@ -1,0 +1,10 @@
+# External worker profile. Context contains only reviewed source packages.
+# Retain the audited worker's dependencies, non-root user, healthcheck and
+# entrypoint; this is separate from the 73-tool bundled agent images.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG SEQUENCE_SOURCE_SHA256
+LABEL io.sciencevision.sequence-source.sha256="${SEQUENCE_SOURCE_SHA256}" \
+      io.sciencevision.sequence-overlay.platform-pr="https://github.com/UniPat-AI/BabyVision-v2/pull/132"
+COPY --chown=10001:10001 sci3d_agent/ /opt/sciencevision-src/sci3d_agent/
+COPY --chown=10001:10001 sequence-source.json /opt/sciencevision-src/sequence-source.json

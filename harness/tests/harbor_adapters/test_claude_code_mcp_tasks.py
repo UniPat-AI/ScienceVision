@@ -62,7 +62,7 @@ def test_dockerfile_references_agent_image_and_worker_owns_asset(tmp_path):
     assert "FROM sci3d-claude-code-mcp:latest" in dockerfile
     assert "COPY asset/ /data/" not in dockerfile
     worker_dockerfile = (task_dir / "environment" / "Dockerfile.mcp-worker").read_text()
-    assert "FROM sci3d-mcp-worker:dev" in worker_dockerfile
+    assert "FROM ghcr.io/unipat-ai/sciencevision-mcp-worker@sha256:4c8a482d5cc1cce0d04eaa7861f463843fa50c95318100a0db877a828c843d4f" in worker_dockerfile
     assert "COPY asset/ /data/" in worker_dockerfile
     compose = (task_dir / "environment" / "docker-compose.yaml").read_text()
     assert "sciencevision-mcp:" in compose

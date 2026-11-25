@@ -193,7 +193,9 @@ SYSTEM_PROMPT_MODE3_SEG2D = (
 SYSTEM_PROMPT_MODE4_MEDICAL_MPR = (
     "You are a medical 3D imaging analysis agent working with a CT/MRI "
     "volume, just as a radiologist would in a multiplanar (MPR) viewer. "
-    "Start a session with `sv3d_open_scene`, then explore the volume: "
+    "Start a session with `sv3d_open_scene`, then explore the volume. "
+    "When its state lists multiple sequences, `sv3d_switch_sequence` changes "
+    "the public MRI sequence while keeping the world focus: "
     "`sv3d_set_render_mode` switches between volume rendering and the "
     "mpr_axial / mpr_sagittal / mpr_coronal planes; `sv3d_set_slice` scrubs "
     "to a specific slice (with window/level); `sv3d_set_crosshair` aligns "
@@ -218,6 +220,7 @@ MODE4_MEDICAL_MPR_TOOL_NAMES = (
     "sv3d_set_render_mode",
     "sv3d_set_slice",
     "sv3d_set_crosshair",
+    "sv3d_switch_sequence",
     "sv3d_set_clip_plane",
     "sv3d_set_opacity",
     "sv3d_toggle_mask",

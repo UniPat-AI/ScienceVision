@@ -276,6 +276,19 @@ def _axis_for_mode(session: Session) -> str:
 
 def _attach_slice_locator(args: dict[str, Any], session: Session) -> None:
     """Add either ``index`` or ``fraction`` to a primitive-args dict."""
+    if len(session.sequences) > 1:
+        import nibabel as nib
+        import numpy as np
+
+        from ._slice_math import _AXIS_TO_NP
+        from .sequences import _focus_world
+
+        image = nib.load(session.asset_path)
+        world = _focus_world(session, image)
+        voxel = np.linalg.solve(image.affine, [*world, 1])[:3]
+        axis = _AXIS_TO_NP[args["axis"]]
+        args["index"] = int(round(voxel[axis]))
+        return
     if session.slice.index is not None:
         args["index"] = int(session.slice.index)
     elif session.slice.fraction is not None:

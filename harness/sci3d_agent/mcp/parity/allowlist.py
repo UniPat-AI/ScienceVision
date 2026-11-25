@@ -68,6 +68,7 @@ _NIFTI = frozenset({
     "sv3d_set_slice",
     "sv3d_set_clip_plane",
     "sv3d_set_crosshair",
+    "sv3d_switch_sequence",
     "sv3d_segment_2d",
     "sv3d_segment_3d_volume",
 })
