@@ -117,3 +117,9 @@ class Session:
     created_at: float        # monotonic seconds
     ttl_seconds: int
     rng_seed: int = 0         # reserved for Phase 3.3 deterministic renders
+    sequences: tuple[tuple[str, str], ...] = ()
+    sequence: Optional[str] = None
+    sequence_mask_path: Optional[str] = None
+    sequence_focus_world: Optional[tuple[float, float, float]] = None
+    sequence_focus_slice: Optional[SliceState] = None
+    sequence_windows: tuple[tuple[str, tuple[float, float]], ...] = ()

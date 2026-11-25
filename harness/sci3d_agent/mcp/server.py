@@ -35,12 +35,33 @@ def list_tool_names(viewer_family: str | None = None) -> list[str]:
     return [spec.name for spec in selected_tools(viewer_family, tools=ALL_TOOLS)]
 
 
+def advertised_parameters(spec: ToolSpec) -> dict[str, Any]:
+    """Export the existing wire shape without changing legacy registration."""
+    from fastmcp.tools import FunctionTool
+
+    if spec.name == "sv3d_switch_sequence":
+        from sci3d_agent.mcp.sequence_catalog import wire_schema
+        return wire_schema(spec.input_schema)
+    # mcp.tool(wrapped) performs this same signature-to-schema conversion.
+    return FunctionTool.from_function(
+        _safe_handler(spec), name=spec.name, description=spec.description
+    ).parameters
+
+
 def _build_fastmcp_server(viewer_family: str | None = None):
     from fastmcp import FastMCP
 
     mcp = FastMCP(SERVER_NAME)
     for spec in selected_tools(viewer_family, tools=ALL_TOOLS):
         wrapped = _safe_handler(spec)
+        if spec.name == "sv3d_switch_sequence":
+            # Preserve every legacy tool's wire schema. The new tool must
+            # advertise its actual inner args enum, rather than args: {}.
+            from fastmcp.tools import FunctionTool
+
+            tool = FunctionTool.from_function(wrapped, name=spec.name, description=spec.description)
+            mcp.add_tool(tool.model_copy(update={"parameters": advertised_parameters(spec)}))
+            continue
         mcp.tool(
             name=spec.name,
             description=spec.description,

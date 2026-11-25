@@ -37,6 +37,12 @@ A route ID is a label, not a permissions attestation. Reproducing a setting requ
 contract and a runtime profile that actually enforce its intended access, with the evidence
 recorded in the run receipt.
 
+Medical multi-sequence tasks additionally use the declared public image manifest
+and the sequence-capable runtime described in
+[Medical sequence switching](medical-sequence-mcp.md). Regenerate task trees to
+obtain their task-specific sequence enum and catalog; historical trees and
+reported scores are unchanged.
+
 ## Running the harness
 
 The entire evaluation harness is vendored under [`harness/`](../harness/), a copy of the

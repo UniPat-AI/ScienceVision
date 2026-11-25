@@ -112,6 +112,23 @@ class MCPWorkerPackaging:
             separators=(",", ":"),
         ) + "\n"
 
+    def render_bundled_dockerfile(self, *, image: str) -> str:
+        """The existing source-plus-MCP stdio setting, explicitly opted into.
+
+        This deliberately exposes the staged public source artifacts to the
+        agent, as the bundled setting already did. It is not MCP-only access.
+        """
+        return (
+            "# Generated bundled stdio MCP task; public source assets are visible.\n"
+            f"FROM {self._image_ref(image)}\n"
+            "COPY asset/ /data/\n"
+            f"COPY {self.task_asset_manifest_filename} {self.task_asset_manifest_path}\n"
+            "ENV SV_MCP_TASK_ISOLATED=1 \\\n"
+            f"    SV_MCP_TASK_ASSET_MANIFEST={self.task_asset_manifest_path} \\\n"
+            "    SV_RENDER_CACHE=/logs/agent/renders\n"
+            "WORKDIR /app\n"
+        )
+
     def render_dockerfile(self, *, image: str) -> str:
         """Render the worker-only Dockerfile that receives raw assets."""
         return (

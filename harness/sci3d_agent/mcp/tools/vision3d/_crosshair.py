@@ -147,6 +147,8 @@ def set_crosshair_handler(args: Mapping[str, Any]) -> Mapping[str, Any]:
             level=s.slice.level,
         )
         replace_slice(sid, new_slice)
+        from .sequences import remember_crosshair
+        remember_crosshair(sid, planes)
 
         applied_mode: Optional[str] = None
         if set_mode:

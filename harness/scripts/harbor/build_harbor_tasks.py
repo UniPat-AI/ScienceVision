@@ -100,7 +100,7 @@ _CONTAINER_ASSET_DIR = "/data"
 # The worker image contains the MCP implementation and is resolved to a digest
 # by official launch preflight.  The task-local Dockerfile is rendered by
 # ``MCP_WORKER_PACKAGING`` so it has a single owner across build and launch.
-_MCP_WORKER_IMAGE = "sci3d-mcp-worker:dev"
+_MCP_WORKER_IMAGE = "ghcr.io/unipat-ai/sciencevision-mcp-worker@sha256:4c8a482d5cc1cce0d04eaa7861f463843fa50c95318100a0db877a828c843d4f"
 _MCP_AGENT_ENVS = frozenset({"codex-mcp", "claude-code-mcp"})
 
 # Labels, target masks, and segmentation sidecars may be verifier inputs, but
@@ -736,6 +736,16 @@ def _task_assets(task: dict) -> list[dict[str, Any]]:
         if primary.get("role") is not None:
             row["role"] = primary["role"]
         assets.insert(0, row)
+    # Medical multi-sequence tasks name the opening image independently of
+    # attachment order. Keep all other multi-asset ordering unchanged.
+    if task.get("domain") == "medical" and any(row.get("role") == "sequence" for row in assets):
+        primary = [row for row in assets if row.get("role") == "primary"]
+        if len(primary) > 1:
+            raise ValueError("medical sequences require one primary image")
+        opening = primary[0] if primary else next((row for row in assets if row["asset_path"] == primary_path), None)
+        if opening is not None:
+            opening.setdefault("role", "primary")
+            assets = [opening, *(row for row in assets if row is not opening)]
     return assets
 
 
@@ -2607,6 +2617,7 @@ def build_one(
     agent_allowed_hosts: Iterable[str] | None = None,
     mcp_catalog: Mapping[str, Any] | None = None,
     mcp_worker_image: str = _MCP_WORKER_IMAGE,
+    bundled_mcp_image: str | None = None,
 ) -> Path:
     """Build one task directory.
 
@@ -2622,6 +2633,12 @@ def build_one(
         raise ValueError("mcp_catalog must be the JSON object emitted by sciencevision-mcp --surface")
     normalized_hosts = normalize_allowed_hosts(agent_allowed_hosts)
     env = AGENT_ENVS.get(agent_env, AGENT_ENVS["host"])
+    if bundled_mcp_image is not None:
+        if not containerized or not _is_mcp_agent_env(env.name):
+            raise ValueError("bundled_mcp_image requires containerized codex-mcp or claude-code-mcp")
+        MCP_WORKER_PACKAGING._image_ref(bundled_mcp_image)
+        if mcp_catalog is None:
+            raise ValueError("bundled stdio requires --mcp-surface from that exact image")
     asset_visibility = _route_asset_visibility(task, env.name)
     effective_task = _effective_task_for_route(task, asset_visibility)
     _assert_eligible_assets(effective_task)
@@ -2692,6 +2709,10 @@ def build_one(
         from sci3d_agent.mcp.surface import surface_payload
 
         effective_mcp_catalog = surface_payload(viewer_family)
+    if effective_mcp_catalog is not None and _is_mcp_agent_env(env.name):
+        from sci3d_agent.mcp.sequence_catalog import specialize_catalog
+
+        effective_mcp_catalog = specialize_catalog(effective_mcp_catalog, staged.get("assets", []))
     route_contract = _route_contract_for_task(
         effective_task,
         env.name,
@@ -2775,22 +2796,33 @@ def build_one(
             # it here preserves the existing per-task diagnostic surface; the
             # worker receives the same value from the immutable contract below.
             per_task = env.env_provider(effective_task) if env.env_provider is not None else {}
-            (env_dir / "Dockerfile").write_text(_with_env(env.dockerfile, per_task))
             (env_dir / MCP_WORKER_PACKAGING.task_asset_manifest_filename).write_text(
                 MCP_WORKER_PACKAGING.render_task_asset_manifest(staged)
             )
-            (env_dir / "Dockerfile.mcp-worker").write_text(
-                MCP_WORKER_PACKAGING.render_dockerfile(image=mcp_worker_image)
-            )
-            (env_dir / "docker-compose.yaml").write_text(
-                MCP_WORKER_PACKAGING.render_compose(
-                    viewer_family=str(mcp.get("viewer_family") or "") or None,
-                    catalog_sha256=str(catalog.get("catalog_sha256") or "") or None,
-                    schema_sha256=str(catalog.get("schema_sha256") or "") or None,
-                    health_receipt_path=MCP_WORKER_PACKAGING.health_receipt_path,
-                    http_surface=MCP_WORKER_PACKAGING.http_surface,
+            if bundled_mcp_image is not None:
+                (env_dir / "Dockerfile").write_text(_with_env(
+                    MCP_WORKER_PACKAGING.render_bundled_dockerfile(image=bundled_mcp_image), per_task))
+                (env_dir / "mcp.stdio.json").write_text(json.dumps({"mcpServers": {
+                    "sciencevision": {"command": "sciencevision-mcp", "args": []}}}, indent=2) + "\n")
+                (env_dir / "mcp-runtime-profile.json").write_text(json.dumps({
+                    "schema_version": "sciencevision.bundled_mcp_profile.v1", "transport": "stdio",
+                    "image": bundled_mcp_image, "public_source_assets_visible_to_agent": True,
+                    "catalog": effective_mcp_catalog,
+                }, sort_keys=True, indent=2) + "\n")
+            else:
+                (env_dir / "Dockerfile").write_text(_with_env(env.dockerfile, per_task))
+                (env_dir / "Dockerfile.mcp-worker").write_text(
+                    MCP_WORKER_PACKAGING.render_dockerfile(image=mcp_worker_image)
                 )
-            )
+                (env_dir / "docker-compose.yaml").write_text(
+                    MCP_WORKER_PACKAGING.render_compose(
+                        viewer_family=str(mcp.get("viewer_family") or "") or None,
+                        catalog_sha256=str(catalog.get("catalog_sha256") or "") or None,
+                        schema_sha256=str(catalog.get("schema_sha256") or "") or None,
+                        health_receipt_path=MCP_WORKER_PACKAGING.health_receipt_path,
+                        http_surface=MCP_WORKER_PACKAGING.http_surface,
+                    )
+                )
         else:
             per_task = env.env_provider(effective_task) if env.env_provider is not None else {}
             (env_dir / "Dockerfile").write_text(_with_env(env.dockerfile, per_task))
@@ -2836,6 +2868,8 @@ def main() -> None:
         default=_MCP_WORKER_IMAGE,
         help="immutable-or-versioned worker image reference; official preflight requires a digest",
     )
+    ap.add_argument("--bundled-mcp-image", default=None,
+                    help="opt into the existing bundled-stdio source-plus-MCP setting using this exact image; requires --mcp-surface")
     args = ap.parse_args()
 
     mcp_catalog: Mapping[str, Any] | None = None
@@ -2860,6 +2894,7 @@ def main() -> None:
             agent_allowed_hosts=args.agent_allowed_host,
             mcp_catalog=mcp_catalog,
             mcp_worker_image=args.mcp_worker_image,
+            bundled_mcp_image=args.bundled_mcp_image,
         )
         for t in tasks
     ]

@@ -148,7 +148,8 @@ def replace_mode(sid: str, mode: Mode) -> Session:
 def replace_slice(sid: str, slice_state: SliceState) -> Session:
     store = get_store()
     s = store.get(sid)
-    new = replace(s, slice=slice_state)
+    from .sequences import update_slice_focus
+    new = update_slice_focus(s, slice_state)
     store.update(new)
     return new
 

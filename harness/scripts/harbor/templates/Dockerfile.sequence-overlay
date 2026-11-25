@@ -1,0 +1,9 @@
+# Sequence capability over the audited bundled 73-tool runtime.
+# Context: sequence_runtime_overlay.py output, never a repository/data tree.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+ARG SEQUENCE_OVERLAY_SHA256
+LABEL io.sciencevision.sequence-overlay.sha256="${SEQUENCE_OVERLAY_SHA256}" \
+      io.sciencevision.sequence-overlay.platform-pr="https://github.com/UniPat-AI/BabyVision-v2/pull/132"
+COPY sci3d_agent/ /app/sci3d_agent/
+COPY sequence-overlay.json /app/sequence-overlay.json
